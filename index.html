@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>随机大乐透&双色球选号</title>
+	<link rel="stylesheet" href="style.css">
+    <style>
+      .red {
+        color: red;
+      }
+      .blue {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>随机大乐透选号</h1>
+	<div>
+    <label for="times">投注次数：</label>
+    <input type="number" id="times" min="1" value="5" />
+    <button onclick="dlt()">生成选号</button>
+	<h1>随机双色球选号</h1>
+    <label for="timesssq">投注次数：</label>
+    <input type="number" id="timesssq" min="1" value="5" />
+    <button onclick="ssq()">生成选号</button>
+	</div>
+	
+    <div id="result"></div>
+    <script>
+      function dlt() {
+        const times = parseInt(document.getElementById('times').value, 10);
+        const resultDiv = document.getElementById('result');
+        let result = '';
+
+        for (let i = 0; i < times; i++) {
+          const redBalls = [];
+          const blueBalls = [];
+
+          // 生成红球号码
+          while (redBalls.length < 5) {
+            const ball = Math.floor(Math.random() * 35) + 1;
+            if (!redBalls.includes(ball)) {
+              redBalls.push(ball);
+            }
+          }
+
+          // 生成蓝球号码
+          while (blueBalls.length < 2) {
+            const ball = Math.floor(Math.random() * 12) + 1;
+            if (!blueBalls.includes(ball)) {
+              blueBalls.push(ball);
+            }
+          }
+
+          // 将号码转换为两位数
+          const formattedRedBalls = redBalls.map(ball => {
+            return ball < 10 ? '0' + ball : ball;
+          });
+          const formattedBlueBalls = blueBalls.map(ball => {
+            return ball < 10 ? '0' + ball : ball;
+          });
+
+          // 将号码输出到页面
+          result += '<div>';
+          result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+          result += '<span class="blue">' + formattedBlueBalls.join(' ') + '</span>';
+          result += '</div>';
+        }
+
+        resultDiv.innerHTML = result;
+      }
+    </script>
+	<script>
+      function ssq() {
+        const timesssq = parseInt(document.getElementById('timesssq').value, 10);
+        const resultDiv = document.getElementById('result');
+        let result = '';
+
+        for (let i = 0; i < timesssq; i++) {
+          const redBalls = [];
+          const blueBall = Math.floor(Math.random() * 16) + 1;
+
+          // 生成红球号码
+          while (redBalls.length < 6) {
+            const ball = Math.floor(Math.random() * 33) + 1;
+            if (!redBalls.includes(ball)) {
+              redBalls.push(ball);
+            }
+          }
+
+          // 将号码转换为两位数
+          const formattedRedBalls = redBalls.map(ball => {
+            return ball < 10 ? '0' + ball : ball;
+          });
+
+          // 将号码输出到页面
+          result += '<div>';
+          result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+          result += '<span class="blue">' + (blueBall < 10 ? '0' + blueBall : blueBall) + '</span>';
+          result += '</div>';
+        }
+
+        resultDiv.innerHTML = result;
+      }
+    </script>
+  </body>
+</html>
