@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>随机大乐透&双色球选号</title>
+    <title>随机大乐透&双色球选号-从此实现财富自由</title>
 	<link rel="stylesheet" href="style.css">
     <style>
       .red {
@@ -63,6 +63,7 @@
           // 将号码输出到页面
           result += '<div>';
           result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+		  result += '      ';
           result += '<span class="blue">' + formattedBlueBalls.join(' ') + '</span>';
           result += '</div>';
         }
@@ -96,6 +97,7 @@
           // 将号码输出到页面
           result += '<div>';
           result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+		  result += '      ';
           result += '<span class="blue">' + (blueBall < 10 ? '0' + blueBall : blueBall) + '</span>';
           result += '</div>';
         }
@@ -103,5 +105,6 @@
         resultDiv.innerHTML = result;
       }
     </script>
+	<div><span class="red"><p>从此实现财富自由</p></div>
   </body>
 </html>
