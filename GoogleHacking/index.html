@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>Google Hacking搜索</title>
+<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/modernizr-2.6.2.min.js"></script>
+<script type="text/javascript" src="js/GoogleHacking.js"></script>
+<link type="text/css" rel="stylesheet" href="css/styles.css" />
+<link rel="icon" href="favicon.ico" />
+<style>
+body{background:url(https://api.ixiaowai.cn/gqapi/gqapi.php) top left;
+background-size:100%;}
+</style>
+
+<script>alert("使用前请确认是否能正常连接 Google");</script>
+
+<script>
+function myFunction(){
+	var x;
+	var r=confirm("按下按钮!");
+	if (r==true){
+		x="你按下了\"确定\"按钮!";
+	}
+	else{
+		x="你按下了\"取消\"按钮!";
+	}
+	document.getElementById("demo").innerHTML=x;
+}
+</script>
+
+
+
+</head>
+<body>
+
+<canvas id="fullstarbg">您的浏览器不支持canvas标签</canvas>
+
+<div class="content">
+ 	<center><img src="Google.png" alt="google" align="middle"></center>
+ 		<div class="input_wrap_box box_S">
+	 		<input id="sercHead" name="sercHead" type="text" class="box_S" value="" placeholder="输入目标域名：baidu.com" onclick="">
+ 		</div>
+</div>
+
+<div class="options">
+	<ul>
+	    <li><a href="#" onclick="do_google_search(9)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">phpinfo()</a></li>
+		
+		<li><a href="#" onclick="do_google_search(6)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">登录页面</a></li>
+
+        <li><a href="#" onclick="do_google_search(7)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">SQL错误</a></li>
+	
+		<li><a href="#" onclick="do_google_search(8)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">公开文件信息</a></li>
+		
+        <li><a href="#" onclick="do_google_search(1)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">目录遍历漏洞</a></li>
+
+        <li><a href="#" onclick="do_google_search(2)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">配置文件泄露</a></li>
+
+        <li><a href="#" onclick="do_google_search(4)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">日志文件泄露</a></li>
+
+        <li><a href="#" onclick="do_google_search(5)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">备份和历史文件</a></li>
+		
+		<li><a href="#" onclick="do_google_search(3)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">数据库文件泄露</a></li>
+		
+		<li><a href="#" onclick="do_google_search(11)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">搜索Github.com和Gitlab.com</a></li>
+    </ul>
+
+</div>
+
+</body>
+</html>
