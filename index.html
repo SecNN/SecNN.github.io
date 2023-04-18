@@ -27,87 +27,92 @@
 	
     <div id="result"></div>
     <script>
-      function dlt() {
-        const times = parseInt(document.getElementById('times').value, 10);
-        const resultDiv = document.getElementById('result');
-        let result = '';
+  function dlt() {
+  const times = parseInt(document.getElementById('times').value, 10);
+  const resultDiv = document.getElementById('result');
+  let result = '';
 
-        for (let i = 0; i < times; i++) {
-          const redBalls = [];
-          const blueBalls = [];
+  for (let i = 0; i < times; i++) {
+    const redBalls = [];
+    const blueBalls = [];
 
-          // 生成红球号码
-          while (redBalls.length < 5) {
-            const ball = Math.floor(Math.random() * 35) + 1;
-            if (!redBalls.includes(ball)) {
-              redBalls.push(ball);
-            }
-          }
-
-          // 生成蓝球号码
-          while (blueBalls.length < 2) {
-            const ball = Math.floor(Math.random() * 12) + 1;
-            if (!blueBalls.includes(ball)) {
-              blueBalls.push(ball);
-            }
-          }
-
-          // 将号码转换为两位数
-          const formattedRedBalls = redBalls.map(ball => {
-            return ball < 10 ? '0' + ball : ball;
-          });
-          const formattedBlueBalls = blueBalls.map(ball => {
-            return ball < 10 ? '0' + ball : ball;
-          });
-
-          // 将号码输出到页面
-          result += '<div>';
-          result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
-		  result += '      ';
-          result += '<span class="blue">' + formattedBlueBalls.join(' ') + '</span>';
-          result += '</div>';
-        }
-
-        resultDiv.innerHTML = result;
+    // 生成红球号码
+    while (redBalls.length < 5) {
+      const ball = Math.floor(Math.random() * 35) + 1;
+      if (!redBalls.includes(ball)) {
+        redBalls.push(ball);
       }
+    }
+
+    // 将红球号码按从小到大的顺序存入新数组sortedRedBalls中
+    const sortedRedBalls = redBalls.sort((a, b) => a - b);
+
+    // 生成蓝球号码
+    while (blueBalls.length < 2) {
+      const ball = Math.floor(Math.random() * 12) + 1;
+      if (!blueBalls.includes(ball)) {
+        blueBalls.push(ball);
+      }
+    }
+
+    // 将号码转换为两位数
+    const formattedRedBalls = sortedRedBalls.map(ball => {
+      return ball < 10 ? '0' + ball : ball;
+    });
+    const formattedBlueBalls = blueBalls.map(ball => {
+      return ball < 10 ? '0' + ball : ball;
+    });
+
+    // 将号码输出到页面
+    result += '<div>';
+    result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+    result += '      ';
+    result += '<span class="blue">' + formattedBlueBalls.join(' ') + '</span>';
+    result += '</div>';
+  }
+
+  resultDiv.innerHTML = result;
+}
+
     </script>
 	<script>
-      function ssq() {
-        const timesssq = parseInt(document.getElementById('timesssq').value, 10);
-        const resultDiv = document.getElementById('result');
-        let result = '';
+    function ssq() {
+	const timesssq = parseInt(document.getElementById('timesssq').value, 10);
+	const resultDiv = document.getElementById('result');
+	let result = '';
 
-        for (let i = 0; i < timesssq; i++) {
-          const redBalls = [];
-          const blueBall = Math.floor(Math.random() * 16) + 1;
+	for (let i = 0; i < timesssq; i++) {
+		const redBalls = [];
+		const blueBall = Math.floor(Math.random() * 16) + 1;
 
-          // 生成红球号码
-          while (redBalls.length < 6) {
-            const ball = Math.floor(Math.random() * 33) + 1;
-            if (!redBalls.includes(ball)) {
-              redBalls.push(ball);
-            }
-          }
+		// 生成红球号码
+		while (redBalls.length < 6) {
+		const ball = Math.floor(Math.random() * 33) + 1;
+		if (!redBalls.includes(ball)) {
+			redBalls.push(ball);
+		}
+		}
 
-          // 将号码转换为两位数
-          const formattedRedBalls = redBalls.map(ball => {
-            return ball < 10 ? '0' + ball : ball;
-          });
-
-          // 将号码输出到页面
-          result += '<div>';
-          result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
-		  result += '      ';
-          result += '<span class="blue">' + (blueBall < 10 ? '0' + blueBall : blueBall) + '</span>';
-          result += '</div>';
-        }
-
-        resultDiv.innerHTML = result;
-      }
-    </script>
+		// 将红球号码进行排序
+		redBalls.sort((a, b) => a - b);
 	
+		// 将号码转换为两位数
+		const formattedRedBalls = redBalls.map(ball => {
+		return ball < 10 ? '0' + ball : ball;
+		});
 
-    
+		// 将号码输出到页面
+		result += '<div>';
+		result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+		result += '      ';
+		result += '<span class="blue">' + (blueBall < 10 ? '0' + blueBall : blueBall) + '</span>';
+		result += '</div>';
+	}
+
+	resultDiv.innerHTML = result;
+}
+
+    </script>
 
 	<div >
 	<span class="red"><p>从此实现财富自由</p>
