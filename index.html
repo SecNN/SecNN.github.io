@@ -1,135 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>随机大乐透&双色球选号-从此实现财富自由</title>
-	<link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="axx8" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在线Base64编码解码 | URL编码解码 | Hex编码解码 | Unicode编码解码 | MD5生成工具 | Java Bash | Java PowerShell | String </title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
-      .red {
-        color: red;
-      }
-      .blue {
-        color: blue;
-      }
+        body {
+            background-color: #F5F5F5;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight: bold;
+            color: #333;
+        }
+        h1 {
+            font-size: 48px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 36px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        p {
+            color: #666;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        .list-unstyled li {
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .list-unstyled li a {
+            color: #333;
+            text-decoration: none;
+        }
+        .list-unstyled li a:hover {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .about-link {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 20px;
+        }
+        .about-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .about-link a:hover {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .friends-link {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 20px;
+        }
+        .friends-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .friends-link a:hover {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .footer {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #666;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #333;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            p {
+                font-size: 16px;
+            }
+            .list-unstyled li {
+                text-align: left;
+                font-size: 20px;
+            }
+            .about-link, .friends-link {
+                font-size: 18px;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <h1>随机大乐透选号</h1>
-	<div>
-    <label for="times">投注次数：</label>
-    <input type="number" id="times" min="1" value="5" />
-    <button onclick="dlt()">生成选号</button>
-	<h1>随机双色球选号</h1>
-    <label for="timesssq">投注次数：</label>
-    <input type="number" id="timesssq" min="1" value="5" />
-    <button onclick="ssq()">生成选号</button>
-	</div>
-	
-    <div id="result"></div>
-    <script>
-  function dlt() {
-  const times = parseInt(document.getElementById('times').value, 10);
-  const resultDiv = document.getElementById('result');
-  let result = '';
+<!-- </head> -->
+<body>
+    <div class="container">
+        <h1>在线编解码工具</h1>
+        <p>Base64编码解码 | URL编码解码 | Hex编码解码 | Unicode编码解码 | MD5生成工具 | Java Bash | Java PowerShell | String</p>
+        <div class="row mt-5">
+            <div class="col-md-8 mx-auto">
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" id="text" rows="3"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="encodeText()">Base64编码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="decodeText()">Base64解码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="urlEncodeText()">URL编码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="urlDecodeText()">URL解码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="hexEncodeText()">Hex编码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="hexDecodeText()">Hex解码</button>
+					<br><br>
+                    <button type="button" class="btn btn-primary" onclick="uniEncodeText()">Unicode编码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="uniDecodeText()">Unicode解码</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="calculateMD5()">MD5</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="javaBash()">Java Bash</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="javaPs()">Java PowerShell</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="stringCharCode()">String</button>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-8 mx-auto">
+		        <div class="form-group">
+			        <textarea class="form-control" id="result" rows="3" readonly></textarea>
+		        </div>
+            </div>
+        </div>
+</body>
 
-  for (let i = 0; i < times; i++) {
-    const redBalls = [];
-    const blueBalls = [];
-
-    // 生成红球号码
-    while (redBalls.length < 5) {
-      const ball = Math.floor(Math.random() * 35) + 1;
-      if (!redBalls.includes(ball)) {
-        redBalls.push(ball);
-      }
+<script src="js/crypto-js.js"></script>
+<script>
+    function encodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = btoa(text);
     }
-
-    // 将红球号码按从小到大的顺序存入新数组sortedRedBalls中
-    const sortedRedBalls = redBalls.sort((a, b) => a - b);
-
-    // 生成蓝球号码
-    while (blueBalls.length < 2) {
-      const ball = Math.floor(Math.random() * 12) + 1;
-      if (!blueBalls.includes(ball)) {
-        blueBalls.push(ball);
-      }
+    function decodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = atob(text);
     }
+    function calculateMD5() {
+        var input = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = CryptoJS.MD5(input).toString();
+    }
+    function urlEncodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = encodeURIComponent(text);
+    }
+    function urlDecodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = decodeURIComponent(text);
+    }
+    function toHex(str) {
+        var hex = "";
+        for (var i = 0; i < str.length; i++) {
+            hex += str.charCodeAt(i).toString(16);
+        }
+        return hex;
+    }
+    function fromHex(hex) {
+        var str = "";
+        for (var i = 0; i < hex.length; i += 2) {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        }
+        return str;
+    }
+    function hexEncodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = toHex(text);
+    }
+    function hexDecodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = fromHex(text);
+    }
+    function toUnicode(str) {
+        var unicode = "";
+        for (var i = 0; i < str.length; i++) {
+            unicode += "\\u" + str.charCodeAt(i).toString(16).padStart(4, '0');
+        }
+        return unicode;
+    }
+    function fromUnicode(unicode) {
+        var str = "";
+        var i = 0;
+        while (i < unicode.length) {
+            if (unicode[i] === '\\' && unicode[i+1] === 'u') {
+                var code = parseInt(unicode.substr(i+2, 4), 16);
+                str += String.fromCharCode(code);
+                i += 6;
+            } else {
+                str += unicode[i];
+                i++;
+            }
+        }
+        return str;
+    }
+    function uniEncodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = toUnicode(text);
+    }
+    function uniDecodeText() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = fromUnicode(text);
+    }
+    function javaBash() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        var base = btoa(text);
+        result.value = "bash -c {echo," + base + "}|{base64,-d}|{bash,-i}";
+    }
+    function toCharCodes(str) {
+        const charCodes = [];
+        for (let i = 0; i < str.length; i++) {
+            charCodes.push(str.charCodeAt(i));
+        }
+        return "String.fromCharCode(" + charCodes.join(",") + ")";
+    }
+    function stringCharCode() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = toCharCodes(text);
+    }
+    function getPowershellCommand(cmd) {
+        const chars = cmd.split('');
+        const temp = [];
+        for (let i = 0; i < chars.length; i++) {
+            const code = unescape(encodeURIComponent(chars[i]));
+            for (let j = 0; j < code.length; j++) {
+            temp.push(code.charCodeAt(j));
+            }
+            temp.push(0);
+        }
+        const result = new Uint8Array(temp);
+        const data = btoa(String.fromCharCode.apply(null, result));
+        const prefix = "powershell.exe -NonI -W Hidden -NoP -Exec Bypass -Enc ";
+        return prefix + data;
+    }
+    function javaPs() {
+        var text = document.getElementById("text").value;
+        var result = document.getElementById("result");
+        result.value = getPowershellCommand(text);
+    }
+</script>
 
-    // 将号码转换为两位数
-    const formattedRedBalls = sortedRedBalls.map(ball => {
-      return ball < 10 ? '0' + ball : ball;
-    });
-    const formattedBlueBalls = blueBalls.map(ball => {
-      return ball < 10 ? '0' + ball : ball;
-    });
-
-    // 将号码输出到页面
-    result += '<div>';
-    result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
-    result += '      ';
-    result += '<span class="blue">' + formattedBlueBalls.join(' ') + '</span>';
-    result += '</div>';
-  }
-
-  resultDiv.innerHTML = result;
-}
-
-    </script>
-	<script>
-    function ssq() {
-	const timesssq = parseInt(document.getElementById('timesssq').value, 10);
-	const resultDiv = document.getElementById('result');
-	let result = '';
-
-	for (let i = 0; i < timesssq; i++) {
-		const redBalls = [];
-		const blueBall = Math.floor(Math.random() * 16) + 1;
-
-		// 生成红球号码
-		while (redBalls.length < 6) {
-		const ball = Math.floor(Math.random() * 33) + 1;
-		if (!redBalls.includes(ball)) {
-			redBalls.push(ball);
-		}
-		}
-
-		// 将红球号码进行排序
-		redBalls.sort((a, b) => a - b);
-	
-		// 将号码转换为两位数
-		const formattedRedBalls = redBalls.map(ball => {
-		return ball < 10 ? '0' + ball : ball;
-		});
-
-		// 将号码输出到页面
-		result += '<div>';
-		result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
-		result += '      ';
-		result += '<span class="blue">' + (blueBall < 10 ? '0' + blueBall : blueBall) + '</span>';
-		result += '</div>';
-	}
-
-	resultDiv.innerHTML = result;
-}
-
-    </script>
-
-	<div >
-	<span class="red"><p>从此实现财富自由</p>
+	<div class="bg-white text-center pb-5">
+	<a href="ssq/index.html" target="_blank" title="随机大乐透&双色球选号-从此实现财富自由">随机大乐透&双色球选号</a>
 	<a href="process/index.html" target="_blank" title="Windows提权辅助|杀软在线对比|常用软件进程对比">Windows提权辅助</a>
 	<a href="GoogleHacking/index.html" target="_blank" title="GoogleHacking">GoogleHacking</a>
 	<a href="sj/index.html" target="_blank" title="罗盘时间">罗盘时间</a>
 	<a href="https://github.com/Axx8/HTTPServer" target="_blank" title="红队内网环境中一个能快速开启HTTP文件浏览服务的小工具,可执行Webshell，可用于在内网不出网时文件的下载，启动时会根据网卡IPV4地址输出URL(本地回环除外)。">HTTPServer</a>
-	</div>
-	<div >
+	<p></p>
 	<img width="200" src="wx1.png" title="关注微信，邀请进交流群" alt="关注微信，邀请进交流群">
 	</div>
-	<footer>
-    <div class="bg-white text-center pb-1">
+<footer>
+    <div >
         <p class="text-body-tertiary pt-3 lh-lg text-opacity-50" id="footer-text">Copyright &copy; 2023
             <br>Made with ❤️ in <a href="https://github.com/Axx8" target="_blank" class="text-opacity-50 text-body-tertiary mt-1 mb-1 ">Axx8</a><br>
         </p>
     </div>
 </footer>
-  </body>
+</head>
 </html>
