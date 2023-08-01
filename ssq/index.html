@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>随机大乐透&双色球选号-从此实现财富自由</title>
+	<link rel="stylesheet" href="style.css">
+    <style>
+      .red {
+        color: red;
+      }
+      .blue {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>随机大乐透选号</h1>
+	<div>
+    <label for="times">投注次数：</label>
+    <input type="number" id="times" min="1" value="5" />
+    <button onclick="dlt()">生成选号</button>
+	<h1>随机双色球选号</h1>
+    <label for="timesssq">投注次数：</label>
+    <input type="number" id="timesssq" min="1" value="5" />
+    <button onclick="ssq()">生成选号</button>
+	</div>
+	
+    <div id="result"></div>
+    <script>
+      function dlt() {
+        const times = parseInt(document.getElementById('times').value, 10);
+        const resultDiv = document.getElementById('result');
+        let result = '';
+
+        for (let i = 0; i < times; i++) {
+          const redBalls = [];
+          const blueBalls = [];
+
+          // 生成红球号码
+          while (redBalls.length < 5) {
+            const ball = Math.floor(Math.random() * 35) + 1;
+            if (!redBalls.includes(ball)) {
+              redBalls.push(ball);
+            }
+          }
+
+          // 生成蓝球号码
+          while (blueBalls.length < 2) {
+            const ball = Math.floor(Math.random() * 12) + 1;
+            if (!blueBalls.includes(ball)) {
+              blueBalls.push(ball);
+            }
+          }
+
+          // 将号码转换为两位数
+          const formattedRedBalls = redBalls.map(ball => {
+            return ball < 10 ? '0' + ball : ball;
+          });
+          const formattedBlueBalls = blueBalls.map(ball => {
+            return ball < 10 ? '0' + ball : ball;
+          });
+
+          // 将号码输出到页面
+          result += '<div>';
+          result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+		  result += '      ';
+          result += '<span class="blue">' + formattedBlueBalls.join(' ') + '</span>';
+          result += '</div>';
+        }
+
+        resultDiv.innerHTML = result;
+      }
+    </script>
+	<script>
+      function ssq() {
+        const timesssq = parseInt(document.getElementById('timesssq').value, 10);
+        const resultDiv = document.getElementById('result');
+        let result = '';
+
+        for (let i = 0; i < timesssq; i++) {
+          const redBalls = [];
+          const blueBall = Math.floor(Math.random() * 16) + 1;
+
+          // 生成红球号码
+          while (redBalls.length < 6) {
+            const ball = Math.floor(Math.random() * 33) + 1;
+            if (!redBalls.includes(ball)) {
+              redBalls.push(ball);
+            }
+          }
+
+          // 将号码转换为两位数
+          const formattedRedBalls = redBalls.map(ball => {
+            return ball < 10 ? '0' + ball : ball;
+          });
+
+          // 将号码输出到页面
+          result += '<div>';
+          result += '<span class="red">' + formattedRedBalls.join(' ') + '</span>';
+		  result += '      ';
+          result += '<span class="blue">' + (blueBall < 10 ? '0' + blueBall : blueBall) + '</span>';
+          result += '</div>';
+        }
+
+        resultDiv.innerHTML = result;
+      }
+    </script>
+	
+
+    
+
+	<div >
+	<span class="red"><p>从此实现财富自由</p>
+	<a href="process/index.html" target="_blank" title="Windows提权辅助|杀软在线对比|常用软件进程对比">Windows提权辅助</a>
+	<a href="GoogleHacking/index.html" target="_blank" title="GoogleHacking">GoogleHacking</a>
+	<a href="sj/index.html" target="_blank" title="罗盘时间">罗盘时间</a>
+	<a href="https://github.com/Axx8/HTTPServer" target="_blank" title="红队内网环境中一个能快速开启HTTP文件浏览服务的小工具,可执行Webshell，可用于在内网不出网时文件的下载，启动时会根据网卡IPV4地址输出URL(本地回环除外)。">HTTPServer</a>
+	</div>
+	<div >
+	<img width="200" src="wx.png" title="关注微信，邀请进交流群" alt="关注微信，邀请进交流群">
+	</div>
+	
+	<footer>
+    <div class="bg-white text-center pb-1">
+        <p class="text-body-tertiary pt-3 lh-lg text-opacity-50" id="footer-text">Copyright &copy; 2023
+            <br>Made with ❤️ in <a href="https://github.com/Axx8" target="_blank" class="text-opacity-50 text-body-tertiary mt-1 mb-1 ">Axx8</a><br>
+        </p>
+    </div>
+</footer>
+  </body>
+</html>

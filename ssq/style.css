@@ -1,0 +1,37 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #FFFFFF ;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+}
+
+div {
+  margin: 10px 0;
+  text-align: center;
+}
+
+label {
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+}
+
+input {
+  width: 60px;
+}
+
+button {
+  margin-left: 10px;
+}
+
+#result {
+  margin: 20px auto;
+  width: 400px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
