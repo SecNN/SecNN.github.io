@@ -1,2 +1,81 @@
-    POC-EXP
+<!DOCTYPE html>  
+<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>  
+    <title>POC&EXP工具武器库&漏洞库</title>  
+    <style>  
+        body {  
+            font-family: Arial, sans-serif;  
+            margin: 0;  
+            padding: 20px;  
+        }  
+        .product-image {  
+            width: 100%;  
+            max-width: 400px;  
+            margin-bottom: 20px;  
+        }  
+        .product-title {  
+            font-size: 24px;  
+            margin-bottom: 10px;  
+        }  
+        .product-description {  
+            font-size: 16px;  
+            line-height: 1.5;  
+        }  
+        .product-price {  
+            font-size: 20px;  
+            font-weight: bold;  
+            margin-top: 20px;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <div class="product">  
+        <h1 class="product-title">POC&EXP工具武器库</h1>  
+        <p class="product-description">			    武器库虚拟机中加载运行主要搜集一些关于渗透测试的工具（应急响应、信息收集、无线WIFI攻击、代理工具、提权辅助、暴力破解、DDOS压力测试、内网攻击、代码审计、漏洞扫描、漏洞利用、分析进程、权限提升、免杀、Webshell管理、APP测试、小程序测试）等，属于内部工具禁止对外传播。敬请期待......</p>  
+		<h1 class="product-title">漏洞库</h1>  
+        <p class="product-description">本Wiki基于公开漏洞库收集整理漏洞利用过程-内部使用禁止对外传播，禁止用于非法用途，否则一切后果自负。敬请期待......</p>  
+		        <img class="product-image" src="wx.png" alt="POC&EXP工具武器库">  
+    </div>  
+	
 
+<span id="sitetime"  ></span>
+<script language=javascript>
+    function siteTime(){
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth()+1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+        var t1 = Date.UTC(2022,10,01,00,00,00); //北京时间2016-12-1 00:00:00
+        var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+        var diff = t2-t1;
+        var diffYears = Math.floor(diff/years);
+        var diffDays = Math.floor((diff/days)-diffYears*365);
+        var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+        var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+        var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+        document.getElementById("sitetime").innerHTML=" 已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+    }
+    siteTime();
+</script>
+	
+	
+	
+</body>  
+</html>
