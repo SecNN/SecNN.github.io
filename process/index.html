@@ -89,7 +89,7 @@ function tasklist() {
         document.body.appendChild(userInfoDiv);
     }
 
-    fetch('https://ipinfo.io/json?token')
+    fetch('https://ipinfo.io/json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
