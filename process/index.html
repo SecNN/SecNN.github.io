@@ -5,6 +5,23 @@
 <link rel="icon" href="favicon.ico" type="image/ico" sizes="16x16">
 <title>Windows提权辅助|杀软在线对比|常用软件进程对比</title>
 <script src="./js/process.js"></script>
+<style>
+    .button_ {
+        border: 2px solid #00ff00; /* 荧光绿色边框 */
+        border-radius: 15px; /* 圆角 */
+        padding: 10px 20px;
+        background-color: #333; /* 背景颜色 */
+        color: white; /* 字体颜色 */
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .button_:hover {
+        background-color: #444; /* 悬停时的背景颜色 */
+        box-shadow: 0 0 10px #00ff00; /* 荧光效果 */
+    }
+</style>
 </head>
 
 <body>
@@ -13,7 +30,7 @@
 <h4>Windows 执行命令 : tasklist /svc 》查询系统内正运行的进程 》复制结果粘贴进框框里 》然后点击进程分析</h4>
 
 <p></p>
-<button type="submit" class="button_" onclick="tasklist();">常见软件进程对比</button>
+<button type="submit" class="button_" onclick="tasklist();">>>>>>杀软进程对比<<<<<</button>
 </h4>
 <textarea rows="10" id="tasklist" style="width:100%;resize:none;" name="input_process"></textarea>
 匹配结果:
