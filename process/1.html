@@ -39,7 +39,6 @@
 <div style="width: 800px; margin: 10px auto;">
 <h1 style="text-align:center">Windows提权辅助|杀软在线对比|常用软件进程对比</h1> 
 <h4>Windows 执行命令 : tasklist /svc 》查询系统内正运行的进程 》复制结果粘贴进框框里 》然后点击进程分析</h4>
-<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
 <script type="text/javascript">  
     function getBrowserInfo() {
         var agent = navigator.userAgent.toLowerCase();
@@ -69,19 +68,25 @@
         }
     }
 
-    function displayUserInfo() {
+    function displayUserInfo(ipData) {
         var userAgent = navigator.userAgent;
-        var ipInfo = '加载中...';
-        if (typeof returnCitySN !== 'undefined') {
-            ipInfo = 'IP地址: ' + returnCitySN["cip"] + ', 地区: ' + returnCitySN["cname"];
-        }
-
+        var ipInfo = ipData ? 'IP地址: ' + ipData.ip + ', 地区: ' + ipData.city + ', ' + ipData.region + ', ' + ipData.country : 'IP信息加载失败';
+        
         var userInfoDiv = document.createElement('div');
         userInfoDiv.className = 'user-info';
         userInfoDiv.innerHTML = 'User-Agent: ' + userAgent + '<br>' + ipInfo;
         document.body.appendChild(userInfoDiv);
     }
-    displayUserInfo();
+
+    fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+            displayUserInfo(data);
+        })
+        .catch(error => {
+            console.error('Error fetching IP info:', error);
+            displayUserInfo(null);
+        });
 </script>
 <p></p>
 <button type="submit" class="button_" onclick="tasklist();">常见软件进程对比</button>
