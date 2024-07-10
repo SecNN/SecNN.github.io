@@ -11,41 +11,7 @@
 <div style="width: 800px; margin: 10px auto;">
 <h1 style="text-align:center">Windows提权辅助|杀软在线对比|常用软件进程对比</h1> 
 <h4>Windows 执行命令 : tasklist /svc 》查询系统内正运行的进程 》复制结果粘贴进框框里 》然后点击进程分析</h4>
-<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
-<script type="text/javascript">  
-        document.write('IP地址:' + returnCitySN["cip"] + ', CID:' + returnCitySN["cid"] + ', 地区:' + returnCitySN["cname"] + ",浏览器版本:" + getBrowserInfo());
-        
-        function getBrowserInfo()
-        {
-            var agent = navigator.userAgent.toLowerCase();
 
-            var regStr_ie = /msie [\d.]+;/gi;
-            var regStr_ff = /firefox\/[\d.]+/gi;
-            var regStr_chrome = /chrome\/[\d.]+/gi;
-            var regStr_saf = /safari\/[\d.]+/gi;
-            
-            //IE
-            if (agent.indexOf("msie") > 0) {
-                return agent.match(regStr_ie);
-            }
-
-            //firefox
-            if (agent.indexOf("firefox") > 0) {
-                return agent.match(regStr_ff);
-            }
-
-            //Chrome
-            if (agent.indexOf("chrome") > 0) {
-                return agent.match(regStr_chrome);
-            }
-
-            //Safari
-            if (agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0) {
-                return agent.match(regStr_saf);
-            }
-
-        }
-</script>
 <p></p>
 <button type="submit" class="button_" onclick="tasklist();">常见软件进程对比</button>
 </h4>
