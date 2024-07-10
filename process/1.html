@@ -70,7 +70,7 @@
 
     function displayUserInfo(ipData) {
         var userAgent = navigator.userAgent;
-        var ipInfo = ipData ? 'IP地址: ' + ipData.ip + ', 地区: ' + ipData.city + ', ' + ipData.region + ', ' + ipData.country : 'IP信息加载失败';
+        var ipInfo = ipData ? 'IP地址: ' + ipData.query + ', 地区: ' + ipData.city + ', ' + ipData.regionName + ', ' + ipData.country : 'IP信息加载失败';
         
         var userInfoDiv = document.createElement('div');
         userInfoDiv.className = 'user-info';
@@ -78,7 +78,7 @@
         document.body.appendChild(userInfoDiv);
     }
 
-    fetch('https://ipapi.co/json/')
+    fetch('http://ip-api.com/json')
         .then(response => response.json())
         .then(data => {
             displayUserInfo(data);
@@ -130,3 +130,4 @@ function tasklist() {
 </body>
 
 </html>
+
