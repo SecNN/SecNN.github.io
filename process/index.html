@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<link rel="icon" href="favicon.ico" type="image/ico" sizes="16x16">
 <title>Windows提权辅助|杀软在线对比|常用软件进程对比</title>
 <script src="./js/process.js"></script>
 </head>
@@ -12,42 +13,38 @@
 <h4>Windows 执行命令 : tasklist /svc 》查询系统内正运行的进程 》复制结果粘贴进框框里 》然后点击进程分析</h4>
 <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
 <script type="text/javascript">  
-        document.write('IP地址:' + returnCitySN["cip"] + ', CID:' + returnCitySN["cid"] + ', 地区:' + returnCitySN["cname"]+",浏览器版本:"+getBrowserInfo());
+        document.write('IP地址:' + returnCitySN["cip"] + ', CID:' + returnCitySN["cid"] + ', 地区:' + returnCitySN["cname"] + ",浏览器版本:" + getBrowserInfo());
         
         function getBrowserInfo()
-{
-    var agent = navigator.userAgent.toLowerCase() ;
+        {
+            var agent = navigator.userAgent.toLowerCase();
 
-    var regStr_ie = /msie [\d.]+;/gi ;
-    var regStr_ff = /firefox\/[\d.]+/gi
-    var regStr_chrome = /chrome\/[\d.]+/gi ;
-    var regStr_saf = /safari\/[\d.]+/gi ;
-    
-    //IE
-    if(agent.indexOf("msie") > 0)
-    {
-        return agent.match(regStr_ie) ;
-    }
+            var regStr_ie = /msie [\d.]+;/gi;
+            var regStr_ff = /firefox\/[\d.]+/gi;
+            var regStr_chrome = /chrome\/[\d.]+/gi;
+            var regStr_saf = /safari\/[\d.]+/gi;
+            
+            //IE
+            if (agent.indexOf("msie") > 0) {
+                return agent.match(regStr_ie);
+            }
 
-    //firefox
-    if(agent.indexOf("firefox") > 0)
-    {
-        return agent.match(regStr_ff) ;
-    }
+            //firefox
+            if (agent.indexOf("firefox") > 0) {
+                return agent.match(regStr_ff);
+            }
 
-    //Chrome
-    if(agent.indexOf("chrome") > 0)
-    {
-        return agent.match(regStr_chrome) ;
-    }
+            //Chrome
+            if (agent.indexOf("chrome") > 0) {
+                return agent.match(regStr_chrome);
+            }
 
-    //Safari
-    if(agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0)
-    {
-        return agent.match(regStr_saf) ;
-    }
+            //Safari
+            if (agent.indexOf("safari") > 0 && agent.indexOf("chrome") < 0) {
+                return agent.match(regStr_saf);
+            }
 
-}
+        }
 </script>
 <p></p>
 <button type="submit" class="button_" onclick="tasklist();">常见软件进程对比</button>
@@ -63,24 +60,24 @@ function tasklist() {
     var tasklist = document.getElementById('tasklist').value;
     var result = document.getElementById('result');
     if (tasklist != "" && tasklist) {
-        var re = new RegExp("(.*?)\.exe", "g");
+        var re = new RegExp("(.*?)\\.exe", "g");
         var tasks = tasklist.match(re);
         if (tasks) {
+            var uniqueTasks = new Set();
             var htmlContent = "";
             for (i = 0; i < Object.keys(avList).length; i++) {
                 var taskid = Object.keys(avList)[i];
                 for (x = 0; x < tasks.length; x++) {
-                    if (taskid.toLowerCase() == tasks[x].toLowerCase()) {
+                    if (taskid.toLowerCase() === tasks[x].toLowerCase() && !uniqueTasks.has(taskid.toLowerCase())) {
+                        uniqueTasks.add(taskid.toLowerCase());
                         htmlContent += taskid + "：" + avList[taskid] + "\n";
                     }
                 }
             }
-            result.innerHTML = htmlContent;
-
+            result.innerHTML = htmlContent || '暂无匹配，欢迎补充！';
         } else {
             result.innerHTML = '暂无匹配，欢迎补充！';
         }
-
     } else {
         result.innerHTML = '请将tasklist /svc 命令执行的结果复制过来！';
     }
@@ -92,4 +89,4 @@ function tasklist() {
   <img src="http://burp/favicon.ico" onload="alert('抓到你了 嘿嘿嘿')" >
 </body>
 
-</html> 
+</html>
