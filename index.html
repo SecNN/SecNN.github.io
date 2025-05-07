@@ -1,488 +1,953 @@
 <!DOCTYPE html>
-<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>
-			在线综合工具-Axx8
-		</title>
-
-		<style>
-			body {
-            font: 500 .875em PingFang SC,Lantinghei SC,Microsoft Yahei,Hiragino Sans GB,Microsoft Sans Serif,WenQuanYi Micro Hei,sans;
-            background-color: #07040e;
-            text-align: center;
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>在线网络安全工具 - Axx8安全工具箱</title>
+	<link rel="icon" href="favicon.ico" sizes="any"> 
+    <!-- 引入字体和图标 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- DNS预加载 -->
+    <link rel="dns-prefetch" href="https://chat.iis.cm">
+    <!-- 放大镜样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #4f46e5;
+            --hover-color: #818cf8;
+            --ai-color: #4a90e2;
+        }
+        
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+        .ai-highlight-fixed {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    transform: rotate(15deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1;
+    min-width: 40px;
+    text-align: center;
+    white-space: nowrap;
+	}
+
+        /* 导航栏样式 */
+        .nav-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-link.github {
+            background: linear-gradient(135deg, #6e48aa, #9d50bb);
+        }
+        
+        .nav-link.ai-assistant {
+            background: linear-gradient(135deg, var(--ai-color), #5e72e4);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+        }
+        
+        .nav-link.register {
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* AI横幅区域 */
+        .ai-banner {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(91, 33, 182, 0.2));
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(74, 144, 226, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-banner::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.1) 0%, rgba(74, 144, 226, 0) 70%);
+            animation: rotate 15s linear infinite;
+            z-index: 0;
+        }
+        
+        .ai-banner-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .ai-banner-text {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .ai-banner-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .ai-banner-desc {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+        
+        .ai-banner-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--ai-color), #5e72e4);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+        
+        .ai-banner-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .ai-banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* 头部样式 */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 10;
+            padding-top: 60px;
+        }
+        
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .site-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .site-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        /* 工具卡片区 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .tool-name {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tool-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        
+        .tool-card.ai {
+            border: 1px solid var(--ai-color);
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(91, 33, 182, 0.15));
+        }
+        
+        .tool-card.ai .tool-icon {
+            color: var(--ai-color);
+        }
+        
+        .tool-card.ai .tool-name {
+            color: white;
+        }
+        
+        .tool-card.ai::before {
+            background: var(--ai-color);
+        }
+        
+        .ai-highlight {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            transform: rotate(15deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        
+        /* 微信公众号区域 */
+        .wx-qrcode-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .wx-qrcode-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+        }
+        
+        .wx-qrcode-image {
+            max-width: 450px;
+            border-radius: 15px;
+            cursor: zoom-in;
+            transition: transform 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .wx-qrcode-image:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            margin-top: auto;
+        }
+        
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .footer-text a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-text a:hover {
+            color: var(--hover-color);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .nav-bar {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+                flex-wrap: wrap;
+            }
+            
+            header {
+                padding-top: 20px;
+            }
+            
+            .site-title {
+                font-size: 2rem;
+            }
+            
+            .ai-banner-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .ai-banner-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tool-card {
+                padding: 1.2rem;
+            }
+        }
+        
+        /* 动效背景 */
+        .particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Magnific Popup 自定义样式 */
+        .mfp-image-holder .mfp-content {
+            max-width: 80%;
+            max-height: 80vh;
+        }
+        
+        .mfp-img {
+            padding: 10px;
+            background: #1e293b;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+        
+        .mfp-title {
+            font-size: 1rem;
+            line-height: 1.4;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            background: rgba(0,0,0,0.7);
+            border-radius: 0 0 8px 8px;
+        }
+		/* 赞助 */
+		.sponsors-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .carousel-container {
+            position: relative;
+            margin: 0 30px;
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            gap: 12px;
+            transition: transform 0.4s ease;
+            padding: 5px 0;
+        }
+        
+        .sponsor-card {
+            min-width: calc(16.666% - 11px); /* 6列布局 */
+            flex-shrink: 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .sponsor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+        
+        .sponsor-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            border: 2px solid #ffe066;
+        }
+        
+        .sponsor-info {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .sponsor-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 2px 0;
+        }
+        
+        .sponsor-amount {
+            font-size: 13px;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin: 3px 0 5px;
+            white-space: nowrap;
+        }
+        
+        .sponsor-message {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 28px;
+            margin-top: 4px;
+            padding-top: 3px;
+            border-top: 1px dashed #eee;
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-			flex-direction: column; /* 垂直布局 */
-
         }
-		.link-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: #fff;
-            box-shadow: 0 0 10px #00ff00; /* 荧光边框颜色 */
-            border-radius: 5px; /* 可以根据需要调整边框圆角 */
-        }
-			#canvas {
-                position: absolute;
-				z-index: -1;
-				top: 0;
-				left: 0;
-				bottom: 0;
-				right: 0;
-				cursor: none;
-			}
-			img {
-            max-width: 25%; /* 图片最大宽度为屏幕宽度 */
-            height: auto; /* 高度自适应，保持纵横比 */
-            margin-bottom: 20px; /* 间距，根据需要调整 */
-			}
-		.boxed-text {
-            border: 2px solid #fff; /* 框的边框样式 */
-            padding: 20px; /* 内边距 */
-            border-radius: 10px; /* 圆角 */
-            color: #fff; /* 文本颜色 */
-            font-size: 18px; /* 字体大小，根据需要调整 */
-        }
-			.user-info {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        font-size: 12px;
-    }
-
-		</style>
-
-
-	</head>
-	
-<body>
-
-<script type="text/javascript">
-    function displayUserInfo(ipData) {
-        var userAgent = navigator.userAgent;
-        var ipInfo = ipData ? 'IP地址: ' + ipData.ip + ', 地区: ' + ipData.city + ', ' + ipData.region + ', ' + ipData.country : 'IP信息加载失败';
         
-        var userInfoDiv = document.createElement('div');
-        userInfoDiv.className = 'user-info';
-        userInfoDiv.innerHTML = 'User-Agent: ' + userAgent + '<br>' + ipInfo;
-        document.body.appendChild(userInfoDiv);
-    }
-
-    fetch('https://ipinfo.io/json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+        .carousel-nav:hover {
+            background: #ffcc00;
+            color: white;
+        }
+        
+        .carousel-prev {
+            left: 0;
+        }
+        
+        .carousel-next {
+            right: 0;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 1400px) {
+            .sponsor-card {
+                min-width: calc(20% - 10px); /* 5列 */
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('IP data:', data);
-            displayUserInfo(data);
-        })
-        .catch(error => {
-            console.error('Error fetching IP info:', error);
-            displayUserInfo(null);
+        }
+        
+        @media (max-width: 1200px) {
+            .sponsor-card {
+                min-width: calc(25% - 10px); /* 4列 */
+            }
+            
+            .sponsor-message {
+                font-size: 10px;
+                height: 24px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sponsor-card {
+                min-width: calc(33.333% - 10px); /* 3列 */
+            }
+            
+            .sponsor-avatar {
+                width: 38px;
+                height: 38px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .sponsor-card {
+                min-width: calc(50% - 10px); /* 2列 */
+            }
+            
+            .sponsor-message {
+                -webkit-line-clamp: 1;
+                height: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 动效背景 -->
+    <canvas class="particles-bg"></canvas>
+    
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+        <a href="https://chat.iis.cm" class="nav-link ai-assistant" target="_blank">
+            <i class="fas fa-robot"></i> Ai网络安全智能助手
+        </a>
+        <a href="https://register.iis.cm" class="nav-link register" target="_blank">
+            <i class="fas fa-user-plus"></i> 用户注册
+        </a>
+        <a href="https://www.github.com/axx8" class="nav-link github" target="_blank">
+            <i class="fab fa-github"></i> GitHub
+        </a>
+    </div>
+    
+    <div class="container">
+        <header>
+            
+            <h1 class="site-title">在线网络安全工具 - Axx8安全工具箱</h1>
+            <p class="site-description">我用两个灵魂对抗世界，一个向往，一个挣扎。</p>
+        </header>
+        
+        <main>
+            <div class="ai-banner">
+                <div class="ai-banner-content">
+                    <div class="ai-banner-text">
+                        <h2 class="ai-banner-title"><i class="fas fa-robot"></i> Ai网络安全智能助手</h2>
+						<div class="ai-highlight-fixed">推荐</div>
+                        <p class="ai-banner-desc">采用最新AI技术，为您提供专业的网络安全咨询服务，解答各类安全难题，生成安全代码、分析漏洞原理、漏洞检索、攻防技巧、CVE知识库、代码审计、应急响应 、聊天机器人、安全基础知识等。</p>
+                    </div>
+                    <div>
+                        <a href="https://chat.iis.cm" class="ai-banner-btn" target="_blank">
+                            <i class="fas fa-robot"></i> 立即体验
+                        </a>
+                        <a href="https://register.iis.cm" class="ai-banner-btn secondary" target="_blank">
+                            <i class="fas fa-user-plus"></i> 用户注册
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tools-grid">
+                <a href="https://github.com/Axx8/AI-PT" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-robot"></i></div>
+                    <h3 class="tool-name">AI-PT靶场</h3>
+                    <p class="tool-desc">漏洞列表包括但不限于：后台弱口令、SQL注入漏洞、XSS漏洞、命令执行漏洞、文件上传漏洞。</p>
+                </a>
+                
+                <a href="code/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-code"></i></div>
+                    <h3 class="tool-name">在线编解码工具</h3>
+                    <p class="tool-desc">支持URL编码、Base64等多种编码转换 一站式解决方案</p>
+                </a>
+                
+                <a href="https://github.com/Axx8/ShellCode_Loader" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-book-dead"></i></div>
+					<h3 class="tool-name">ShellCode_Loader免杀</h3>
+                    <p class="tool-desc">Msf&CobaltStrike免杀ShellCode加载器、Shellcode_encryption - 免杀Shellcode加密生成工具，目前测试免杀360&火绒&电脑管家&Windows Defender（其他杀软未测试）。 </p>
+                </a>
+				
+				<a href="https://github.com/Axx8/Bypass_AV" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-khanda"></i></div>
+                    <h3 class="tool-name">Bypass_AV免杀</h3>
+                    <p class="tool-desc">Bypass_AV msf免杀，ShellCode免杀加载器 ，免杀shellcode执行程序 ，360&火绒&Windows Defender </p>
+                </a>
+				
+				<a href="https://github.com/Axx8/Xeno-RAT-Server" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-theater-masks"></i></div>
+					<div class="ai-highlight-fixed">推荐</div>
+                    <h3 class="tool-name">Xeno RAT Server 远控中文汉化版</h3>
+                    <p class="tool-desc">Xeno RAT Server 中文汉化版 Xeno-RAT 是用 C# 开发的开源远程访问工具 （RAT），为远程系统管理提供了一套全面的功能。具有 HVNC、实时麦克风、反向代理等功能！ </p>
+                </a>
+				
+				<a href="shell/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-terminal"></i></div>
+					<h3 class="tool-name">反弹Shell命令生成</h3>
+                    <p class="tool-desc">一键生成各种环境下的反弹shell命令</p>
+                </a>
+                
+                <a href="https://github.com/Axx8/HTTPServer" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-server"></i></div>
+					<div class="ai-highlight-fixed">推荐</div>
+                    <h3 class="tool-name">HTTPServer</h3>
+                    <p class="tool-desc">轻量级HTTP服务器实现-红队内网环境中一个能快速开启HTTP文件浏览服务的小工具 ,可执行Webshell，可用于在内网不出网时文件的下载。 </p>
+                </a>
+                
+                <a href="process/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-shield-alt"></i></div>
+					<h3 class="tool-name">Windows提权辅助</h3>
+                    <p class="tool-desc">进程对比与提权辅助工具</p>
+                </a>
+                
+                <a href="GoogleHacking/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fab fa-google"></i></div>
+					<div class="ai-highlight-fixed">推荐</div>
+                    <h3 class="tool-name">GoogleHacking</h3>
+                    <p class="tool-desc">Google高级的信息收集工具</p>
+                </a>
+             
+                <a href="POC-EXP/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-bug"></i></div>
+                    <h3 class="tool-name">漏洞库</h3>
+                    <p class="tool-desc">常见漏洞与利用方式集合</p>
+                </a>
+                
+                <a href="sj/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-compass"></i></div>
+                    <h3 class="tool-name">罗盘时间</h3>
+                    <p class="tool-desc">独特的罗盘式时间显示</p>
+                </a>
+                
+                <a href="ssq/index.html" class="tool-card" target="_blank">
+                    <div class="tool-icon"><i class="fas fa-dice"></i></div>
+                    <h3 class="tool-name">随机选号</h3>
+                    <p class="tool-desc">大乐透与双色球随机选号</p>
+                </a>
+            </div>
+            
+            
+        </main>
+    </div>
+	
+    <div class="sponsors-grid">
+        <div class="carousel-container">
+		<div style="text-align: center;"><h3>❤️【感恩有你 一路同行 感谢打赏 共筑精彩】🙏</h3></div>
+		<div style="text-align: center;"><h5>🌟 特别鸣谢每一位打赏的朋友，金额不在大小，心意最珍贵💰 每一份支持，都是前行的动力 | 排名不分先后🌟️</h5></div>
+
+            <button class="carousel-nav carousel-prev">❮</button>
+            <div class="carousel-track" id="carouselTrack"></div>
+            <button class="carousel-nav carousel-next">❯</button>
+        </div>
+    </div>
+	<div class="wx-qrcode-container">
+                <h3 class="wx-qrcode-title">📌关注微信公众号获取最新资讯   ||    最新打赏名单即将整理公布，敬请期待！</h3>
+                <a href="img/wx.png" class="wx-popup" title="扫描二维码关注微信公众号">
+                    <img src="img/wx.png" alt="关注微信公众号" class="wx-qrcode-image">
+					
+                </a>
+            </div>
+	<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 赞助者数据
+            const sponsors = [
+                { 
+                    avatar: 'sponsor/1.jpg',
+                    name: '肉松', 
+                    amount: 5, 
+                    currency: '¥', 
+                    message: '内容很有价值！' 
+                },
+                { 
+                    avatar: 'sponsor/2.jpg',
+                    name: '浪', 
+                    amount: 10, 
+                    currency: '¥', 
+                    message: '期待更多更新' 
+                },
+                // 更多数据...
+                { 
+                    avatar: 'sponsor/3.jpg',
+                    name: '风继续吹', 
+                    amount: 8.88, 
+                    currency: '¥', 
+                    message: '感谢分享' 
+                },
+                { 
+                    avatar: 'sponsor/4.jpg',
+                    name: 'D~', 
+                    amount: 5, 
+                    currency: '¥', 
+                    message: '帮我解决了大问题' 
+                },
+                { 
+                    avatar: 'sponsor/5.jpg',
+                    name: '西钉不敢吱声', 
+                    amount: 6.66, 
+                    currency: '¥', 
+                    message: '物超所值' 
+                },
+                { 
+                    avatar: 'sponsor/6.jpg',
+                    name: '冷酷DE瞬间', 
+                    amount: 20, 
+                    currency: '¥', 
+                    message: '推荐给朋友了' 
+                },
+                { 
+                    avatar: 'sponsor/7.jpg',
+                    name: 'Aღ᭄💞来盘意大利面ᯤ📶⁵ᴳ', 
+                    amount: 5, 
+                    currency: '¥', 
+                    message: '简洁明了' 
+                },
+                { 
+                    avatar: 'sponsor/8.jpg',
+                    name: 'A、我想静静', 
+                    amount: 10, 
+                    currency: '¥', 
+                    message: '第二次赞助了' 
+                },
+                { 
+                    avatar: 'sponsor/9.jpg',
+                    name: '笼中鸟余哀鸣', 
+                    amount: 1, 
+                    currency: '¥', 
+                    message: '继续加油' 
+                },
+                { 
+                    avatar: 'sponsor/10.jpg',
+                    name: 'July', 
+                    amount: 30, 
+                    currency: '¥', 
+                    message: '小而精' 
+                }
+            ];
+
+            const track = document.getElementById('carouselTrack');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+            let currentIndex = 0;
+            let itemsPerView = 6;
+            let cardWidth = 0;
+            let isDragging = false;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let animationID;
+            let autoScrollInterval;
+
+            // 初始化轮播
+            function initCarousel() {
+                track.innerHTML = '';
+                updateItemsPerView();
+                
+                sponsors.forEach(sponsor => {
+                    const card = document.createElement('div');
+                    card.className = 'sponsor-card';
+                    card.innerHTML = `
+                        <img src="${sponsor.avatar}" class="sponsor-avatar" 
+                             alt="${sponsor.name}" 
+                             onerror="this.src='https://via.placeholder.com/40?text=${sponsor.name.charAt(0)}'">
+                        <div class="sponsor-info">
+                            <div class="sponsor-name">${sponsor.name}</div>
+                            <div class="sponsor-amount">${sponsor.currency}${sponsor.amount}</div>
+                            <div class="sponsor-message">${sponsor.message}</div>
+                        </div>
+                    `;
+                    track.appendChild(card);
+                });
+
+                if(track.children.length > 0) {
+                    cardWidth = track.children[0].offsetWidth + 12; // 包含gap
+                }
+                
+                startAutoScroll();
+            }
+
+            // 更新可见项数量
+            function updateItemsPerView() {
+                const width = window.innerWidth;
+                if(width >= 1400) itemsPerView = 6;
+                else if(width >= 1200) itemsPerView = 5;
+                else if(width >= 992) itemsPerView = 4;
+                else if(width >= 768) itemsPerView = 3;
+                else if(width >= 576) itemsPerView = 2;
+                else itemsPerView = 1;
+            }
+
+            // 更新轮播位置
+            function updatePosition() {
+                track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            }
+
+            // 自动滚动
+            function startAutoScroll() {
+                autoScrollInterval = setInterval(() => {
+                    nextSlide();
+                }, 3000);
+            }
+
+            function resetAutoScroll() {
+                clearInterval(autoScrollInterval);
+                startAutoScroll();
+            }
+
+            // 下一张
+            function nextSlide() {
+                if(currentIndex >= sponsors.length - itemsPerView) {
+                    currentIndex = 0;
+                } else {
+                    currentIndex++;
+                }
+                updatePosition();
+            }
+
+            // 上一张
+            function prevSlide() {
+                if(currentIndex <= 0) {
+                    currentIndex = Math.max(0, sponsors.length - itemsPerView);
+                } else {
+                    currentIndex--;
+                }
+                updatePosition();
+            }
+
+            // 事件监听
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                resetAutoScroll();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetAutoScroll();
+            });
+
+            // 响应式调整
+            window.addEventListener('resize', () => {
+                updateItemsPerView();
+                if(track.children.length > 0) {
+                    cardWidth = track.children[0].offsetWidth + 12;
+                }
+                updatePosition();
+            });
+
+            // 初始化
+            initCarousel();
         });
-</script>
-
+    </script>
 	
-<img src="https://www.iis.cm/img/logo.jpg" alt="logo">
-
-<div class="boxed-text">
-        我用两个灵魂对抗世界，一个向往，一个挣扎。
-    </div>
-
-    <div class="link-container">
-        <a href="https://www.iis.cm/code/index.html"   target="_blank"  >在线编解码工具</a>
-	<a href="https://www.iis.cm/shell/index.html"   target="_blank"  >在线反弹Shell命令一键生成</a>
-        <a href="https://github.com/Axx8/HTTPServer"   target="_blank"  >HTTPServer</a>
-        <a href="https://www.iis.cm/process/index.html"   target="_blank"  >Windows提权辅助&进程对比 </a>
-        <a href="https://www.iis.cm/GoogleHacking/index.html"   target="_blank"  >GoogleHacking </a>
-	<a href="https://www.iis.cm/POC-EXP/index.html"   target="_blank"  >漏洞库 </a>
-	<a href="https://www.iis.cm/POC-EXP/index.html"   target="_blank"  >POC&EXP工具武器库 </a>
-        <a href="https://www.iis.cm/sj/index.html"   target="_blank"  >罗盘时间 </a>
-        <a href="https://www.iis.cm/ssq/index.html"   target="_blank"  >随机大乐透&双色球选号</a>
-    </div>
-	
-<img src="https://www.iis.cm/img/wx.png" alt="关注">
-
-
-		<canvas id="canvas" width="100%" height="100%"></canvas>
-		<script src="hovertreewelcome.js"></script>
-		<script type="text/javascript">
-			(function(window) {
-
-				var ctx,
-					hue,
-					logo,
-					form,
-					buffer,
-					target = {},
-					tendrils = [],
-					settings = {};
-
-				settings.debug = true;
-				settings.friction = 0.5;
-				settings.trails = 20;
-				settings.size = 50;
-				settings.dampening = 0.25;
-				settings.tension = 0.98;
-
-				Math.TWO_PI = Math.PI * 2;
-				function Oscillator(options) {
-					this.init(options || {});
-				}
-
-				Oscillator.prototype = (function() {
-
-					var value = 0;
-
-					return {
-
-						init: function(options) {
-							this.phase = options.phase || 0;
-							this.offset = options.offset || 0;
-							this.frequency = options.frequency || 0.001;
-							this.amplitude = options.amplitude || 1;
-						},
-
-						update: function() {
-							this.phase += this.frequency;
-							value = this.offset + Math.sin(this.phase) * this.amplitude;
-							return value;
-						},
-
-						value: function() {
-							return value;
-						}
-					};
-
-				})();
-
-
-				function Tendril(options) {
-					this.init(options || {});
-				}
-
-				Tendril.prototype = (function() {
-
-					function Node() {
-						this.x = 0;
-						this.y = 0;
-						this.vy = 0;
-						this.vx = 0;
-					}
-
-					return {
-
-						init: function(options) {
-
-							this.spring = options.spring + (Math.random() * 0.1) - 0.05;
-							this.friction = settings.friction + (Math.random() * 0.01) - 0.005;
-							this.nodes = [];
-
-							for (var i = 0, node; i < settings.size; i++) {
-
-								node = new Node();
-								node.x = target.x;
-								node.y = target.y;
-
-								this.nodes.push(node);
-							}
-						},
-
-						update: function() {
-
-							var spring = this.spring,
-								node = this.nodes[0];
-
-							node.vx += (target.x - node.x) * spring;
-							node.vy += (target.y - node.y) * spring;
-
-							for (var prev, i = 0, n = this.nodes.length; i < n; i++) {
-
-								node = this.nodes[i];
-
-								if (i > 0) {
-
-									prev = this.nodes[i - 1];
-
-									node.vx += (prev.x - node.x) * spring;
-									node.vy += (prev.y - node.y) * spring;
-									node.vx += prev.vx * settings.dampening;
-									node.vy += prev.vy * settings.dampening;
-								}
-
-								node.vx *= this.friction;
-								node.vy *= this.friction;
-								node.x += node.vx;
-								node.y += node.vy;
-
-								spring *= settings.tension;
-							}
-						},
-
-						draw: function() {
-
-							var x = this.nodes[0].x,
-								y = this.nodes[0].y,
-								a, b;
-
-							ctx.beginPath();
-							ctx.moveTo(x, y);
-
-							for (var i = 1, n = this.nodes.length - 2; i < n; i++) {
-
-								a = this.nodes[i];
-								b = this.nodes[i + 1];
-								x = (a.x + b.x) * 0.5;
-								y = (a.y + b.y) * 0.5;
-
-								ctx.quadraticCurveTo(a.x, a.y, x, y);
-							}
-
-							a = this.nodes[i];
-							b = this.nodes[i + 1];
-
-							ctx.quadraticCurveTo(a.x, a.y, b.x, b.y);
-							ctx.stroke();
-							ctx.closePath();
-						}
-					};
-
-				})();
-
-				// ----------------------------------------------------------------------------------------
-
-				function init(event) {
-
-					document.removeEventListener('mousemove', init);
-					document.removeEventListener('touchstart', init);
-
-					document.addEventListener('mousemove', mousemove);
-					document.addEventListener('touchmove', mousemove);
-					document.addEventListener('touchstart', touchstart);
-
-					mousemove(event);
-					reset();
-					loop();
-				}
-
-				function reset() {
-
-					tendrils = [];
-
-					for (var i = 0; i < settings.trails; i++) {
-
-						tendrils.push(new Tendril({
-							spring: 0.45 + 0.025 * (i / settings.trails)
-						}));
-					}
-				}
-
-				function loop() {
-
-					if (!ctx.running) return;
-
-					ctx.globalCompositeOperation = 'source-over';
-					ctx.fillStyle = 'rgba(8,5,16,0.4)';
-					ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-					ctx.globalCompositeOperation = 'lighter';
-					ctx.strokeStyle = 'hsla(' + Math.round(hue.update()) + ',90%,50%,0.25)';
-					ctx.lineWidth = 1;
-
-					if (ctx.frame % 60 == 0) {
-						console.log(hue.update(), Math.round(hue.update()), hue.phase, hue.offset, hue.frequency, hue.amplitude);
-					}
-
-					for (var i = 0, tendril; i < settings.trails; i++) {
-						tendril = tendrils[i];
-						tendril.update();
-						tendril.draw();
-					}
-
-					ctx.frame++;
-					ctx.stats.update();
-					requestAnimFrame(loop);
-				}
-
-				function resize() {
-					ctx.canvas.width = window.innerWidth;
-					ctx.canvas.height = window.innerHeight;
-				}
-
-				function start() {
-					if (!ctx.running) {
-						ctx.running = true;
-						loop();
-					}
-				}
-
-				function stop() {
-					ctx.running = false;
-				}
-
-				function mousemove(event) {
-					if (event.touches) {
-						target.x = event.touches[0].pageX;
-						target.y = event.touches[0].pageY;
-					} else {
-						target.x = event.clientX
-						target.y = event.clientY;
-					}
-					event.preventDefault();
-				}
-
-				function touchstart(event) {
-					if (event.touches.length == 1) {
-						target.x = event.touches[0].pageX;
-						target.y = event.touches[0].pageY;
-					}
-				}
-
-				function keyup(event) {
-
-					switch (event.keyCode) {
-						case 32:
-							save();
-							break;
-						default:
-							// console.log(event.keyCode); hovertree.com
-					}
-				}
-
-				function letters(id) {
-
-					var el = document.getElementById(id),
-						letters = el.innerHTML.replace('&amp;', '&').split(''),
-						heading = '';
-
-					for (var i = 0, n = letters.length, letter; i < n; i++) {
-						letter = letters[i].replace('&', '&amp');
-						heading += letter.trim() ? '<span class="letter-' + i + '">' + letter + '</span>' : '&nbsp;';
-					}
-
-					el.innerHTML = heading;
-					setTimeout(function() {
-						el.className = 'transition-in';
-					}, (Math.random() * 500) + 500);
-				}
-
-				function save() {
-
-					if (!buffer) {
-
-						buffer = document.createElement('canvas');
-						buffer.width = screen.availWidth;
-						buffer.height = screen.availHeight;
-						buffer.ctx = buffer.getContext('2d');
-
-						form = document.createElement('form');
-						form.method = 'post';
-						form.input = document.createElement('input');
-						form.input.type = 'hidden';
-						form.input.name = 'data';
-						form.appendChild(form.input);
-
-						document.body.appendChild(form);
-					}
-
-					buffer.ctx.fillStyle = 'rgba(8,5,16)';
-					buffer.ctx.fillRect(0, 0, buffer.width, buffer.height);
-
-					buffer.ctx.drawImage(canvas,
-						Math.round(buffer.width / 2 - canvas.width / 2),
-						Math.round(buffer.height / 2 - canvas.height / 2)
-					);
-
-					buffer.ctx.drawImage(logo,
-						Math.round(buffer.width / 2 - logo.width / 4),
-						Math.round(buffer.height / 2 - logo.height / 4),
-						logo.width / 2,
-						logo.height / 2
-					);
-
-					window.open(buffer.toDataURL(), 'wallpaper', 'top=0,left=0,width=' + buffer.width + ',height=' + buffer.height);
-
-					// form.input.value = buffer.toDataURL().substr(22);
-					// form.submit(); hovertree.com
-				}
-
-				window.requestAnimFrame = (function() {
-					return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
-						function(fn) {
-							window.setTimeout(fn, 1000 / 60)
-						};
-				})();
-
-				window.onload = function() {
-
-					ctx = document.getElementById('canvas').getContext('2d');
-					ctx.stats = new Stats();
-					ctx.running = true;
-					ctx.frame = 1;
-
-
-
-					hue = new Oscillator({
-						phase: Math.random() * Math.TWO_PI,
-						amplitude: 85,
-						frequency: 0.0015,
-						offset: 285
-					});
-
-
-
-					document.addEventListener('mousemove', init);
-					document.addEventListener('touchstart', init);
-					document.body.addEventListener('orientationchange', resize);
-					window.addEventListener('resize', resize);
-					window.addEventListener('keyup', keyup);
-					window.addEventListener('focus', start);
-					window.addEventListener('blur', stop);
-
-					resize();
-
-					if (window.DEBUG) {
-
-						var gui = new dat.GUI();
-
-						// gui.add(settings, 'debug');
-						settings.gui.add(settings, 'trails', 1, 30).onChange(reset);
-						settings.gui.add(settings, 'size', 25, 75).onFinishChange(reset);
-						settings.gui.add(settings, 'friction', 0.45, 0.55).onFinishChange(reset);
-						settings.gui.add(settings, 'dampening', 0.01, 0.4).onFinishChange(reset);
-						settings.gui.add(settings, 'tension', 0.95, 0.999).onFinishChange(reset);
-
-						document.body.appendChild(ctx.stats.domElement);
-					}
-				};
-
-			})(window);
-		</script>
-		<script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=56nwhk8hmif&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"></script>		
-		
-<span id="sitetime"  style="color: #fff;" ></span>
-<script language=javascript>
+    <footer>
+        <p class="footer-text">
+            🚀Copyright &copy; 2023 Made with <i class="fas fa-heart" style="color: #ff4757;"></i> in 
+            <a href="https://www.github.com/Axx8" target="_blank">Axx8</a>
+        </p>
+        <p id="sitetime" class="footer-text"></p>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+    <script language=javascript>
     function siteTime(){
         window.setTimeout("siteTime()", 1000);
         var seconds = 1000;
@@ -497,15 +962,7 @@
         var todayHour = today.getHours();
         var todayMinute = today.getMinutes();
         var todaySecond = today.getSeconds();
-        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
-        year - 作为date对象的年份，为4位年份值
-        month - 0-11之间的整数，做为date对象的月份
-        day - 1-31之间的整数，做为date对象的天数
-        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
-        minutes - 0-59之间的整数，做为date对象的分钟数
-        seconds - 0-59之间的整数，做为date对象的秒数
-        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
-        var t1 = Date.UTC(2022,10,01,00,00,00); //北京时间2016-12-1 00:00:00
+        var t1 = Date.UTC(2022,10,01,00,00,00); //北京时间
         var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
         var diff = t2-t1;
         var diffYears = Math.floor(diff/years);
@@ -513,23 +970,103 @@
         var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
         var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
         var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
-		document.getElementById("sitetime").innerHTML=" 已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+		document.getElementById("sitetime").innerHTML=" 🖥️已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
     }
     siteTime();
 </script>
-	
-	
-	
-	
-	
-	<footer>
-    <div >
-        <p class="text-body-tertiary pt-3 lh-lg text-opacity-50" id="footer-text" style="color: #fff;">
-    <br>
-	Copyright &copy; 2023 Made with ❤️ in <a href="https://github.com/Axx8" target="_blank" class="text-opacity-50 text-body-tertiary mt-1 mb-1" style="color: #fff;">Axx8</a>
-    <br>
-</p>
-
-    </div>
-	</body>
+    <script>
+        $(document).ready(function() {
+            $('.wx-popup').magnificPopup({
+                type: 'image',
+                closeOnContentClick: true,
+                closeBtnInside: false,
+                fixedContentPos: true,
+                mainClass: 'mfp-no-margins mfp-with-zoom', 
+                image: {
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return item.el.attr('title');
+                    }
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 400,
+                    easing: 'ease-in-out'
+                }
+            });
+            
+            // 粒子背景效果
+            const canvas = document.querySelector('.particles-bg');
+            const ctx = canvas.getContext('2d');
+            
+            function initCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                // 粒子配置
+                const particles = [];
+                const particleCount = Math.floor(window.innerWidth / 10);
+                const colors = ['rgba(99, 102, 241, 0.8)', 'rgba(79, 70, 229, 0.7)', 'rgba(129, 140, 248, 0.6)'];
+                
+                // 创建粒子
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 3 + 1,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        speedX: Math.random() * 0.5 - 0.25,
+                        speedY: Math.random() * 0.5 - 0.25
+                    });
+                }
+                
+                // 绘制粒子
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    
+                    // 粒子移动
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    // 边界检查
+                    if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+                    
+                    // 绘制连线
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const distance = Math.sqrt(Math.pow(p.x - p2.x, 2) + Math.pow(p.y - p2.y, 2));
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(99, 102, 241, ${1 - distance/100})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                requestAnimationFrame(draw);
+            }
+            
+            draw();
+            
+            // 窗口大小调整
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        });
+    </script>
+</body>
 </html>
