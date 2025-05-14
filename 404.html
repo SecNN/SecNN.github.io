@@ -75,13 +75,15 @@
             width: 100%;
             position: relative;
             margin: 25px 0;
+            display: flex;
+            align-items: center;
         }
         
         .search-box input {
-            width: 100%;
+            flex: 1;
             padding: 15px 20px;
             border: none;
-            border-radius: 50px;
+            border-radius: 50px 0 0 50px;
             background: rgba(0, 0, 0, 0.03);
             font-size: 1rem;
             transition: all var(--transition-speed) ease;
@@ -92,6 +94,23 @@
             outline: none;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
             background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .search-button {
+            padding: 15px 25px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-button:hover {
+            background: var(--secondary-color);
         }
         
         .action-buttons {
@@ -233,6 +252,7 @@
         
         <div class="search-box">
             <input type="text" placeholder="搜索您需要的内容..." id="searchInput">
+            <button class="search-button" id="searchButton">搜索</button>
         </div>
         
         <div class="action-buttons">
@@ -243,14 +263,22 @@
 
     <script>
         // 百度站内搜索功能
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if(query) {
+                window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(query)}+site:www.secnn.com`, '_blank');
+            }
+        }
+        
+        // 回车键搜索
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if(e.key === 'Enter') {
-                const query = this.value.trim();
-                if(query) {
-                    window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(query)}+site:www.secnn.com`, '_blank');
-                }
+                performSearch();
             }
         });
+        
+        // 搜索按钮点击
+        document.getElementById('searchButton').addEventListener('click', performSearch);
         
         // 破碎数字动画
         const brokenNumber = document.querySelector('.broken-number');
