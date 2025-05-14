@@ -1,83 +1,271 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>页面不存在 - SecNN</title>
+    <title>页面不存在 | SecNN</title>
     <style>
-        /* 通用样式 */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f5f7fa;
-            color: #333;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #f06595;
+            --text-color: #2b2d42;
+            --light-bg: #f8f9fa;
+            --transition-speed: 0.4s;
+        }
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-        }
-        .container {
-            max-width: 800px;
-            width: 90%;
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        /* 响应式处理 */
-        @media (max-width: 768px) {
-            .container {
-                width: 95%;
-                padding: 1rem;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
-        
-        /* 元素样式 */
-        h1 {
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        p {
-            margin-bottom: 2rem;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
             line-height: 1.6;
+            padding: 20px;
         }
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #3498db;
-            color: white;
-            text-decoration: none;
+        
+        .error-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 10px 0;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        p.description {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .search-box {
+            width: 100%;
+            position: relative;
+            margin: 25px 0;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
             border-radius: 50px;
-            transition: all 0.3s;
+            background: rgba(0, 0, 0, 0.03);
+            font-size: 1rem;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        .btn:hover {
-            background: #2980b9;
+        
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .action-button {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            text-decoration: none;
+        }
+        
+        .secondary-button {
+            background: white;
+            color: var(--text-color);
+            border: 1px solid #ddd;
+            box-shadow: none;
+        }
+        
+        .action-button:hover {
+            background: var(--secondary-color);
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .secondary-button:hover {
+            background: #f8f9fa;
+            border-color: #ccc;
+        }
+        
+        .broken-link {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .broken-link:nth-child(1) {
+            top: -50px;
+            left: -50px;
+        }
+        
+        .broken-link:nth-child(2) {
+            bottom: -30px;
+            right: -40px;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(10px, 10px) rotate(5deg);
+            }
+            50% {
+                transform: translate(0, 15px) rotate(-5deg);
+            }
+            75% {
+                transform: translate(-10px, 5px) rotate(3deg);
+            }
+        }
+        
+        /* 404数字破碎效果 */
+        .broken-number {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .broken-number::after {
+            content: "";
+            position: absolute;
+            top: 20%;
+            left: 55%;
+            width: 30px;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            transform: rotate(-20deg);
+            border-radius: 4px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#e74c3c" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+    <div class="error-container">
+        <!-- 破碎链接装饰元素 -->
+        <svg class="broken-link" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.8285 10.1716C12.2664 8.60948 9.73367 8.60948 8.17157 10.1716L4.17157 14.1716C2.60948 15.7337 2.60948 18.2663 4.17157 19.8284C5.73367 21.3905 8.26633 21.3905 9.82843 19.8284L12 17.6569M10.1716 13.8284C11.7337 15.3905 14.2663 15.3905 15.8284 13.8284L19.8284 9.82843C21.3905 8.26633 21.3905 5.73367 19.8284 4.17157C18.2663 2.60948 15.7337 2.60948 14.1716 4.17157L12 6.34315" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <h1>页面不存在或已被移除</h1>
-        <p>您访问的页面可能已经变更地址或暂时不可用</p>
-        <a href="https://www.secnn.com" class="btn">前往网站首页</a>
         
-        <script>
-            setTimeout(function(){
-                window.location.href = "https://www.secnn.com";
-            }, 5000);
-        </script>
+        <svg class="broken-link" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.8285 10.1716C12.2664 8.60948 9.73367 8.60948 8.17157 10.1716L4.17157 14.1716C2.60948 15.7337 2.60948 18.2663 4.17157 19.8284C5.73367 21.3905 8.26633 21.3905 9.82843 19.8284L12 17.6569M10.1716 13.8284C11.7337 15.3905 14.2663 15.3905 15.8284 13.8284L19.8284 9.82843C21.3905 8.26633 21.3905 5.73367 19.8284 4.17157C18.2663 2.60948 15.7337 2.60948 14.1716 4.17157L12 6.34315" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        
+        <h1><span class="broken-number">404</span></h1>
+        <h2>页面未找到</h2>
+        <p class="description">
+            您访问的页面不存在或已被移除<br>
+            请检查URL是否正确，或尝试以下操作
+        </p>
+        
+        <div class="search-box">
+            <input type="text" placeholder="搜索您需要的内容..." id="searchInput">
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="action-button">返回首页</a>
+            <a href="javascript:history.back()" class="action-button secondary-button">返回上一页</a>
+        </div>
     </div>
+
+    <script>
+        // 百度站内搜索功能
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                const query = this.value.trim();
+                if(query) {
+                    window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(query)}+site:www.secnn.com`, '_blank');
+                }
+            }
+        });
+        
+        // 破碎数字动画
+        const brokenNumber = document.querySelector('.broken-number');
+        setInterval(() => {
+            brokenNumber.style.transform = `rotate(${Math.random() * 6 - 3}deg)`;
+        }, 3000);
+    </script>
+    
+    <!-- 无障碍优化 -->
+    <noscript>
+        <style>
+            .error-container {
+                backdrop-filter: none;
+            }
+        </style>
+    </noscript>
 </body>
 </html>
