@@ -1,17 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>正在重定向…… - walterlv</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面不存在 - SECNN</title>
+    <style>
+        /* 通用样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* 响应式处理 */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 元素样式 */
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        p {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-    <script language="javascript">
-        var domain = "www.secnn.com";
-        var current = window.location.href;
-        var target = current.substring(current.indexOf('/', current.indexOf(':') + 3));
-        window.location.href = "//" + domain + target;
-        location.href = "//" + domain + target;
-    </script>
-    <body>
-        正在重定向……
-    </body>
+<body>
+    <div class="container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#e74c3c" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+        <h1>页面不存在或已被移除</h1>
+        <p>您访问的页面可能已经变更地址或暂时不可用</p>
+        <a href="https://www.secnn.com" class="btn">前往网站首页</a>
+        
+        <script>
+            setTimeout(function(){
+                window.location.href = "https://www.secnn.com";
+            }, 5000);
+        </script>
+    </div>
+</body>
 </html>
