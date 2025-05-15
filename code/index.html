@@ -1,298 +1,678 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="axx8" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>在线Base64编码解码 | URL编码解码 | Hex编码解码 | Unicode编码解码 | MD5生成工具 | Java Bash | Java PowerShell | String </title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线编解码工具集合 - Base64/URL/Hex/Unicode/MD5/Java工具 - SecNN</title>
+	<meta name="description" content="免费在线编码解码工具集合，支持Base64/URL/Hex/Unicode编码解码、MD5生成、Java Bash/PowerShell命令转换等功能，网络安全人员必备工具，支持一站式解决方案">
+	<meta name="keywords" content="在线工具,编码转换,解码工具,Base64,URL编码,Hex解码,Unicode转换,MD5生成,网络安全工具">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
+        :root {
+            --primary-color: #00d9ff;
+            --secondary-color: #00a1ff;
+            --dark-bg: #0a192f;
+            --darker-bg: #020c1b;
+            --light-text: #e6f1ff;
+            --highlight: #64ffda;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+        }
+        
         body {
-            background-color: #F5F5F5;
-            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(0, 168, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(100, 255, 218, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
         }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-            font-weight: bold;
-            color: #333;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--highlight);
+            margin: 1rem auto;
+        }
+        
         h1 {
-            font-size: 48px;
-            margin-top: 50px;
-            margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary-color), var(--highlight));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tool-card {
+            background: rgba(16, 26, 53, 0.8);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 217, 255, 0.2);
+        }
+        
+        .tool-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        textarea, input, select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border 0.3s ease;
+        }
+        
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--darker-bg);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex-grow: 1;
+            box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+        }
+        
+        .result-container {
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .features {
+            margin-top: 3rem;
             text-align: center;
         }
-        h2 {
-            font-size: 36px;
-            margin-top: 30px;
-            margin-bottom: 10px;
+        
+        .features h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--light-text);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-item {
+            background: rgba(10, 25, 47, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-item h3 {
+            color: var(--highlight);
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
             text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        p {
-            color: #666;
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.5;
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
         }
-        .list-unstyled li {
-            font-size: 24px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .list-unstyled li a {
-            color: #333;
+        
+        .social-links a {
+            color: var(--light-text);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
-        .list-unstyled li a:hover {
-            color: #007BFF;
-            text-decoration: none;
+        
+        .social-links a:hover {
+            color: var(--highlight);
         }
-        .about-link {
-            margin-top: 30px;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 20px;
-        }
-        .about-link a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        .about-link a:hover {
-            color: #0056b3;
-            text-decoration: none;
-        }
-        .friends-link {
-            margin-top: 30px;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 20px;
-        }
-        .friends-link a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        .friends-link a:hover {
-            color: #0056b3;
-            text-decoration: none;
-        }
-        .footer {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-        .footer a {
-            color: #666;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            color: #333;
-            text-decoration: none;
-        }
-        @media only screen and (max-width: 768px) {
-            h1 {
-                font-size: 36px;
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
             }
-            h2 {
-                font-size: 24px;
+            
+            .btn-group {
+                flex-direction: column;
             }
-            p {
-                font-size: 16px;
-            }
-            .list-unstyled li {
-                text-align: left;
-                font-size: 20px;
-            }
-            .about-link, .friends-link {
-                font-size: 18px;
+            
+            button {
+                width: 100%;
             }
         }
     </style>
-<!-- </head> -->
+</head>
 <body>
     <div class="container">
-        <h1>在线编解码工具</h1>
-        <p>Base64编码解码 | URL编码解码 | Hex编码解码 | Unicode编码解码 | MD5生成工具 | Java Bash | Java PowerShell | String</p>
-        <div class="row mt-5">
-            <div class="col-md-8 mx-auto">
-                <form>
-                    <div class="form-group">
-                        <textarea class="form-control" id="text" rows="3"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="encodeText()">Base64编码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="decodeText()">Base64解码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="urlEncodeText()">URL编码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="urlDecodeText()">URL解码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="hexEncodeText()">Hex编码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="hexDecodeText()">Hex解码</button>
-					<br><br>
-                    <button type="button" class="btn btn-primary" onclick="uniEncodeText()">Unicode编码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="uniDecodeText()">Unicode解码</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="calculateMD5()">MD5</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="javaBash()">Java Bash</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="javaPs()">Java PowerShell</button>
-                    &nbsp;
-                    <button type="button" class="btn btn-primary" onclick="stringCharCode()">String</button>
-                </form>
+        <header>
+            <h1>在线编解码工具集合 - SecNN</h1>
+            <p class="subtitle">免费在线编码解码工具集合，支持Base64/URL/Hex/Unicode编码解码、MD5生成、Java Bash/PowerShell命令转换等功能，网络安全人员必备工具。</p>
+        </header>
+		
+         <div class="features">
+            <h2>特色功能</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <h3>全面支持</h3>
+                    <p>支持Base64/URL/Hex/Unicode多种编码解码</p>
+                </div>
+                <div class="feature-item">
+                    <h3>安全可靠</h3>
+                    <p>所有处理在客户端完成，不发送数据到服务器</p>
+                </div>
+                <div class="feature-item">
+                    <h3>高阶转换</h3>
+                    <p>支持Java代码到Bash/PowerShell命令转换</p>
+                </div>
+                <div class="feature-item">
+                    <h3>响应式设计</h3>
+                    <p>完美适配各种设备，从手机到桌面</p>
+                </div>
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="col-md-8 mx-auto">
-		        <div class="form-group">
-			        <textarea class="form-control" id="result" rows="3" readonly></textarea>
-		        </div>
+		
+        <div class="grid">
+            <!-- Base64 编解码 -->
+            <div class="tool-card">
+                <h3>Base64 编解码</h3>
+                <textarea id="base64-text" rows="4" placeholder="输入要编码/解码的内容"></textarea>
+                <div class="btn-group">
+                    <button onclick="encodeBase64()">编码</button>
+                    <button onclick="decodeBase64()">解码</button>
+                </div>
+                <div class="result-container">
+                    <textarea id="base64-result" rows="4" placeholder="结果将显示在这里" readonly></textarea>
+                    <button class="copy-btn" onclick="copyResult('base64-result')">复制</button>
+                </div>
             </div>
-        </div>
-</body>
-
-<script src="js/crypto-js.js"></script>
-<script>
-    function encodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = btoa(text);
-    }
-    function decodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = atob(text);
-    }
-    function calculateMD5() {
-        var input = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = CryptoJS.MD5(input).toString();
-    }
-    function urlEncodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = encodeURIComponent(text);
-    }
-    function urlDecodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = decodeURIComponent(text);
-    }
-    function toHex(str) {
-        var hex = "";
-        for (var i = 0; i < str.length; i++) {
-            hex += str.charCodeAt(i).toString(16);
-        }
-        return hex;
-    }
-    function fromHex(hex) {
-        var str = "";
-        for (var i = 0; i < hex.length; i += 2) {
-            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-        }
-        return str;
-    }
-    function hexEncodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = toHex(text);
-    }
-    function hexDecodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = fromHex(text);
-    }
-    function toUnicode(str) {
-        var unicode = "";
-        for (var i = 0; i < str.length; i++) {
-            unicode += "\\u" + str.charCodeAt(i).toString(16).padStart(4, '0');
-        }
-        return unicode;
-    }
-    function fromUnicode(unicode) {
-        var str = "";
-        var i = 0;
-        while (i < unicode.length) {
-            if (unicode[i] === '\\' && unicode[i+1] === 'u') {
-                var code = parseInt(unicode.substr(i+2, 4), 16);
-                str += String.fromCharCode(code);
-                i += 6;
-            } else {
-                str += unicode[i];
-                i++;
-            }
-        }
-        return str;
-    }
-    function uniEncodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = toUnicode(text);
-    }
-    function uniDecodeText() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = fromUnicode(text);
-    }
-    function javaBash() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        var base = btoa(text);
-        result.value = "bash -c {echo," + base + "}|{base64,-d}|{bash,-i}";
-    }
-    function toCharCodes(str) {
-        const charCodes = [];
-        for (let i = 0; i < str.length; i++) {
-            charCodes.push(str.charCodeAt(i));
-        }
-        return "String.fromCharCode(" + charCodes.join(",") + ")";
-    }
-    function stringCharCode() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = toCharCodes(text);
-    }
-    function getPowershellCommand(cmd) {
-        const chars = cmd.split('');
-        const temp = [];
-        for (let i = 0; i < chars.length; i++) {
-            const code = unescape(encodeURIComponent(chars[i]));
-            for (let j = 0; j < code.length; j++) {
-            temp.push(code.charCodeAt(j));
-            }
-            temp.push(0);
-        }
-        const result = new Uint8Array(temp);
-        const data = btoa(String.fromCharCode.apply(null, result));
-        const prefix = "powershell.exe -NonI -W Hidden -NoP -Exec Bypass -Enc ";
-        return prefix + data;
-    }
-    function javaPs() {
-        var text = document.getElementById("text").value;
-        var result = document.getElementById("result");
-        result.value = getPowershellCommand(text);
-    }
-</script>
-	<div class="bg-white text-center pb-5">
-	<a href="ssq/index.html" target="_blank" title="随机大乐透&双色球选号-从此实现财富自由">随机大乐透&双色球选号</a>
-	<a href="process/index.html" target="_blank" title="Windows提权辅助|杀软在线对比|常用软件进程对比">Windows提权辅助</a>
-	<a href="GoogleHacking/index.html" target="_blank" title="GoogleHacking">GoogleHacking</a>
-	<a href="sj/index.html" target="_blank" title="罗盘时间">罗盘时间</a>
-	<a href="https://github.com/Axx8/HTTPServer" target="_blank" title="红队内网环境中一个能快速开启HTTP文件浏览服务的小工具,可执行Webshell，可用于在内网不出网时文件的下载，启动时会根据网卡IPV4地址输出URL(本地回环除外)。">HTTPServer</a>
-	<p></p>
-	<img width="200" src="wx.png" title="关注微信，邀请进交流群" alt="关注微信，邀请进交流群">
-	</div>
-<footer>
-    <div >
-        <p class="text-body-tertiary pt-3 lh-lg text-opacity-50" id="footer-text">Copyright &copy; 2023
-            <br>Made with ❤️ in <a href="https://github.com/Axx8" target="_blank" class="text-opacity-50 text-body-tertiary mt-1 mb-1 ">Axx8</a><br>
-        </p>
+            
+            <!-- URL 编解码 -->
+            <div class="tool-card">
+                <h3>URL 编解码</h3>
+                <textarea id="url-text" rows="4" placeholder="输入要编码/解码的URL"></textarea>
+                <div class="btn-group">
+                    <button onclick="encodeURL()">编码</button>
+                    <button onclick="decodeURL()">解码</button>
+                </div>
+                <div class="result-container">
+                    <textarea id="url-result" rows="4" placeholder="结果将显示在这里" readonly></textarea>
+                    <button class="copy-btn" onclick="copyResult('url-result')">复制</button>
+                </div>
+            </div>
+            
+            <!-- Hex 编解码 -->
+            <div class="tool-card">
+                <h3>Hex 编解码</h3>
+                <textarea id="hex-text" rows="4" placeholder="输入要编码/解码的Hex"></textarea>
+                <div class="btn-group">
+                    <button onclick="encodeHex()">编码</button>
+                    <button onclick="decodeHex()">解码</button>
+                </div>
+                <div class="result-container">
+                    <textarea id="hex-result" rows="4" placeholder="结果将显示在这里" readonly></textarea>
+                    <button class="copy-btn" onclick="copyResult('hex-result')">复制</button>
+                </div>
+            </div>
+            
+            <!-- Unicode 编解码 -->
+            <div class="tool-card">
+                <h3>Unicode 编解码</h3>
+                <textarea id="unicode-text" rows="4" placeholder="输入要编码/解码的Unicode"></textarea>
+                <div class="btn-group">
+                    <button onclick="encodeUnicode()">编码</button>
+                    <button onclick="decodeUnicode()">解码</button>
+                </div>
+                <div class="result-container">
+                    <textarea id="unicode-result" rows="4" placeholder="结果将显示在这里" readonly></textarea>
+                    <button class="copy-btn" onclick="copyResult('unicode-result')">复制</button>
+                </div>
+            </div>
+            
+            <!-- MD5 生成 -->
+            <div class="tool-card">
+                <h3>MD5 生成</h3>
+                <textarea id="md5-text" rows="4" placeholder="输入要生成MD5的内容"></textarea>
+                <button onclick="generateMD5()">生成</button>
+                <div class="result-container">
+                    <textarea id="md5-result" rows="4" placeholder="结果将显示在这里" readonly></textarea>
+                    <button class="copy-btn" onclick="copyResult('md5-result')">复制</button>
+                </div>
+            </div>
+            
+            <!-- 命令转换 -->
+			<!-- 替换前一个命令转换部分的完整代码 -->
+<div class="tool-card">
+    <h3>命令转换工具</h3>
+    <div class="btn-group">
+        <button class="active" data-type="path">路径格式转换</button>
+        <button data-type="env">环境变量转换</button>
+        <button data-type="http">HTTP请求转换</button>
     </div>
-	
-</footer>
-</head>
+    
+    <div id="path-converter" class="converter-section">
+        <textarea id="path-input" rows="3" placeholder="输入要转换的路径 (例: C:\Users\test 或 /home/user)"></textarea>
+        <div class="btn-group">
+            <button onclick="convertPath('win-to-linux')">Windows → Linux</button>
+            <button onclick="convertPath('linux-to-win')">Linux → Windows</button>
+        </div>
+    </div>
+    
+    <div id="env-converter" class="converter-section" style="display:none">
+        <textarea id="env-input" rows="3" placeholder="输入包含环境变量的命令 (例: %APPDATA% 或 $HOME)"></textarea>
+        <div class="btn-group">
+            <button onclick="convertEnv('win-to-linux')">CMD → Bash</button>
+            <button onclick="convertEnv('linux-to-win')">Bash → CMD</button>
+            <button onclick="convertEnv('win-to-ps')">CMD → PowerShell</button>
+        </div>
+    </div>
+    
+    <div id="http-converter" class="converter-section" style="display:none">
+        <textarea id="http-input" rows="3" placeholder="输入HTTP请求 (例: curl -X GET https://api.example.com)"></textarea>
+        <div class="btn-group">
+            <button onclick="convertHttp('curl-to-ps')">cURL → PowerShell</button>
+            <button onclick="convertHttp('ps-to-curl')">PowerShell → cURL</button>
+        </div>
+    </div>
+    
+    <div class="result-container">
+        <textarea id="cmd-result" rows="4" placeholder="转换结果将显示在这里" readonly></textarea>
+        <button class="copy-btn" onclick="copyResult('cmd-result')">复制</button>
+    </div>
+</div>
+
+<script>
+// 选项卡切换
+document.querySelectorAll('.btn-group button[data-type]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelector('.btn-group button.active').classList.remove('active');
+        btn.classList.add('active');
+        
+        document.querySelectorAll('.converter-section').forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById(btn.dataset.type + '-converter').style.display = 'block';
+    });
+});
+
+// 路径转换
+function convertPath(type) {
+    const input = document.getElementById('path-input').value.trim();
+    if (!input) {
+        alert('请输入要转换的路径');
+        return;
+    }
+
+    try {
+        let result = '';
+        if (type === 'win-to-linux') {
+            // Windows -> Linux 转换
+            result = input.replace(/^([A-Z]):\\/i, '/mnt/$1/')
+                         .replace(/\\/g, '/')
+                         .replace(/ /g, '\\ ');
+        } else {
+            // Linux -> Windows 转换
+            result = input.replace(/^\/mnt\/([a-z])\//i, '$1:\\')
+                         .replace(/\//g, '\\')
+                         .replace(/\\ /g, ' ');
+        }
+        document.getElementById('cmd-result').value = result;
+    } catch (e) {
+        document.getElementById('cmd-result').value = "转换失败: " + e.message;
+    }
+}
+
+// 环境变量转换
+function convertEnv(type) {
+    const input = document.getElementById('env-input').value.trim();
+    if (!input) {
+        alert('请输入要转换的命令');
+        return;
+    }
+
+    try {
+        let result = '';
+        switch(type) {
+            case 'win-to-linux': // CMD -> Bash
+                result = input.replace(/%([^%]+)%/g, '$$$1')
+                             .replace(/\^/g, '\\');
+                break;
+            case 'linux-to-win': // Bash -> CMD
+                result = input.replace(/\$([A-Z_]+)/g, '%$1%')
+                             .replace(/\\ /g, '^ ');
+                break;
+            case 'win-to-ps': // CMD -> PowerShell
+                result = input.replace(/%([^%]+)%/g, '$env:$1')
+                             .replace(/\^/g, '`');
+                break;
+        }
+        document.getElementById('cmd-result').value = result || input;
+    } catch (e) {
+        document.getElementById('cmd-result').value = "转换失败: " + e.message;
+    }
+}
+
+// HTTP请求转换
+function convertHttp(type) {
+    const input = document.getElementById('http-input').value.trim();
+    if (!input) {
+        alert('请输入HTTP请求');
+        return;
+    }
+
+    try {
+        let result = '';
+        if (type === 'curl-to-ps') {
+            // cURL -> PowerShell
+            if (!input.startsWith('curl')) {
+                throw new Error('请输入有效的cURL命令');
+            }
+            
+            // 简单实现 - 实际应该使用更完善的解析
+            let psCmd = '$response = Invoke-WebRequest ';
+            
+            // 提取URL
+            const urlMatch = input.match(/(https?:\/\/[^\s]+)/);
+            if (urlMatch) {
+                psCmd += `-Uri "${urlMatch[1]}" `;
+            }
+            
+            // 方法类型
+            if (input.includes('-X POST')) {
+                psCmd += '-Method POST ';
+            }
+            
+            // 请求头
+            const headers = input.matchAll(/-H '([^']+)'/g);
+            for (const header of headers) {
+                const [hKey, hValue] = header[1].split(': ');
+                psCmd += `-Headers @{'${hKey.trim()}' = '${hValue.trim()}'} `;
+            }
+            
+            // 请求体
+            if (input.includes('--data')) {
+                const dataMatch = input.match(/--data '([^']+)'/);
+                if (dataMatch) {
+                    psCmd += `-Body '${dataMatch[1]}' `;
+                }
+            }
+            
+            psCmd += '\n$response.Content';
+            result = psCmd;
+        } else {
+            // PS -> cURL
+            if (!input.includes('Invoke-WebRequest')) {
+                throw new Error('请输入有效的PowerShell命令');
+            }
+            
+            let curlCmd = 'curl ';
+            
+            // 方法类型
+            if (input.includes('-Method POST')) {
+                curlCmd += '-X POST ';
+            }
+            
+            // 提取URL
+            const uriMatch = input.match(/-Uri "([^"]+)"/);
+            if (uriMatch) {
+                curlCmd += `'${uriMatch[1]}' `;
+            }
+            
+            // 请求头
+            const headersMatch = input.match(/-Headers @{([^}]+)}/);
+            if (headersMatch) {
+                const headers = headersMatch[1].matchAll(/'([^']+)' = '([^']+)'/g);
+                for (const header of headers) {
+                    curlCmd += `-H '${header[1]}: ${header[2]}' `;
+                }
+            }
+            
+            // 请求体
+            if (input.includes('-Body')) {
+                const bodyMatch = input.match(/-Body '([^']+)'/);
+                if (bodyMatch) {
+                    curlCmd += `--data '${bodyMatch[1]}' `;
+                }
+            }
+            
+            result = curlCmd.trim();
+        }
+        
+        document.getElementById('cmd-result').value = result || "未识别到可转换的命令";
+    } catch (e) {
+        document.getElementById('cmd-result').value = "转换失败: " + e.message;
+    }
+}
+</script>
+
+
+
+        </div>
+    </div>
+    
+    <footer>
+        <div class="social-links">
+            🚀Copyright &copy; 2023 Made with<i class="fas fa-heart" style="color: #ff4757;"><a href="https://github.com/Axx8" target="_blank">GitHub</a>
+            <a href="wx.png" onclick="alert('扫码关注公众号')"> 微信公众号</a>
+        </div>
+    </footer>
+
+    <script>
+        // 复制结果功能
+        function copyResult(elementId) {
+            const resultEl = document.getElementById(elementId);
+            resultEl.select();
+            document.execCommand('copy');
+            alert('已复制到剪贴板');
+        }
+        
+        // Base64 编解码
+        function encodeBase64() {
+            const text = document.getElementById('base64-text').value;
+            const result = btoa(encodeURIComponent(text));
+            document.getElementById('base64-result').value = result;
+        }
+        
+        function decodeBase64() {
+            const text = document.getElementById('base64-text').value;
+            try {
+                const result = decodeURIComponent(atob(text));
+                document.getElementById('base64-result').value = result;
+            } catch (e) {
+                document.getElementById('base64-result').value = '解码失败: ' + e.message;
+            }
+        }
+        
+        // URL 编解码
+        function encodeURL() {
+            const text = document.getElementById('url-text').value;
+            const result = encodeURIComponent(text);
+            document.getElementById('url-result').value = result;
+        }
+        
+        function decodeURL() {
+            const text = document.getElementById('url-text').value;
+            try {
+                const result = decodeURIComponent(text);
+                document.getElementById('url-result').value = result;
+            } catch (e) {
+                document.getElementById('url-result').value = '解码失败: ' + e.message;
+            }
+        }
+        
+        // Hex 编解码
+        function encodeHex() {
+            const text = document.getElementById('hex-text').value;
+            let hex = '';
+            for (let i = 0; i < text.length; i++) {
+                hex += text.charCodeAt(i).toString(16).padStart(2, '0');
+            }
+            document.getElementById('hex-result').value = hex;
+        }
+        
+        function decodeHex() {
+            let hex = document.getElementById('hex-text').value;
+            // 移除可能的空格或0x前缀
+            hex = hex.replace(/\s|0x/g, '');
+            
+            let str = '';
+            for (let i = 0; i < hex.length; i += 2) {
+                const byte = hex.substr(i, 2);
+                str += String.fromCharCode(parseInt(byte, 16));
+            }
+            document.getElementById('hex-result').value = str;
+        }
+        
+        // Unicode 编解码
+        function encodeUnicode() {
+            const text = document.getElementById('unicode-text').value;
+            let unicode = '';
+            for (let i = 0; i < text.length; i++) {
+                unicode += '\\u' + text.charCodeAt(i).toString(16).padStart(4, '0');
+            }
+            document.getElementById('unicode-result').value = unicode;
+        }
+        
+        function decodeUnicode() {
+            const text = document.getElementById('unicode-text').value;
+            let str = '';
+            let i = 0;
+            while (i < text.length) {
+                if (text[i] === '\\' && text[i+1] === 'u') {
+                    const code = parseInt(text.substr(i+2, 4), 16);
+                    str += String.fromCharCode(code);
+                    i += 6;
+                } else {
+                    str += text[i];
+                    i++;
+                }
+            }
+            document.getElementById('unicode-result').value = str;
+        }
+        
+        // MD5 生成
+        function generateMD5() {
+            const input = document.getElementById('md5-text').value;
+            const result = CryptoJS.MD5(input).toString();
+            document.getElementById('md5-result').value = result;
+        }
+        
+        // 命令转换
+        function convertCmd() {
+            const text = document.getElementById('cmd-text').value;
+            const type = document.getElementById('cmd-type').value;
+            let result = '';
+            
+            if (type === 'bash') {
+                const base = btoa(text);
+                result = `bash -c {echo,${base}}|{base64,-d}|{bash,-i}`;
+            } else if (type === 'powershell') {
+                const chars = text.split('');
+                const temp = [];
+                for (let i = 0; i < chars.length; i++) {
+                    const code = unescape(encodeURIComponent(chars[i]));
+                    for (let j = 0; j < code.length; j++) {
+                        temp.push(code.charCodeAt(j));
+                    }
+                    temp.push(0);
+                }
+                const resultData = new Uint8Array(temp);
+                const data = btoa(String.fromCharCode.apply(null, resultData));
+                result = `powershell.exe -NonI -W Hidden -NoP -Exec Bypass -Enc ${data}`;
+            }
+            
+            document.getElementById('cmd-result').value = result;
+        }
+    </script>
+</body>
 </html>
