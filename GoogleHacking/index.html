@@ -1,72 +1,355 @@
-﻿<!DOCTYPE html>
-<html>
-<head lang="en">
-<meta charset="UTF-8">
-<title>Google Hacking搜索</title>
-<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="js/modernizr-2.6.2.min.js"></script>
-<script type="text/javascript" src="js/GoogleHacking.js"></script>
-<link type="text/css" rel="stylesheet" href="css/styles.css" />
-<link rel="icon" href="favicon.ico" />
-<style>
-body{background:url(https://api.isoyu.com/bing_images.php) top left;
-background-size:100%;}
-</style>
-
-<script>alert("使用前请确认是否能正常连接 Google");</script>
-
-<script>
-function myFunction(){
-	var x;
-	var r=confirm("按下按钮!");
-	if (r==true){
-		x="你按下了\"确定\"按钮!";
-	}
-	else{
-		x="你按下了\"取消\"按钮!";
-	}
-	document.getElementById("demo").innerHTML=x;
-}
-</script>
-
-
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Google Hacking工具|网络安全研究|适用于渗透测试和信息安全学习 - SecNN</title>
+	<meta name="description" content="全面介绍Google Hacking技术，包含phpinfo()探测、SQL错误发现、敏感文件搜索等实用Google搜索语法，适用于渗透测试和信息安全学习。">
+    <style>
+        :root {
+            --primary-color: #00d8ff;
+            --secondary-color: #0b0e23;
+            --accent-color: #6e48aa;
+            --text-color: #e0e0e0;
+            --dark-bg: rgba(15, 18, 37, 0.9);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to right, var(--secondary-color), #1a1e3a);
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://source.unsplash.com/random/1920x1080/?cyber,security') center/cover no-repeat;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 1rem;
+            filter: drop-shadow(0 0 8px var(--primary-color));
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 216, 255, 0.3);
+        }
+        
+        .description {
+            color: rgba(224, 224, 224, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-container {
+            background: var(--dark-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 216, 255, 0.2);
+        }
+        
+        .search-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 216, 255, 0.4);
+        }
+        
+        .quick-search {
+            margin-bottom: 2rem;
+        }
+        
+        .quick-search h2 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .quick-search-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+        }
+        
+        .quick-search-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            padding: 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .quick-search-btn:hover {
+            background: rgba(0, 216, 255, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .active-syntax {
+            margin-top: 2rem;
+            background: var(--dark-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .active-syntax h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .syntax-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: monospace;
+            color: #00ffaa;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .disclaimer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+        
+        /* 动画效果 */
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .quick-search-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<canvas id="fullstarbg">您的浏览器不支持canvas标签</canvas>
-
-<div class="content">
- 	<center><img src="Google.png" alt="google" align="middle"></center>
- 		<div class="input_wrap_box box_S">
-	 		<input id="sercHead" name="sercHead" type="text" class="box_S" value="" placeholder="输入目标域名：baidu.com" onclick="">
- 		</div>
-</div>
-
-<div class="options">
-	<ul>
-	    <li><a href="#" onclick="do_google_search(9)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">phpinfo()</a></li>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="Google.png" alt="Google Logo">
+                <h1>Hacking 高级搜索工具 - SecNN</h1>
+            </div>
+            <p class="description">
+                这是一个专业的Google Hacking工具，用于网络安全研究人员查找潜在的安全漏洞。
+                请输入目标域名并使用预定义的搜索语法进行高效搜索。
+            </p>
+        </header>
+        
+        <div class="search-container">
+		🔍输入目标域名 》选择"快速搜索选项" 》点击搜索（自动组合语法并跳转到Google搜索结果）
 		
-		<li><a href="#" onclick="do_google_search(6)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">登录页面</a></li>
-
-        <li><a href="#" onclick="do_google_search(7)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">SQL错误</a></li>
-	
-		<li><a href="#" onclick="do_google_search(8)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">公开文件信息</a></li>
-		
-        <li><a href="#" onclick="do_google_search(1)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">目录遍历漏洞</a></li>
-
-        <li><a href="#" onclick="do_google_search(2)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">配置文件泄露</a></li>
-
-        <li><a href="#" onclick="do_google_search(4)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">日志文件泄露</a></li>
-
-        <li><a href="#" onclick="do_google_search(5)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">备份和历史文件</a></li>
-		
-		<li><a href="#" onclick="do_google_search(3)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">数据库文件泄露</a></li>
-		
-		<li><a href="#" onclick="do_google_search(11)" style="font-family:verdana;font-size:20px;color:#FF0000;text-decoration:none">搜索Github.com和Gitlab.com</a></li>
-    </ul>
-
-</div>
-
+            <div class="search-form">
+                <input type="text" class="search-input" id="domainInput" placeholder="输入目标域名 (例如: example.com)" required>
+                <button class="search-btn" onclick="performSearch()">搜索</button>
+            </div>
+            
+            <div class="quick-search">
+                <h2>快速搜索选项:</h2>
+                <div class="quick-search-buttons">
+                    <button class="quick-search-btn" onclick="setSyntax('phpinfo')">phpinfo()</button>
+                    <button class="quick-search-btn" onclick="setSyntax('login')">登录页面</button>
+                    <button class="quick-search-btn" onclick="setSyntax('sql')">SQL错误</button>
+                    <button class="quick-search-btn" onclick="setSyntax('documents')">公开文件信息</button>
+                    <button class="quick-search-btn" onclick="setSyntax('directory')">目录遍历漏洞</button>
+                    <button class="quick-search-btn" onclick="setSyntax('config')">配置文件泄露</button>
+                    <button class="quick-search-btn" onclick="setSyntax('logs')">日志文件泄露</button>
+                    <button class="quick-search-btn" onclick="setSyntax('backup')">备份和历史文件</button>
+                    <button class="quick-search-btn" onclick="setSyntax('database')">数据库文件泄露</button>
+                    <button class="quick-search-btn" onclick="setSyntax('github')">搜索Github/Gitlab</button>
+                </div>
+            </div>
+            
+            <div class="active-syntax">
+                <h2>当前搜索语法: <span id="currentSyntax">未选择</span></h2>
+                <div class="syntax-display" id="syntaxDisplay">
+                    请从上方选择搜索语法或直接输入域名进行搜索
+                </div>
+            </div>
+        </div>
+        
+        <p class="disclaimer">
+            注意: 此工具仅供合法的安全研究和授权渗透测试使用。未经授权扫描系统可能违反法律。
+        </p>
+    </div>
+    
+    <script>
+        let currentSyntax = '';
+        
+        function setSyntax(type) {
+            const domain = document.getElementById('domainInput').value;
+            let syntax = '';
+            let description = '';
+            
+            switch(type) {
+                case 'phpinfo':
+                    syntax = `site:${domain} ext:php intitle:phpinfo "published by the PHP Group"`;
+                    description = "查找公开的phpinfo()页面，可能泄露服务器敏感信息";
+                    break;
+                case 'login':
+                    syntax = `site:${domain} inurl:login | inurl:admin | intitle:登陆 | intitle:后台 | intitle:管理 | intitle:认证`;
+                    description = "查找目标网站的登录页面、管理后台";
+                    break;
+                case 'sql':
+                    syntax = `site:${domain} intext:"sql syntax near" | intext:"syntax error has occurred" | intext:"incorrect syntax near" | intext:"unexpected end of SQL command" | intext:"Warning: mysql_connect()" | intext:"Warning: mysql_query()" | intext:"Warning: pg_connect()" | intext:"You have an error in your SQL syntax"`;
+                    description = "查找SQL错误信息，可能暴露数据库结构或配置";
+                    break;
+                case 'documents':
+                    syntax = `site:${domain} ext:doc | ext:docx | ext:odt | ext:pdf | ext:rtf | ext:sxw | ext:psw`;
+                    description = "查找公开的文档文件，可能包含敏感信息";
+                    break;
+                case 'directory':
+                    syntax = `site:${domain} intitle:index.of`;
+                    description = "查找目录遍历漏洞，可能暴露目录结构";
+                    break;
+                case 'config':
+                    syntax = `site:${domain} ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini`;
+                    description = "查找配置文件泄露，可能包含敏感配置信息";
+                    break;
+                case 'logs':
+                    syntax = `site:${domain} ext:log`;
+                    description = "查找日志文件，可能包含敏感活动记录";
+                    break;
+                case 'backup':
+                    syntax = `site:${domain} ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup`;
+                    description = "查找备份和历史文件，可能包含旧版本但敏感的数据";
+                    break;
+                case 'database':
+                    syntax = `site:${domain} ext:sql | ext:dbf | ext:mdb`;
+                    description = "查找数据库文件泄露，可能包含完整的数据库数据";
+                    break;
+                case 'github':
+                    syntax = `site:${domain} github.com | site:gitlab.com ""`;
+                    description = "在GitHub/GitLab上搜索与目标相关的公开代码仓库";
+                    break;
+            }
+            
+            currentSyntax = syntax;
+            document.getElementById('currentSyntax').textContent = description;
+            document.getElementById('syntaxDisplay').textContent = syntax;
+        }
+        
+        function performSearch() {
+            const domain = document.getElementById('domainInput').value;
+            if (!domain) {
+                alert('请输入目标域名');
+                return;
+            }
+            
+                        
+            let searchQuery = `site:${domain}`;
+            if (currentSyntax) {
+                searchQuery += ` ${currentSyntax}`;
+            }
+            
+            // 编码搜索查询并打开Google搜索
+            const encodedQuery = encodeURIComponent(searchQuery);
+            window.open(`https://www.google.com/search?q=${encodedQuery}`, '_blank');
+        }
+    </script>
 </body>
 </html>
