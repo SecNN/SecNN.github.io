@@ -60,34 +60,4 @@
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
-    <url>
-        <loc>https://github.com/Axx8/AI-PT</loc>
-        <lastmod>2025-04-22</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://github.com/Axx8/ShellCode_Loader</loc>
-        <lastmod>2025-05-12</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://github.com/Axx8/Bypass_AV</loc>
-        <lastmod>2025-04-28</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://github.com/Axx8/Xeno-RAT-Server</loc>
-        <lastmod>2025-05-03</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://github.com/Axx8/HTTPServer</loc>
-        <lastmod>2025-04-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
 </urlset>
