@@ -1,3 +1,5 @@
-# robots.txt generated at https://www.iis.cm
+# robots.txt generated at https://www.secnn.com
 User-agent: *
-Disallow: 
+Allow: /
+
+Sitemap: https://www.secnn.com/sitemap.xml
