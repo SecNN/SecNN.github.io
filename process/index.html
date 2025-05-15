@@ -6,109 +6,363 @@
 <title>Windows提权辅助|杀软在线对比|常用软件进程对比</title>
 <script src="./js/process.js"></script>
 <style>
+    /* 全局样式 */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #0a0a1a;
+        color: #e0e0ff;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    /* 新增扫描线动画 */
+    @keyframes scan {
+        0% { top: 0%; opacity: 0.2; }
+        20% { opacity: 0.8; }
+        100% { top: 100%; opacity: 0.2; }
+    }
+    
+    .scan-line {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(to right, transparent, #00ffff, transparent);
+        box-shadow: 0 0 15px #00ffff;
+        z-index: 9999;
+        animation: scan 3s linear infinite;
+        pointer-events: none;
+        display: none;
+    }
+    
+    /* 修改容器以容纳扫描效果 */
+    .container {
+        position: relative;
+        max-width: 900px;
+        margin: 0 auto;
+        background: rgba(10, 20, 30, 0.8);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+        border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+    
+    /* 标题样式 */
+    h1 {
+        text-align: center;
+        color: #00ffff;
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+        margin-bottom: 30px;
+        font-weight: 300;
+        letter-spacing: 1px;
+    }
+    
+    h4 {
+        color: #7afcff;
+        font-weight: 400;
+        margin-bottom: 25px;
+        text-shadow: 0 0 5px rgba(122, 252, 255, 0.5);
+    }
+    
+    /* 按钮样式 */
     .button_ {
-        border: 2px solid #00ff00; /* 荧光绿色边框 */
-        border-radius: 15px; /* 圆角 */
-        padding: 10px 20px;
-        background-color: #333; /* 背景颜色 */
-        color: white; /* 字体颜色 */
-        font-size: 16px;
+        display: block;
+        width: 80%;
+        margin: 25px auto;
+        padding: 15px 20px;
+        text-align: center;
+        background: linear-gradient(135deg, #9c27b0, #00bcd4);
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
+        box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4), 
+                    inset 0 0 10px rgba(156, 39, 176, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
     }
-
+    
     .button_:hover {
-        background-color: #444; /* 悬停时的背景颜色 */
-        box-shadow: 0 0 10px #00ff00; /* 荧光效果 */
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 188, 212, 0.6), 
+                    inset 0 0 20px rgba(156, 39, 176, 0.5);
     }
-	.user-info {
+    
+    .button_:active {
+        transform: translateY(0);
+    }
+    
+    .button_:hover::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: 0.5s;
+    }
+    
+    .button_:hover::after {
+        left: 100%;
+    }
+    
+    /* 文本区域样式 */
+    textarea {
+        width: 100%;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #00bcd4;
+        background-color: rgba(10, 20, 30, 0.7);
+        color: #e0e0ff;
+        font-size: 14px;
+        line-height: 1.5;
+        resize: none;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 0 10px rgba(0, 188, 212, 0.2);
+    }
+    
+    textarea:focus {
+        outline: none;
+        border-color: #9c27b0;
+        box-shadow: inset 0 0 15px rgba(156, 39, 176, 0.3), 
+                    0 0 15px rgba(156, 39, 176, 0.2);
+    }
+    
+    /* 加载动画 */
+    @keyframes pulse {
+        0% { opacity: 0.5; }
+        50% { opacity: 1; }
+        100% { opacity: 0.5; }
+    }
+    
+    .loading {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+        color: #00ffff;
+        font-size: 16px;
+        text-shadow: 0 0 10px #00ffff;
+    }
+    
+    .loading.active {
+        display: block;
+        animation: pulse 1.5s infinite;
+    }
+    
+    /* 用户信息样式 */
+    .user-info {
         position: fixed;
         bottom: 10px;
         right: 10px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 10px;
+        background-color: rgba(10, 20, 30, 0.9);
+        color: #7afcff;
+        padding: 10px 15px;
         border-radius: 5px;
         font-size: 12px;
+        border: 1px solid rgba(0, 188, 212, 0.3);
+        box-shadow: 0 0 15px rgba(0, 188, 212, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .user-info:hover {
+        background-color: rgba(15, 25, 40, 0.95);
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .container {
+            padding: 15px;
+            width: 95%;
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        .button_ {
+            width: 100%;
+            padding: 12px;
+        }
+		/* 新增指令提示框样式 */
+    .command-instruction {
+        background: rgba(0, 50, 80, 0.3);
+        border: 2px solid #00ffff;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 20px 0;
+        position: relative;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3),
+                    inset 0 0 15px rgba(0, 255, 255, 0.2);
+        overflow: hidden;
+    }
+    
+    .command-instruction::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        animation: borderGlow 2s linear infinite;
+    }
+    
+    .command-instruction::after {
+        content: '❯ 操作指南 ❮';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: #0a0a1a;
+        padding: 0 10px;
+        color: #00ffff;
+        font-size: 14px;
+        text-shadow: 0 0 8px #00ffff;
+    }
+    
+    .command-instruction h4 {
+        margin: 0;
+        color: #7afcff;
+        text-shadow: 0 0 5px rgba(122, 252, 255, 0.5);
+        line-height: 1.8;
+    }
+    
+    .command-instruction span {
+        display: inline-block;
+        color: #00ffff;
+        margin-right: 8px;
+        font-weight: bold;
+    }
+    
+    @keyframes borderGlow {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
     }
 </style>
 </head>
 
 <body>
-<div style="width: 800px; margin: 10px auto;">
-<h1 style="text-align:center">Windows提权辅助|杀软在线对比|常用软件进程对比</h1> 
-<h4>Windows 执行命令 : tasklist /svc 》查询系统内正运行的进程 》复制结果粘贴进框框里 》然后点击进程分析</h4>
-
-<p></p>
-<button type="submit" class="button_" onclick="tasklist();">>>>>>杀软进程对比<<<<<</button>
-</h4>
-<textarea rows="10" id="tasklist" style="width:100%;resize:none;" name="input_process"></textarea>
-匹配结果:
-<textarea rows="13" id="result" style="width:100%;resize:none;" name="process" disabled="disabled"></textarea>
+<div class="container">
+    <h1>Windows提权辅助|杀软在线对比|常用软件进程对比</h1>
+    
+    <div class="command-instruction">
+        <h4>
+            <span>💡</span>Windows 执行命令: <strong>tasklist /svc  </strong>查询系统内正运行的进程 ➔ 复制结果粘贴到下方区域 ➔ 然后点击杀软进程对比<br>
+        </h4>
+    </div>
+    
+    <button type="submit" class="button_" onclick="processAnalysis()">>>>>>杀软进程对比<<<<<</button>
+    
+    <div class="loading" id="loading">系统分析中，请稍候...</div>
+    
+    <textarea rows="10" id="tasklist" placeholder="请在此粘贴tasklist /svc命令的执行结果..." name="input_process"></textarea>
+    <label for="result">匹配结果:</label>
+    <textarea rows="13" id="result" name="process" disabled="disabled"></textarea>
 </div>
-</body>
+<script>
+
+    window.addEventListener('load', function() {
+        const scanLine = document.createElement('div');
+        scanLine.className = 'scan-line';
+        document.body.appendChild(scanLine);
+        scanLine.style.display = 'block';
+        
+        // 每10秒扫描一次
+        setInterval(() => {
+            scanLine.style.display = 'block';
+            setTimeout(() => {
+                scanLine.style.display = 'none';
+            }, 3000);
+        }, 10000);
+        
+        const originalProcessAnalysis = processAnalysis;
+        processAnalysis = function() {
+            scanLine.style.display = 'block';
+            setTimeout(() => {
+                scanLine.style.display = 'none';
+            }, 3000);
+            
+            return originalProcessAnalysis.apply(this, arguments);
+        };
+    });
+</script>
+
+
 
 <script>
-function tasklist() {
+function processAnalysis() {
     var tasklist = document.getElementById('tasklist').value;
     var result = document.getElementById('result');
-    if (tasklist != "" && tasklist) {
-        var re = new RegExp("(.*?)\\.exe", "g");
-        var tasks = tasklist.match(re);
-        if (tasks) {
-            var uniqueTasks = new Set();
-            var htmlContent = "";
-            for (i = 0; i < Object.keys(avList).length; i++) {
-                var taskid = Object.keys(avList)[i];
-                for (x = 0; x < tasks.length; x++) {
-                    if (taskid.toLowerCase() === tasks[x].toLowerCase() && !uniqueTasks.has(taskid.toLowerCase())) {
-                        uniqueTasks.add(taskid.toLowerCase());
-                        htmlContent += taskid + "：" + avList[taskid] + "\n";
+    var loading = document.getElementById('loading');
+    
+    loading.classList.add('active');
+    result.value = '';
+    
+    setTimeout(function() {
+        try {
+            if (tasklist != "" && tasklist) {
+                var re = new RegExp("(.*?)\\.exe", "g");
+                var tasks = tasklist.match(re);
+                
+                if (tasks) {
+                    var uniqueTasks = new Set();
+                    var htmlContent = "";
+                    for (i = 0; i < Object.keys(avList).length; i++) {
+                        var taskid = Object.keys(avList)[i];
+                        for (x = 0; x < tasks.length; x++) {
+                            if (taskid.toLowerCase() === tasks[x].toLowerCase() && !uniqueTasks.has(taskid.toLowerCase())) {
+                                uniqueTasks.add(taskid.toLowerCase());
+                                htmlContent += taskid + "：" + avList[taskid] + "\n";
+                            }
+                        }
                     }
+                    result.value = htmlContent || '暂无匹配，欢迎补充！';
+                } else {
+                    result.value = '暂无匹配，欢迎补充！';
                 }
+            } else {
+                result.value = '请将tasklist /svc 命令执行的结果复制过来！';
             }
-            result.innerHTML = htmlContent || '暂无匹配，欢迎补充！';
-        } else {
-            result.innerHTML = '暂无匹配，欢迎补充！';
+        } catch (e) {
+            console.error(e);
+            result.value = '分析过程中发生错误，请重试或检查输入内容。';
+        } finally {
+            loading.classList.remove('active');
         }
-    } else {
-        result.innerHTML = '请将tasklist /svc 命令执行的结果复制过来！';
-    }
+    }, 800); // 模拟加载延迟
 }
 
+// 用户信息显示功能保持不变
+function displayUserInfo(ipData) {
+    var userAgent = navigator.userAgent;
+    var ipInfo = ipData ? 'IP地址: ' + ipData.ip + ', 地区: ' + ipData.city + ', ' + ipData.region + ', ' + ipData.country : 'IP信息加载失败';
+    
+    var userInfoDiv = document.createElement('div');
+    userInfoDiv.className = 'user-info';
+    userInfoDiv.innerHTML = 'User-Agent: ' + userAgent + '<br>' + ipInfo;
+    document.body.appendChild(userInfoDiv);
+}
+
+fetch('https://ipinfo.io/json')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        displayUserInfo(data);
+    })
+    .catch(error => {
+        console.error('Error fetching IP info:', error);
+        displayUserInfo(null);
+    });
 </script>
-
-<script type="text/javascript">
-    function displayUserInfo(ipData) {
-        var userAgent = navigator.userAgent;
-        var ipInfo = ipData ? 'IP地址: ' + ipData.ip + ', 地区: ' + ipData.city + ', ' + ipData.region + ', ' + ipData.country : 'IP信息加载失败';
-        
-        var userInfoDiv = document.createElement('div');
-        userInfoDiv.className = 'user-info';
-        userInfoDiv.innerHTML = 'User-Agent: ' + userAgent + '<br>' + ipInfo;
-        document.body.appendChild(userInfoDiv);
-    }
-
-    fetch('https://ipinfo.io/json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('IP data:', data);
-            displayUserInfo(data);
-        })
-        .catch(error => {
-            console.error('Error fetching IP info:', error);
-            displayUserInfo(null);
-        });
-</script>
-
-
-<body>
-  <img src="http://burp/favicon.ico" onload="alert('抓到你了 嘿嘿嘿')" >
 </body>
-
 </html>
