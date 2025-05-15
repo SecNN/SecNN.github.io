@@ -1,82 +1,476 @@
-<!DOCTYPE html>  
-<html lang="zh-cn" xmlns="http://www.w3.org/1999/xhtml">
-<head>  
-    <title>POC&EXP工具武器库&漏洞库</title>  
-    <style>  
-        body {  
-            font-family: Arial, sans-serif;  
-            margin: 0;  
-            padding: 20px;  
-        }  
-        .product-image {  
-            width: 100%;  
-            max-width: 400px;  
-            margin-bottom: 20px;  
-        }  
-        .product-title {  
-            font-size: 24px;  
-            margin-bottom: 10px;  
-        }  
-        .product-description {  
-            font-size: 16px;  
-            line-height: 1.5;  
-        }  
-        .product-price {  
-            font-size: 20px;  
-            font-weight: bold;  
-            margin-top: 20px;  
-        }  
-    </style>  
-</head>  
-<body>  
-    <div class="product">   
-        <h1 class="product-title">POC&EXP工具武器库</h1>  
-        <p class="product-description">POC&EXP工具武器库虚拟机中主要搜集一些关于渗透测试的工具（应急响应、信息收集、无线WIFI攻击、代理工具、提权辅助、暴力破解、DDOS压力测试、内网攻击、代码审计、漏洞扫描、漏洞利用、分析进程、权限提升、免杀、Webshell管理、APP测试、小程序测试）等，属于内部工具禁止对外传播。敬请期待......</p>  
-		<h1 class="product-title">漏洞库</h1>  
-        <p class="product-description">本Wiki基于公开漏洞库收集整理漏洞利用过程-内部使用禁止对外传播，禁止用于非法用途，否则一切后果自负。敬请期待......</p>  
-		<img class="product-image" src="wx.png" alt="POC&EXP工具武器库"> 
-	<h1 class="product-title">免责声明：工具仅用于合法授权渗透测试，交流技术安全研究使用，禁止用于非法用途，否则一切后果自负。</h1> 		
-    </div>  
-	
-
-<span id="sitetime"  ></span>
-<script language=javascript>
-    function siteTime(){
-        window.setTimeout("siteTime()", 1000);
-        var seconds = 1000;
-        var minutes = seconds * 60;
-        var hours = minutes * 60;
-        var days = hours * 24;
-        var years = days * 365;
-        var today = new Date();
-        var todayYear = today.getFullYear();
-        var todayMonth = today.getMonth()+1;
-        var todayDate = today.getDate();
-        var todayHour = today.getHours();
-        var todayMinute = today.getMinutes();
-        var todaySecond = today.getSeconds();
-        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
-        year - 作为date对象的年份，为4位年份值
-        month - 0-11之间的整数，做为date对象的月份
-        day - 1-31之间的整数，做为date对象的天数
-        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
-        minutes - 0-59之间的整数，做为date对象的分钟数
-        seconds - 0-59之间的整数，做为date对象的秒数
-        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
-        var t1 = Date.UTC(2022,10,01,00,00,00); //北京时间2016-12-1 00:00:00
-        var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
-        var diff = t2-t1;
-        var diffYears = Math.floor(diff/years);
-        var diffDays = Math.floor((diff/days)-diffYears*365);
-        var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
-        var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
-        var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
-        document.getElementById("sitetime").innerHTML=" 已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
-    }
-    siteTime();
-</script>
-	
-	
-	
-</body>  
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POC&EXP 安全工具库|网络安全研究人员必备工具|漏洞库|安全研究人员专业工具集合</title>
+	 <meta name="description" content="安全研究人员专业工具集合，包含多种POC&EXP工具和漏洞库。本资源为内部渗透测试和安全研究提供强大支持。">
+    <meta name="keywords" content="渗透测试工具,安全研究工具,漏洞利用工具,POC EXP工具,网络安全工具包,漏洞库">
+    <link rel="canonical" href="https://www.secnn.com/POC-EXP/index.html" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* 全局样式 */
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff00aa;
+            --bg-dark: #0a0a1a;
+            --bg-darker: #050510;
+            --text-light: #e0e0ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-light);
+            background-color: var(--bg-dark);
+            overflow-x: hidden;
+            perspective: 1000px;
+            height: 100vh;
+        }
+        
+        /* 全屏背景 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: linear-gradient(to bottom, var(--bg-darker), var(--bg-dark));
+        }
+        
+        /* 3D容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            transform-style: preserve-3d;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+            50% { transform: translateY(-20px) rotateX(5deg) rotateY(5deg); }
+        }
+        
+        /* 标题样式 */
+        .main-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .main-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        /* 内容卡片 */
+        .card {
+            background: rgba(10, 10, 30, 0.7);
+            border: 1px solid rgba(0, 247, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) rotateX(3deg);
+            box-shadow: 0 15px 40px rgba(0, 247, 255, 0.1);
+            border-color: rgba(0, 247, 255, 0.4);
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 5px var(--primary);
+        }
+        
+        .card-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* 图像容器 */
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.2);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .image-container:hover {
+            transform: scale(1.03) rotateY(5deg);
+            box-shadow: 0 0 50px rgba(0, 247, 255, 0.4);
+        }
+        
+        .image-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(0, 247, 255, 0.1) 0%, 
+                transparent 50%, 
+                rgba(255, 0, 170, 0.1) 100%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+        
+        /* 免责声明 */
+        .disclaimer {
+            font-size: 0.9rem;
+            color: rgba(255, 100, 100, 0.8);
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 0, 170, 0.3);
+            margin-top: 3rem;
+        }
+        
+        /* 运行时间 */
+        #sitetime {
+            font-family: 'Orbitron', sans-serif;
+            display: block;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--primary);
+            margin: 2rem 0;
+            text-shadow: 0 0 5px var(--primary);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.8rem;
+            border-radius: 5px;
+            border: 1px solid rgba(0, 247, 255, 0.2);
+        }
+        
+        /* 3D元素 */
+        .floating-cubes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* 入场动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container > * {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .container > *:nth-child(1) { animation-delay: 0.3s; }
+        .container > *:nth-child(2) { animation-delay: 0.6s; }
+        .container > *:nth-child(3) { animation-delay: 0.9s; }
+        .container > *:nth-child(4) { animation-delay: 1.2s; }
+        .container > *:nth-child(5) { animation-delay: 1.5s; }
+    </style>
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
+    <!-- 3D浮动立方体 -->
+    <div class="floating-cubes" id="cubes-container"></div>
+    
+    <!-- 主容器 -->
+    <div class="container">
+        <h1 class="main-title">POC&EXP 安全工具库|漏洞库</h1>
+		
+        
+        <div class="card">
+            <h2 class="card-title">工具武器库</h2>
+            <p class="card-content">
+                POC&EXP工具武器库虚拟机中主要搜集一些关于渗透测试的工具（应急响应、信息收集、无线WIFI攻击、代理工具、提权辅助、
+                暴力破解、DDOS压力测试、内网攻击、代码审计、漏洞扫描、漏洞利用、分析进程、权限提升、免杀、Webshell管理、
+                APP测试、小程序测试）等，属于内部工具禁止对外传播。
+            </p>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">漏洞库</h2>
+            <p class="card-content">
+                本Wiki基于公开漏洞库收集整理漏洞利用过程-内部使用禁止对外传播，禁止用于非法用途，否则一切后果自负。
+            </p>
+        </div>
+        <h2 style="text-align: center;">✅ "关注微信公众号，即将揭晓重磅内容 敬请期待！"</h2>
+        <div class="image-container">
+            <img src="wx.png" alt="POC&EXP工具武器库" style="width:100%; display:block;">
+        </div>
+        
+        <span id="sitetime"></span>
+        
+        <p class="disclaimer">
+            免责声明：工具仅用于合法授权渗透测试，交流技术安全研究使用，禁止用于非法用途，否则一切后果自负。
+        </p>
+    </div>
+    
+    <!-- 原始计时脚本 -->
+    <script language="javascript">
+        function siteTime(){
+            window.setTimeout("siteTime()", 1000);
+            var seconds = 1000;
+            var minutes = seconds * 60;
+            var hours = minutes * 60;
+            var days = hours * 24;
+            var years = days * 365;
+            var today = new Date();
+            var todayYear = today.getFullYear();
+            var todayMonth = today.getMonth()+1;
+            var todayDate = today.getDate();
+            var todayHour = today.getHours();
+            var todayMinute = today.getMinutes();
+            var todaySecond = today.getSeconds();
+            var t1 = Date.UTC(2022,10,01,00,00,00);
+            var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+            var diff = t2-t1;
+            var diffYears = Math.floor(diff/years);
+            var diffDays = Math.floor((diff/days)-diffYears*365);
+            var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+            var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+            var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+            document.getElementById("sitetime").innerHTML=" <span style='color:#00f7ff;'>|</span> 已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒 <span style='color:#00f7ff;'>|</span>";
+        }
+        siteTime();
+    </script>
+    
+    <!-- 粒子效果配置 -->
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#00f7ff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#00f7ff",
+                    "opacity": 0.3,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 3,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 0.8
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+        
+        // 3D浮动立方体效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置场景
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('cubes-container').appendChild(renderer.domElement);
+            
+            // 创建立方体
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x00f7ff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.2
+            });
+            
+            const cubes = [];
+            for (let i = 0; i < 10; i++) {
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.x = Math.random() * 20 - 10;
+                cube.position.y = Math.random() * 20 - 10;
+                cube.position.z = Math.random() * 20 - 10;
+                cube.rotation.x = Math.random() * Math.PI;
+                cube.rotation.y = Math.random() * Math.PI;
+                cube.scale.set(
+                    Math.random() + 0.5,
+                    Math.random() + 0.5,
+                    Math.random() + 0.5
+                );
+                scene.add(cube);
+                cubes.push(cube);
+            }
+            
+            camera.position.z = 5;
+            
+            // 动画循环
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                cubes.forEach(cube => {
+                    cube.rotation.x += 0.01;
+                    cube.rotation.y += 0.01;
+                    
+                    // 缓慢移动
+                    cube.position.x += (Math.random() - 0.5) * 0.05;
+                    cube.position.y += (Math.random() - 0.5) * 0.05;
+                    
+                    // 边界检查
+                    if (Math.abs(cube.position.x) > 10) cube.position.x *= -0.99;
+                    if (Math.abs(cube.position.y) > 10) cube.position.y *= -0.99;
+                    if (Math.abs(cube.position.z) > 10) cube.position.z *= -0.99;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            // 窗口大小调整
+            window.addEventListener('resize', function() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            animate();
+            
+            // Hover效果 - 让粒子在鼠标移动时产生互动
+            const canvas = renderer.domElement;
+            canvas.style.pointerEvents = 'none';
+            
+            document.addEventListener('mousemove', function(event) {
+                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                
+                cubes.forEach(cube => {
+                    cube.position.x += (mouseX * 5 - cube.position.x) * 0.001;
+                    cube.position.y += (mouseY * 5 - cube.position.y) * 0.001;
+                });
+            });
+        });
+    </script>
+</body>
 </html>
