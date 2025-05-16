@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT在线编解码工具|JSON Web Token解析、验证与生成|SecNN.com</title>
+	<meta name="description" content="免费在线JSON Web Token(JWT)解析解码器，实时验证JWT有效性，生成HS256/RS256签名Token，支持在线调试JWT Header、Payload、Signature。">
+    <style>
+        :root {
+            --primary-color: #4a6bdf;
+            --secondary-color: #3a4f9a;
+            --bg-color: #1a1a2e;
+            --card-color: #16213e;
+            --text-color: #e6e6e6;
+            --error-color: #e94560;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --border-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 3px;
+        }
+
+        .description {
+            margin-bottom: 1rem;
+            color: #a1a1a1;
+        }
+
+        .tool-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tool-card {
+            flex: 1;
+            min-width: 300px;
+            background: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%);
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: #fff;
+            font-size: 1.5rem;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 123, 228, 0.5);
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #333;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-family: monospace;
+            resize: vertical;
+            min-height: 50px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        textarea:focus, input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #ccc;
+        }
+
+        button {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-container {
+            margin-top: 1rem;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .warning-message {
+            color: var(--warning-color);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .signature-status {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .valid {
+            color: var(--success-color);
+            border-left: 5px solid var(--success-color);
+        }
+
+        .invalid {
+            color: var(--error-color);
+            border-left: 5px solid var(--error-color);
+        }
+
+        .token-preview {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
+
+        .header-info {
+            background-color: rgba(74, 123, 228, 0.1);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            color: #a8c4ff;
+        }
+
+        .footer {
+            margin-top: 1rem;
+            text-align: center;
+            color: #777;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .algorithm-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .algorithm-option {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #333;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .field-explanations {
+            background-color: rgba(26, 42, 77, 0.5);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+        }
+
+        .field-explanations h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .field-item {
+            margin-bottom: 1rem;
+        }
+
+        .field-item h4 {
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .field-item p {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .tool-section {
+                flex-direction: column;
+            }
+            
+            .tool-card {
+                min-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* 深色滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3a3a5c;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4a6c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JWT(JSON Web Token)在线编解码 | SecNN.com</h1>
+            <p class="description">免费安全、快速的在线JSON Web Token编码和解码工具，数据完全在本地处理，不会将任何数据发送到服务器。</p>
+        </header>
+
+        <div class="tool-section">
+            <div class="tool-card">
+                <h2>编码  JWT Token</h2>
+                <div class="input-group">
+                    <label for="header-input"></label>
+                    <textarea id="header-input" placeholder='Header (JSON){"alg":"HS256","typ":"JWT"}'></textarea>
+                    <div id="header-error" class="error-message"></div>
+                </div>
+                <div class="input-group">
+                    <label for="payload-input">Payload (JSON)</label>
+                    <textarea id="payload-input" placeholder='{"sub":"1234567890","name":"John Doe","iat":1516239022}'></textarea>
+                    <div id="payload-error" class="error-message"></div>
+                </div>
+                <div class="input-group">
+                    <label for="secret-key">Secret Key (可选)</label>
+                    <input type="text" id="secret-key" placeholder="输入密钥用于签名">
+                </div>
+                <div class="algorithm-selector">
+                    <div class="algorithm-option">
+                        <label for="algorithm-select">算法</label>
+                        <select id="algorithm-select">
+                            <option value="HS256">HS256</option>
+                            <option value="HS384">HS384</option>
+                            <option value="HS512">HS512</option>
+                            <option value="RS256">RS256 (暂不支持)</option>
+                            <option value="none">None (未签名)</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="encode-btn">编码 JWT Token</button>
+                <div class="result-container">
+                    <label for="encoded-result">结果</label>
+                    <textarea id="encoded-result" readonly></textarea>
+                    <div id="encode-success" class="success-message"></div>
+                    <div id="encode-error" class="error-message"></div>
+                    <div id="token-preview" class="token-preview"></div>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h2>解码 JWT Token</h2>
+                <div class="input-group">
+                    <label for="token-input"></label>
+                    <textarea id="token-input" placeholder="输入要解码的JWT..."></textarea>
+                    <div id="token-error" class="error-message"></div>
+                </div>
+                <div class="input-group">
+                    <label for="verify-secret-key">Secret Key (验证签名)</label>
+                    <input type="text" id="verify-secret-key" placeholder="输入密钥验证签名(可选)">
+                </div>
+                <button id="decode-btn">解码 JWT</button>
+                <div id="signature-status" class="signature-status" style="display: none;">
+                    <strong>签名验证: </strong><span id="signature-validity"></span>
+                </div>
+                <div class="result-container">
+                    <label for="decoded-header">Header</label>
+                    <pre id="decoded-header"></pre>
+                    <div id="header-info" class="header-info" style="display: none;"></div>
+                    <label for="decoded-payload">Payload</label>
+                    <pre id="decoded-payload"></pre>
+                    <div id="decode-error" class="error-message"></div>
+                    <div id="decode-warning" class="warning-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2023 JWT(JSON Web Token)在线编解码工具  | SecNN.com</p>
+			<p>数据完全在本地处理，不会上传到任何服务器</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/hmac-sha256.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/hmac-sha384.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/hmac-sha512.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const encodeBtn = document.getElementById('encode-btn');
+            const decodeBtn = document.getElementById('decode-btn');
+            const headerInput = document.getElementById('header-input');
+            const payloadInput = document.getElementById('payload-input');
+            const secretKeyInput = document.getElementById('secret-key');
+            const algorithmSelect = document.getElementById('algorithm-select');
+            const encodedResult = document.getElementById('encoded-result');
+            const tokenInput = document.getElementById('token-input');
+            const verifySecretKeyInput = document.getElementById('verify-secret-key');
+            const decodedHeader = document.getElementById('decoded-header');
+            const decodedPayload = document.getElementById('decoded-payload');
+            const headerError = document.getElementById('header-error');
+            const payloadError = document.getElementById('payload-error');
+            const encodeError = document.getElementById('encode-error');
+            const decodeError = document.getElementById('decode-error');
+            const decodeWarning = document.getElementById('decode-warning');
+            const encodeSuccess = document.getElementById('encode-success');
+            const tokenPreview = document.getElementById('token-preview');
+            const signatureStatus = document.getElementById('signature-status');
+            const signatureValidity = document.getElementById('signature-validity');
+            const headerInfo = document.getElementById('header-info');
+
+            // 实时解码功能
+            tokenInput.addEventListener('input', function() {
+                if (tokenInput.value.trim().length > 0) {
+                    tryDecodeToken(tokenInput.value);
+                } else {
+                    clearDecodeResults();
+                }
+            });
+
+            encodeBtn.addEventListener('click', encodeJWT);
+            decodeBtn.addEventListener('click', function() {
+                tryDecodeToken(tokenInput.value);
+            });
+
+            function encodeJWT() {
+                clearErrors();
+                clearEncodeResults();
+
+                try {
+                    let headerObj = {};
+                    let payloadObj = {};
+                    
+                    // 解析Header
+                    if (headerInput.value.trim()) {
+                        try {
+                            headerObj = JSON.parse(headerInput.value.trim());
+                        } catch (e) {
+                            headerError.textContent = 'Header不是有效的JSON: ' + e.message;
+                            return;
+                        }
+                    } else {
+                        headerObj = { alg: 'HS256', typ: 'JWT' };
+                        headerInput.value = JSON.stringify(headerObj, null, 2);
+                    }
+
+                    // 解析Payload
+                    if (payloadInput.value.trim()) {
+                        try {
+                            payloadObj = JSON.parse(payloadInput.value.trim());
+                        } catch (e) {
+                            payloadError.textContent = 'Payload不是有效的JSON: ' + e.message;
+                            return;
+                        }
+                    } else {
+                        payloadError.textContent = '请提供Payload内容';
+                        return;
+                    }
+
+                    // 检查算法
+                    const algorithm = algorithmSelect.value;
+                    headerObj.alg = algorithm;
+
+                    // 如果是none算法，不能有密钥
+                    if (algorithm === 'none' && secretKeyInput.value.trim()) {
+                        encodeError.textContent = 'None算法不能提供密钥';
+                        return;
+                    }
+
+                    // 如果选择HS算法但没提供密钥
+                    if (algorithm.startsWith('HS') && !secretKeyInput.value.trim()) {
+                        encodeError.textContent = `${algorithm}算法需要提供密钥`;
+						                    return;
+                }
+
+                // 生成编码后的JWT
+                const encodedHeader = Base64.encodeURI(JSON.stringify(headerObj));
+                const encodedPayload = Base64.encodeURI(JSON.stringify(payloadObj));
+                let encodedSignature = '';
+
+                if (algorithm === 'none') {
+                    encodedSignature = '';
+                } else {
+                    // 计算签名
+                    const secret = secretKeyInput.value.trim();
+                    const data = encodedHeader + "." + encodedPayload;
+                    
+                    try {
+                        let signature = '';
+                        if (algorithm === 'HS256') {
+                            signature = CryptoJS.HmacSHA256(data, secret).toString(CryptoJS.enc.Base64url);
+                        } else if (algorithm === 'HS384') {
+                            signature = CryptoJS.HmacSHA384(data, secret).toString(CryptoJS.enc.Base64url);
+                        } else if (algorithm === 'HS512') {
+                            signature = CryptoJS.HmacSHA512(data, secret).toString(CryptoJS.enc.Base64url);
+                        } else {
+                            encodeError.textContent = `不支持的算法: ${algorithm}`;
+                            return;
+                        }
+                        
+                        encodedSignature = signature.replace(/=+$/, '');
+                    } catch (e) {
+                        encodeError.textContent = '签名生成失败: ' + e.message;
+                        return;
+                    }
+                }
+
+                // 组装JWT
+                const jwt = algorithm === 'none' 
+                    ? encodedHeader + "." + encodedPayload + "." 
+                    : encodedHeader + "." + encodedPayload + "." + encodedSignature;
+
+                encodedResult.value = jwt;
+                encodeSuccess.textContent = 'JWT生成成功！';
+                showTokenPreview(jwt);
+            } catch (e) {
+                encodeError.textContent = '编码过程中出现错误: ' + e.message;
+            }
+        }
+
+        function tryDecodeToken(token) {
+            clearDecodeResults();
+            
+            if (!token.trim()) {
+                return;
+            }
+
+            try {
+                // 检查是否是有效的JWT格式
+                const parts = token.trim().split('.');
+                if (parts.length !== 3) {
+                    decodeError.textContent = '无效的JWT格式，应有header.payload.signature三部分';
+                    return;
+                }
+
+                // 解码Header和Payload
+                let header = {};
+                let payload = {};
+                
+                try {
+                    header = JSON.parse(Base64.decode(parts[0]));
+                } catch (e) {
+                    decodeError.textContent = 'Header解码失败: ' + e.message;
+                    return;
+                }
+
+                try {
+                    payload = JSON.parse(Base64.decode(parts[1]));
+                } catch (e) {
+                    decodeError.textContent = 'Payload解码失败: ' + e.message;
+                    return;
+                }
+
+                // 显示解码结果
+                decodedHeader.textContent = JSON.stringify(header, null, 2);
+                decodedPayload.textContent = JSON.stringify(payload, null, 2);
+
+                // 显示Header信息
+                showHeaderInfo(header);
+
+                // 检查是否提供密钥用于验证
+                const verifySecret = verifySecretKeyInput.value.trim();
+                if (verifySecret) {
+                    verifySignature(token, verifySecret);
+                } else {
+                    decodeWarning.textContent = '警告: 未提供密钥，签名验证已被跳过';
+                    if (header.alg === 'none') {
+                        decodeWarning.textContent = '警告: 此JWT未签名(alg=none)';
+                    }
+                }
+            } catch (e) {
+                decodeError.textContent = '解码过程中出现错误: ' + e.message;
+            }
+        }
+
+        function verifySignature(token, secret) {
+            const parts = token.split('.');
+            if (parts.length !== 3) return;
+
+            const header = JSON.parse(Base64.decode(parts[0]));
+            const algorithm = header.alg;
+
+            if (algorithm === 'none') {
+                signatureStatus.style.display = 'block';
+                signatureStatus.className = 'signature-status invalid';
+                signatureValidity.textContent = '无效: 此JWT未签名(alg=none)';
+                return;
+            }
+
+            // 计算签名并与现有的比较
+            const data = parts[0] + "." + parts[1];
+            let calculatedSignature = '';
+
+            try {
+                if (algorithm === 'HS256') {
+                    calculatedSignature = CryptoJS.HmacSHA256(data, secret).toString(CryptoJS.enc.Base64url).replace(/=+$/, '');
+                } else if (algorithm === 'HS384') {
+                    calculatedSignature = CryptoJS.HmacSHA384(data, secret).toString(CryptoJS.enc.Base64url).replace(/=+$/, '');
+                } else if (algorithm === 'HS512') {
+                    calculatedSignature = CryptoJS.HmacSHA512(data, secret).toString(CryptoJS.enc.Base64url).replace(/=+$/, '');
+                } else {
+                    signatureStatus.style.display = 'block';
+                    signatureStatus.className = 'signature-status invalid';
+                    signatureValidity.textContent = `不支持验证的算法: ${algorithm}`;
+                    return;
+                }
+
+                const isValid = parts[2] === calculatedSignature;
+                signatureStatus.style.display = 'block';
+                signatureStatus.className = isValid ? 'signature-status valid' : 'signature-status invalid';
+                signatureValidity.textContent = isValid ? '有效: 签名验证通过' : '无效: 签名不匹配';
+            } catch (e) {
+                signatureStatus.style.display = 'block';
+                signatureStatus.className = 'signature-status invalid';
+                signatureValidity.textContent = '验证失败: ' + e.message;
+            }
+        }
+
+        function showTokenPreview(jwt) {
+            const parts = jwt.split('.');
+            if (parts.length !== 3) return;
+
+            const preview = `Header: ${parts[0].slice(0, 10)}... | Payload: ${parts[1].slice(0, 10)}... | Signature: ${parts[2].slice(0, 10)}...`;
+            tokenPreview.textContent = preview;
+        }
+
+        function showHeaderInfo(header) {
+            let info = '';
+            
+            if (header.typ) {
+                info += `类型: ${header.typ} | `;
+            }
+            
+            if (header.alg) {
+                info += `算法: ${header.alg}`;
+            }
+
+            if (info) {
+                headerInfo.textContent = info;
+                headerInfo.style.display = 'block';
+            } else {
+                headerInfo.style.display = 'none';
+            }
+        }
+
+        function clearErrors() {
+            headerError.textContent = '';
+            payloadError.textContent = '';
+            encodeError.textContent = '';
+            decodeError.textContent = '';
+            decodeWarning.textContent = '';
+            encodeSuccess.textContent = '';
+        }
+
+        function clearEncodeResults() {
+            encodedResult.value = '';
+            tokenPreview.textContent = '';
+        }
+
+        function clearDecodeResults() {
+            decodedHeader.textContent = '';
+            decodedPayload.textContent = '';
+            signatureStatus.style.display = 'none';
+            headerInfo.style.display = 'none';
+            decodeError.textContent = '';
+            decodeWarning.textContent = '';
+        }
+
+        // 初始示例
+        headerInput.value = JSON.stringify({
+            alg: "HS256",
+            typ: "JWT"
+        }, null, 2);
+
+        payloadInput.value = JSON.stringify({
+            sub: "1234567890",
+            name: "示例用户",
+            iat: Math.floor(Date.now() / 1000)
+        }, null, 2);
+    });
+</script>
+</body> </html>
+                       
