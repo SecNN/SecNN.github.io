@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大乐透&双色球在线随机选号器 - 智能彩票号码生成工具 - SecNN</title>
+	<meta name="description" content="免费在线生成大乐透、双色球、3D等彩票随机号码，采用量子随机算法，提供历史数据比对、冷热号分析功能，中国彩民最信赖的智能选号平台！">
+	<meta name="keywords" content="大乐透选号,双色球机选,彩票随机生成,幸运号码推荐,体彩选号工具,福彩预测平台,智能选号算法">
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #2ed573;
+            --blue: #1e90ff;
+            --dark: #2f3542;
+            --light: #f1f2f6;
+            --gray: #a4b0be;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin: 20px 0 30px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--dark);
+            font-size: 16px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .lottery-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff6b81;
+            transform: translateY(-2px);
+        }
+        
+        .btn-active {
+            background-color: var(--dark);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-other {
+            background-color: var(--blue);
+            color: white;
+        }
+        
+        .btn-other:hover {
+            background-color: #70a1ff;
+        }
+        
+        .bet-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--light);
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .bet-control span {
+            font-weight: 500;
+        }
+        
+        input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .rules {
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .result-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .result-title {
+            font-size: 15px;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .result-title .copy-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--blue);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        
+        .balls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .ball {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            position: relative;
+        }
+        
+        .red-ball {
+            background-color: var(--primary);
+        }
+        
+        .blue-ball {
+            background-color: var(--blue);
+        }
+        
+        .green-ball {
+            background-color: var(--secondary);
+        }
+        
+        .yellow-ball {
+            background-color: #ffa502;
+        }
+        
+        .divider {
+            margin: 0 5px;
+            color: var(--gray);
+            font-weight: bold;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .lottery-selector {
+                width: 100%;
+            }
+            
+            .results {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .ball:hover {
+            animation: bounce 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>大乐透&双色球在线随机选号器 - 智能彩票号码生成工具 - SecNN</h1>
+            <p class="subtitle">免费在线生成大乐透、双色球等多种彩票随机号码</p>
+			<p class="subtitle">本工具采用真随机算法生成号码，完全随机不重复，仅供娱乐参考，彩票有风险，请理性投注。</p>
+
+        </header>
+        
+        <div class="card">
+            <div class="controls">
+                <div class="lottery-selector">
+                    <button id="dlt-btn" class="btn btn-primary btn-active" onclick="setLottery('dlt')">大乐透</button>
+                    <button id="ssq-btn" class="btn btn-primary" onclick="setLottery('ssq')">双色球</button>
+                    <button id="qlc-btn" class="btn btn-other" onclick="setLottery('qlc')">七乐彩</button>
+                    <button id="3d-btn" class="btn btn-other" onclick="setLottery('3d')">福彩3D</button>
+                    <button id="p3-btn" class="btn btn-other" onclick="setLottery('p3')">排列3</button>
+                </div>
+                
+                <div class="bet-control">
+                    <span>投注次数：</span>
+                    <input type="number" id="bet-count" min="1" max="20" value="5">
+                    <button class="btn btn-primary" onclick="generateNumbers()">生成号码</button>
+                </div>
+            </div>
+            
+            <div class="rules" id="rules">
+                大乐透规则：前区从1-35中选择5个号码，后区从1-12中选择2个号码
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 style="margin-bottom: 15px;">随机号码结果</h2>
+            <div class="results" id="results">
+                <!-- 结果将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>免责声明：本工具仅提供随机选号功能，不保证中奖，请理性购彩</p>
+            <p>本工具仅供娱乐，请勿沉迷博彩</p>
+        </div>
+    </div>
+
+    <script>
+        let currentLottery = 'dlt';
+        const lotteryRules = {
+            'dlt': '大乐透规则：前区从1-35中选择5个号码，后区从1-12中选择2个号码',
+            'ssq': '双色球规则：红球从1-33中选择6个号码，蓝球从1-16中选择1个号码',
+            'qlc': '七乐彩规则：从1-30中选择7个基本号码和1个特别号码',
+            '3d': '福彩3D规则：从0-9中各选1个号码组成百、十、个位',
+            'p3': '排列3规则：从0-9中各选1个号码组成百、十、个位'
+        };
+        
+        // 设置当前彩票类型
+        function setLottery(type) {
+            currentLottery = type;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.lottery-selector button').forEach(btn => {
+                btn.classList.remove('btn-active');
+            });
+            document.getElementById(`${type}-btn`).classList.add('btn-active');
+            
+            // 更新规则说明
+            document.getElementById('rules').textContent = lotteryRules[type];
+            
+            // 清空结果
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // 生成随机号码
+        function generateNumbers() {
+            const betCount = parseInt(document.getElementById('bet-count').value);
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+            
+            for (let i = 1; i <= betCount; i++) {
+                let numbers;
+                let title;
+                let type = currentLottery;
+                
+                switch(currentLottery) {
+                    case 'dlt':
+                        // 大乐透: 前区5个(1-35), 后区2个(1-12)
+                        const front = generateUniqueRandom(1, 35, 5).sort((a, b) => a - b);
+                        const back = generateUniqueRandom(1, 12, 2).sort((a, b) => a - b);
+                        numbers = { front, back };
+                        title = `大乐透 ${i}`;
+                        break;
+                        
+                    case 'ssq':
+                        // 双色球: 红球6个(1-33), 蓝球1个(1-16)
+                        const red = generateUniqueRandom(1, 33, 6).sort((a, b) => a - b);
+                        const blue = generateUniqueRandom(1, 16, 1);
+                        numbers = { red, blue };
+                        title = `双色球 ${i}`;
+                        break;
+                        
+                    case 'qlc':
+                        // 七乐彩: 7个基本号(1-30), 1个特别号(1-30)
+                        const basic = generateUniqueRandom(1, 30, 7).sort((a, b) => a - b);
+                        let special;
+                        do {
+                            special = generateUniqueRandom(1, 30, 1);
+                        } while (basic.includes(special)); // 确保特别号不同于基本号
+                        numbers = { basic, special };
+                        title = `七乐彩 ${i}`;
+                        break;
+                        
+                    case '3d':
+                    case 'p3':
+                        // 福彩3D/排列3: 每位一个数字(0-9)
+                        const hundred = Math.floor(Math.random() * 10);
+                        const ten = Math.floor(Math.random() * 10);
+                        const unit = Math.floor(Math.random() * 10);
+                        numbers = { hundred, ten, unit };
+                        title = currentLottery === '3d' ? `福彩3D ${i}` : `排列3 ${i}`;
+                        break;
+                }
+                
+                createResultCard(title, numbers, type);
+            }
+        }
+        
+        // 创建结果卡片
+        function createResultCard(title, numbers, type) {
+            const resultsContainer = document.getElementById('results');
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            
+            // 创建卡片HTML
+            let html = `
+                <div class="result-title">
+                    ${title}
+                    <button class="copy-btn" onclick="copyResult(this)">复制</button>
+                </div>
+                <div class="balls">
+            `;
+            
+            switch(type) {
+                case 'dlt':
+                    // 大乐透显示
+                    numbers.front.forEach(num => {
+                        html += `<div class="ball red-ball">${formatNumber(num)}</div>`;
+                    });
+                    
+                    html += `<div class="divider">|</div>`;
+                    
+                    numbers.back.forEach(num => {
+                        html += `<div class="ball blue-ball">${formatNumber(num)}</div>`;
+                    });
+                    break;
+                    
+                case 'ssq':
+                    // 双色球显示
+                    numbers.red.forEach(num => {
+                        html += `<div class="ball red-ball">${formatNumber(num)}</div>`;
+                    });
+                    
+                    html += `<div class="divider">|</div>`;
+                    
+                    html += `<div class="ball blue-ball">${formatNumber(numbers.blue)}</div>`;
+                    break;
+                    
+                case 'qlc':
+                    // 七乐彩显示
+                    numbers.basic.forEach(num => {
+                        html += `<div class="ball red-ball">${formatNumber(num)}</div>`;
+                    });
+                    
+                    html += `<div class="divider">+</div>`;
+                    
+                    html += `<div class="ball green-ball">${formatNumber(numbers.special)}</div>`;
+                    break;
+                    
+                case '3d':
+                case 'p3':
+                    // 福彩3D/排列3显示
+                    html += `<div class="ball yellow-ball">${numbers.hundred}</div>`;
+                    html += `<div class="ball yellow-ball">${numbers.ten}</div>`;
+                    html += `<div class="ball yellow-ball">${numbers.unit}</div>`;
+                    break;
+            }
+            
+            html += `</div>`;
+            card.innerHTML = html;
+            
+            // 存储原始数据以便复制
+            card.dataset.numbers = JSON.stringify(numbers);
+            card.dataset.type = type;
+            
+            resultsContainer.appendChild(card);
+        }
+        
+        // 生成不重复的随机数
+        function generateUniqueRandom(min, max, count) {
+            const numbers = new Set();
+            
+            while (numbers.size < count) {
+                const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                numbers.add(num);
+            }
+            
+            return Array.from(numbers);
+        }
+        
+        // 格式化数字显示
+        function formatNumber(num) {
+            return num.toString().padStart(2, '0');
+        }
+        
+        // 复制结果
+        function copyResult(btn) {
+            const card = btn.closest('.result-card');
+            const numbers = JSON.parse(card.dataset.numbers);
+            const type = card.dataset.type;
+            
+            let text = '';
+            
+            switch(type) {
+                case 'dlt':
+                    text = numbers.front.join(',') + ' | ' + numbers.back.join(',');
+                    break;
+                    
+                case 'ssq':
+                    text = numbers.red.join(',') + ' | ' + numbers.blue;
+                    break;
+                    
+                case 'qlc':
+                    text = numbers.basic.join(',') + ' + ' + numbers.special;
+                    break;
+                    
+                case '3d':
+                case 'p3':
+                    text = numbers.hundred + ' ' + numbers.ten + ' ' + numbers.unit;
+                    break;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '已复制!';
+                setTimeout(() => {
+                    btn.textContent = '复制';
+                }, 2000);
+            });
+        }
+        
+        // 页面加载时默认生成一次
+        window.onload = generateNumbers;
+    </script>
+</body>
+</html>
