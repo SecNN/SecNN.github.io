@@ -287,43 +287,43 @@
             
             switch(type) {
                 case 'phpinfo':
-                    syntax = `site:${domain} ext:php intitle:phpinfo "published by the PHP Group"`;
+                    syntax = ` ext:php intitle:phpinfo "published by the PHP Group"`;
                     description = "查找公开的phpinfo()页面，可能泄露服务器敏感信息";
                     break;
                 case 'login':
-                    syntax = `site:${domain} inurl:login | inurl:admin | intitle:登陆 | intitle:后台 | intitle:管理 | intitle:认证`;
+                    syntax = ` inurl:login | inurl:admin | intitle:登陆 | intitle:后台 | intitle:管理 | intitle:认证`;
                     description = "查找目标网站的登录页面、管理后台";
                     break;
                 case 'sql':
-                    syntax = `site:${domain} intext:"sql syntax near" | intext:"syntax error has occurred" | intext:"incorrect syntax near" | intext:"unexpected end of SQL command" | intext:"Warning: mysql_connect()" | intext:"Warning: mysql_query()" | intext:"Warning: pg_connect()" | intext:"You have an error in your SQL syntax"`;
+                    syntax = ` intext:"sql syntax near" | intext:"syntax error has occurred" | intext:"incorrect syntax near" | intext:"unexpected end of SQL command" | intext:"Warning: mysql_connect()" | intext:"Warning: mysql_query()" | intext:"Warning: pg_connect()" | intext:"You have an error in your SQL syntax"`;
                     description = "查找SQL错误信息，可能暴露数据库结构或配置";
                     break;
                 case 'documents':
-                    syntax = `site:${domain} ext:doc | ext:docx | ext:odt | ext:pdf | ext:rtf | ext:sxw | ext:psw`;
+                    syntax = ` ext:doc | ext:docx | ext:odt | ext:pdf | ext:rtf | ext:sxw | ext:psw`;
                     description = "查找公开的文档文件，可能包含敏感信息";
                     break;
                 case 'directory':
-                    syntax = `site:${domain} intitle:index.of`;
+                    syntax = ` intitle:index.of`;
                     description = "查找目录遍历漏洞，可能暴露目录结构";
                     break;
                 case 'config':
-                    syntax = `site:${domain} ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini`;
+                    syntax = ` ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini`;
                     description = "查找配置文件泄露，可能包含敏感配置信息";
                     break;
                 case 'logs':
-                    syntax = `site:${domain} ext:log`;
+                    syntax = ` ext:log`;
                     description = "查找日志文件，可能包含敏感活动记录";
                     break;
                 case 'backup':
-                    syntax = `site:${domain} ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup`;
+                    syntax = ` ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup`;
                     description = "查找备份和历史文件，可能包含旧版本但敏感的数据";
                     break;
                 case 'database':
-                    syntax = `site:${domain} ext:sql | ext:dbf | ext:mdb`;
+                    syntax = ` ext:sql | ext:dbf | ext:mdb`;
                     description = "查找数据库文件泄露，可能包含完整的数据库数据";
                     break;
                 case 'github':
-                    syntax = `site:${domain} github.com | site:gitlab.com ""`;
+                    syntax = ` github.com | site:gitlab.com ""`;
                     description = "在GitHub/GitLab上搜索与目标相关的公开代码仓库";
                     break;
             }
