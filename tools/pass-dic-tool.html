@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费在线密码字典生成工具 - 自定义规则暴力破解字典工具|本工具仅限安全测试与学术研究 - SecNN.com</title>
+	<meta name="description" content="免费在线密码字典生成工具，专业密码字典生成器，支持自定义规则组合生成百万级密码组合，适用于渗透测试、WiFi密码恢复和安全研究，提供社会工程学密码模式生成。">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00b894;
+            --danger: #d63031;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --gray: #b2bec3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #dfe6e9 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin: 20px 0 30px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--dark);
+            font-size: 16px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--gray);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+            outline: none;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            background-color: var(--light);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-label:hover {
+            background-color: #e2e6ea;
+        }
+        
+        .checkbox-input {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5649c2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #b52b2b;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .range-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .range-input {
+            flex: 1;
+        }
+        
+        .range-value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .results {
+            margin-top: 30px;
+            border-top: 1px solid var(--gray);
+            padding-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .result-count {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .password-list {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            columns: 3;
+            column-gap: 20px;
+        }
+        
+        .password-item {
+            margin-bottom: 5px;
+            break-inside: avoid;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .password-list {
+                columns: 2;
+            }
+            
+            .checkbox-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .password-list {
+                columns: 1;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>免费在线密码字典生成工具 | 本工具仅限安全测试与学术研究 - SecNN</h1>
+            <p class="subtitle">根据自定义规则生成可能的密码组合，适用于渗透测试、WiFi密码恢复和安全研究。</p>
+        </header>
+        
+        <div class="warning">
+            <strong>免责声明：</strong>本工具仅限合法授权测试使用，如密码安全测试、找回遗忘密码等。请勿将此工具用于任何非法目的，使用者将自行承担所有法律责任。
+        </div>
+        
+        <div class="card">
+            <div class="form-group">
+                <label class="form-label" for="min-length">密码长度范围</label>
+                <div class="range-control">
+                    <input type="range" id="min-length" class="range-input" min="1" max="20" value="4">
+                    <span class="range-value" id="min-length-value">4</span>
+                    <span>至</span>
+                    <input type="range" id="max-length" class="range-input" min="1" max="20" value="8">
+                    <span class="range-value" id="max-length-value">8</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">字符集选择</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" id="lowercase" checked>
+                        小写字母 (a-z)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" id="uppercase" checked>
+                        大写字母 (A-Z)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" id="numbers" checked>
+                        数字 (0-9)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" id="symbols">
+                        符号 (!@#$%^&*)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" id="space">
+                        空格
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="custom-chars">自定义字符集（可选）</label>
+                <input type="text" id="custom-chars" class="form-control" placeholder="例如: 姓名缩写、生日等特殊字符">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="prefix">前缀（可选）</label>
+                <input type="text" id="prefix" class="form-control" placeholder="所有密码前添加的固定字符">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="suffix">后缀（可选）</label>
+                <input type="text" id="suffix" class="form-control" placeholder="所有密码后添加的固定字符">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="max-results">最大生成数量（防止内存溢出）</label>
+                <select id="max-results" class="form-control">
+                    <option value="1000">1,000</option>
+                    <option value="5000" selected>5,000</option>
+                    <option value="10000">10,000</option>
+                    <option value="50000">50,000</option>
+                    <option value="100000">100,000</option>
+                    <option value="500000">500,000</option>
+                </select>
+            </div>
+            
+            <div class="btn-group">
+                <button id="generate-btn" class="btn btn-primary" onclick="generatePasswords()">
+                    <span id="generate-text">生成密码</span>
+                </button>
+                <button id="download-btn" class="btn btn-danger" onclick="downloadPasswords()" disabled>
+                    下载字典
+                </button>
+            </div>
+        </div>
+        
+        <div class="card" id="results-card" style="display: none;">
+            <h2 style="margin-bottom: 15px;">生成结果</h2>
+            <div class="result-count" id="result-count"></div>
+            <div class="results">
+                <div class="password-list" id="password-list"></div>
+            </div>
+            <div class="btn-group" style="margin-top: 20px;">
+                <button class="btn btn-danger" onclick="downloadPasswords()">
+                    下载字典
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>提示：大量密码组合会消耗较多计算资源，请在合理范围内使用，本工具完全在浏览器中运行，不会上传您的任何数据</p>
+        </div>
+    </div>
+
+    <script>
+        // 更新范围输入显示值
+        document.getElementById('min-length').addEventListener('input', function() {
+            document.getElementById('min-length-value').textContent = this.value;
+            validateRange();
+        });
+        
+        document.getElementById('max-length').addEventListener('input', function() {
+            document.getElementById('max-length-value').textContent = this.value;
+            validateRange();
+        });
+        
+        function validateRange() {
+            const min = parseInt(document.getElementById('min-length').value);
+            const max = parseInt(document.getElementById('max-length').value);
+            
+            if (min > max) {
+                document.getElementById('min-length').value = max;
+                document.getElementById('min-length-value').textContent = max;
+            }
+        }
+        
+        // 生成密码
+        function generatePasswords() {
+            const minLength = parseInt(document.getElementById('min-length').value);
+            const maxLength = parseInt(document.getElementById('max-length').value);
+            const maxResults = parseInt(document.getElementById('max-results').value);
+            
+            // 收集选中的字符集
+            let charSet = '';
+            
+            if (document.getElementById('lowercase').checked) {
+                charSet += 'abcdefghijklmnopqrstuvwxyz';
+            }
+            
+            if (document.getElementById('uppercase').checked) {
+                charSet += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            }
+            
+            if (document.getElementById('numbers').checked) {
+                charSet += '0123456789';
+            }
+            
+            if (document.getElementById('symbols').checked) {
+                charSet += '!@#$%^&*';
+            }
+            
+            if (document.getElementById('space').checked) {
+                charSet += ' ';
+            }
+            
+            // 添加自定义字符集
+            const customChars = document.getElementById('custom-chars').value;
+            if (customChars) {
+                charSet += customChars;
+            }
+            
+            // 检查是否至少选择了一种字符集
+            if (charSet.length === 0 && !customChars) {
+                alert('请至少选择一种字符集或输入自定义字符！');
+                return;
+            }
+            
+            // 获取前缀和后缀
+            const prefix = document.getElementById('prefix').value || '';
+            const suffix = document.getElementById('suffix').value || '';
+            
+            // 显示加载状态
+            const generateBtn = document.getElementById('generate-btn');
+            const generateText = document.getElementById('generate-text');
+            generateText.innerHTML = '<span class="loading"></span>生成中...';
+            generateBtn.disabled = true;
+            
+            // 使用setTimeout让UI有机会更新
+            setTimeout(() => {
+                try {
+                    const passwords = generateAllPasswords(charSet, minLength, maxLength, prefix, suffix, maxResults);
+                    
+                    // 显示结果
+                    displayResults(passwords);
+                } catch (error) {
+                    alert('生成密码时出错：' + error.message);
+                } finally {
+                    // 恢复按钮状态
+                    generateText.textContent = '生成密码';
+                    generateBtn.disabled = false;
+                    document.getElementById('download-btn').disabled = false;
+                }
+            }, 100);
+        }
+        
+        // 生成所有可能的密码组合
+        function generateAllPasswords(charSet, minLength, maxLength, prefix, suffix, maxResults) {
+            const passwords = [];
+            const fixedLength = prefix.length + suffix.length;
+            
+            // 为每种可能的长度生成密码
+            for (let len = minLength; len <= maxLength; len++) {
+                const effectiveLength = len - fixedLength;
+                if (effectiveLength < 1) continue; // 跳过无效长度
+                
+                generatePasswordsOfLength(charSet, effectiveLength, (password) => {
+                    const fullPassword = prefix + password + suffix;
+                    passwords.push(fullPassword);
+                    
+                    // 如果达到最大数量，停止生成
+                    if (passwords.length >= maxResults) {
+                        return true; // 返回true表示停止
+                    }
+                    return false;
+                });
+                
+                // 检查是否已达到最大数量
+                if (passwords.length >= maxResults) {
+                    break;
+                }
+            }
+            
+            return passwords;
+        }
+        
+        // 生成长度为len的所有密码组合
+        function generatePasswordsOfLength(charSet, len, callback) {
+            const current = new Array(len).fill(0);
+            const maxIndices = new Array(len).fill(charSet.length - 1);
+            
+            while (true) {
+                // 生成当前密码
+                let password = '';
+                for (let i = 0; i < len; i++) {
+                    password += charSet[current[i]];
+                }
+                
+                // 调用回调函数
+                if (callback(password)) {
+                    return; // 回调返回true表示停止
+                }
+                
+                // 递增计数器
+                let i = len - 1;
+                while (i >= 0) {
+                    if (current[i] < maxIndices[i]) {
+                        current[i]++;
+                        break;
+                    } else {
+                        current[i] = 0;
+                        i--;
+                    }
+                }
+                
+                // 检查是否完成所有组合
+                if (i < 0) {
+                    break;
+                }
+            }
+        }
+        
+        // 显示生成结果
+        function displayResults(passwords) {
+            const resultCount = passwords.length;
+            const resultCountElement = document.getElementById('result-count');
+            const passwordListElement = document.getElementById('password-list');
+            const resultsCard = document.getElementById('results-card');
+            
+            resultCountElement.textContent = `共生成 ${resultCount.toLocaleString()} 个密码组合`;
+            passwordListElement.innerHTML = '';
+            
+            // 显示所有密码
+            passwords.forEach(password => {
+                const item = document.createElement('div');
+                item.className = 'password-item';
+                item.textContent = password;
+                passwordListElement.appendChild(item);
+            });
+            
+            // 显示结果卡片
+            resultsCard.style.display = 'block';
+            
+            // 滚动到结果区域
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 下载密码字典
+        function downloadPasswords() {
+            const passwordItems = document.querySelectorAll('.password-item');
+            if (passwordItems.length === 0) {
+                alert('没有可下载的密码！');
+                return;
+            }
+            
+            const passwords = Array.from(passwordItems).map(item => item.textContent).join('\n');
+            const blob = new Blob([passwords], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'password-dictionary-SecNN.txt';
+            document.body.appendChild(a);
+            a.click();
+            
+            // 清理
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+    </script>
+</body>
+</html>
