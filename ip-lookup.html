@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>在线IP地址查询工具 - 支持IPv6/域名解析/地理位置信息 | SecNN.com</title>
+	<meta name="description" content="免费在线IP地址查询工具，精准查询IPv4/IPv6地址位置信息，支持域名解析获取IP。提供IP归属地、运营商ISP和详细地理位置等信息，快速检测您的公网IP和网络环境，是网络管理员的必备工具。">
+
+    <style>
+        :root {
+            --primary-color: #00a8ff;
+            --secondary-color: #0097e6;
+            --dark-color: #1e272e;
+            --light-color: #f5f6fa;
+            --accent-color: #00d2d3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 168, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 210, 211, 0.1) 0%, transparent 20%);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        h1:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .search-box::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 168, 255, 0.5), transparent);
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(30, 39, 46, 0.8);
+            color: var(--light-color);
+            font-size: 1rem;
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.3);
+        }
+        
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-container {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ip-card {
+            background: rgba(30, 39, 46, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 65%, rgba(0, 168, 255, 0.05) 100%);
+            pointer-events: none;
+        }
+        
+        .ip-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 168, 255, 0.2);
+        }
+        
+        .ip-address {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .ip-image {
+            width: 100%;
+            height: 470px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+        
+        .ip-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            color: rgba(245, 246, 250, 0.7);
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 500;
+            word-break: break-all;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(0, 168, 255, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(245, 246, 250, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .ip-details {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>在线IP地址查询工具 - 支持IPv6/域名解析/地理位置信息 | SecNN.com</h1>
+            <p>免费查询IP地址的详细信息及地理位置信息</p>
+        </header>
+        
+        <div class="search-box">
+            <input type="text" id="ip-input" placeholder="输入IPv4/IPv6地址或域名 (例如: 8.8.8.8 或 2400:3200::1 或 baidu.com)" />
+            <button id="search-btn">查询</button>
+            <button id="my-ip-btn">本机IP</button>
+        </div>
+        
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>正在查询中...</p>
+        </div>
+        
+        <div class="error-message" id="error-message"></div>
+        
+        <div class="result-container" id="result-container">
+            <div class="ip-card">
+                <div class="ip-card-header">
+                    <div class="ip-address" id="ip-address"></div>
+                </div>
+                <div class="ip-details">
+                    <div class="detail-item">
+                        <div class="detail-label">国家</div>
+                        <div class="detail-value" id="country"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">地区</div>
+                        <div class="detail-value" id="region"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">城市</div>
+                        <div class="detail-value" id="city"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">邮政编码</div>
+                        <div class="detail-value" id="postal-code"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">纬度</div>
+                        <div class="detail-value" id="latitude"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">经度</div>
+                        <div class="detail-value" id="longitude"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ISP</div>
+                        <div class="detail-value" id="isp"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ASN</div>
+                        <div class="detail-value" id="asn"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ASN组织</div>
+                        <div class="detail-value" id="asn-org"></div>
+                    </div>
+                </div>
+				<div class="ip-image" id="ip-image"></div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 免费在线IP地址查询工具，精准查询IPv4/IPv6地址位置信息，支持IPv6/域名解析/地理位置信息 | SecNN.com</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ipInput = document.getElementById('ip-input');
+            const searchBtn = document.getElementById('search-btn');
+            const myIpBtn = document.getElementById('my-ip-btn');
+            const resultContainer = document.getElementById('result-container');
+            const loading = document.querySelector('.loading');
+            const errorMessage = document.getElementById('error-message');
+            
+            // 查询按钮点击事件
+            searchBtn.addEventListener('click', function() {
+                const query = ipInput.value.trim();
+                if (query) {
+                    // 检查是否是域名
+                    if (/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/.test(query)) {
+                        resolveDomain(query);
+                    } else {
+                        // 假设是IP地址
+                        fetchIpInfo(query);
+                    }
+                } else {
+                    showError('请输入IP地址或域名');
+                }
+            });
+            
+            // 我的IP按钮点击事件
+            myIpBtn.addEventListener('click', function() {
+                fetchMyIp();
+            });
+            
+            // 回车键触发查询
+            ipInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+            
+            // 解析域名获取IP
+            function resolveDomain(domain) {
+                showLoading();
+                hideError();
+                
+                fetch(`https://dns.alidns.com/resolve?name=${domain}&type=A`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.Answer && data.Answer.length > 0) {
+                            const ip = data.Answer[0].data;
+                            fetchIpInfo(ip);
+                        } else {
+                            showError('无法解析该域名');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('域名解析错误:', error);
+                        showError('域名解析失败');
+                    })
+                    .finally(() => {
+                        hideLoading();
+                    });
+            }
+            
+            // 获取我的IP
+            function fetchMyIp() {
+                showLoading();
+                hideError();
+                
+                fetch('https://ifconfig.me/ip')
+                    .then(response => response.text())
+                    .then(ip => {
+                        ipInput.value = ip;
+                        fetchIpInfo(ip);
+                    })
+                    .catch(error => {
+                        console.error('获取本机IP错误:', error);
+                        showError('获取本机IP失败');
+                    })
+                    .finally(() => {
+                        hideLoading();
+                    });
+            }
+            
+            // 获取IP信息
+            function fetchIpInfo(ip) {
+                showLoading();
+                hideError();
+                
+                fetch(`https://api.ip.sb/geoip/${ip}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('IP查询失败');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        displayIpInfo(data);
+                    })
+                    .catch(error => {
+                        console.error('IP查询错误:', error);
+                        showError('IP查询失败，请检查输入的IP地址或域名是否正确');
+                    })
+                    .finally(() => {
+                        hideLoading();
+                    });
+            }
+            
+            // 显示IP信息
+            function displayIpInfo(data) {
+                document.getElementById('ip-address').textContent = data.ip || '未知';
+                document.getElementById('country').textContent = data.country || '未知';
+                document.getElementById('region').textContent = data.region || '未知';
+                document.getElementById('city').textContent = data.city || '未知';
+                document.getElementById('postal-code').textContent = data.postal_code || '未知';
+                document.getElementById('latitude').textContent = data.latitude || '未知';
+                document.getElementById('longitude').textContent = data.longitude || '未知';
+                document.getElementById('isp').textContent = data.isp || '未知';
+                document.getElementById('asn').textContent = data.asn || '未知';
+                document.getElementById('asn-org').textContent = data.asn_organization || '未知';
+                
+                // 设置IP卡片图片
+                const ipImage = document.getElementById('ip-image');
+                ipImage.style.backgroundImage = `url(https://zh-hans.ipshu.com/picture/${data.ip}.png)`;
+                
+                // 显示结果容器
+                resultContainer.style.display = 'block';
+            }
+            
+            // 显示加载中
+            function showLoading() {
+                loading.style.display = 'block';
+                resultContainer.style.display = 'none';
+            }
+            
+            // 隐藏加载中
+            function hideLoading() {
+                loading.style.display = 'none';
+            }
+            
+            // 显示错误信息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                resultContainer.style.display = 'none';
+            }
+            
+            // 隐藏错误信息
+            function hideError() {
+                errorMessage.style.display = 'none';
+            }
+            
+            // 页面加载时自动获取本机IP
+            fetchMyIp();
+        });
+    </script>
+</body>
+</html>
