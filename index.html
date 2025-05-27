@@ -2,24 +2,29 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
-	<title>SecNN在线网络安全工具 - Ai安全咨询|渗透测试|红队工具|ShellCode免杀|网络安全工具|网络安全智能助手|黑客工具|漏洞扫描|安全测试|免杀木马|黑客攻防</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecNN在线网络安全工具 - Ai安全咨询|渗透测试|红队工具|ShellCode免杀|网络安全工具|网络安全智能助手|黑客工具|漏洞扫描|安全测试|免杀木马|黑客攻防</title>
 	<meta name="description" content="SecNN提供专业网络安全工具和AI安全助手，包括ShellCode免杀、内网渗透、红蓝对抗、黑客工具、Web安全、红队演练、黑客攻防、Web漏洞扫描、红队渗透测试工具、GoogleHacking高级搜索、Windows提权辅助工具等，助力网络安全研究人员提升安全防护能力和高级攻防解决方案。">
 	<meta name="keywords" content="网络安全工具,渗透测试,漏洞扫描,ShellCode免杀,红队工具,AI安全助手,HTTPServer,黑客工具,Web安全,AI安全检测,红队演练,安全测试、渗透测试工具,CS免杀,免杀木马,内网渗透,攻击模拟,C2服务器,红蓝对抗,Kali Linux工具,黑客攻防">
 	<link rel="icon" href="favicon.ico" sizes="any"> 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="dns-prefetch" href="https://chat.secnn.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    
     <style>
         :root {
-            --primary-color: #6366f1;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #4f46e5;
-            --hover-color: #818cf8;
-            --ai-color: #4a90e2;
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #818cf8;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --gradient: linear-gradient(135deg, var(--primary), #7c3aed);
         }
         
         * {
@@ -30,8 +35,8 @@
         
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--text-color);
+            background-color: var(--dark);
+            color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
@@ -39,75 +44,468 @@
             overflow-x: hidden;
         }
         
+        /* 新导航栏 */
+        .navbar {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+        
+        .logo {
+            height: 40px;
+            transition: transform 0.3s;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-light);
+        }
+        
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+        
+        .nav-link.btn {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .nav-link.btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+        }
+        
+        /* 主要内容区 */
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 6rem 2rem 2rem;
             flex: 1;
         }
-        .ai-highlight-fixed {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: #ff4757;
-    color: white;
-    font-size: 0.8rem;
-    font-weight: bold;
-    padding: 0.25rem 0.6rem;
-    border-radius: 12px;
-    transform: rotate(15deg);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    z-index: 1;
-    min-width: 40px;
-    text-align: center;
-    white-space: nowrap;
-	}
-
-        /* 导航栏样式 */
-        .nav-bar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-            z-index: 100;
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 2rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            overflow: hidden;
         }
         
-        .nav-link {
-            display: inline-block;
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            text-decoration: none;
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, rgba(129, 140, 248, 0) 70%);
+            animation: rotate 15s linear infinite;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
             font-weight: 500;
+            text-decoration: none;
             transition: all 0.3s;
             white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* 工具卡片区 */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50%;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tool-card {
+            background: var(--dark-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+        
+        .tool-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            margin-bottom: 1rem;
         }
         
-        .nav-link.github {
-            background: linear-gradient(135deg, #6e48aa, #9d50bb);
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(79, 70, 229, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary-light);
+            font-size: 1.5rem;
         }
         
-        .nav-link.ai-assistant {
-            background: linear-gradient(135deg, var(--ai-color), #5e72e4);
-            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+        .tool-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
         }
         
-        .nav-link.register {
-            background: linear-gradient(135deg, #10b981, #3b82f6);
+        .tool-category {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
         }
         
-        .nav-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        .tool-desc {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            flex-grow: 1;
         }
         
-        /* AI横幅区域 */
+        .tool-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tool-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        
+        .badge-new {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .badge-popular {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .badge-ai {
+            background: var(--info);
+            color: white;
+        }
+        
+        /* 特色区域 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background: var(--dark-light);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-desc {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+        
+        /* 页脚 */
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+        
+        .footer-links i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* 动画 */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                width: 100%;
+                margin-top: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .container {
+                padding: 7rem 1rem 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* 3D悬浮效果 */
+        .card-hover-3d {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card-hover-3d:hover {
+            transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+		/* AI横幅区域 */
         .ai-banner {
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(91, 33, 182, 0.2));
             border-radius: 12px;
@@ -181,271 +579,6 @@
         .ai-banner-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
-        }
-        
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        
-        /* 头部样式 */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 10;
-            padding-top: 60px;
-        }
-        
-        .logo {
-            max-width: 150px;
-            height: auto;
-            margin-bottom: 1rem;
-            transition: transform 0.3s;
-        }
-        
-        .logo:hover {
-            transform: scale(1.05);
-        }
-        
-        .site-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .site-description {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-        }
-        
-        /* 工具卡片区 */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-        
-        .tool-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tool-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-color);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .tool-card:hover::before {
-            opacity: 1;
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            border-color: var(--primary-color);
-        }
-        
-        .tool-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-        
-        .tool-name {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tool-desc {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        
-        .tool-card.ai {
-            border: 1px solid var(--ai-color);
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(91, 33, 182, 0.15));
-        }
-        
-        .tool-card.ai .tool-icon {
-            color: var(--ai-color);
-        }
-        
-        .tool-card.ai .tool-name {
-            color: white;
-        }
-        
-        .tool-card.ai::before {
-            background: var(--ai-color);
-        }
-        
-        .ai-highlight {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: #ff4757;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 0.2rem 0.5rem;
-            border-radius: 10px;
-            transform: rotate(15deg);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-        
-        /* 微信公众号区域 */
-        .wx-qrcode-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .wx-qrcode-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
-            color: var(--primary-color);
-        }
-        
-        .wx-qrcode-image {
-            max-width: 450px;
-            border-radius: 15px;
-            cursor: zoom-in;
-            transition: transform 0.3s;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .wx-qrcode-image:hover {
-            transform: scale(1.05);
-            border-color: var(--primary-color);
-        }
-        
-        /* 页脚样式 */
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: rgba(0, 0, 0, 0.3);
-            margin-top: auto;
-        }
-        
-        .footer-text {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-        
-        .footer-text a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-text a:hover {
-            color: var(--hover-color);
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .nav-bar {
-                position: static;
-                justify-content: center;
-                margin-bottom: 1.5rem;
-                flex-wrap: wrap;
-            }
-            
-            header {
-                padding-top: 20px;
-            }
-            
-            .site-title {
-                font-size: 2rem;
-            }
-            
-            .ai-banner-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .ai-banner-btn {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tool-card {
-                padding: 1.2rem;
-            }
-        }
-        
-        /* 动效背景 */
-        .particles-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Magnific Popup 自定义样式 */
-        .mfp-image-holder .mfp-content {
-            max-width: 80%;
-            max-height: 80vh;
-        }
-        
-        .mfp-img {
-            padding: 10px;
-            background: #1e293b;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.6);
-        }
-        
-        .mfp-title {
-            font-size: 1rem;
-            line-height: 1.4;
-            color: #fff;
-            text-align: center;
-            padding: 1rem 0;
-            background: rgba(0,0,0,0.7);
-            border-radius: 0 0 8px 8px;
         }
 		/* 赞助 */
 		.sponsors-grid {
@@ -563,78 +696,54 @@
         .carousel-next {
             right: 0;
         }
-        
-        /* 响应式调整 */
-        @media (max-width: 1400px) {
-            .sponsor-card {
-                min-width: calc(20% - 10px); /* 5列 */
-            }
-        }
-        
-        @media (max-width: 1200px) {
-            .sponsor-card {
-                min-width: calc(25% - 10px); /* 4列 */
-            }
-            
-            .sponsor-message {
-                font-size: 10px;
-                height: 24px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sponsor-card {
-                min-width: calc(33.333% - 10px); /* 3列 */
-            }
-            
-            .sponsor-avatar {
-                width: 38px;
-                height: 38px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .sponsor-card {
-                min-width: calc(50% - 10px); /* 2列 */
-            }
-            
-            .sponsor-message {
-                -webkit-line-clamp: 1;
-                height: 18px;
-            }
-        }
+		.site-title {
+        text-align: center;
+    }
+
+
     </style>
 </head>
 <body>
-    <canvas class="particles-bg"></canvas>
-        <div class="nav-bar">
-        <a href="https://chat.secnn.com" class="nav-link ai-assistant" target="_blank">
-            <i class="fas fa-robot"></i> SecNN - 网络安全智能助手
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="#" class="navbar-brand">
+            <img src="img/logo.png" alt="" class="logo">
+            <span class="brand-name">SecNN.com</span>
         </a>
-        <a href="https://register.secnn.com" class="nav-link register" target="_blank">
-            <i class="fas fa-user-plus"></i> 用户注册
-        </a>
-        <a href="https://github.com/SecNN" class="nav-link github" rel="nofollow" target="_blank">
+        <div class="nav-links">
+            <a href="#" class="nav-link">
+                <i class="fas fa-home"></i> 首页
+            </a>
+            <a href="#tools" class="nav-link">
+                <i class="fas fa-tools"></i> 工具
+            </a>
+            <a href="#sponsor" class="nav-link">
+                <i class="fas fa-award"></i> 打赏列表
+            </a>
+			<a href="https://www.github.com/SecNN" class="nav-link github" rel="nofollow" target="_blank">
             <i class="fab fa-github"></i> GitHub
         </a>
-    </div>
-    
+		<a href="https://chat.secnn.com" class="nav-link btn" target="_blank">
+                <i class="fas fa-robot"></i> AI助手
+            </a>
+        </div>
+    </nav>
+	
     <div class="container">
-        <header>
-            <h1 class="site-title">SecNN在线网络安全工具</h1>
-            <p class="site-description">我用两个灵魂对抗世界，一个向往，一个挣扎。</p>
+	<header>
+		    <h1 class="site-title">SecNN在线网络安全工具</h1>
+            <p class="site-title">我用两个灵魂对抗世界，一个向往，一个挣扎。</p>
         </header>
-        
-        <main>
-            <div class="ai-banner">
+        <div class="ai-banner">
                 <div class="ai-banner-content">
                     <div class="ai-banner-text">
+					<span class="tool-badge badge-popular">推荐</span>
                         <h2 class="ai-banner-title"><i class="fas fa-robot"></i> SecNN - 网络安全智能助手</h2>
-						<div class="ai-highlight-fixed">推荐</div>
+						
                         <p class="ai-banner-desc">采用最新AI技术，为您提供专业的网络安全咨询服务，解答各类安全难题，生成安全代码、分析漏洞原理、漏洞检索、攻防技巧、CVE知识库、代码审计、应急响应 、聊天机器人、安全基础知识等。</p>
                     </div>
                     <div>
-                        <a href="https://chat.secnn.com" class="ai-banner-btn" target="_blank">
+                        <a href="https://chat.secnn.com" class="nav-link btn" target="_blank">
                             <i class="fas fa-robot"></i> 立即体验
                         </a>
                         <a href="https://register.secnn.com" class="ai-banner-btn secondary" target="_blank">
@@ -643,132 +752,320 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="tools-grid">
-				
-				
-				<a href="GoogleHacking/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fab fa-google"></i></div>
-					<div class="ai-highlight-fixed">推荐</div>
-                    <h3 class="tool-name">GoogleHacking高级搜索</h3>
-                    <p class="tool-desc">这是一个专业的Google Hacking工具，用于网络安全研究人员查找潜在的安全漏洞，输入目标域名并使用预定义的搜索语法进行高效搜索。 </p>
-                </a>
-				
-				<a href="tools/ip-lookup.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-wifi"></i></div>
-					<div class="ai-highlight-fixed">推荐</div>
-                    <h3 class="tool-name">在线IP地址查询工具 - 支持IPv6/域名解析/地理位置信息</h3>
-                    <p class="tool-desc">免费在线IP地址查询工具，精准查询IPv4/IPv6地址位置信息，支持域名解析获取IP。提供IP归属地、运营商ISP和详细地理位置等信息，快速检测您的公网IP和网络环境，是网络管理员的必备工具。</p>
-                </a>
-				
-				<a href="tools/pass-dic-tool.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-passport"></i></div>
-					<div class="ai-highlight-fixed">推荐</div>
-                    <h3 class="tool-name">免费在线密码字典生成</h3>
-                    <p class="tool-desc">根据自定义规则生成可能的密码组合，适用于渗透测试、WiFi密码恢复和安全研究。</p>
-                </a>
-				
-				<a href="tools/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-laptop-code"></i></div>
-                    <h3 class="tool-name">在线编解码工具集合</h3>
-                    <p class="tool-desc">支持Base64编码解码|URL编码解码|Hex编码解码|Unicode编码解码|MD5生成，一站式解决方案</p>
-                </a>
-                
-				<a href="process/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-shield-alt"></i></div>
-					<div class="ai-highlight-fixed">推荐</div>
-					<h3 class="tool-name">Windows提权辅助</h3>
-                    <p class="tool-desc">这是一个专业的Windows系统安全工具，提供杀毒软件进程在线对比、常用软件进程识别和系统提权辅助功能，帮助您快速检测系统安全状况。</p>
-                </a>
-             
-                <a href="POC-EXP/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-bug"></i></div>
-					<div class="ai-highlight-fixed">敬请期待</div>
-                    <h3 class="tool-name">POC&EXP 安全工具库|漏洞库</h3>
-                    <p class="tool-desc">包含多种POC&EXP漏洞库,渗透测试工具,安全研究工具,漏洞利用工具,网络安全工具包</p>
-                </a>
-				
-				<a href="tools/jwt-tool.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fab fa-the-red-yeti"></i></div>
-					<h3 class="tool-name">JWT(JSON Web Token)在线编解码</h3>
-                    <p class="tool-desc">免费安全、快速的在线JSON Web Token编码和解码工具，数据完全在本地处理，不会将任何数据发送到服务器。</p>
-                </a>
-				
-				<a href="shell/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-terminal"></i></div>
-					<h3 class="tool-name">反弹Shell命令生成</h3>
-                    <p class="tool-desc">一键生成各种环境下的反弹shell命令</p>
-                </a>
-				
-				<a href="https://github.com/SecNN/Xeno-RAT-Server" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-theater-masks"></i></div>
-					<div class="ai-highlight-fixed">推荐</div>
-                    <h3 class="tool-name">Xeno RAT Server 远控中文汉化版</h3>
-                    <p class="tool-desc">Xeno RAT Server 中文汉化版 Xeno-RAT 是用 C# 开发的开源远程访问工具 （RAT），为远程系统管理提供了一套全面的功能。具有 HVNC、实时麦克风、反向代理等功能！ </p>
-                </a>
-				
-				<a href="https://github.com/SecNN/AI-PT" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fab fa-fort-awesome"></i></div>
-                    <h3 class="tool-name">Ai-PT靶场</h3>
-                    <p class="tool-desc">漏洞列表包括但不限于：后台弱口令、SQL注入漏洞、XSS漏洞、命令执行漏洞、文件上传漏洞。</p>
-                </a>
-				
-				<a href="https://github.com/SecNN/HTTPServer" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-server"></i></div>
-					<div class="ai-highlight-fixed">推荐</div>
-                    <h3 class="tool-name">HTTPServer</h3>
-                    <p class="tool-desc">轻量级HTTP服务器实现-红队内网环境中一个能快速开启HTTP文件浏览服务的小工具 ,可执行Webshell，可用于在内网不出网时文件的下载。 </p>
-                </a>
-				
-				<a href="https://github.com/SecNN/Bypass_AV" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-khanda"></i></div>
-                    <h3 class="tool-name">Bypass_AV免杀</h3>
-                    <p class="tool-desc">专业级免杀利器，有效绕过360/火绒/Windows Defender等杀毒软件检测，支持MSF/CobaltStrike payload免杀处理。</p>
-                </a>
-				
-								
-                <a href="https://github.com/SecNN/ShellCode_Loader" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-book-dead"></i></div>
-					<h3 class="tool-name">ShellCode_Loader免杀</h3>
-                    <p class="tool-desc">Msf&CobaltStrike免杀ShellCode加载器、Shellcode_encryption - 免杀Shellcode加密生成工具，目前测试免杀360&火绒&电脑管家&Windows Defender（其他杀软未测试）。 </p>
-                </a>
-				
-								
-								
-                <a href="sj/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-compass"></i></div>
-                    <h3 class="tool-name">罗盘时间</h3>
-                    <p class="tool-desc">独特的罗盘式时间显示</p>
-                </a>
-                
-                <a href="ssq/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon"><i class="fas fa-dice"></i></div>
-                    <h3 class="tool-name">随机选号-智能彩票号码生成</h3>
-                    <p class="tool-desc">免费在线生成大乐透、双色球等多种彩票随机号码</p>
-                </a>
+        
+        <!-- 特色功能 -->
+        <section class="features" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-card card-hover-3d">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">专业安全工具</h3>
+                <p class="feature-desc">精选各类专业网络安全工具，涵盖渗透测试、漏洞扫描、红队演练等全场景需求</p>
             </div>
             
+            <div class="feature-card card-hover-3d">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="feature-title">AI安全助手</h3>
+                <p class="feature-desc">智能AI助手提供安全咨询、漏洞分析、代码审计等专业服务，7×24小时在线</p>
+            </div>
             
-        </main>
+            <div class="feature-card card-hover-3d">
+                <div class="feature-icon">
+                    <i class="fas fa-book-dead"></i>
+                </div>
+                <h3 class="feature-title">免杀技术</h3>
+                <p class="feature-desc">专业级免杀技术，有效绕过主流杀毒软件检测，提供安全研究解决方案</p>
+            </div>
+        </section>
+        
+        <!-- 工具列表 -->
+        <section id="tools">
+            <h2 class="section-title" data-aos="fade-up">精选工具</h2>
+            <div class="tools-grid">
+                <!-- GoogleHacking -->
+                <a href="GoogleHacking/index.html" class="tool-card card-hover-3d" data-aos="fade-up" target="_blank">
+                    <span class="tool-badge badge-popular">热门</span>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">GoogleHacking高级搜索</h3>
+                            <span class="tool-category">信息收集</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">专业的Google Hacking工具，用于网络安全研究人员查找潜在的安全漏洞，输入目标域名并使用预定义的搜索语法进行高效搜索。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- IP查询 -->
+                <a href="tools/ip-lookup.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="50" target="_blank">
+                    <span class="tool-badge badge-popular">热门</span>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">IP地址查询工具</h3>
+                            <span class="tool-category">网络工具</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">免费在线IP地址查询工具，精准查询IPv4/IPv6地址位置信息，支持域名解析获取IP，提供IP归属地、运营商ISP等信息。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- 密码字典生成 -->
+                <a href="tools/pass-dic-tool.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="100" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-passport"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">密码字典生成</h3>
+                            <span class="tool-category">渗透测试</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">根据自定义规则生成可能的密码组合，适用于渗透测试、WiFi密码恢复和安全研究。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- 编解码工具 -->
+                <a href="tools/index.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="150" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">编解码工具集合</h3>
+                            <span class="tool-category">开发工具</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">支持Base64编码解码、URL编码解码、Hex编码解码、Unicode编码解码、MD5生成，一站式解决方案。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- Windows提权辅助 -->
+                <a href="process/index.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="200" target="_blank">
+                    <span class="tool-badge badge-new">新工具-更多匹配规则</span>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Windows提权辅助</h3>
+                            <span class="tool-category">系统安全</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">专业的Windows系统安全工具，提供杀毒软件进程在线对比、常用软件进程识别和系统提权辅助功能。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- POC&EXP -->
+                <a href="POC-EXP/index.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="250" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">POC&EXP安全工具库</h3>
+                            <span class="tool-category">漏洞研究</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">包含多种POC&EXP漏洞库、渗透测试工具、安全研究工具、漏洞利用工具、网络安全工具包。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+        
+        <!-- 更多工具部分 -->
+        <section>
+            <h2 class="section-title" data-aos="fade-up">更多工具</h2>
+            <div class="tools-grid">
+                <!-- JWT工具 -->
+                <a href="tools/jwt-tool.html" class="tool-card card-hover-3d" data-aos="fade-up" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fab fa-the-red-yeti"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">JWT在线编解码</h3>
+                            <span class="tool-category">Web安全</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">免费安全、快速的在线JSON Web Token编码和解码工具，数据完全在本地处理，不会将任何数据发送到服务器。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- 反弹Shell -->
+                <a href="shell/index.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="50" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-terminal"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">反弹Shell命令生成</h3>
+                            <span class="tool-category">渗透测试</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">一键生成各种环境下的反弹shell命令，支持多种语言和场景，提高渗透测试效率。</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+                
+                <!-- Xeno RAT -->
+                <a href="https://github.com/SecNN/Xeno-RAT-Server" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="100" target="_blank">
+                    <span class="tool-badge badge-popular">热门</span>
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-theater-masks"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Xeno RAT Server</h3>
+                            <span class="tool-category">远程管理</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">Xeno RAT Server 中文汉化版，用C#开发的开源远程访问工具(RAT)，为远程系统管理提供全面的功能。</p>
+                    <div class="tool-footer">
+                        <span><i class="fab fa-github"></i> GitHub项目</span>
+                    </div>
+                </a>
+                
+                <!-- AI-PT靶场 -->
+                <a href="https://github.com/SecNN/AI-PT" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="150" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fab fa-fort-awesome"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">AI-PT靶场</h3>
+                            <span class="tool-category">学习资源</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">漏洞列表包括但不限于：后台弱口令、SQL注入漏洞、XSS漏洞、命令执行漏洞、文件上传漏洞。</p>
+                    <div class="tool-footer">
+                        <span><i class="fab fa-github"></i> GitHub项目</span>
+                    </div>
+                </a>
+                
+                <!-- HTTPServer -->
+                <a href="https://github.com/SecNN/HTTPServer" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="200" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">HTTPServer</h3>
+                            <span class="tool-category">红队工具</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">轻量级HTTP服务器实现，红队内网环境中一个能快速开启HTTP文件浏览服务的小工具，可执行Webshell。</p>
+                    <div class="tool-footer">
+                        <span><i class="fab fa-github"></i> GitHub项目</span>
+                    </div>
+                </a>
+                
+                <!-- Bypass_AV免杀 -->
+                <a href="https://github.com/SecNN/Bypass_AV" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="250" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-khanda"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">Bypass_AV免杀</h3>
+                            <span class="tool-category">免杀技术</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">专业级免杀利器，有效绕过360/火绒/Windows Defender等杀毒软件检测，支持MSF/CobaltStrike payload免杀处理。</p>
+                    <div class="tool-footer">
+                        <span><i class="fab fa-github"></i> GitHub项目</span>
+                    </div>
+                </a>
+				
+				<a href="https://github.com/SecNN/ShellCode_Loader" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="250" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-book-dead"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">ShellCode_Loader免杀</h3>
+                            <span class="tool-category">免杀技术</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">Msf&CobaltStrike免杀ShellCode加载器、Shellcode_encryption - 免杀Shellcode加密生成工具，目前测试免杀360&火绒&电脑管家&Windows Defender（其他杀软未测试）。</p>
+                    <div class="tool-footer">
+                        <span><i class="fab fa-github"></i> GitHub项目</span>
+                    </div>
+                </a>
+				<a href="sj/index.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="150" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">罗盘时间</h3>
+                            <span class="tool-category">其他</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">独特的罗盘式时间显示</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+				<a href="ssq/index.html" class="tool-card card-hover-3d" data-aos="fade-up" data-aos-delay="150" target="_blank">
+                    <div class="tool-header">
+                        <div class="tool-icon">
+                            <i class="fas fa-dice"></i>
+                        </div>
+                        <div>
+                            <h3 class="tool-title">随机选号-智能彩票号码生成</h3>
+                            <span class="tool-category">娱乐工具</span>
+                        </div>
+                    </div>
+                    <p class="tool-desc">免费在线生成大乐透、双色球等多种彩票随机号码</p>
+                    <div class="tool-footer">
+                        <span><i class="fas fa-external-link-alt"></i> 访问工具</span>
+                    </div>
+                </a>
+				
+            </div>
+        </section>
     </div>
+	<section>
+    <h2 class="section-title" data-aos="fade-up" id="sponsor">❤️【感恩有你 一路同行 感谢打赏 共筑精彩】🙏</h2>
 	
-    <div class="sponsors-grid">
-        <div class="carousel-container">
-		<div style="text-align: center;"><h3>❤️【感恩有你 一路同行 感谢打赏 共筑精彩】🙏</h3></div>
-		<div style="text-align: center;"><h5>🌟 特别鸣谢每一位打赏的朋友，金额不在大小，心意最珍贵💰 每一份支持，都是前行的动力 | 排名不分先后🌟️</h5></div>
 
+	<a href="sponsor/sponsor.html" class="nav-link btn" target="_blank"  style="font-weight: bold; text-align: center; display: block; text-decoration: none;">
+                <i class="fas fa-sack-dollar"></i> 我要打赏
+            </a>
+	
+	<div class="sponsors-grid">
+        <div class="carousel-container">
+		<div style="text-align: center;"><h5>🌟 特别鸣谢每一位打赏的朋友，金额不在大小，心意最珍贵💰 每一份支持，都是前行的动力 | 排名不分先后🌟️</h5>
+		<h5 class="wx-qrcode-title">📌 关注微信公众号获取最新资讯   ||    最新打赏名单即将整理公布，敬请期待！</h5>
+		</div>
             <button class="carousel-nav carousel-prev">❮</button>
             <div class="carousel-track" id="carouselTrack"></div>
             <button class="carousel-nav carousel-next">❯</button>
         </div>
+		
     </div>
-	<div class="wx-qrcode-container">
-                <h3 class="wx-qrcode-title">📌关注微信公众号获取最新资讯   ||    最新打赏名单即将整理公布，敬请期待！</h3>
-                <a href="img/wx.png" class="wx-popup" title="扫描二维码关注微信公众号">
-                    <img src="img/wx.png" alt="关注微信公众号" class="wx-qrcode-image">
-					
-                </a>
-            </div>
 	<script>
         document.addEventListener('DOMContentLoaded', function() {
             // 赞助者数据
@@ -966,139 +1263,102 @@
             initCarousel();
         });
     </script>
-	
+    
+    <!-- 页脚 -->
     <footer>
-        <p class="footer-text">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>关于SecNN</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                    <li><a href="#"><i class="fas fa-bullhorn"></i> 最新动态</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> 常见问题</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>工具资源</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-tools"></i> 所有工具</a></li>
+                    <li><a href="#"><i class="fas fa-book"></i> 文档中心</a></li>
+                    <li><a href="#"><i class="fas fa-video"></i> 教程视频</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>社区</h3>
+                <ul class="footer-links">
+                    <li><a href="https://www.github.com/SecNN" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="#"><i class="fab fa-telegram"></i> Telegram</a></li>
+                    <li><a href="#"><i class="fas fa-comments"></i> 论坛</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>联系我们</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-envelope"></i> 邮件：sec@secnn.com</a></li>
+                    <li><a href="#"><i class="fab fa-weixin"></i> 微信公众号：渗透测试</a></li>
+                </ul>
+            </div>
+        </div>
+		
+		
+        
+        <div class="footer-bottom">
             🚀Copyright &copy; 2023 Made with <i class="fas fa-heart" style="color: #ff4757;"></i> in 
             <a href="https://github.com/SecNN" target="_blank">SecNN</a>
-        </p>
-        <p id="sitetime" class="footer-text"></p>
+            <p id="sitetime"></p>
+        </div>
     </footer>
+    
+    <!-- JavaScript 库 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
-    <script language=javascript>
-    function siteTime(){
-        window.setTimeout("siteTime()", 1000);
-        var seconds = 1000;
-        var minutes = seconds * 60;
-        var hours = minutes * 60;
-        var days = hours * 24;
-        var years = days * 365;
-        var today = new Date();
-        var todayYear = today.getFullYear();
-        var todayMonth = today.getMonth()+1;
-        var todayDate = today.getDate();
-        var todayHour = today.getHours();
-        var todayMinute = today.getMinutes();
-        var todaySecond = today.getSeconds();
-        var t1 = Date.UTC(2022,10,01,00,00,00); //北京时间
-        var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
-        var diff = t2-t1;
-        var diffYears = Math.floor(diff/years);
-        var diffDays = Math.floor((diff/days)-diffYears*365);
-        var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
-        var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
-        var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
-		document.getElementById("sitetime").innerHTML=" 🖥️已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
-    }
-    siteTime();
-</script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        $(document).ready(function() {
-            $('.wx-popup').magnificPopup({
-                type: 'image',
-                closeOnContentClick: true,
-                closeBtnInside: false,
-                fixedContentPos: true,
-                mainClass: 'mfp-no-margins mfp-with-zoom', 
-                image: {
-                    verticalFit: true,
-                    titleSrc: function(item) {
-                        return item.el.attr('title');
-                    }
-                },
-                zoom: {
-                    enabled: true,
-                    duration: 400,
-                    easing: 'ease-in-out'
-                }
-            });
-            
-            // 粒子背景效果
-            const canvas = document.querySelector('.particles-bg');
-            const ctx = canvas.getContext('2d');
-            
-            function initCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                // 粒子配置
-                const particles = [];
-                const particleCount = Math.floor(window.innerWidth / 10);
-                const colors = ['rgba(99, 102, 241, 0.8)', 'rgba(79, 70, 229, 0.7)', 'rgba(129, 140, 248, 0.6)'];
-                
-                // 创建粒子
-                for (let i = 0; i < particleCount; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        size: Math.random() * 3 + 1,
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        speedX: Math.random() * 0.5 - 0.25,
-                        speedY: Math.random() * 0.5 - 0.25
-                    });
-                }
-                
-                // 绘制粒子
-                function draw() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
-                    
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color;
-                    ctx.fill();
-                    
-                    // 粒子移动
-                    p.x += p.speedX;
-                    p.y += p.speedY;
-                    
-                    // 边界检查
-                    if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-                    if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-                    
-                    // 绘制连线
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const p2 = particles[j];
-                        const distance = Math.sqrt(Math.pow(p.x - p2.x, 2) + Math.pow(p.y - p2.y, 2));
-                        
-                        if (distance < 100) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(99, 102, 241, ${1 - distance/100})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.stroke();
-                        }
-                    }
-                }
-                
-                requestAnimationFrame(draw);
+        // 初始化AOS动画
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        
+        // 运行时间计算
+        function siteTime() {
+            window.setTimeout("siteTime()", 1000);
+            var seconds = 1000;
+            var minutes = seconds * 60;
+            var hours = minutes * 60;
+            var days = hours * 24;
+            var years = days * 365;
+            var today = new Date();
+            var todayYear = today.getFullYear();
+            var todayMonth = today.getMonth()+1;
+            var todayDate = today.getDate();
+            var todayHour = today.getHours();
+            var todayMinute = today.getMinutes();
+            var todaySecond = today.getSeconds();
+            var t1 = Date.UTC(2022,10,01,00,00,00);
+            var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+            var diff = t2-t1;
+            var diffYears = Math.floor(diff/years);
+            var diffDays = Math.floor((diff/days)-diffYears*365);
+            var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+            var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+            var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+            document.getElementById("sitetime").innerHTML=" 🖥️已稳定运行： "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+        }
+        siteTime();
+        
+        // 导航栏滚动效果
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 100) {
+                $('.navbar').addClass('scrolled');
+            } else {
+                $('.navbar').removeClass('scrolled');
             }
-            
-            draw();
-            
-            // 窗口大小调整
-            window.addEventListener('resize', function() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
         });
     </script>
-
-
-
 </body>
 </html>
