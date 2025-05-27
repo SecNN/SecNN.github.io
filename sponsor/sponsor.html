@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打赏我们</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #4f46e5;
+            --hover-color: #818cf8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-top: 20px;
+        }
+        
+        .logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .site-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .site-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* 打赏卡片区 */
+        .donation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .donation-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .donation-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .donation-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .donation-desc {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .qrcode-image {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 1.5rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .qrcode-image:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+        
+        .donation-note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 1.5rem;
+            font-style: italic;
+        }
+        
+        /* 感谢区域 */
+        .thanks-section {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.15), rgba(91, 33, 182, 0.15));
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(74, 144, 226, 0.5);
+            text-align: center;
+        }
+        
+        .thanks-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .thanks-text {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            margin-top: auto;
+        }
+        
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .site-title {
+                font-size: 2rem;
+            }
+            
+            .donation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+		/* 赞助 */
+		.sponsors-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .carousel-container {
+            position: relative;
+            margin: 0 30px;
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            gap: 12px;
+            transition: transform 0.4s ease;
+            padding: 5px 0;
+        }
+        
+        .sponsor-card {
+            min-width: calc(16.666% - 11px); /* 6列布局 */
+            flex-shrink: 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .sponsor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+        
+        .sponsor-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            border: 2px solid #ffe066;
+        }
+        
+        .sponsor-info {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .sponsor-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 2px 0;
+        }
+        
+        .sponsor-amount {
+            font-size: 13px;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin: 3px 0 5px;
+            white-space: nowrap;
+        }
+        
+        .sponsor-message {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 28px;
+            margin-top: 4px;
+            padding-top: 3px;
+            border-top: 1px dashed #eee;
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-nav:hover {
+            background: #ffcc00;
+            color: white;
+        }
+        
+        .carousel-prev {
+            left: 0;
+        }
+        
+        .carousel-next {
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="site-title"></h1>
+            <p class="site-description">
+                感谢您对SecNN的支持！您的每一份打赏都是我们持续改进和提供优质服务的动力。<br>
+            </p>
+		</header>
+        
+        <main>
+            <div class="donation-grid">
+                <div class="donation-card">
+                    <div class="donation-icon">
+                        <i class="fab fa-weixin"></i>
+                    </div>
+                    <h3 class="donation-title">微信打赏</h3>
+                    <p class="donation-desc">
+                        扫描下方二维码，通过微信赞赏码支持我们
+                    </p>
+                    <img src="../img/wechat-donation.jpg" alt="微信打赏二维码" class="qrcode-image">
+                    <p class="donation-note">
+                        长按识别二维码 → 输入金额 → 添加备注(可选)
+                    </p>
+                </div>
+                
+                <div class="donation-card">
+                    <div class="donation-icon">
+                        <i class="fab fa-alipay"></i>
+                    </div>
+                    <h3 class="donation-title">支付宝打赏</h3>
+                    <p class="donation-desc">
+                        扫描下方二维码，通过支付宝支持我们
+                    </p>
+                    <img src="../img/alipay-donation.jpg" alt="支付宝打赏二维码" class="qrcode-image">
+                    <p class="donation-note">
+                        长按识别二维码 → 输入金额 → 添加备注(可选)
+                    </p>
+                </div>
+            </div>
+                        
+        </main>
+    </div>
+    <div class="sponsors-grid">
+        <div class="carousel-container">
+		<div style="text-align: center;"><h3>❤️ 衷心感谢您的支持 ❤️</h3></div>
+		<div style="text-align: center;"><h5>🌟 特别鸣谢每一位打赏的朋友，金额不在大小，心意最珍贵💰 每一份支持，都是前行的动力 | 排名不分先后🌟️</h5></div>
+
+            <button class="carousel-nav carousel-prev">❮</button>
+            <div class="carousel-track" id="carouselTrack"></div>
+            <button class="carousel-nav carousel-next">❯</button>
+        </div>
+    </div>
+	<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 赞助者数据
+            const sponsors = [
+                
+		{ 
+                    avatar: '11.jpg',
+                    name: '清风徐来', 
+                    amount: 9.99, 
+                    currency: '¥', 
+                    message: '看你的文章感觉有搞头！' 
+                },
+		{ 
+                    avatar: '1.jpg',
+                    name: '肉松', 
+                    amount: 5, 
+                    currency: '¥', 
+                    message: '内容很有价值！' 
+                },
+                { 
+                    avatar: '2.jpg',
+                    name: '浪', 
+                    amount: 10, 
+                    currency: '¥', 
+                    message: '期待更多更新' 
+                },
+                { 
+                    avatar: '3.jpg',
+                    name: '风继续吹', 
+                    amount: 8.88, 
+                    currency: '¥', 
+                    message: '感谢分享' 
+                },
+                { 
+                    avatar: '4.jpg',
+                    name: 'D~', 
+                    amount: 52.0, 
+                    currency: '¥', 
+                    message: '帮我解决了大问题' 
+                },
+                { 
+                    avatar: '5.jpg',
+                    name: '西钉不敢吱声', 
+                    amount: 6.66, 
+                    currency: '¥', 
+                    message: '物超所值' 
+                },
+                { 
+                    avatar: '6.jpg',
+                    name: '冷酷DE瞬间', 
+                    amount: 20, 
+                    currency: '¥', 
+                    message: '推荐给朋友了' 
+                },
+                { 
+                    avatar: '7.jpg',
+                    name: 'Aღ᭄💞来盘意大利面ᯤ📶⁵ᴳ', 
+                    amount: 5, 
+                    currency: '¥', 
+                    message: '简洁明了' 
+                },
+                { 
+                    avatar: '8.jpg',
+                    name: 'A、我想静静', 
+                    amount: 10, 
+                    currency: '¥', 
+                    message: '第二次赞助了' 
+                },
+                { 
+                    avatar: '9.jpg',
+                    name: '笼中鸟余哀鸣', 
+                    amount: 1, 
+                    currency: '¥', 
+                    message: '继续加油' 
+                },
+                { 
+                    avatar: '10.jpg',
+                    name: 'July', 
+                    amount: 30, 
+                    currency: '¥', 
+                    message: '小而精' 
+                }
+            ];
+
+            const track = document.getElementById('carouselTrack');
+            const prevBtn = document.querySelector('.carousel-prev');
+            const nextBtn = document.querySelector('.carousel-next');
+            let currentIndex = 0;
+            let itemsPerView = 6;
+            let cardWidth = 0;
+            let isDragging = false;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let animationID;
+            let autoScrollInterval;
+
+            // 初始化轮播
+            function initCarousel() {
+                track.innerHTML = '';
+                updateItemsPerView();
+                
+                sponsors.forEach(sponsor => {
+                    const card = document.createElement('div');
+                    card.className = 'sponsor-card';
+                    card.innerHTML = `
+                        <img src="${sponsor.avatar}" class="sponsor-avatar" 
+                             alt="${sponsor.name}" 
+                             onerror="this.src='https://via.placeholder.com/40?text=${sponsor.name.charAt(0)}'">
+                        <div class="sponsor-info">
+                            <div class="sponsor-name">${sponsor.name}</div>
+                            <div class="sponsor-amount">${sponsor.currency}${sponsor.amount}</div>
+                            <div class="sponsor-message">${sponsor.message}</div>
+                        </div>
+                    `;
+                    track.appendChild(card);
+                });
+
+                if(track.children.length > 0) {
+                    cardWidth = track.children[0].offsetWidth + 12; // 包含gap
+                }
+                
+                startAutoScroll();
+            }
+
+            // 更新可见项数量
+            function updateItemsPerView() {
+                const width = window.innerWidth;
+                if(width >= 1400) itemsPerView = 6;
+                else if(width >= 1200) itemsPerView = 5;
+                else if(width >= 992) itemsPerView = 4;
+                else if(width >= 768) itemsPerView = 3;
+                else if(width >= 576) itemsPerView = 2;
+                else itemsPerView = 1;
+            }
+
+            // 更新轮播位置
+            function updatePosition() {
+                track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+            }
+
+            // 自动滚动
+            function startAutoScroll() {
+                autoScrollInterval = setInterval(() => {
+                    nextSlide();
+                }, 3000);
+            }
+
+            function resetAutoScroll() {
+                clearInterval(autoScrollInterval);
+                startAutoScroll();
+            }
+
+            // 下一张
+            function nextSlide() {
+                if(currentIndex >= sponsors.length - itemsPerView) {
+                    currentIndex = 0;
+                } else {
+                    currentIndex++;
+                }
+                updatePosition();
+            }
+
+            // 上一张
+            function prevSlide() {
+                if(currentIndex <= 0) {
+                    currentIndex = Math.max(0, sponsors.length - itemsPerView);
+                } else {
+                    currentIndex--;
+                }
+                updatePosition();
+            }
+
+            // 事件监听
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                resetAutoScroll();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                resetAutoScroll();
+            });
+
+            // 响应式调整
+            window.addEventListener('resize', () => {
+                updateItemsPerView();
+                if(track.children.length > 0) {
+                    cardWidth = track.children[0].offsetWidth + 12;
+                }
+                updatePosition();
+            });
+
+            // 初始化
+            initCarousel();
+        });
+    </script>
+    <footer>
+         <p class="footer-text">
+            🚀Copyright &copy; 2023 Made with <i class="fas fa-heart" style="color: #ff4757;"></i> in 
+            <a href="https://github.com/SecNN" target="_blank">SecNN</a>
+        </p>
+    </footer>
+</body>
+</html>
