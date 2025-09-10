@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CTF/misc/%E6%96%87%E4%BB%B6%E4%BF%AE%E5%A4%8D/%E9%AB%98%E5%BA%A6%E4%BF%AE%E5%A4%8D/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>高度修复 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u9ad8\u5ea6\u4fee\u590d", url: "#_top", children: [
+              {title: "\u5173\u4e8e", url: "#_2" },
+              {title: "BuuCTF - \u5927\u767d (PNG\u9ad8\u5ea6\u4fee\u590d)", url: "#buuctf-png" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E9%9F%B3%E9%A2%91%E9%9A%90%E5%86%99/MP3%E9%9A%90%E5%86%99/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E9%9F%B3%E9%A2%91%E9%9A%90%E5%86%99/MP3%E9%9A%90%E5%86%99/" class="btn btn-xs btn-link">
+        MP3隐写
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%A0%87%E8%AF%86%E4%BF%AE%E5%A4%8D/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%A0%87%E8%AF%86%E4%BF%AE%E5%A4%8D/" class="btn btn-xs btn-link">
+        标识修复
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="_1">高度修复<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="_2">关于<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>图片中可以通过修改数据块中的数据来减小文件的高度达到隐藏数据的目的.</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1667880998438-db228d22-1901-4af9-94d4-3fb7e05f1cd2.png" /></p>
+<p>如上图使用一张 PNG图片做演示，其中  000004B8 00000338 为 图片高度的数据段，通过修改这一部分就可以隐藏图片中的信息</p>
+<h2 id="buuctf-png">BuuCTF - 大白 (PNG高度修复)<a class="headerlink" href="#buuctf-png" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="mi">89</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="mi">4</span><span class="n">E</span><span class="w"> </span><span class="mi">47</span><span class="w"> </span><span class="mf">0D</span><span class="w"> </span><span class="mi">0</span><span class="n">A</span><span class="w"> </span><span class="mi">1</span><span class="n">A</span><span class="w"> </span><span class="mi">0</span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="n">PNG文件头</span><span class="p">)</span>
+<span class="p">.....</span>
+<span class="mo">00</span><span class="w"> </span><span class="mo">00</span><span class="w"> </span><span class="mo">02</span><span class="w"> </span><span class="n">A7</span><span class="w"> </span><span class="mo">00</span><span class="w"> </span><span class="mo">00</span><span class="w"> </span><span class="mo">01</span><span class="w"> </span><span class="mo">00</span><span class="w"> </span><span class="p">(</span><span class="n">宽高</span><span class="p">)</span>
+<span class="p">.....</span>
+<span class="mf">6D</span><span class="w"> </span><span class="mi">7</span><span class="n">C</span><span class="w"> </span><span class="mi">71</span><span class="w"> </span><span class="mi">35</span><span class="w"> </span><span class="p">(</span><span class="mi">13</span><span class="n">位IHDR数据块后的4字节</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1667882574021-ce1edb02-ba95-48c8-b86e-93e6a83068fd.png" />找到CRC后通过脚本爆破高度</p>
+<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="o">!/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">env</span><span class="w"> </span><span class="n">python</span>
+<span class="err">#</span><span class="o">-*-</span><span class="w"> </span><span class="n">coding</span><span class="p">:</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="w"> </span><span class="o">-*-</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">binascii</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">crcbp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">open</span><span class="p">(</span><span class="s">&quot;BuuCTF - 大白.png&quot;</span><span class="p">,</span><span class="s">&quot;rb&quot;</span><span class="p">).</span><span class="na">read</span><span class="p">()</span><span class="err">#</span><span class="n">填文件名</span>
+<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">range</span><span class="p">(</span><span class="mi">1024</span><span class="p">):</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="nf">range</span><span class="p">(</span><span class="mi">1024</span><span class="p">):</span>
+<span class="w">        </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crcbp</span><span class="o">[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">struct</span><span class="p">.</span><span class="na">pack</span><span class="p">(</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="n">i</span><span class="err">&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">struct</span><span class="p">.</span><span class="na">pack</span><span class="p">(</span><span class="err">&#39;</span><span class="o">&gt;</span><span class="n">i</span><span class="err">&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">crcbp</span><span class="o">[</span><span class="mi">24</span><span class="p">:</span><span class="mi">29</span><span class="o">]</span>
+<span class="w">        </span><span class="n">crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">binascii</span><span class="p">.</span><span class="na">crc32</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xffffffff</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">crc32</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x6D7C7135</span><span class="w"> </span><span class="p">:</span><span class="err">#</span><span class="n">此处填CRC值</span>
+<span class="w">            </span><span class="nf">print</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">print</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+<span class="w">            </span><span class="n">print</span><span class="w"> </span><span class="p">(</span><span class="n">hex</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">hex</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1667882738917-57a390c2-20e8-488b-8d0a-bf6aee57038e.png" /></p>
+<p>修复高度就可以看到隐藏信息</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1667882818842-bfc7a9ed-c287-4b92-8ef4-9d101335ebc8.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E9%9F%B3%E9%A2%91%E9%9A%90%E5%86%99/MP3%E9%9A%90%E5%86%99/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E9%9F%B3%E9%A2%91%E9%9A%90%E5%86%99/MP3%E9%9A%90%E5%86%99/" class="btn btn-xs btn-link">
+        MP3隐写
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%A0%87%E8%AF%86%E4%BF%AE%E5%A4%8D/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%A0%87%E8%AF%86%E4%BF%AE%E5%A4%8D/" class="btn btn-xs btn-link">
+        标识修复
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

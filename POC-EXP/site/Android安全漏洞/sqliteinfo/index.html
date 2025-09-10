@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Android%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E/sqliteinfo/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>SQLite敏感信息 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "SQLite\u654f\u611f\u4fe1\u606f", url: "#_top", children: [
+              {title: "0x01 \u6f0f\u6d1e\u63cf\u8ff0", url: "#0x01" },
+              {title: "0x02 \u6f0f\u6d1e\u5371\u5bb3", url: "#0x02" },
+              {title: "0x03 \u4fee\u590d\u610f\u89c1", url: "#0x03" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../CMS%E6%BC%8F%E6%B4%9E/74cms%20v4.2.1%20v4.2.129%20%E5%90%8E%E5%8F%B0getshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../CMS%E6%BC%8F%E6%B4%9E/74cms%20v4.2.1%20v4.2.129%20%E5%90%8E%E5%8F%B0getshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        74cms v4.2.1 v4.2.129 后台getshell漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../sign/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../sign/" class="btn btn-xs btn-link">
+        安装包签名
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="sqlite">SQLite敏感信息<a class="headerlink" href="#sqlite" title="Permanent link">&para;</a></h1>
+<h2 id="0x01">0x01 漏洞描述<a class="headerlink" href="#0x01" title="Permanent link">&para;</a></h2>
+<p>ndroid中有些时候会将一些隐私数据存放在sqlite数据库中，在root过的手机中通过RE就能够轻松的打开并查看数据库所有内容。</p>
+<h2 id="0x02">0x02 漏洞危害<a class="headerlink" href="#0x02" title="Permanent link">&para;</a></h2>
+<p>SQLite不支持加密，应用中重要的数据、账号密码等容易被泄露。</p>
+<h2 id="0x03">0x03 修复意见<a class="headerlink" href="#0x03" title="Permanent link">&para;</a></h2>
+<h3 id="31">3.1 加密数据库内容<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<p>在存储数据时加密内容，在查询时进行解密。但是这种方式不能彻底加密，数据库的表结构等信息还是能被查看到，另外检索数据也是一个问题。</p>
+<h3 id="32">3.2 加密数据库文件<a class="headerlink" href="#32" title="Permanent link">&para;</a></h3>
+<p>借助SQLCipher。SQLCipher是一个在SQLite基础之上进行扩展的开源数据库，它主要是在SQLite的基础之上增加了数据加密功能。</p>
+<ul>
+<li>加密性能高、开销小，只要5-15%的开销用于加密</li>
+<li>完全做到数据库100%加密</li>
+<li>采用良好的加密方式（CBC加密模式）</li>
+<li>使用方便，做到应用级别加密</li>
+<li>采用OpenSSL加密库提供的算法</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../CMS%E6%BC%8F%E6%B4%9E/74cms%20v4.2.1%20v4.2.129%20%E5%90%8E%E5%8F%B0getshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../CMS%E6%BC%8F%E6%B4%9E/74cms%20v4.2.1%20v4.2.129%20%E5%90%8E%E5%8F%B0getshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        74cms v4.2.1 v4.2.129 后台getshell漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../sign/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../sign/" class="btn btn-xs btn-link">
+        安装包签名
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

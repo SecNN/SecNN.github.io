@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CTF/blockchain/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>工具安装与使用 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5de5\u5177\u5b89\u88c5\u4e0e\u4f7f\u7528", url: "#_top", children: [
+              {title: "Remix", url: "#remix" },
+              {title: "MetaMask", url: "#metamask" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../crypto/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../crypto/" class="btn btn-xs btn-link">
+        Crypto
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%85%B3%E4%BA%8E%E5%8C%BA%E5%9D%97%E9%93%BE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%85%B3%E4%BA%8E%E5%8C%BA%E5%9D%97%E9%93%BE/" class="btn btn-xs btn-link">
+        关于区块链
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="_1">工具安装与使用<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="remix">Remix<a class="headerlink" href="#remix" title="Permanent link">&para;</a></h2>
+<p>Remix 是以太坊官方推荐的<code>智能合约开发IDE（集成开发环境</code>，适合新手，可以在浏览器中快速部署测试智能合约，你不需要在本地安装任何程序。</p>
+<p><a-alert type="success" message="https://remix.ethereum.org" description="" showIcon>
+</a-alert>
+<br/></p>
+<p><img alt="image-20220918112654787" src="../../../.vuepress/public/img/image-20220918112654787.png" /></p>
+<h3 id="solidity">创建 Solidity程序<a class="headerlink" href="#solidity" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="c1">// compiler version must be greater than or equal to 0.8.13 and less than 0.9.0</span>
+<span class="k">pragma solidity</span><span class="w"> </span><span class="o">^</span><span class="k">0.8.13</span><span class="p">;</span>
+
+<span class="k">contract</span><span class="w"> </span><span class="ni">HelloWorld</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="k">public </span><span class="nv">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Hello World!&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><img alt="image-20220918112952693" src="../../../.vuepress/public/img/image-20220918112952693.png" /></p>
+<h3 id="_2">编译并部署<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>编译成功后在虚拟机中部署，部署成功后，你会在下面看到名为 <code>HelloWorld 的合约</code>，点击 greet，就能看到我们代码中写的 <code>Hello Worl d!</code> 了。</p>
+<p><img alt="image-20220918113110896" src="../../../.vuepress/public/img/image-20220918113110896.png" /></p>
+<h2 id="metamask">MetaMask<a class="headerlink" href="#metamask" title="Permanent link">&para;</a></h2>
+<p>MetaMask是一款浏览器插件钱包，不需下载安装客户端，只需添加至浏览器扩展程序即可使用。</p>
+<p><img src="../../../.vuepress/public/img/image-20220918113457060.png" alt="image-20220918113457060" style="zoom:50%;" /></p>
+<h3 id="_3">安装<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>谷歌商店搜索 MetaMask</p>
+<p><img alt="image-20220918113605974" src="../../../.vuepress/public/img/image-20220918113605974.png" /></p>
+<p>安装后可以在浏览器扩展中找到它，我们创建第一个钱包</p>
+<p><img src="../../../.vuepress/public/img/image-20220918113913098.png" alt="image-20220918113913098" style="zoom:50%;" /></p>
+<p><img src="../../../.vuepress/public/img/image-20220918113944548.png" alt="image-20220918113944548" style="zoom:50%;" /></p>
+<p><a-alert type="success" message="注意钱包需要创建后保存私钥并记住地址，防止钱包丢失" description="" showIcon>
+</a-alert>
+<br/></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../crypto/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../crypto/" class="btn btn-xs btn-link">
+        Crypto
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%85%B3%E4%BA%8E%E5%8C%BA%E5%9D%97%E9%93%BE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%85%B3%E4%BA%8E%E5%8C%BA%E5%9D%97%E9%93%BE/" class="btn btn-xs btn-link">
+        关于区块链
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

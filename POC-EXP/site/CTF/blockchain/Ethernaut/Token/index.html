@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CTF/blockchain/Ethernaut/Token/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.Token - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "5.Token", url: "#_top", children: [
+              {title: "\u9898\u76ee\u63cf\u8ff0", url: "#_1" },
+              {title: "\u89e3\u9898\u8fc7\u7a0b", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Solidity%E8%AF%AD%E8%A8%80/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Solidity%E8%AF%AD%E8%A8%80/" class="btn btn-xs btn-link">
+        Solidity语言
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Telephone/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Telephone/" class="btn btn-xs btn-link">
+        4.Telephone
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="5token">5.Token<a class="headerlink" href="#5token" title="Permanent link">&para;</a></h1>
+<h2 id="_1">题目描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="img" src="../../../.vuepress/public/img/1645094270443-fe7019fb-f28b-4b89-9f9a-32ae6656b57b.png" /></p>
+<h2 id="_2">解题过程<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>题目源码</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span><span class="w"> </span><span class="nx">solidity</span><span class="w"> </span><span class="o">^</span><span class="mf">0.6.0</span><span class="p">;</span>
+
+<span class="nx">contract</span><span class="w"> </span><span class="nx">Token</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">  </span><span class="nx">mapping</span><span class="p">(</span><span class="nx">address</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">uint</span><span class="p">)</span><span class="w"> </span><span class="nx">balances</span><span class="p">;</span>
+<span class="w">  </span><span class="nx">uint</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">totalSupply</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">uint</span><span class="w"> </span><span class="nx">_initialSupply</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">totalSupply</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_initialSupply</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">transfer</span><span class="p">(</span><span class="nx">address</span><span class="w"> </span><span class="nx">_to</span><span class="p">,</span><span class="w"> </span><span class="nx">uint</span><span class="w"> </span><span class="nx">_value</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">returns</span><span class="w"> </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">require</span><span class="p">(</span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">_value</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="nx">_value</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">balances</span><span class="p">[</span><span class="nx">_to</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">_value</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">balanceOf</span><span class="p">(</span><span class="nx">address</span><span class="w"> </span><span class="nx">_owner</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">view</span><span class="w"> </span><span class="nx">returns</span><span class="w"> </span><span class="p">(</span><span class="nx">uint</span><span class="w"> </span><span class="nx">balance</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">balances</span><span class="p">[</span><span class="nx">_owner</span><span class="p">];</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>根据题目提示我们默认含有20代币，注意一下 transfer方法</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 向某地址转移代币，且需要通过require的大于0的检测</span>
+<span class="kd">function</span><span class="w"> </span><span class="nx">transfer</span><span class="p">(</span><span class="nx">address</span><span class="w"> </span><span class="nx">_to</span><span class="p">,</span><span class="w"> </span><span class="nx">uint</span><span class="w"> </span><span class="nx">_value</span><span class="p">)</span><span class="w"> </span><span class="kr">public</span><span class="w"> </span><span class="nx">returns</span><span class="w"> </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">require</span><span class="p">(</span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">_value</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">0</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="nx">_value</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">balances</span><span class="p">[</span><span class="nx">_to</span><span class="p">]</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="nx">_value</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+<p>以太坊虚拟机（EVM）为整数指定固定大小的数据类型。这意味着一个整形变量只能表达一定范围的数字。</p>
+<p>例如，uint8，只能存储[0,255]之间的数字，如果想存储256，那么就会上溢，从而将变量的值变为0。相对应的，如果从一个uint8类型的值为0的变量中减1，就会发生下溢，该变量会变成255。</p>
+<p>所以我们需要通过下溢出来完成攻击</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645096666548-cd2628ad-9a03-406f-9529-10e4e5ea40a6.png" /></p>
+<p>部署合约后可以看到默认20代币，产生下溢我们就可以向任意地址转移 21代币，发生下溢</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645096830004-77970f21-a171-4941-8087-ca1e4df0bf50.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="nx">Overflow</span><span class="w"> </span><span class="nx">在</span><span class="w"> </span><span class="nx">solidity</span><span class="w"> </span><span class="nx">中非常常见</span><span class="p">,</span><span class="w"> </span><span class="nx">你必须小心检查</span><span class="p">,</span><span class="w"> </span><span class="nx">比如下面这样</span><span class="o">:</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nx">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">c</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">c</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">另一个简单的方法是使用</span><span class="w"> </span><span class="nx">OpenZeppelin</span><span class="w"> </span><span class="nx">的</span><span class="w"> </span><span class="nx">SafeMath</span><span class="w"> </span><span class="nx">库</span><span class="p">,</span><span class="w"> </span><span class="nx">它会自动检查所有数学运算的溢出</span><span class="p">,</span><span class="w"> </span><span class="nx">可以像这样使用</span><span class="o">:</span>
+
+<span class="nx">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+<span class="nx">如果有溢出</span><span class="p">,</span><span class="w"> </span><span class="nx">代码会自动恢复</span><span class="p">.</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Solidity%E8%AF%AD%E8%A8%80/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Solidity%E8%AF%AD%E8%A8%80/" class="btn btn-xs btn-link">
+        Solidity语言
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Telephone/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Telephone/" class="btn btn-xs btn-link">
+        4.Telephone
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

