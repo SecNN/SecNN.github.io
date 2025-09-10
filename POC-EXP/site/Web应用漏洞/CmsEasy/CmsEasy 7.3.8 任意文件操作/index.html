@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/CmsEasy/CmsEasy%207.3.8%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>CmsEasy 7.3.8 任意文件操作 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "CmsEasy 7.3.8 \u4efb\u610f\u6587\u4ef6\u64cd\u4f5c", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../CmsEasy%207.3.8%20%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../CmsEasy%207.3.8%20%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        CmsEasy 7.3.8 本地文件包含漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CmsEasy%207.3.8%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CmsEasy%207.3.8%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        CmsEasy 7.3.8 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cmseasy-738">CmsEasy 7.3.8 任意文件操作<a class="headerlink" href="#cmseasy-738" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>CmsEasy 7.3.8</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>"无需代码，自由拖拽布局，适应所有设备"是这个系统宣传的特色，后台自然地存在自定义网站模板功能，这种功能中如果处理不当很可能造成文件任意读、写或者删除的脆弱性问题，需要着重注意。</p>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId24.png" /></p>
+<p>观察模板编辑功能，存在对模板的html文件的读取操作，对应到HTTP请求可以明显看到可控参数</p>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId25.png" /></p>
+<p>看到功能不急着看代码，首先想到黑盒测试一下，手动修改id参数后观察发现可以这个接口果然没有做好限制和过滤，可以读取任意传参文件</p>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId26.png" /></p>
+<p>观察接口URL中的参数，猜测除了fetch之外应该还有保存和删除的功能，但是功能接口的接收参数就不知道了，因此需要去看源码以进行下一步操作</p>
+<h5 id="_4">定位到接口的功能函数文件后，发现经过了加密混淆处理。。。<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h5>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId28.png" /></p>
+<p>经过一番操作后，最终得到了文件删除的接口函数大致内容，很明显地存在文件删除路径可控问题</p>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId29.png" /></p>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId30.png" /></p>
+<p><img alt="" src="../resource/CmsEasy7.3.8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/media/rId31.png" /></p>
+<p>同理，文件写也存在问题，这里就不详细列出了，感兴趣的朋友可以再看看</p>
+<h2 id="_5">参考链接<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7273">https://xz.aliyun.com/t/7273</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../CmsEasy%207.3.8%20%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../CmsEasy%207.3.8%20%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        CmsEasy 7.3.8 本地文件包含漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CmsEasy%207.3.8%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CmsEasy%207.3.8%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        CmsEasy 7.3.8 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

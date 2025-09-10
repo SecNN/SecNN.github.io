@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Php/Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3/%EF%BC%88%E4%B8%89%EF%BC%89%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（三）通过IDA获取加密的key - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08\u4e09\uff09\u901a\u8fc7IDA\u83b7\u53d6\u52a0\u5bc6\u7684key", url: "#_top", children: [
+              {title: "\u901a\u8fc7\u5bfc\u56fe\u67e5\u627e", url: "#_1" },
+              {title: "\u901a\u8fc7\u4f2a\u4ee3\u7801\u67e5\u627e", url: "#_2" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88%E4%BA%8C%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88screw_decode%EF%BC%89/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88%E4%BA%8C%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88screw_decode%EF%BC%89/" class="btn btn-xs btn-link">
+        （二）Php screw加密与破解工具（screw_decode）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88%E4%B8%80%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88php-screw-brute%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88%E4%B8%80%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88php-screw-brute%EF%BC%89/" class="btn btn-xs btn-link">
+        （一）Php screw加密与破解工具（php-screw-brute）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="idakey">（三）通过IDA获取加密的key<a class="headerlink" href="#idakey" title="Permanent link">&para;</a></h1>
+<h2 id="_1">通过导图查找<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>首先找到php_screw.so文件，然后通过IDA分析（幸好之前跟基友要了份IDA）。加密过程是在pm9screw_ext_fopen函数中实现的，所以只需要到这个函数中去找加密部分即可。<img alt="3.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId22.png" /></p>
+<p>找到pm9screw_ext_fopen函数，双击，如下图所示：</p>
+<p><img alt="4.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId23.png" /></p>
+<p>然后右边的窗口就会如下图所示：</p>
+<p><img alt="1.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId24.png" /></p>
+<p>很明显，我标黄的就是加密密钥了，双击跳转至其指针保存处：</p>
+<p><img alt="2.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId25.png" /></p>
+<p>再次双击，跟踪变量，见下图，打码处就是密钥了。</p>
+<p><img alt="3.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId26.png" /></p>
+<p>如下图，右键，将十六进制的密钥转成十进制的，然后打开screwdecode.c，见下图9，将密钥替换掉，即可使用screw_decode解密。</p>
+<p><img alt="4.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId27.png" /></p>
+<p><img alt="5.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId28.png" /></p>
+<h2 id="_2">通过伪代码查找<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>再找到目标函数之后，使用F5，查看伪代码，双击黄标也可以跳转到之前找到的位置。</p>
+<p><img alt="6.png" src="../resource/%28%E4%B8%89%29%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/media/rId30.png" /></p>
+<h2 id="_3">参考链接<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/StudyCat/p/11268399.html">https://www.cnblogs.com/StudyCat/p/11268399.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88%E4%BA%8C%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88screw_decode%EF%BC%89/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88%E4%BA%8C%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88screw_decode%EF%BC%89/" class="btn btn-xs btn-link">
+        （二）Php screw加密与破解工具（screw_decode）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88%E4%B8%80%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88php-screw-brute%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88%E4%B8%80%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88php-screw-brute%EF%BC%89/" class="btn btn-xs btn-link">
+        （一）Php screw加密与破解工具（php-screw-brute）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

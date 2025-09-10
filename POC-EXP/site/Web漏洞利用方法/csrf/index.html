@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95/csrf/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>CSRF - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "CSRF", url: "#_top", children: [
+              {title: "0x01 \u6f0f\u6d1e\u63cf\u8ff0", url: "#0x01" },
+              {title: "0x02 \u5e38\u89c1\u5e94\u7528\u573a\u666f", url: "#0x02" },
+              {title: "0x03 \u6f0f\u6d1e\u5371\u5bb3", url: "#0x03" },
+              {title: "0x04 \u4fee\u590d\u610f\u89c1", url: "#0x04" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../dirtraversal/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../dirtraversal/" class="btn btn-xs btn-link">
+        Directory Browsing
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../crlf/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../crlf/" class="btn btn-xs btn-link">
+        CRLF Injection
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="csrf">CSRF<a class="headerlink" href="#csrf" title="Permanent link">&para;</a></h1>
+<h2 id="0x01">0x01 漏洞描述<a class="headerlink" href="#0x01" title="Permanent link">&para;</a></h2>
+<p>CSRF（Cross-site request forgery）跨站请求伪造，也被称为“One Click Attack”或者Session Riding，通常缩写为CSRF，是一种对网站的恶意利用。尽管听起来像跨站脚本（XSS），但它与XSS非常不同，XSS利用站点内的信任用户，而CSRF则通过伪装来自受信任用户的请求来利用受信任的网站。攻击者通过伪造来自受信任用户的请求，达到增加、删除、篡改网站内容的目的。</p>
+<h2 id="0x02">0x02 常见应用场景<a class="headerlink" href="#0x02" title="Permanent link">&para;</a></h2>
+<p>一个成功的CSRF漏洞攻击的场景，需要由"三个部分"来构成。 </p>
+<ol>
+<li>有一个没有进行二次校验措施的前台或后台的数据修改、新增、删除等数据交互请求的漏洞存在； </li>
+<li>伪装数据操作请求的恶意链接或者页面； </li>
+<li>诱使用户主动访问、点击恶意链接，触发非法操作；</li>
+</ol>
+<h2 id="0x03">0x03 漏洞危害<a class="headerlink" href="#0x03" title="Permanent link">&para;</a></h2>
+<p>CSRF漏洞是借助受害者的cookie来进行攻击者想要的恶意操作，攻击者并不是拿到了受害者cookie，对于服务器返回的结果也无法解析查看，攻击者的攻击就是让服务器执行了自己想要的操作指令或业务流程。</p>
+<p>最常见的攻击场景为：攻击者冒充用户/管理员伪造请求，进行网页篡改；用户修改、添加用户、密码修改；发送帖子、消息等非法操作。</p>
+<h2 id="0x04">0x04 修复意见<a class="headerlink" href="#0x04" title="Permanent link">&para;</a></h2>
+<ol>
+<li>验证HTTP Referer字段；</li>
+<li>关键业务操作使用图形验证码进行二次确认验，只接受 POST 请求，GET请求应只浏览而不改变服务器端资源；</li>
+<li>过滤用户输入，不允许发布含有站内操作URL的链接；</li>
+<li>增加csrftoken验证，csrftoken可以在用户登陆后产生并放于 session 之中，然后在每次请求时把csrftoken从 session 中拿出，与请求中的csrftoken进行比对。对于GET请求，csrftoken将附在请求地址之后，对于POST请求来说，要在form的最后加上 <code>&lt;input type="hidden" name="csrftoken" value="tokenvalue"/&gt;</code>；</li>
+<li>在 HTTP 头中自定义属性并验证，该方法同csrftoken，同为随机值校验，但是这里并不是把csrftoken以参数的形式置于HTTP请求之中，而是把它放到 HTTP头中自定义的属性里；</li>
+<li>在浏览其它站点前登出站点或者在浏览器会话结束后清理浏览器的cookie。</li>
+</ol>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../dirtraversal/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../dirtraversal/" class="btn btn-xs btn-link">
+        Directory Browsing
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../crlf/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../crlf/" class="btn btn-xs btn-link">
+        CRLF Injection
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

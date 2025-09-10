@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Zzzcms/Zzzcms%201.75%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Zzzcms 1.75 前台sql注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Zzzcms 1.75 \u524d\u53f0sql\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Zzzcms%201.75%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Zzzcms%201.75%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        Zzzcms 1.75 后台任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Zzzcms%201.75%20xss%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Zzzcms%201.75%20xss%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Zzzcms 1.75 xss漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="zzzcms-175-sql">Zzzcms 1.75 前台sql注入<a class="headerlink" href="#zzzcms-175-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Zzzcms 1.75</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>注入点的入口在plugins\sms\sms_list.php文件中，</p>
+<p><img alt="" src="../resource/Zzzcms1.75%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId24.png" /></p>
+<p>其中id参数是用户post输入的参数，并且在第7行中调用了db_delete去删除指定id的数据，进入db_delete函数后可以看到函数本身并不长，逻辑还是较为清晰的。</p>
+<p>在获取到代表着数据库连接的$d后开始处理传入的$where条件变量，接着调用db_cond_to_sqladd函数后传入db_exec进行sql语句的执行过程。</p>
+<p><img alt="" src="../resource/Zzzcms1.75%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId25.png" /></p>
+<p>这里继续看db_cond_to_sqladd函数部分，该函数代码部分比较长（70行），但只需要着重看其中几个处理分支即可。注入点传入的条件变量是数组，自然进入下面的第一个红框控制流中。接着，假如传入的参数id也是数组并且不存在key为0的元素，那么会进入第二个红框控制流中。</p>
+<p>关键点在于第三个红框的控制流中，作为键名key的$k1直接拼接到了条件语句中。</p>
+<p><img alt="" src="../resource/Zzzcms1.75%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId26.png" /></p>
+<p>在代码中加入sql语句回显进行测试，当我们传入如下post的id后，返回的sql语句如下所示，已经形成可以利用的SQL注入点了：</p>
+<p><img alt="" src="../resource/Zzzcms1.75%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId27.png" /></p>
+<p>利用BENCHMARK函数可以直接构造exp利用时间盲注得到数据库信息。</p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7414">https://xz.aliyun.com/t/7414</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Zzzcms%201.75%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Zzzcms%201.75%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        Zzzcms 1.75 后台任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Zzzcms%201.75%20xss%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Zzzcms%201.75%20xss%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Zzzcms 1.75 xss漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

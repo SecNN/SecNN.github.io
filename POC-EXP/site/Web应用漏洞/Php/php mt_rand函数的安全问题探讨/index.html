@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Php/php%20mt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>php mt_rand函数的安全问题探讨 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "php mt_rand\u51fd\u6570\u7684\u5b89\u5168\u95ee\u9898\u63a2\u8ba8", url: "#_top", children: [
+              {title: "mt_rand() \u51fd\u6570\u7684\u5b89\u5168\u6027\u95ee\u9898", url: "#mt_rand" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2012-1823%EF%BC%89PHP-CGI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2012-1823%EF%BC%89PHP-CGI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2012-1823）PHP-CGI远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%EF%BC%88%E5%88%A9%E7%94%A8phpinfo%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%EF%BC%88%E5%88%A9%E7%94%A8phpinfo%EF%BC%89/" class="btn btn-xs btn-link">
+        Php文件包含漏洞（利用phpinfo）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="php-mt_rand">php mt_rand函数的安全问题探讨<a class="headerlink" href="#php-mt_rand" title="Permanent link">&para;</a></h1>
+<h2 id="mt_rand">mt_rand() 函数的安全性问题<a class="headerlink" href="#mt_rand" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>php -r &#39;echo getrandmax().&quot;\n&quot;.mt_getrandmax().&quot;\n&quot;; echo (pow(2,31)-1).&quot;\n&quot;;&#39;
+</code></pre></div>
+
+<p><img alt="" src="../resource/phpmt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/media/rId22.png" /></p>
+<p>在我的 linux 64 位系统中,rand() 和 mt_rand()
+产生的最大随机数都是2147483647, 正好是 2^31-1 ,
+也就是说随机播种的种子也是在这个范围中,0 -- 2147483647
+的这个范围是允许我们进行爆破的. 但是用 php爆破比较慢</p>
+<p>这里放一个爆破poc的d地址</p>
+<p>php_mt_seed爆破程序 <a href="https://github.com/ianxtianxt/php-mt_rand">https://github.com/ianxtianxt/php-mt_rand</a></p>
+<p>下面演示一下它的用法:</p>
+<p><img alt="" src="../resource/phpmt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/media/rId24.png" /></p>
+<p>在例子中,我没有自己播种种子,而是让php自动去播种一个种子并产生一个随机数,然后用
+php_mt_seed
+这个工具把产生的随机数作为参数,去爆破种子,最后的得到了四个结果.
+经过验证,四个结果都是对的.都会产生这样的一个随机数.</p>
+<p>但是还有一个疑问,就是 php manual 中说,自动播种种子是指:在每次调用
+mt_rand()函数之前都播种一次种子呢,还是多次调用
+mt_rand()函数之前,只播种一次种子呢,这对于我们能否猜到产生的随机数序列至关重要.</p>
+<p>看下面的测试:</p>
+<p><img alt="" src="../resource/phpmt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/media/rId25.png" /></p>
+<p>在测试中,在没有进行手工播种的情况下产生两个连续的随机数,然后去爆破种子,得到了四个可能种子,经过测试发现其中一个种子产生的随机数序列和预期的相同,所以可以猜想在php中产生一系列的随机数时,只进行了一次播种!</p>
+<p>那请考虑下面代码的安全性:</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">wp_generate_password</span><span class="p">(</span><span class="nv">$length</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="nv">$special_chars</span> <span class="o">=</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$chars</span> <span class="o">=</span> <span class="s1">&#39;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#39;</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="nv">$special_chars</span> <span class="p">)</span>
+  <span class="nv">$chars</span> <span class="o">.=</span> <span class="s1">&#39;!@#$%^&amp;*()&#39;</span><span class="p">;</span>
+
+  <span class="nv">$password</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="nv">$password</span> <span class="o">.=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$chars</span><span class="p">,</span> <span class="nb">mt_rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$chars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nv">$password</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nv">$key</span> <span class="o">=</span> <span class="nx">wp_generate_password</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s2">&quot;[*] This is a key for public:&quot;</span><span class="o">.</span><span class="nv">$key</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+
+<span class="nv">$private</span> <span class="o">=</span> <span class="nx">wp_generate_password</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="k">false</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s2">&quot;[*] Create a private key which you don&#39;t know:&quot;</span><span class="o">.</span><span class="nv">$private</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>我们是否可以根据公开的key,猜到 $private 呢?</p>
+<p>运行一次上面的代码:</p>
+<div class="codehilite"><pre><span></span><code>njctf$ php mtRand.php
+[*] This is a key for public:uS66FDD9LCR62UV3
+[*] Create a private key which you don\&#39;t know:t3JSUHzYAv
+</code></pre></div>
+
+<p>下面演示破解过程,首先获得public key在每一位在字符串中的位置:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;?</span><span class="n">php</span>
+<span class="n">$str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;uS66FDD9LCR62UV3&quot;</span><span class="p">;</span>
+<span class="n">$randStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&quot;</span><span class="p">;</span>
+
+<span class="k">for</span><span class="p">(</span><span class="n">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">$i</span><span class="o">&lt;</span><span class="n">strlen</span><span class="p">(</span><span class="n">$str</span><span class="p">);</span><span class="n">$i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">   </span><span class="n">$pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strpos</span><span class="p">(</span><span class="n">$randStr</span><span class="p">,</span><span class="n">$str</span><span class="p">[</span><span class="n">$i</span><span class="p">]);</span>
+<span class="w">   </span><span class="n">echo</span><span class="w"> </span><span class="n">$pos</span><span class="p">.</span><span class="s">&quot; &quot;</span><span class="p">.</span><span class="n">$pos</span><span class="p">.</span><span class="s">&quot; &quot;</span><span class="p">.</span><span class="s">&quot;0 &quot;</span><span class="p">.(</span><span class="n">strlen</span><span class="p">(</span><span class="n">$randStr</span><span class="p">)</span><span class="mi">-1</span><span class="p">).</span><span class="s">&quot; &quot;</span><span class="p">;</span>
+<span class="w">   </span><span class="c1">//整理成方便 php_mt_seed 测试的格式</span>
+<span class="w">  </span><span class="c1">//php_mt_seed VALUE_OR_MATCH_MIN [MATCH_MAX [RANGE_MIN RANGE_MAX]]</span>
+<span class="p">}</span>
+<span class="n">echo</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="o">?&gt;</span>
+</code></pre></div>
+
+<p>然后用 php_mt_seed 进行破解,这个需要的时间还是挺长的,几分钟左右.</p>
+<p><img alt="" src="../resource/phpmt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/media/rId26.png" /></p>
+<p>已经成功的破解了一个seed,下面看这个seed对不对:</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">wp_generate_password</span><span class="p">(</span><span class="nv">$length</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="nv">$special_chars</span> <span class="o">=</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nv">$chars</span> <span class="o">=</span> <span class="s1">&#39;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#39;</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="nv">$special_chars</span> <span class="p">)</span>
+  <span class="nv">$chars</span> <span class="o">.=</span> <span class="s1">&#39;!@#$%^&amp;*()&#39;</span><span class="p">;</span>
+
+  <span class="nv">$password</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span> <span class="p">)</span>
+  <span class="nv">$password</span> <span class="o">.=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$chars</span><span class="p">,</span> <span class="nb">mt_rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$chars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nv">$password</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">mt_srand</span><span class="p">(</span><span class="mi">4030923041</span><span class="p">);</span> <span class="c1">//手工添加了这个种子</span>
+<span class="nv">$key</span> <span class="o">=</span> <span class="nx">wp_generate_password</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s2">&quot;[*] This is a key for public:&quot;</span><span class="o">.</span><span class="nv">$key</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="nv">$private</span> <span class="o">=</span> <span class="nx">wp_generate_password</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="k">false</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s2">&quot;[*] Create a private key which you don&#39;t know:&quot;</span><span class="o">.</span><span class="nv">$private</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>跟刚才的结果一模一样 :</p>
+<p><img alt="" src="../resource/phpmt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/media/rId27.png" /></p>
+<p>这样就说明了,我们只需要拿到public key,就可以预测到private key 的值了.</p>
+<p>但是在有的一些环境中，public key可能在private
+key之后产生，但是知道private key的位数 怎么预测private key呢？
+强大的php_mt_seed_4.0,支持一些统配的写法，把未知的都写成参数 0 0 0 0
+就可以了php_mt_seed详细的使用说明。它就会跳过前面的mt_rand()的一些输出，直接匹配后面的：</p>
+<p>下面测试我们获得了private key，来猜测public key的情况。</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;?</span><span class="n">php</span>
+<span class="w"> </span><span class="cp"># mtRand.php</span>
+<span class="n">$str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;t3JSUHzYAv&quot;</span><span class="p">;</span>
+<span class="n">$randStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&quot;</span><span class="p">;</span>
+
+<span class="k">for</span><span class="p">(</span><span class="n">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">$i</span><span class="o">&lt;</span><span class="n">strlen</span><span class="p">(</span><span class="n">$str</span><span class="p">);</span><span class="n">$i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">   </span><span class="n">$pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strpos</span><span class="p">(</span><span class="n">$randStr</span><span class="p">,</span><span class="n">$str</span><span class="p">[</span><span class="n">$i</span><span class="p">]);</span>
+<span class="w">   </span><span class="n">echo</span><span class="w"> </span><span class="n">$pos</span><span class="p">.</span><span class="s">&quot; &quot;</span><span class="p">.</span><span class="n">$pos</span><span class="p">.</span><span class="s">&quot; &quot;</span><span class="p">.</span><span class="s">&quot;0 &quot;</span><span class="p">.(</span><span class="n">strlen</span><span class="p">(</span><span class="n">$randStr</span><span class="p">)</span><span class="mi">-1</span><span class="p">).</span><span class="s">&quot; &quot;</span><span class="p">;</span>
+<span class="w">   </span><span class="c1">//整理成方便 php_mt_seed 测试的格式</span>
+<span class="w">  </span><span class="c1">//php_mt_seed VALUE_OR_MATCH_MIN [MATCH_MAX [RANGE_MIN RANGE_MAX]]</span>
+<span class="p">}</span>
+<span class="n">echo</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="o">?&gt;</span>
+</code></pre></div>
+
+<p>下面就开始破解：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">➜</span><span class="w">  </span><span class="nt">Desktop</span><span class="w"> </span><span class="nt">echo</span><span class="w">  </span><span class="o">$(</span><span class="nt">python</span><span class="w"> </span><span class="nt">-c</span><span class="w"> </span><span class="s2">&quot;print &#39;0 &#39;*64&quot;</span><span class="o">)</span><span class="w"> </span><span class="o">$(</span><span class="nt">php</span><span class="w"> </span><span class="nt">mtRand</span><span class="p">.</span><span class="nc">php</span><span class="o">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nt">xargs</span><span class="w">   </span><span class="o">~/</span><span class="nt">script</span><span class="o">/</span><span class="nt">php_mt_seed-4</span><span class="p">.</span><span class="nc">0</span><span class="o">/</span><span class="nt">php_mt_seed</span>
+<span class="nt">Pattern</span><span class="o">:</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">SKIP</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span><span class="w"> </span><span class="nt">EXACT-FROM-62</span>
+<span class="nt">Version</span><span class="o">:</span><span class="w"> </span><span class="nt">3</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">7</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">5</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">0</span>
+<span class="nt">Found</span><span class="w"> </span><span class="nt">0</span><span class="o">,</span><span class="w"> </span><span class="nt">trying</span><span class="w"> </span><span class="nt">0xfc000000</span><span class="w"> </span><span class="nt">-</span><span class="w"> </span><span class="nt">0xffffffff</span><span class="o">,</span><span class="w"> </span><span class="nt">speed</span><span class="w"> </span><span class="nt">65</span><span class="p">.</span><span class="nc">2</span><span class="w"> </span><span class="nt">Mseeds</span><span class="o">/</span><span class="nt">s</span>
+<span class="nt">Version</span><span class="o">:</span><span class="w"> </span><span class="nt">5</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">1</span><span class="o">+</span>
+<span class="nt">Found</span><span class="w"> </span><span class="nt">0</span><span class="o">,</span><span class="w"> </span><span class="nt">trying</span><span class="w"> </span><span class="nt">0xf0000000</span><span class="w"> </span><span class="nt">-</span><span class="w"> </span><span class="nt">0xf1ffffff</span><span class="o">,</span><span class="w"> </span><span class="nt">speed</span><span class="w"> </span><span class="nt">5</span><span class="p">.</span><span class="nc">5</span><span class="w"> </span><span class="nt">Mseeds</span><span class="o">/</span><span class="nt">s</span>
+<span class="nt">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">0xf0430121</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">4030923041</span><span class="w"> </span><span class="o">(</span><span class="nt">PHP</span><span class="w"> </span><span class="nt">5</span><span class="p">.</span><span class="nc">2</span><span class="p">.</span><span class="nc">1</span><span class="w"> </span><span class="nt">to</span><span class="w"> </span><span class="nt">7</span><span class="p">.</span><span class="nc">0</span><span class="p">.</span><span class="nc">x</span><span class="o">;</span><span class="w"> </span><span class="nt">HHVM</span><span class="o">)</span>
+<span class="nt">Found</span><span class="w"> </span><span class="nt">1</span><span class="o">,</span><span class="w"> </span><span class="nt">trying</span><span class="w"> </span><span class="nt">0xfe000000</span><span class="w"> </span><span class="nt">-</span><span class="w"> </span><span class="nt">0xffffffff</span><span class="o">,</span><span class="w"> </span><span class="nt">speed</span><span class="w"> </span><span class="nt">5</span><span class="p">.</span><span class="nc">5</span><span class="w"> </span><span class="nt">Mseeds</span><span class="o">/</span><span class="nt">s</span>
+<span class="nt">Found</span><span class="w"> </span><span class="nt">1</span>
+</code></pre></div>
+
+<p>可以看到破解得到的seed和之前的一样。</p>
+<p>接下来看一个 njctf中的一个例子,只贴部分关键代码:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="n">function</span><span class="w"> </span><span class="n">random_str</span><span class="p">(</span><span class="o">$</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;32&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;c&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;E&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;f&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;F&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;G&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;h&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;H&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;i&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;I&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;j&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;J&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;k&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;L&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;n&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;o&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;O&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;p&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;q&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Q&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;R&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;s&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;S&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;t&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;T&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;u&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;U&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;v&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;V&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;W&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;X&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;z&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;6&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;7&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;8&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;9&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="nb">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="o">$</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="o">$</span><span class="n">length</span><span class="p">;</span><span class="w"> </span><span class="o">++$</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mt_rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="o">$</span><span class="n">set</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="nb">str</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="o">$</span><span class="n">set</span><span class="p">[</span><span class="o">$</span><span class="n">ch</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="nb">str</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">session_start</span><span class="p">();</span>
+
+<span class="o">$</span><span class="nb">seed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">999999999</span><span class="p">);</span>
+<span class="n">mt_srand</span><span class="p">(</span><span class="o">$</span><span class="nb">seed</span><span class="p">);</span>
+<span class="o">$</span><span class="n">ss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mt_rand</span><span class="p">();</span>
+<span class="o">$</span><span class="nb">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">md5</span><span class="p">(</span><span class="n">session_id</span><span class="p">()</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">ss</span><span class="p">);</span>
+<span class="n">setcookie</span><span class="p">(</span><span class="s1">&#39;SESSI0N&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="nb">hash</span><span class="p">,</span><span class="w"> </span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3600</span><span class="p">);</span>
+
+<span class="o">$</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;./uP1O4Ds/&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">random_str</span><span class="p">()</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="s1">&#39;file-upload-field&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+<span class="err">?</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<p>我们的目标是猜测出filename. 这里 $seed 是
+rand(0,999999999)生成的,我们不知道,但是$hash = md5(session_id() .
+$ss);我们却是知道的,在 cookie的SESSION中,当把cookie中的 PHPSESSID
+设为空的时候,session_id()就也是空了,通过结hash,就可以获得 mt_rand()
+产生的第一个随机数,然后用
+php_mt_seed这工工具爆破种子,就可以直接算出文件名了.</p>
+<p>rand() 函数的安全性问题 rand() 函数在产生随机数的时候没有调用
+srand(),则产生的随机数是有规律可询的.
+具体的说明请看这里<a href="http://www.sjoerdlangkemper.nl/2016/02/11/cracking-php-rand/">http://www.sjoerdlangkemper.nl/2016/02/11/cracking-php-rand/</a>
+产生的随机数可以用下面这个公式预测 : state[i] = state[i-3] +
+state[i-31] (一般预测值可能比实际值要差1) 写下面测试代码,验证一下:</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="nv">$randStr</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+<span class="k">for</span><span class="p">(</span><span class="nv">$i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nv">$i</span><span class="o">&lt;</span><span class="mi">50</span><span class="p">;</span><span class="nv">$i</span><span class="o">++</span><span class="p">){</span>  <span class="c1">//先产生 32个随机数</span>
+    <span class="nv">$randStr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span><span class="o">=</span><span class="nb">rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="nv">$i</span><span class="o">&gt;=</span><span class="mi">31</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span>  <span class="s2">&quot;</span><span class="si">$randStr[$i]</span><span class="s2">=(&quot;</span><span class="o">.</span><span class="nv">$randStr</span><span class="p">[</span><span class="nv">$i</span><span class="o">-</span><span class="mi">31</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="nv">$randStr</span><span class="p">[</span><span class="nv">$i</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;) mod 31&quot;</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>看一下结果:</p>
+<p><img alt="" src="../resource/phpmt_rand%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E6%8E%A2%E8%AE%A8/media/rId29.png" /></p>
+<p>发现预测的值,基本都是对的,这样就可以根据之前生成的随机数,预</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2012-1823%EF%BC%89PHP-CGI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2012-1823%EF%BC%89PHP-CGI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2012-1823）PHP-CGI远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%EF%BC%88%E5%88%A9%E7%94%A8phpinfo%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%EF%BC%88%E5%88%A9%E7%94%A8phpinfo%EF%BC%89/" class="btn btn-xs btn-link">
+        Php文件包含漏洞（利用phpinfo）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

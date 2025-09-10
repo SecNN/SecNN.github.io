@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Php/PHP%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E8%AF%AD%E6%B3%95%E5%B7%AE%E5%BC%82%E9%97%AE%E9%A2%98/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PHP序列化和反序列化语法差异问题 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PHP\u5e8f\u5217\u5316\u548c\u53cd\u5e8f\u5217\u5316\u8bed\u6cd5\u5dee\u5f02\u95ee\u9898", url: "#_top", children: [
+          ]},
+          {title: "\u4ecb\u7ecd", url: "#_1", children: [
+          ]},
+          {title: "\u73af\u5883", url: "#_2", children: [
+          ]},
+          {title: "\u5dee\u5f02\u95ee\u9898", url: "#_3", children: [
+              {title: "\u5e8f\u5217\u5316", url: "#_4" },
+              {title: "\u53cd\u5e8f\u5217\u5316", url: "#_5" },
+          ]},
+          {title: "\u5b9e\u9645\u4f5c\u7528", url: "#_6", children: [
+          ]},
+          {title: "\u603b\u7ed3", url: "#_7", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Php%20XDebug%20%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Php%20XDebug%20%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Php XDebug 远程调试漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHPCGIWindows%E5%B9%B3%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28CVE-2024-4577%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHPCGIWindows%E5%B9%B3%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28CVE-2024-4577%29/" class="btn btn-xs btn-link">
+        PHP CGI Windows平台远程代码执行漏洞(CVE-2024-4577)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="php">PHP序列化和反序列化语法差异问题<a class="headerlink" href="#php" title="Permanent link">&para;</a></h2>
+<h2 id="_1">介绍<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>官方文档中介绍PHP序列化和反序列化如下：</p>
+<div class="codehilite"><pre><span></span><code>所有php里面的值都可以使用函数serialize()来返回一个包含字节流的字符串来表示。unserialize()函数能够重新把字符串变回php原来的值。 序列化一个对象将会保存对象的所有变量，但是不会保存对象的方法，只会保存类的名字。
+
+为了能够unserialize()一个对象，这个对象的类必须已经定义过。如果序列化类A的一个对象，将会返回一个跟类A相关，而且包含了对象所有变量值的字符串。
+</code></pre></div>
+
+<p>简单说序列化是对象转化字符串的过程，反序列化是字符串还原对象的过程。</p>
+<h2 id="_2">环境<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>文章中所述内容使用环境如下:</p>
+<div class="codehilite"><pre><span></span><code>PHP7.3.1、SDK
+
+VSCode
+
+C++和C
+</code></pre></div>
+
+<p>环境配置建议参考：《WINDOWS下用VSCODE调试PHP7源代码》<a href="https://www.jianshu.com/p/29bc0443***6">https://www.jianshu.com/p/29bc0443***6</a>
+(作者经过几小时尝试后找到最全的版本)</p>
+<p>在网上公开参数反序列化执行流程已经非常详细，但是对于一些细节地方有一些不足，其中就包括序列化和反序列化之间的语法差异问题</p>
+<h2 id="_3">差异问题<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h4 id="_4">序列化<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<p>我们通过编译PHP内核源码分析，发现PHP序列化在默认情况下在对象转换中加入:{和}用来拼接成字符串。</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[var.c]</span>
+<span class="na">Line</span><span class="o">:</span><span class="s">882</span>
+<span class="na">static void php_var_serialize_intern()</span>
+
+<span class="na">Line</span><span class="o">:</span><span class="s">896</span>
+<span class="na">if (ce-&gt;serialize(struc, &amp;serialized_data, &amp;serialized_length, (zend_serialize_data *)var_hash)</span><span class="w"> </span><span class="o">=</span><span class="s">= SUCCESS) {</span>
+<span class="w">                        </span><span class="na">smart_str_appendl(buf, &quot;C</span><span class="o">:</span><span class="s">&quot;</span><span class="err">, 2)</span><span class="c1">;</span>
+<span class="w">                        </span><span class="na">smart_str_append_unsigned(buf, ZSTR_LEN(Z_OBJCE_P(struc)-&gt;name));</span>
+<span class="w">                        </span><span class="na">smart_str_appendl(buf, &quot;</span><span class="o">:</span><span class="s">\&quot;&quot;, 2)</span><span class="c1">;</span>
+<span class="w">                        </span><span class="na">smart_str_append(buf, Z_OBJCE_P(struc)-&gt;name);</span>
+<span class="w">                        </span><span class="na">smart_str_appendl(buf, &quot;\&quot;</span><span class="o">:</span><span class="s">&quot;</span><span class="err">, 2)</span><span class="c1">;</span>
+
+<span class="w">                        </span><span class="na">smart_str_append_unsigned(buf, serialized_length);</span>
+<span class="w">                        </span><span class="na">smart_str_appendl(buf, &quot;</span><span class="o">:</span><span class="s">{&quot;, 2)</span><span class="c1">;</span>
+<span class="w">                        </span><span class="na">smart_str_appendl(buf, (char *) serialized_data, serialized_length);</span>
+<span class="w">                        </span><span class="na">smart_str_appendc(buf, &#39;}&#39;);</span>
+<span class="w">                    </span><span class="na">}</span>
+
+<span class="na">Line</span><span class="o">:</span><span class="s">952</span>
+<span class="na">smart_str_appendl(buf, &quot;</span><span class="o">:</span><span class="s">{&quot;, 2)</span><span class="c1">;</span>
+
+<span class="na">Line</span><span class="o">:</span><span class="s">995</span>
+<span class="na">smart_str_appendc(buf, &#39;}&#39;);</span>
+</code></pre></div>
+
+<p>咱们来看上面这段代码，PHP会使用smart_str_appendl为序列化字符串前后拼接:{和}，从var.c的第882行开始进入序列化逻辑。在第896行进行序列化字符串拼接，第952行和第995行，对于内嵌方法进行拼接。</p>
+<h4 id="_5">反序列化<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<p>反序列化是将序列化的字符串，按照一定语法规则进行转化还原。</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[var_unserialize.c]</span>
+<span class="na">Line</span><span class="o">:</span><span class="s">655</span>
+<span class="na">static int php_var_unserialize_internal()</span>
+
+<span class="na">Line</span><span class="o">:</span><span class="s">674</span>
+<span class="na">{</span>
+<span class="w">    </span><span class="na">YYCTYPE yych;</span>
+<span class="w">    </span><span class="na">static const unsigned char yybm[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{</span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">        </span><span class="na">128, 128, 128, 128, 128, 128, 128, 128, </span>
+<span class="w">        </span><span class="na">128, 128,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">          </span><span class="na">0,   0,   0,   0,   0,   0,   0,   0, </span>
+<span class="w">    </span><span class="na">};</span>
+<span class="w">    </span><span class="na">if ((YYLIMIT - YYCURSOR) &lt; 7) YYFILL(7);</span>
+<span class="w">    </span><span class="na">yych</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">*YYCURSOR</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">switch (yych) {</span>
+<span class="w">    </span><span class="na">case &#39;C&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="na">case &#39;O&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy4</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;N&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy5</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;R&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy6</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;S&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy7</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;a&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy8</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;b&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy9</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;d&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy10</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;i&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy11</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;o&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy12</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;r&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy13</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;s&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy14</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">case &#39;}&#39;</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy15</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">default</span><span class="o">:</span><span class="w">    </span><span class="s">goto yy2</span><span class="c1">;</span>
+<span class="w">    </span><span class="na">}</span>
+
+<span class="na">Line</span><span class="o">:</span><span class="s">776</span>
+<span class="na">yy15</span><span class="o">:</span>
+<span class="w">    </span><span class="na">++YYCURSOR;</span>
+<span class="w">    </span><span class="na">{</span>
+<span class="w">    </span><span class="na">/* this is the case where we have less data than planned */</span>
+<span class="w">    </span><span class="na">php_error_docref(NULL, E_NOTICE, &quot;Unexpected end of serialized data&quot;);</span>
+<span class="w">    </span><span class="na">return 0; /* not sure if it should be 0 or 1 here? */</span>
+<span class="na">}</span>
+</code></pre></div>
+
+<p>通过内核代码能够看到第655行进入反序列化，反序列化是利用词法扫描，判断各项符号转换对应对象。能够看到反序列化中对于}进行了处理，处理中只是对计数器加一并没有其他操作。</p>
+<h2 id="_6">实际作用<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>反序列化语法的差异，对于安全防护设备判断反序列化产生很大的影响。在Snort中，有段规则如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">alert</span><span class="w"> </span><span class="nt">tcp</span><span class="w"> </span><span class="nt">any</span><span class="w"> </span><span class="nt">any</span><span class="w"> </span><span class="nt">-</span><span class="o">&gt;</span><span class="w"> </span><span class="nt">any</span><span class="w"> </span><span class="cp">[</span><span class="mi">80</span><span class="p">,</span><span class="mi">8080</span><span class="p">,</span><span class="mi">443</span><span class="cp">]</span><span class="w"> </span><span class="o">(</span><span class="nt">uricontent</span><span class="o">:</span><span class="s2">&quot;.php&quot;</span><span class="o">;</span><span class="w"> </span><span class="nt">pcre</span><span class="o">:</span><span class="s2">&quot;/\{\w:.+?\}/&quot;</span><span class="o">;</span><span class="w"> </span><span class="nt">sid</span><span class="p">:</span><span class="nd">1</span><span class="o">;</span><span class="w"> </span><span class="nt">msg</span><span class="p">:</span><span class="nd">php_serialize</span><span class="o">;)</span>
+</code></pre></div>
+
+<p>在攻击载荷中可以使用大多数字符代替{},从而导致规则失效。</p>
+<h2 id="_7">总结<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>在红队攻击中可以利用PHP序列化和反序列化语法差异，从而达到绕过防护的目的。</p>
+<p>在蓝队防御中建议考虑定义中所述<code>不会保存对象的方法，只会保存类的名字。</code>，拦截保存类的名字，以及语法中相同的字符</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Php%20XDebug%20%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Php%20XDebug%20%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Php XDebug 远程调试漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHPCGIWindows%E5%B9%B3%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28CVE-2024-4577%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHPCGIWindows%E5%B9%B3%E5%8F%B0%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%28CVE-2024-4577%29/" class="btn btn-xs btn-link">
+        PHP CGI Windows平台远程代码执行漏洞(CVE-2024-4577)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

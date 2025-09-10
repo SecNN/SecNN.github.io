@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Weblogic/weak_password/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WebLogic Weak Password, Arbitrary File Read and Remote Code Execution - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WebLogic Weak Password, Arbitrary File Read and Remote Code Execution", url: "#_top", children: [
+              {title: "Environment Setup", url: "#environment-setup" },
+              {title: "Vulnerability Exploitation", url: "#vulnerability-exploitation" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        WebLogic 弱口令、任意文件读取与远程代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ssrf/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ssrf/README.zh-cn/" class="btn btn-xs btn-link">
+        Weblogic UDDI Explorer SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="weblogic-weak-password-arbitrary-file-read-and-remote-code-execution">WebLogic Weak Password, Arbitrary File Read and Remote Code Execution<a class="headerlink" href="#weblogic-weak-password-arbitrary-file-read-and-remote-code-execution" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Oracle WebLogic Server is a Java-based enterprise application server.</p>
+<p>This environment simulates a realistic WebLogic setup with two vulnerabilities: a weak password in the admin console and an arbitrary file read vulnerability in the frontend. These vulnerabilities demonstrate common penetration testing scenarios for WebLogic servers.</p>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start the WebLogic server, this server based on WebLogic 10.3.6 (11g) and Java 1.6.</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>After the environment starts, visit <code>http://your-ip:7001/console</code> to access the WebLogic admin console.</p>
+<h2 id="vulnerability-exploitation">Vulnerability Exploitation<a class="headerlink" href="#vulnerability-exploitation" title="Permanent link">&para;</a></h2>
+<p>The environment contains the following default credentials:</p>
+<ul>
+<li>Username: weblogic</li>
+<li>Password: Oracle@123</li>
+</ul>
+<p>For a comprehensive list of common WebLogic default credentials, visit: <a href="http://cirt.net/passwords?criteria=weblogic">http://cirt.net/passwords?criteria=weblogic</a></p>
+<p>If weak credentials are not available, how can we penetrate the WebLogic server? This environment simulates an arbitrary file download vulnerability. Visit <code>http://your-ip:7001/hello/file.jsp?path=/etc/passwd</code> to verify that we can successfully read the passwd file.</p>
+<p>To leverage this vulnerability effectively, we can extract the admin password by following these steps:</p>
+<h3 id="reading-backend-user-password-hash-and-key-files">Reading Backend User Password Hash and Key Files<a class="headerlink" href="#reading-backend-user-password-hash-and-key-files" title="Permanent link">&para;</a></h3>
+<p>WebLogic passwords are encrypted using AES (older versions used 3DES). Since this is symmetric encryption, we can decrypt the password if we obtain both the ciphertext and the encryption key. These files are located in the base_domain directory:</p>
+<ul>
+<li><code>SerializedSystemIni.dat</code>: The encryption key file</li>
+<li><code>config.xml</code>: The configuration file containing encrypted passwords</li>
+</ul>
+<p>In this environment, these files are located at:</p>
+<ul>
+<li><code>./security/SerializedSystemIni.dat</code></li>
+<li><code>./config/config.xml</code></li>
+</ul>
+<p>(relative to <code>/root/Oracle/Middleware/user_projects/domains/base_domain</code>)</p>
+<p>When downloading <code>SerializedSystemIni.dat</code>, use Burp Suite as it's a binary file. Browser downloads might introduce unwanted characters. In Burp Suite, select the binary content and use "Copy to File" to save it correctly:</p>
+<p><img alt="" src="img/05.png" /></p>
+<p>In <code>config.xml</code>, locate the <code>&lt;node-manager-password-encrypted&gt;</code> value, which contains the encrypted administrator password:</p>
+<p><img alt="" src="img/06.png" /></p>
+<h3 id="decrypting-the-password">Decrypting the Password<a class="headerlink" href="#decrypting-the-password" title="Permanent link">&para;</a></h3>
+<p>Use the <code>weblogic_decrypt.jar</code> tool (provided in the decrypt directory) to decrypt the password. For more details on building your own decryption tool, refer to: <a href="http://cb.drops.wiki/drops/tips-349.html">http://cb.drops.wiki/drops/tips-349.html</a></p>
+<p><img alt="" src="img/07.png" /></p>
+<p>The decrypted password matches our preset password, confirming successful exploitation.</p>
+<h3 id="deploying-a-webshell">Deploying a WebShell<a class="headerlink" href="#deploying-a-webshell" title="Permanent link">&para;</a></h3>
+<p>After obtaining administrator credentials, log into the admin console. Click "Deployments" in the left navigation panel to view the application list:</p>
+<p><img alt="" src="img/01.png" /></p>
+<p>Click "Install" and select "Upload your files":</p>
+<p><img alt="" src="img/02.png" /></p>
+<p>Upload a WAR package. Note that standard Tomcat WAR files might not work properly. You can use the <code>web/hello.war</code> package from this project as a template. After uploading, click "Next".</p>
+<p>Enter the application name:</p>
+<p><img alt="" src="img/03.png" /></p>
+<p>Continue through the remaining steps and click "Finish".</p>
+<p>The application path is specified in <code>WEB-INF/weblogic.xml</code> within the WAR package. Since this test environment already uses the <code>/hello</code> path, modify this path (e.g., to <code>/jspspy</code>) when deploying your shell:</p>
+<p><img alt="" src="img/08.png" /></p>
+<p>Successfully accessing the webshell:</p>
+<p><img alt="" src="img/04.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        WebLogic 弱口令、任意文件读取与远程代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ssrf/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ssrf/README.zh-cn/" class="btn btn-xs btn-link">
+        Weblogic UDDI Explorer SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

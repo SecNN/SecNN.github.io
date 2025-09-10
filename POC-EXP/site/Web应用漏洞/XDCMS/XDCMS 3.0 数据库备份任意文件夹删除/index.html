@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/XDCMS/XDCMS%203.0%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%88%A0%E9%99%A4/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>XDCMS 3.0 数据库备份任意文件夹删除 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "XDCMS 3.0 \u6570\u636e\u5e93\u5907\u4efd\u4efb\u610f\u6587\u4ef6\u5939\u5220\u9664", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../XETUX/XETUX%E8%BD%AF%E4%BB%B6dynamiccontent.properties.xhtml%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../XETUX/XETUX%E8%BD%AF%E4%BB%B6dynamiccontent.properties.xhtml%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        XETUX 软件 dynamiccontent.properties.xhtml 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../XDCMS%203.0%20%E5%90%8E%E5%8F%B0%E7%99%BB%E5%BD%95%E7%AA%97sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../XDCMS%203.0%20%E5%90%8E%E5%8F%B0%E7%99%BB%E5%BD%95%E7%AA%97sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        XDCMS 3.0 后台登录窗sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="xdcms-30">XDCMS 3.0 数据库备份任意文件夹删除<a class="headerlink" href="#xdcms-30" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>XDCMS 3.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><img alt="" src="../resource/XDCMS3.0%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%88%A0%E9%99%A4/media/rId24.jpg" /></p>
+<p>漏洞点：<code>system/modules/xdcms/data.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="k">delete</span><span class="p">()</span><span class="err">{</span>
+<span class="w">        </span><span class="err">$</span><span class="k">file</span><span class="o">=</span><span class="k">trim</span><span class="p">(</span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&quot;file&quot;</span><span class="o">]</span><span class="p">);</span>
+<span class="w">        </span><span class="err">$</span><span class="n">dir</span><span class="o">=</span><span class="n">DATA_PATH</span><span class="p">.</span><span class="s1">&#39;backup/&#39;</span><span class="p">.</span><span class="err">$</span><span class="k">file</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">is_dir</span><span class="p">(</span><span class="err">$</span><span class="n">dir</span><span class="p">))</span><span class="err">{</span>
+<span class="w">            </span><span class="o">//</span><span class="n">删除文件夹中的文件</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">false</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opendir</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="err">$</span><span class="n">dir</span><span class="w"> </span><span class="p">)))</span><span class="w"> </span><span class="err">{</span><span class="w">  </span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="k">false</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readdir</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="err">$</span><span class="n">handle</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="err">{</span><span class="w">   </span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="ss">&quot;.&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="k">file</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="ss">&quot;..&quot;</span><span class="o">&amp;&amp;</span><span class="n">strpos</span><span class="p">(</span><span class="err">$</span><span class="k">file</span><span class="p">,</span><span class="ss">&quot;.&quot;</span><span class="p">))</span><span class="w"> </span><span class="err">{</span><span class="w">  </span>
+<span class="w">                        </span><span class="nv">@unlink</span><span class="p">(</span><span class="err">$</span><span class="n">dir</span><span class="p">.</span><span class="ss">&quot;/&quot;</span><span class="p">.</span><span class="err">$</span><span class="k">file</span><span class="p">);</span><span class="w">    </span>
+<span class="w">                    </span><span class="err">}</span><span class="w">  </span>
+<span class="w">                </span><span class="err">}</span><span class="w">  </span>
+<span class="w">                </span><span class="n">closedir</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="err">$</span><span class="n">handle</span><span class="w"> </span><span class="p">);</span><span class="w">  </span>
+<span class="w">            </span><span class="err">}</span>
+
+<span class="w">            </span><span class="nv">@rmdir</span><span class="p">(</span><span class="err">$</span><span class="n">dir</span><span class="p">);</span><span class="o">//</span><span class="n">删除目录</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">        </span><span class="n">showmsg</span><span class="p">(</span><span class="n">C</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">),</span><span class="s1">&#39;-1&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+</code></pre></div>
+
+<p>删除数据库备份时候仅判断是否为文件夹，是则删除其中所有的文件；同时未对目录进行过滤，导致可以删除任意文件夹中的文件</p>
+<p><img alt="" src="../resource/XDCMS3.0%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%A4%B9%E5%88%A0%E9%99%A4/media/rId25.jpg" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../XETUX/XETUX%E8%BD%AF%E4%BB%B6dynamiccontent.properties.xhtml%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../XETUX/XETUX%E8%BD%AF%E4%BB%B6dynamiccontent.properties.xhtml%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        XETUX 软件 dynamiccontent.properties.xhtml 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../XDCMS%203.0%20%E5%90%8E%E5%8F%B0%E7%99%BB%E5%BD%95%E7%AA%97sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../XDCMS%203.0%20%E5%90%8E%E5%8F%B0%E7%99%BB%E5%BD%95%E7%AA%97sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        XDCMS 3.0 后台登录窗sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

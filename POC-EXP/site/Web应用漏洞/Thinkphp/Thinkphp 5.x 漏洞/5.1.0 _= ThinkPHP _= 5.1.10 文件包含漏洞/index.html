@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Thinkphp/Thinkphp%205.x%20%E6%BC%8F%E6%B4%9E/5.1.0%20_%3D%20ThinkPHP%20_%3D%205.1.10%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>5.0.0 \&lt;= Thinkphp \&lt;= 5.0.18 &amp; 5.1.0 \&lt;= ThinkPHP \&lt;= 5.1.10 文件包含漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "5.0.0 \\\u0026lt;= Thinkphp \\\u0026lt;= 5.0.18 \u0026amp; 5.1.0 \\\u0026lt;= ThinkPHP \\\u0026lt;= 5.1.10 \u6587\u4ef6\u5305\u542b\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_8" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5.1.0%20_%3D%20Thinkphp%20_%3D%205.1.5%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5.1.0%20_%3D%20Thinkphp%20_%3D%205.1.5%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.0.13 \&lt;= Thinkphp \&lt;= 5.0.15 &amp; 5.1.0 \&lt;= Thinkphp \&lt;= 5.1.5
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5.0.13%20_%3D%20Thinkphp%20_%3D%205.0.15%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5.0.13%20_%3D%20Thinkphp%20_%3D%205.0.15%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.0.13 \&lt;= Thinkphp \&lt;= 5.0.15 &amp; 5.1.0 \&lt;= Thinkphp \&lt;= 5.1.5
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="500-thinkphp-5018-510-thinkphp-5110">5.0.0 \&lt;= Thinkphp \&lt;= 5.0.18 &amp; 5.1.0 \&lt;= ThinkPHP \&lt;= 5.1.10 文件包含漏洞<a class="headerlink" href="#500-thinkphp-5018-510-thinkphp-5110" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>本次漏洞存在于 <strong>ThinkPHP</strong>
+模板引擎中，在加载模版解析变量时存在变量覆盖问题，而且程序没有对数据进行很好的过滤，最终导致
+<strong>文件包含漏洞</strong> 的产生。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>5.0.0 \&lt;= Thinkphp \&lt;= 5.0.18</p>
+<p>5.1.0 \&lt;= ThinkPHP \&lt;= 5.1.10</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞环境<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>通过以下命令获取测试环境代码：</p>
+<div class="codehilite"><pre><span></span><code>composer create-project --prefer-dist topthink/think=5.0.18 tpdemo
+</code></pre></div>
+
+<p>将 <strong>composer.json</strong> 文件的 <strong>require</strong> 字段设置成如下：</p>
+<div class="codehilite"><pre><span></span><code>&quot;require&quot;: {
+    &quot;php&quot;: &quot;&gt;=5.6.0&quot;,
+    &quot;topthink/framework&quot;: &quot;5.0.18&quot;
+},
+</code></pre></div>
+
+<p>然后执行 <code>composer update</code> ，并将
+<strong>application/index/controller/Index.php</strong> 文件代码设置如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="n">namespace</span><span class="w"> </span><span class="n">app</span>\<span class="n">index</span>\<span class="n">controller</span><span class="p">;</span>
+<span class="n">use</span><span class="w"> </span><span class="n">think</span>\<span class="n">Controller</span><span class="p">;</span>
+<span class="k">class</span><span class="w"> </span><span class="n">Index</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="n">Controller</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">index</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">assign</span><span class="p">(</span><span class="n">request</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">fetch</span><span class="p">();</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">当前模块</span><span class="o">/</span><span class="err">默认视图目录</span><span class="o">/</span><span class="err">当前控制器（小写）</span><span class="o">/</span><span class="err">当前操作（小写）</span><span class="o">.</span><span class="n">html</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>创建 <strong>application/index/view/index/index.html</strong>
+文件，内容随意（没有这个模板文件的话，在渲染时程序会报错），并将图片马
+<strong>1.jpg</strong> 放至 <strong>public</strong> 目录下（模拟上传图片操作）。</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org:8000/index/index/index?cacheFile=demo.php
+</code></pre></div>
+
+<p>接着访问链接，即可触发 <strong>文件包含漏洞</strong> 。</p>
+<p><img alt="1.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId26.png" /></p>
+<h3 id="_5">漏洞分析<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>首先在官方发布的 <strong>5.0.19</strong> 版本更新说明中，发现其中提到该版本包含了一个安全更新。</p>
+<p><img alt="2.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId28.png" /></p>
+<p>我们可以查阅其 <strong>commit</strong> 记录，发现其改进了模板引擎，其中存在危险函数
+<strong>extract</strong> ，有可能引发变量覆盖漏洞。接下来，我们直接跟进代码一探究竟。</p>
+<p><img alt="3.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId29.png" /></p>
+<p>首先，用户可控数据未经过滤，直接通过 <strong>Controller</strong> 类的 <strong>assign</strong>
+方法进行模板变量赋值，并将可控数据存在 <strong>think\View</strong> 类的 <strong>data</strong>
+属性中。</p>
+<p><img alt="4.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId30.png" /></p>
+<p>接着，程序开始调用 <strong>fetch</strong>
+方法加载模板输出。这里如果我们没有指定模板名称，其会使用默认的文件作为模板，模板路径类似
+<strong>当前模块/默认视图目录/当前控制器（小写）/当前操作（小写）.html</strong>
+，如果默认路径模板不存在，程序就会报错。</p>
+<p><img alt="5.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId31.png" /></p>
+<p>我们跟进到 <strong>Template</strong> 类的 <strong>fetch</strong> 方法，可以发现可控变量 <strong>$vars</strong>
+赋值给 <strong>$this-&gt;data</strong> 并最终传入 <strong>File</strong> 类的 <strong>read</strong> 方法。而
+<strong>read</strong> 方法中在使用了 <strong>extract</strong> 函数后，直接包含了 <strong>$cacheFile</strong>
+变量。这里就是漏洞发生的关键原因（可以通过 <strong>extract</strong> 函数，直接覆盖
+<strong>$cacheFile</strong> 变量，因为 <strong>extract</strong> 函数中的参数 <strong>$vars</strong>
+可以由用户控制）。</p>
+<p><img alt="6.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId32.png" /></p>
+<h3 id="_6">漏洞修复<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>官方的修复方法是：先将 <strong>$cacheFile</strong> 变量存储在 <strong>$this-&gt;cacheFile</strong>
+中，在使用 <strong>extract</strong> 函数后，最终 <strong>include</strong> 的变量是
+<strong>$this-&gt;cacheFile</strong> ，这样也就避免了 <strong>include</strong> 被覆盖后的变量值。</p>
+<p><img alt="3.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId34.png" /></p>
+<h3 id="_7">攻击总结<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>最后，再通过一张攻击流程图来回顾整个攻击过程。</p>
+<p><img alt="7.png" src="./resource/5.1.0&lt;=ThinkPHP&lt;=5.1.10文件包含漏洞/media/rId36.png" /></p>
+<h2 id="_8">参考链接<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://github.com/Mochazz/ThinkPHP-Vuln">https://github.com/Mochazz/ThinkPHP-Vuln</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../5.1.0%20_%3D%20Thinkphp%20_%3D%205.1.5%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../5.1.0%20_%3D%20Thinkphp%20_%3D%205.1.5%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.0.13 \&lt;= Thinkphp \&lt;= 5.0.15 &amp; 5.1.0 \&lt;= Thinkphp \&lt;= 5.1.5
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../5.0.13%20_%3D%20Thinkphp%20_%3D%205.0.15%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../5.0.13%20_%3D%20Thinkphp%20_%3D%205.0.15%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        5.0.13 \&lt;= Thinkphp \&lt;= 5.0.15 &amp; 5.1.0 \&lt;= Thinkphp \&lt;= 5.1.5
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

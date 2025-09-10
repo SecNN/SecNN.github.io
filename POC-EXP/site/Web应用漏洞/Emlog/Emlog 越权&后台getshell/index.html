@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Emlog/Emlog%20%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Emlog 越权&amp;后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Emlog \u8d8a\u6743\u0026amp;\u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../emlog%20widgets.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../emlog%20widgets.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        emlog widgets.php 后台SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Emlog%20%E7%9B%B8%E5%86%8C%E6%8F%92%E4%BB%B6%E5%89%8D%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%2BGetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Emlog%20%E7%9B%B8%E5%86%8C%E6%8F%92%E4%BB%B6%E5%89%8D%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%2BGetshell/" class="btn btn-xs btn-link">
+        Emlog 相册插件前台SQL注入+Getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="emlog-getshell">Emlog 越权&amp;后台getshell<a class="headerlink" href="#emlog-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">代码分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h4 id="_5">安装漏洞<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<p>​ 其实一般代码审计都是从安装文件开始审计，一般安装脚本主要存在如下漏洞：</p>
+<div class="codehilite"><pre><span></span><code>无验证功能，任意重装覆盖
+表单不做过滤写入config.php导致getshell
+$_GET[&#39;step&#39;]跳过限制步骤
+漏洞文件：install.php
+</code></pre></div>
+
+<p>​​首先我们直奔第一个点能否任意重装，我们可以看到必须常量DEL_INSTALLER为1的时候才会触发删除install.php,那么我们追踪DEL_INSTALLER看看</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<p>这里可以看到DEL_INSTALLER默认值就是0，所以一般情况下这里是可以任意重装的，我们从黑盒的测试也可以印证这一点。同时表单也做了过滤所以这里也没有后面两种情况。</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId27.png" /></p>
+<h4 id="_6">越权漏洞<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<p>​​在安装完毕后打开config.php看到两个比较奇怪的常量定义：AUTH_KEY和AUTH_COOKIE_NAME从名字来看这连个常量肯定是有一定联系的。如下图：</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId29.png" /></p>
+<p>我们在抓包时候发现了AUTH_COOKIE_NAME这个常量，说明这是一个cookie名。我们继续再代码中追踪这个常量。</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId30.png" /></p>
+<p>我们可以看到在登录验证cookie中使用了这个常量，我们追踪一下cookie值是如何构造的</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId31.png" /></p>
+<p>这里可以看到，调用了emHash这个类方法，并且这里使用了AUTH_KEY这个常量，这里说明这两个常量是有联系的。我们在继续追踪hash_hmac()到底使用key做了什么。</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId32.png" /></p>
+<p>这里对传入的$key也就是AUTH_KEY进行了md5加密到一个二进制字符串中而后分割为64个字节与一个字符*64次的字符串进行异或最后得到两个字符串$ipad,$opad最后再将他们打包拼接用md5加密返回给上级调用。我们再回到上级。</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId33.png" /></p>
+<p>我们知道generateAuthCookie方法中的
+$key、$hash是由AUTH_KEY加密而成。最终的cookie是由$user_login 、
+$expiration
+$hash拼接而成，而$expiration是cookie的生存时间，$user_login是用户名。这里可以得知$key、$user_login、$expiration都是固定的那么只要知道AUTH_KEY就有伪造cookie造成越权的可能。</p>
+<p>​例如我们准备两个靶机，一个靶机登陆，获取这个靶机的cookie即可越权登陆另外一个靶机。前提是两个靶机的AUTH_KEY得一致。这里有点鸡肋但是还是有利用的可能。我们将两个靶机的cookie拿出来比较确实是一样的。​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId34.png" /></p>
+<h4 id="getshell">后台getshell（一）<a class="headerlink" href="#getshell" title="Permanent link">&para;</a></h4>
+<p>​​其实上诉两个漏洞已经能够让我们进入后台了，现在的任务就是如何Getshell了。这里我随便看了一下发现后台有设置上传附件后缀的功能。​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId36.png" />​​
+但是测试发现，加入php后缀你发现会将phpt替换为X,从源码中可有很直观看到这点。​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId37.png" />​​此时我注意到了备份功能，这个后缀是保存在数据库中的，既然我不能直接将后缀写入数据库，那么我能不能通过数据备份恢复的方法写入数据库呢。​​ 这里直接备份所有表，下载下来然后找到写入后缀的语句，加上php,如下​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId38.png" />​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId39.png" />​​ 导入备份后发现设置中的上传后缀有php​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId40.png" />​​ 直接在文章发表出上传PHP文件即可getshell​<img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId41.png" /></p>
+<h4 id="getshell_1">后台getshell（二）<a class="headerlink" href="#getshell_1" title="Permanent link">&para;</a></h4>
+<p>我们还发现这个cms中上传插件的地方可以上传zip，这里我们想如果在插件中插入一句话木马是不是也能getshell?我们找到插件上传的脚本，发现使用了一个叫emUnzip的函数。</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId43.png" /></p>
+<p>我们继续追踪这个函数，发现这个解压函数是使用ZipArchive()类来实现解压缩的。我们可以看到代码755行中获取了压缩包的内部目录/文件的名称
+,并将其分割为数组将第一个元素赋值给了$dir，我们看到switch中plugin选项，这里又将获取的第一个文件夹名称赋值给$plugin_name,使用getFromName方法获取了压缩包是否存在$dir
+. $plugin_name .
+\'.php\'这个文件。综上这里就是检测压缩包中文件夹里面是否存在一个与文件夹名称一致的PHP文件，最后在再压。这里也没对文件进行其他校验操作。因此我们只要再构造
+文件夹名和文件名相同的内容的压缩包，同时由上方代码也可以知道，文件将会被解压到
+/content/plugins/a/a.php(文件夹名称a)</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId44.png" /></p>
+<p>构建压缩包上传插件：</p>
+<p><img alt="" src="../resource/Emlog%E8%B6%8A%E6%9D%83%26%E5%90%8E%E5%8F%B0getshell/media/rId45.png" /></p>
+<h2 id="_7">四、参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/6861">https://xz.aliyun.com/t/6861</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../emlog%20widgets.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../emlog%20widgets.php%20%E5%90%8E%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        emlog widgets.php 后台SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Emlog%20%E7%9B%B8%E5%86%8C%E6%8F%92%E4%BB%B6%E5%89%8D%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%2BGetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Emlog%20%E7%9B%B8%E5%86%8C%E6%8F%92%E4%BB%B6%E5%89%8D%E5%8F%B0SQL%E6%B3%A8%E5%85%A5%2BGetshell/" class="btn btn-xs btn-link">
+        Emlog 相册插件前台SQL注入+Getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

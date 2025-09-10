@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA/%EF%BC%88CNVD-2019-17294%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（CNVD-2019-17294）齐治堡垒机 后台命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08CNVD-2019-17294\uff09\u9f50\u6cbb\u5821\u5792\u673a \u540e\u53f0\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_5" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CNVD-2019-20835%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CNVD-2019-20835%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2019-20835）齐治堡垒机 前台远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CNVD-2019-09593%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20ShtermClient-2.1.1%20%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CNVD-2019-09593%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20ShtermClient-2.1.1%20%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2019-09593）齐治堡垒机 ShtermClient-2.1.1 命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cnvd-2019-17294">（CNVD-2019-17294）齐治堡垒机 后台命令执行漏洞<a class="headerlink" href="#cnvd-2019-17294" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>首先，定位到/audit/data_provider.php，直接查找$_GET['service']或者$_REQUEST['service']都找不到。原来在文件开头包含的common.php中，已有全局配置。</p>
+<p>代码如下，不但给变量加了个前缀"req_"，还过滤掉了一些危险字符。</p>
+<p><img alt="1.jpg" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId25.jpg" /></p>
+<p>然后，搜索"
+$req_service"定位到data_provider.php文件的第99行。可见，将$GET['service']赋值到$service变量中。</p>
+<p><img alt="2.jpg" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId26.jpg" /></p>
+<p>然后，跟进$service来到data_provider.php文件的第124行。可见，通过字符串拼接，将$_GET['service']带入到$cmd变量中。</p>
+<p><img alt="3.jpg" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId27.jpg" /></p>
+<p>然后，跟进$cmd来到data_provider.php文件的第133行。可见，$cmd被带入exec函数中执行。至此，造成远程命令执行漏洞。</p>
+<p><img alt="4.jpg" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId28.jpg" /></p>
+<h2 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>如下图，通过在传递参数"service=<code>id</code>"，成功执行命令，并回显命令执行结果。</p>
+<p><img alt="5.png" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<p>通过反单引号执行命令，写入PHP一句话代码到服务器。</p>
+<p>原理如下图所示，这样就可以绕过过滤执行任意命令。实际上，还需要用${IFS}替换掉空格才行。</p>
+<p><img alt="6.jpg" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId31.jpg" /></p>
+<p>所以，最终方案如下。</p>
+<p><img alt="7.jpg" src="../resource/%28CNVD-2019-17294%29%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId32.jpg" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/StudyCat/p/11197986.html">https://www.cnblogs.com/StudyCat/p/11197986.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CNVD-2019-20835%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CNVD-2019-20835%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20%E5%89%8D%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2019-20835）齐治堡垒机 前台远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%EF%BC%88CNVD-2019-09593%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20ShtermClient-2.1.1%20%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%EF%BC%88CNVD-2019-09593%EF%BC%89%E9%BD%90%E6%B2%BB%E5%A0%A1%E5%9E%92%E6%9C%BA%20ShtermClient-2.1.1%20%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2019-09593）齐治堡垒机 ShtermClient-2.1.1 命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

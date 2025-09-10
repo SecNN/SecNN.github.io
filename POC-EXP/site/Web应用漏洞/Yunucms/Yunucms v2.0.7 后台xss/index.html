@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Yunucms/Yunucms%20v2.0.7%20%E5%90%8E%E5%8F%B0xss/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Yunucms v2.0.7 后台xss - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Yunucms v2.0.7 \u540e\u53f0xss", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Yunucms%20v2.0.7%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Yunucms%20v2.0.7%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Yunucms v2.0.7 数据库泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../YourPHPCMS/YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../YourPHPCMS/YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YourPHPCMS系统login_checkEmail存在sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yunucms-v207-xss">Yunucms v2.0.7 后台xss<a class="headerlink" href="#yunucms-v207-xss" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>云优CMS是一款基于TP5.0框架为核心开发的一套免费+开源的城市分站内容管理系统。云优CMS前身为远航CMS。云优CMS于2017年9月上线全新版本，二级域名分站，内容分站独立，七牛云存储，自定义字段，自定义表单，自定义栏目权限，自定义管理权限等众多功能深受用户青睐。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Yunucms v2.0.7</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">环境搭建<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>从<a href="https://xz.aliyun.com/t/www.yunucms.com/Buy/program.html">官网</a>下载源码并进行过安装</p>
+<p>需要注意的是需要填云账号，我去官网注册了一个随便填上了，账号testqwe，密码123456，手机号利用的在线短信注册的</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId26.png" /></p>
+<p>填上MySQL密码即可</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId27.png" /></p>
+<p>前台界面</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId28.png" /></p>
+<h3 id="_5">漏洞分析<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org/index.php?s=/admin/tagurl/addtagurl
+</code></pre></div>
+
+<p>该cms路由为<code>目录/文件/方法</code>，直接查看方法</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">addTagurl</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="n">request</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">isAjax</span><span class="p">()){</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">判断是否是</span><span class="n">ajax请求</span>
+<span class="w">            </span><span class="err">$</span><span class="n">param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">(</span><span class="s">&#39;post.&#39;</span><span class="p">);</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">获取参数</span>
+<span class="w">            </span><span class="err">$</span><span class="n">tagurl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">TagurlModel</span><span class="p">();</span>
+<span class="w">            </span><span class="err">$</span><span class="n">flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">tagurl</span><span class="o">-&gt;</span><span class="n">insertTagurl</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">);</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">将结果进行保存并返回响应</span>
+<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="n">json</span><span class="p">([</span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">flag</span><span class="p">[</span><span class="s">&#39;code&#39;</span><span class="p">],</span><span class="w"> </span><span class="s">&#39;data&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">flag</span><span class="p">[</span><span class="s">&#39;data&#39;</span><span class="p">],</span><span class="w"> </span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">flag</span><span class="p">[</span><span class="s">&#39;msg&#39;</span><span class="p">]]);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nf">fetch</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>跟进insertTagurl方法</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">insertTagurl</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">try</span><span class="p">{</span>
+<span class="w">            </span><span class="err">$</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">allowField</span><span class="p">(</span><span class="kr">true</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">save</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">);</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">保存当前数据对象</span>
+<span class="w">            </span><span class="nf">if</span><span class="p">(</span><span class="kr">false</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="err">$</span><span class="n">result</span><span class="p">){</span><span class="w">            </span>
+<span class="w">                </span><span class="kr">return</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;data&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getError</span><span class="p">()];</span>
+<span class="w">            </span><span class="p">}</span><span class="n">else</span><span class="p">{</span>
+<span class="w">                </span><span class="kr">return</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;data&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&#39;添加TAG成功&#39;</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="n">catch</span><span class="p">(</span><span class="w"> </span><span class="n">PDOException</span><span class="w"> </span><span class="err">$</span><span class="n">e</span><span class="p">){</span>
+<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="p">[</span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;data&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">e</span><span class="o">-&gt;</span><span class="n">getMessage</span><span class="p">()];</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>继续跟进save方法</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 数据自动验证</span>
+<span class="w">            </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">validateData</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">验证集为空，直接返回</span><span class="kr">true</span>
+<span class="w">                </span><span class="kr">return</span><span class="w"> </span><span class="kr">false</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// 数据对象赋值</span>
+<span class="w">            </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="err">$</span><span class="n">key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="err">$</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">);</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">将参数赋值给$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data数组</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">where</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">isUpdate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="p">......</span>
+
+<span class="err">$</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getQuery</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+
+<span class="p">......</span>
+<span class="err">``</span>
+</code></pre></div>
+
+<p>validateData方法需要验证集，而本身没有传入</p>
+<div class="codehilite"><pre><span></span><code><span class="n">protected</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">validateData</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="kt">rule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">null</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">batch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">null</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="err">$</span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">is_null</span><span class="p">(</span><span class="err">$</span><span class="n">rule</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="kr">validate</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">$</span><span class="n">rule</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">info</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">......</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kr">return</span><span class="w"> </span><span class="kr">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>且<code>$this-&gt;validate</code>参数为空，因此直接返回true</p>
+<p>跟进insert方法</p>
+<div class="codehilite"><pre><span></span><code><span class="p">.....</span>
+<span class="w">        </span><span class="c1">// 生成SQL语句</span>
+<span class="w">        </span><span class="err">$</span><span class="kr">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">builder</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">options</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">replace</span><span class="p">);</span>
+<span class="w">        </span><span class="err">$</span><span class="n">bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getBind</span><span class="p">();</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">options</span><span class="p">[</span><span class="s">&#39;fetch_sql&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 获取实际执行的SQL语句</span>
+<span class="w">            </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">connection</span><span class="o">-&gt;</span><span class="n">getRealSql</span><span class="p">(</span><span class="err">$</span><span class="kr">sql</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">bind</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 执行操作</span>
+<span class="w">        </span><span class="err">$</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">(</span><span class="err">$</span><span class="kr">sql</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">bind</span><span class="p">);</span>
+</code></pre></div>
+
+<p>fetch_sql变量为false，跟进execute方法</p>
+<div class="codehilite"><pre><span></span><code><span class="p">......</span>
+<span class="w">    </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">procedure</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="kr">false</span>
+<span class="w">                </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">bindParam</span><span class="p">(</span><span class="err">$</span><span class="n">bind</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">bindValue</span><span class="p">(</span><span class="err">$</span><span class="n">bind</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="p">......</span>
+</code></pre></div>
+
+<p>最后跟进参数绑定方法</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">protected</span><span class="w"> </span><span class="nt">function</span><span class="w"> </span><span class="nt">bindValue</span><span class="o">(</span><span class="nt">array</span><span class="w"> </span><span class="o">$</span><span class="nt">bind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cp">[]</span><span class="o">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="err">foreach</span><span class="w"> </span><span class="err">($bind</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">$key</span><span class="w"> </span><span class="err">=&gt;</span><span class="w"> </span><span class="err">$val)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">占位符</span>
+<span class="w">            </span><span class="err">$param</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">is_numeric($key)</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="err">$key</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">1</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="err">&#39;:&#39;</span><span class="w"> </span><span class="err">.</span><span class="w"> </span><span class="err">$key</span><span class="p">;</span>
+<span class="w">            </span><span class="err">if</span><span class="w"> </span><span class="err">(is_array($val))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="err">if</span><span class="w"> </span><span class="err">(</span><span class="n">PDO</span><span class="p">:</span><span class="o">:</span><span class="n">PARAM_INT</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="err">$</span><span class="n">val</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="err">$</span><span class="n">val</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                    </span><span class="err">$</span><span class="n">val</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="o">$</span><span class="nt">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">PDOStatement-</span><span class="o">&gt;</span><span class="nt">bindValue</span><span class="o">($</span><span class="nt">param</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">val</span><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span><span class="o">,</span><span class="w"> </span><span class="o">$</span><span class="nt">val</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="o">);</span>
+<span class="w">            </span><span class="err">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$result</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">$this-&gt;PDOStatement-&gt;bindValue($param,</span><span class="w"> </span><span class="err">$val)</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">if</span><span class="w"> </span><span class="o">(!$</span><span class="nt">result</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">throw</span><span class="w"> </span><span class="err">new</span><span class="w"> </span><span class="err">BindParamException(</span>
+<span class="w">                    </span><span class="err">&quot;Error</span><span class="w"> </span><span class="err">occurred</span><span class="w">  </span><span class="err">when</span><span class="w"> </span><span class="err">binding</span><span class="w"> </span><span class="err">parameters</span><span class="w"> </span><span class="err">&#39;{$param</span><span class="p">}</span><span class="err">&#39;&quot;</span><span class="o">,</span>
+<span class="w">                    </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">config</span><span class="o">,</span>
+<span class="w">                    </span><span class="o">$</span><span class="nt">this-</span><span class="o">&gt;</span><span class="nt">getLastsql</span><span class="o">(),</span>
+<span class="w">                    </span><span class="o">$</span><span class="nt">bind</span>
+<span class="w">                </span><span class="o">);</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">    </span><span class="err">}</span>
+</code></pre></div>
+
+<p>可以看到最后是调用PDO对象对参数进行的绑定，除此之外并没有任何过滤，因此XSS代码可插入并执行</p>
+<h3 id="_6">漏洞复现<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>后台TAG管理模块</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId31.png" /></p>
+<p>进行添加TAG</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId32.png" /></p>
+<p>在名称处填入XSS代码并提交</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId33.png" /></p>
+<p>返回模块即可看到效果</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId34.png" /></p>
+<p>查看源码，发现已经插入</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E5%90%8E%E5%8F%B0xss/media/rId35.png" /></p>
+<p>查看数据库</p>
+<p>image</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Yunucms%20v2.0.7%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Yunucms%20v2.0.7%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Yunucms v2.0.7 数据库泄露
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../YourPHPCMS/YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../YourPHPCMS/YourPHPCMS%E7%B3%BB%E7%BB%9Flogin_checkEmail%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        YourPHPCMS系统login_checkEmail存在sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

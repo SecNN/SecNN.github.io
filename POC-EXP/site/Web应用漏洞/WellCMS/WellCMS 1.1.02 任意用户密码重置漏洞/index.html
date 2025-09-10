@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/WellCMS/WellCMS%201.1.02%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WellCMS 1.1.02 任意用户密码重置漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WellCMS 1.1.02 \u4efb\u610f\u7528\u6237\u5bc6\u7801\u91cd\u7f6e\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WellCMS%202.0%20Beta3%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WellCMS%202.0%20Beta3%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        WellCMS 2.0 Beta3 后台任意文件上传
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../WeiPHP/WeiPHP%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6Notice_index%E6%8E%A5%E5%8F%A3%E5%A4%84%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../WeiPHP/WeiPHP%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6Notice_index%E6%8E%A5%E5%8F%A3%E5%A4%84%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeiPHP微信开发框架Notice/index接口处存在远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wellcms-1102">WellCMS 1.1.02 任意用户密码重置漏洞<a class="headerlink" href="#wellcms-1102" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>WellCMS 1.1.02</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>CMS中密码重置逻辑代码存放于 /route/user.php
+中，在没有配置邮件服务情况加，我们可以在生成验证码后增加
+<code>message(0, '重置密码验证码为：'.$code);</code>代码弹出验证码，修改后需删除
+/route/route_user.php
+原缓存文件，重新执行弹出验证码代码便会生效，详细代码如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 重设密码第 1 步 | reset password first step</span>
+<span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">action</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;resetpw&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// hook user_resetpw_get_post.php</span>
+
+<span class="w">    </span>!<span class="no">$</span><span class="n">conf</span><span class="p">[</span><span class="s">&#39;user_resetpw_on&#39;</span><span class="p">]</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;未开启密码找回功能！&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;GET&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_get_start.php</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">header</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;resetpw&#39;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_get_end.php</span>
+
+<span class="w">        </span><span class="n">include</span><span class="w"> </span><span class="n">_include</span><span class="p">(</span><span class="n">APP_PATH</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="s">&#39;view/htm/user_resetpw.htm&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_post_start.php</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">email</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;please_input_email&#39;</span><span class="p">));</span>
+<span class="w">        </span>!<span class="n">is_email</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">err</span><span class="p">);</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">_user</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">user_read_by_email</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">);</span>
+<span class="w">        </span>!<span class="no">$</span><span class="n">_user</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;email_is_not_in_use&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">code</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">code</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;please_input_verify_code&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">sess_email</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">_SESSION</span><span class="p">(</span><span class="s">&#39;user_resetpw_email&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="no">$</span><span class="n">sess_code</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">_SESSION</span><span class="p">(</span><span class="s">&#39;user_resetpw_code&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">sess_code</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;click_to_get_verify_code&#39;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">sess_email</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;click_to_get_verify_code&#39;</span><span class="p">));</span>
+<span class="w">        </span><span class="no">$</span><span class="n">email</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">sess_email</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;verify_code_incorrect&#39;</span><span class="p">));</span>
+<span class="w">        </span><span class="no">$</span><span class="n">code</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">sess_code</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;code&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;verify_code_incorrect&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s">&#39;resetpw_verify_ok&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_post_end.php</span>
+
+<span class="w">        </span><span class="n">message</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;check_ok_to_next_step&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="c1">// 重设密码第 3 步 | reset password step 3</span>
+<span class="p">}</span><span class="w"> </span><span class="k">elseif</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">action</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;resetpw_complete&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// hook user_resetpw_get_post.php</span>
+
+<span class="w">    </span><span class="c1">// 校验数据</span>
+<span class="w">    </span><span class="no">$</span><span class="n">email</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">_SESSION</span><span class="p">(</span><span class="s">&#39;user_resetpw_email&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="no">$</span><span class="n">resetpw_verify_ok</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">_SESSION</span><span class="p">(</span><span class="s">&#39;resetpw_verify_ok&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">resetpw_verify_ok</span><span class="p">))</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;data_empty_to_last_step&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="no">$</span><span class="n">_user</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">user_read_by_email</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">);</span>
+<span class="w">    </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">_user</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;email_not_exists&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="no">$</span><span class="n">_uid</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">_user</span><span class="p">[</span><span class="s">&#39;uid&#39;</span><span class="p">];</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;GET&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_get_start.php</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">header</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;resetpw&#39;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_get_end.php</span>
+
+<span class="w">        </span><span class="n">include</span><span class="w"> </span><span class="n">_include</span><span class="p">(</span><span class="n">APP_PATH</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="s">&#39;view/htm/user_resetpw_complete.htm&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">method</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;POST&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_post_start.php</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">password</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s">&#39;password&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">password</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;password&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;please_input_password&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">salt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">_user</span><span class="p">[</span><span class="s">&#39;salt&#39;</span><span class="p">];</span>
+<span class="w">        </span><span class="no">$</span><span class="n">password</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">md5</span><span class="p">(</span><span class="no">$</span><span class="n">password</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="no">$</span><span class="n">salt</span><span class="p">);</span>
+
+<span class="w">        </span>!<span class="n">is_password</span><span class="p">(</span><span class="no">$</span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;password&#39;</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">err</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">user_update</span><span class="p">(</span><span class="no">$</span><span class="n">_uid</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;password&#39;</span><span class="w"> </span><span class="p">=</span><span class="o">&gt;</span><span class="w"> </span><span class="no">$</span><span class="n">password</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">unset</span><span class="p">(</span><span class="no">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s">&#39;user_resetpw_email&#39;</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">unset</span><span class="p">(</span><span class="no">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s">&#39;user_resetpw_code&#39;</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">unset</span><span class="p">(</span><span class="no">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s">&#39;resetpw_verify_ok&#39;</span><span class="p">]);</span>
+
+<span class="w">        </span><span class="c1">// hook user_resetpw_post_end.php</span>
+
+<span class="w">        </span><span class="n">message</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;modify_successfully&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="p">}</span>
+
+<span class="c1">// 发送验证码</span>
+<span class="p">}</span><span class="w"> </span><span class="k">elseif</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">action</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;send_code&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="no">$</span><span class="n">method</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="s">&#39;POST&#39;</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;method_error&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// hook user_sendcode_start.php</span>
+
+<span class="w">    </span><span class="no">$</span><span class="n">action2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 重置密码，往老地址发送</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">action2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;user_resetpw&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">email</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">param</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;please_input_email&#39;</span><span class="p">));</span>
+<span class="w">        </span>!<span class="n">is_email</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="no">$</span><span class="n">err</span><span class="p">);</span>
+<span class="w">        </span><span class="no">$</span><span class="n">_user</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">user_read_by_email</span><span class="p">(</span><span class="no">$</span><span class="n">email</span><span class="p">);</span>
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">_user</span><span class="p">)</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="s">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;email_is_not_in_use&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">empty</span><span class="p">(</span><span class="no">$</span><span class="n">conf</span><span class="p">[</span><span class="s">&#39;user_resetpw_on&#39;</span><span class="p">])</span><span class="w"> </span><span class="n">AND</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">lang</span><span class="p">(</span><span class="s">&#39;resetpw_not_on&#39;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="no">$</span><span class="n">code</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">rand</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span><span class="w"> </span><span class="mi">999999</span><span class="p">);</span>
+<span class="w">        </span><span class="no">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s">&#39;user_resetpw_email&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">email</span><span class="p">;</span>
+<span class="w">        </span><span class="no">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s">&#39;user_resetpw_code&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">code</span><span class="p">;</span>
+<span class="w">        </span><span class="n">message</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;重置密码验证码为：&#39;</span><span class="p">.</span><span class="no">$</span><span class="n">code</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>梳理密码重置逻辑流程图如下（黑色实现箭头为漏洞利用的简单思路步骤）：</p>
+<p><img alt="" src="../resource/WellCMS1.1.02%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>从逻辑中可以看出，在第三部中，重置密码仅进行了简单的SESSION中存储数据是否为空的验证，而并未对密码重置用户邮箱进行严格验证；若重置密码时，SESSION中存储的邮箱非当前验证用户邮箱，便会造成任意密码重置漏洞；</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>在此程序中，在获取验证码时刷新当前SESSION中存储的密码重置用户邮箱，而未对SESSION中resetpw_verify_ok数据进行清除，也因此造成了任意用户密码重置逻辑漏洞。</p>
+<p>我们先使用自己的账户通过验证进入第三步的用户重设密码界面；在此时，SESSION中user_resetpw_email是当前通过验证的攻击账户邮箱，SESSION中resetpw_verify_ok值为1，浏览器界面如下图所示：</p>
+<p><img alt="" src="../resource/WellCMS1.1.02%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>在第三步时，我们可以在浏览器中打开一个新的标签页，使用管理员的邮箱发送重置密码验证码请求，在同一浏览器中SESSION会话不会改变，此时
+<code>$_SESSION['user_resetpw_email'] = $email;</code>代码会将SESSION中存储的密码重置邮箱更新为管理员邮箱，如下图所示：</p>
+<p><img alt="" src="../resource/WellCMS1.1.02%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<p>回到第一个标签页，刷新页面可以发现当前SESSION中存储的密码重置用户邮箱已经变为管理员用户邮箱（非必须刷新，密码重置第三部中邮箱取自SESSION，并非提交参数），我们提交重设密码请求后，即可更改管理员用户密码，如下图所示：</p>
+<p><img alt="" src="../resource/WellCMS1.1.02%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId29.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="http://www.shexink.top/2020/03/wellcms任意用户密码逻辑漏洞/">http://www.shexink.top/2020/03/wellcms%e4%bb%bb%e6%84%8f%e7%94%a8%e6%88%b7%e5%af%86%e7%a0%81%e9%80%bb%e8%be%91%e6%bc%8f%e6%b4%9e/</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WellCMS%202.0%20Beta3%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WellCMS%202.0%20Beta3%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        WellCMS 2.0 Beta3 后台任意文件上传
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../WeiPHP/WeiPHP%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6Notice_index%E6%8E%A5%E5%8F%A3%E5%A4%84%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../WeiPHP/WeiPHP%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6Notice_index%E6%8E%A5%E5%8F%A3%E5%A4%84%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeiPHP微信开发框架Notice/index接口处存在远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

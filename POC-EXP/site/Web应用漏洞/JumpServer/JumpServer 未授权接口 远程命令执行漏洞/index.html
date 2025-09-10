@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/JumpServer/JumpServer%20%E6%9C%AA%E6%8E%88%E6%9D%83%E6%8E%A5%E5%8F%A3%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>JumpServer 未授权接口 远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "JumpServer \u672a\u6388\u6743\u63a5\u53e3 \u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_4" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../JumpServer%28CVE-2024-29201%29%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%28CVE-2024-29202%29Jinin2%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../JumpServer%28CVE-2024-29201%29%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%28CVE-2024-29202%29Jinin2%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        JumpServer(CVE 2024 29201)远程代码执行漏洞&(CVE 2024 29202)Jinin2模板注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Journyx/Journyx%E5%AD%98%E5%9C%A8%E6%9C%AA%E7%BB%8F%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%9A%84XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Journyx/Journyx%E5%AD%98%E5%9C%A8%E6%9C%AA%E7%BB%8F%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%9A%84XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Journyx存在未经身份验证的XML外部实体注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="jumpserver">JumpServer 未授权接口 远程命令执行漏洞<a class="headerlink" href="#jumpserver" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>JumpServer 是全球首款完全开源的堡垒机, 使用GNU GPL v2.0 开源协议, 是符合4A 的专业运维审计系统。 JumpServer 使用Python / Django 进行开发。2021年1月15日，阿里云应急响应中心监控到开源堡垒机JumpServer发布更新，修复了一处远程命令执行漏洞。由于 JumpServer 某些接口未做授权限制，攻击者可构造恶意请求获取到日志文件获取敏感信息，或者执行相关API操作控制其中所有机器。</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>JumpServer &lt; v2.6.2</a-checkbox></br></p>
+<p><a-checkbox checked>JumpServer &lt; v2.5.4</a-checkbox></br></p>
+<p><a-checkbox checked>JumpServer &lt; v2.4.5</a-checkbox></br></p>
+<p><a-checkbox checked>JumpServer = v1.5.9</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>app="FIT2CLOUD-JumpServer-堡垒机"</a-checkbox></br></p>
+<h2 id="_4">环境搭建<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>安装 JumpServer v2.6.1 版本</p>
+<p><a href="https://www.o2oxy.cn/wp-content/uploads/2021/01/quick_start.zip">下载链接</a></p>
+<p><a-checkbox checked>安装注意 配置网络，配置Mysql，配置Redis 选择 n</a-checkbox></br></p>
+<p>等待完成安装执行以下命令</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/opt/jumpserver-installer-v2.6.1
+./jmsctl.sh<span class="w"> </span>start
+</code></pre></div>
+<p>等待安装完毕访问 <a href="http://xxx.xxx.xxx.xxxx:8080">http://xxx.xxx.xxx.xxxx:8080</a></p>
+<p>默认账号密码 amdin:admin</p>
+<h2 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>进入后台添加配置</p>
+<p><code>资产管理 --&gt;  系统用户</code></p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809662.png" /></p>
+<p><code>资产管理 --&gt; 管理用户</code></p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809610.png" /></p>
+<p><code>用户管理 --&gt; 用户列表</code></p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809603.png" /></p>
+<p><code>资产管理 --&gt; 资产列表</code></p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809643.png" /></p>
+<p>查看一下项目代码提交变动</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809614.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.celery.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_celery_task_log_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">channels.generic.websocket</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonWebsocketConsumer</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CeleryLogWebsocket</span><span class="p">(</span><span class="n">JsonWebsocketConsumer</span><span class="p">):</span>
+    <span class="n">disconnected</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">is_org_admin</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bytes_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>
+        <span class="n">task_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">task_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_task</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wait_util_log_path_exist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
+        <span class="n">log_path</span> <span class="o">=</span> <span class="n">get_celery_task_log_path</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">disconnected</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">log_path</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task_id</span><span class="p">})</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">})</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Task log path: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">log_path</span><span class="p">))</span>
+                <span class="n">task_log_f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">task_log_f</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_log_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
+        <span class="n">task_log_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_util_log_path_exist</span><span class="p">(</span><span class="n">task_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">task_log_f</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Task log file is None: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+            <span class="k">return</span>
+
+        <span class="n">task_end_mark</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">disconnected</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">task_log_f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">),</span> <span class="s1">&#39;task&#39;</span><span class="p">:</span> <span class="n">task_id</span><span class="p">}</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;succeeded in&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">task_end_mark</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">task_end_mark</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_end_mark</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Task log end: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">task_log_f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Task id: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_id</span><span class="p">))</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">read_log_file</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">task_id</span><span class="p">,))</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_code</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disconnected</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+<p>新版对用户进行了一个判断，可以使用 谷歌插件 WebSocket King 连接上这个websocket 进行日志读取</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809793.png" /></p>
+<p>比如send这里获取的 Task id ,这里是可以获得一些敏感的信息的</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809929.png" /></p>
+<p>查看一下连接Web终端的后端api代码</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810460.png" /></p>
+<p>可以看到这里调用时必须需要 <code>user asset system_user</code> 这三个值，再获取一个20秒的 <code>token</code></p>
+<p>访问web终端后查看日志的调用</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809708.png" /></p>
+<div class="highlight"><pre><span></span><code>docker exec -it (jumpserve/core的docker) /bin/bash
+cat gunicorn.log | grep /api/v1/perms/asset-permissions/user/validate/?
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809942.png" /></p>
+<div class="highlight"><pre><span></span><code>assset_id=ee7e7446-6df7-4f60-b551-40a241958451
+system_user_id=d89bd097-b7e7-4616-9422-766c6e4fcdb8 
+user_id=efede3f4-8659-4daa-8e95-9a841dbe82a8
+</code></pre></div>
+<p>可以看到在不同的时间访问这个接口的asset_id等都是一样的，所以只用在 <code>刚刚的未授权日志读取</code>里找到想要的这几个值就可以获得 token</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810372.png" /></p>
+<p>发送请求获取20s的token</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161809940.png" /></p>
+<p>看一下 koko.js 这个前端文件</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810314.png" /></p>
+<p><br/></p>
+<p><a-alert type="success" message="后端代码 https://github.com/jumpserver/koko/blob/e054394ffd13ac7c71a4ac980340749d9548f5e1/pkg/httpd/webserver.go" description="" showIcon>
+</a-alert>
+<br/></p>
+<p>​   </p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810134.png" /></p>
+<p>这里我们就可以通过 获得的token来模拟请求</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810381.png" /></p>
+<p>成功连接模拟了这个 token 的请求,可以在Network看一下流量是怎么发送的</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810561.png" /></p>
+<p>模拟连接发送和接发数据</p>
+<p><img alt="img" src="../../../.vuepress/public/img/watermark,image_c2h1aXlpbi9zdWkucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLFBfMTQvYnJpZ2h0LC0zOS9jb250cmFzdCwtNjQ,g_se,t_17,x_1,y_10-20220313161810460-7159490.png" /></p>
+<p>这里可以看到我们只要模拟了这个发送，返回的数据和web终端是一样的，那我们就可以通过这样的方法来进行命令执行了</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../JumpServer%28CVE-2024-29201%29%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%28CVE-2024-29202%29Jinin2%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../JumpServer%28CVE-2024-29201%29%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%26%28CVE-2024-29202%29Jinin2%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        JumpServer(CVE 2024 29201)远程代码执行漏洞&(CVE 2024 29202)Jinin2模板注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Journyx/Journyx%E5%AD%98%E5%9C%A8%E6%9C%AA%E7%BB%8F%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%9A%84XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Journyx/Journyx%E5%AD%98%E5%9C%A8%E6%9C%AA%E7%BB%8F%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E7%9A%84XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Journyx存在未经身份验证的XML外部实体注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

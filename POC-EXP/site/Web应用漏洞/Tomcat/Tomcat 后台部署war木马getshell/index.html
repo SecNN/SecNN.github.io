@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Tomcat/Tomcat%20%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Tomcat 后台部署war木马getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Tomcat \u540e\u53f0\u90e8\u7f72war\u6728\u9a6cgetshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Tomcat样例目录session操纵漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-link">
+        Tomcat 后台爆破
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="tomcat-wargetshell">Tomcat 后台部署war木马getshell<a class="headerlink" href="#tomcat-wargetshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>在获取到令牌后，我们可以进入Tomcat后台了：</p>
+<p><img alt="" src="../resource/Tomcat%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/media/rId24.jpg" /></p>
+<p>在这个后台，我们可以操作每个应用的状态......以及读取每个应用下的Session。</p>
+<p>但是这都不是最大的安全隐患 :)</p>
+<p>下面来讲一下如何制作war包。</p>
+<blockquote>
+<p>war包：Java
+web工程，都是打成war包，进行发布，如果我们的服务器选择TOMCAT等轻量级服务器，一般就打出WAR包进行发布</p>
+</blockquote>
+<p><img alt="" src="../resource/Tomcat%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/media/rId25.jpg" /></p>
+<p>先准备了一个JSP的一句话木马，安装好JDK环境，我的目录是在<code>C:\Program Files (x86)\Java\jdk1.8.0_131\bin</code>,这个目录下又个文件叫<code>jar.exe</code>。</p>
+<p>执行:<code>jar -cvf [war包名称].war 打包目录</code></p>
+<p><img alt="" src="../resource/Tomcat%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/media/rId26.jpg" /></p>
+<p>我们现在已经打包好了一个WAR包。</p>
+<p>找到Tomcat管理页面中的<code>WAR file to deploy</code>进行上传就可以部署了。</p>
+<p><img alt="" src="../resource/Tomcat%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/media/rId27.jpg" /></p>
+<p>应用列表已经出现了我们的目录：</p>
+<p><img alt="" src="../resource/Tomcat%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/media/rId28.jpg" /></p>
+<p>访问文件名即可：</p>
+<p><img alt="" src="../resource/Tomcat%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/media/rId29.jpg" /></p>
+<p>##参考链接</p>
+<blockquote>
+<p><a href="https://payloads.online/archivers/2017-08-17/2">https://payloads.online/archivers/2017-08-17/2</a>#tomcat-%E7%88%86%E7%A0%B4</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Tomcat样例目录session操纵漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-link">
+        Tomcat 后台爆破
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

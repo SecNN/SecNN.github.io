@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/YzmCMS/YzmCMS%20V5.3%20%E5%90%8E%E5%8F%B0ssrf/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>YzmCMS V5.3 后台ssrf - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "YzmCMS V5.3 \u540e\u53f0ssrf", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-link">
+        YzmCMS V5.4 后台getshell（一）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-link">
+        Yunyecms V2.0.2 后台注入漏洞（二）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yzmcms-v53-ssrf">YzmCMS V5.3 后台ssrf<a class="headerlink" href="#yzmcms-v53-ssrf" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>YzmCMS V5.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞位于
+application\collection\controller\collection_content.class.php 中的
+collection_test
+函数，此函数为获取一个网页中的URL，并获取此URL的值输出。类似于爬虫，爬取网页中URL对应的文章。以下为主要功能函数：　</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId25.png" /></p>
+<p>首先查看 get_content()函数：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId26.png" /></p>
+<p>可以看到传进来的URL不进过任何检测规则就带入
+file_get_content()函数，那么倘若此 $url 为 file://
+伪协议的话，如此则产生任意文件读取漏洞。那么此时回头看
+$url的值是否可控。</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId27.png" /></p>
+<p>可以看到，$url 的值来自于 collection_node 表中的 urlpage
+字段的值。如果要 $url 可控，那么就要找到一个数据库写入操作，并且urlpage
+字段的值可控。再看</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId28.png" /></p>
+<p>此函数则是将$_POST的数据写入到表中。看 insert 函数如何写。</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId29.png" /></p>
+<p>可以看到在写入过程中经过过滤函数 safe_data() ：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId30.png" /></p>
+<p>假设payload为：file://C:/Windows/System32/drivers/etc/hosts
+可以看到此过滤函数对此payload并无任何影响，所以导致插入数据库中的urlpage字段的值可控，由此导致$url的值可控。再往下查看
+get_sub_content()函数：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId31.png" /></p>
+<p>可以看到此函数是将 $html 中的 $start 和 $end 之间的值取出来，而
+$start 表示区间开始的html表示，$end
+表示区间结束的html标识。并且这两个标识不能为空。于是可以构造payload为：file://C:/Windows/System32/drivers/etc/hosts，如此进过上述函数则会取出payload并返回。再往下：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId32.png" /></p>
+<p>进入get_all_url()函数：</p>
+<div class="codehilite"><pre><span></span><code>public<span class="w"> </span>static<span class="w"> </span>function<span class="w"> </span>get_all_url($html,<span class="w"> </span>$url_contain=&#39;&#39;,<span class="w"> </span>$url_except=&#39;&#39;)<span class="w"> </span>{
+
+<span class="w">        </span>$html<span class="w"> </span>=<span class="w"> </span>str_replace(array(&quot;\r&quot;,<span class="w"> </span>&quot;\n&quot;),<span class="w"> </span>&#39;&#39;,<span class="w"> </span>$html);
+<span class="w">        </span>$html<span class="w"> </span>=<span class="w"> </span>str_replace(array(&quot;<span class="nt">&lt;/a&gt;</span>&quot;,<span class="w"> </span>&quot;<span class="nt">&lt;/A&gt;</span>&quot;),<span class="w"> </span>&quot;<span class="nt">&lt;/a&gt;</span>\n&quot;,<span class="w"> </span>$html);
+<span class="w">        </span>preg_match_all(&#39;/<span class="nt">&lt;a</span><span class="w"> </span><span class="err">([^</span><span class="nt">&gt;</span>]*)&gt;([^\/a&gt;].*)<span class="err">&lt;</span>\/a&gt;/i&#39;,<span class="w"> </span>$html,<span class="w"> </span>$out);
+<span class="w">        </span>$data<span class="w"> </span>=<span class="w"> </span>array();
+<span class="w">        </span>foreach<span class="w"> </span>($out[1]<span class="w"> </span>as<span class="w"> </span>$k=&gt;$v)<span class="w"> </span>{
+<span class="w">            </span>if<span class="w"> </span>(preg_match(&#39;/href=[\&#39;&quot;]?([^\&#39;&quot;<span class="w"> </span>]*)[\&#39;&quot;]?/i&#39;,<span class="w"> </span>$v,<span class="w"> </span>$match_out))<span class="w"> </span>{
+<span class="w">                </span>if<span class="w"> </span>($url_contain)<span class="w"> </span>{
+<span class="w">                    </span>if<span class="w"> </span>(strpos($match_out[1],<span class="w"> </span>$url_contain)<span class="w"> </span>===<span class="w"> </span>false)<span class="w"> </span>{
+<span class="w">                        </span>continue;
+<span class="w">                    </span>}<span class="w"> </span>
+<span class="w">                </span>}
+
+<span class="w">                </span>if<span class="w"> </span>($url_except)<span class="w"> </span>{
+<span class="w">                    </span>if<span class="w"> </span>(strpos($match_out[1],<span class="w"> </span>$url_except)<span class="w"> </span>!==<span class="w"> </span>false)<span class="w"> </span>{
+<span class="w">                        </span>continue;
+<span class="w">                    </span>}<span class="w"> </span>
+<span class="w">                </span>}
+<span class="w">                </span>$url2<span class="w"> </span>=<span class="w"> </span>$match_out[1];
+<span class="w">                </span>$url2<span class="w"> </span>=<span class="w"> </span>self::url_check($url2,<span class="w"> </span>self::$url);
+
+<span class="w">                </span>$title<span class="w"> </span>=<span class="w"> </span>strip_tags($out[2][$k]);
+
+<span class="w">                </span>if(empty($url2)<span class="w"> </span>||<span class="w"> </span>empty($title))<span class="w"> </span>continue;
+
+<span class="w">                </span>$data[&#39;url&#39;][$k]<span class="w"> </span>=<span class="w"> </span>$url2;
+<span class="w">                </span>$data[&#39;title&#39;][$k]<span class="w"> </span>=<span class="w"> </span>$title;
+
+<span class="w">            </span>}<span class="w"> </span>else<span class="w"> </span>{
+<span class="w">                </span>continue;
+<span class="w">            </span>}
+<span class="w">        </span>}
+</code></pre></div>
+
+<p>发现其中有一个正则过滤：
+preg_match_all(\'/]<em>)&gt;(<a href="#fn_%5C/a%3E"><sup>\/a&gt;</sup></a>.</em>)\&lt;\/a&gt;/i\',
+$html, $out);
+，此正则获取(value)括号中的值，并将其合并为一个数组。再往下看，又出现一个正则过滤：</p>
+<p>preg_match(\'/href=[\\'\"]?(<a href="#fn_%5C%27"><sup>\\'\"</sup></a>
+*)[\\'\"]?/i\', $v, $match_out)
+，此规则为href=\"(value)\"，并获取括号中value的值给$match_out，那么此时我们的payload需更改为：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;test123&gt;&lt;a</span><span class="w"> </span><span class="na">href=</span><span class="s">&quot;file://C:/Windows/System32/drivers/etc/hosts&quot;</span><span class="nt">&gt;</span>test<span class="nt">&lt;/a&gt;&lt;/test123&gt;</span>
+</code></pre></div>
+
+<p>此时在往下看，有一个url_check函数：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId33.png" /></p>
+<p>可以看到会检测最后取出payload的值中是否有 ://
+，巧的是我们的payload正好符合，所以该检测函数并未对payload造成影响。再往下回到最初的函数中：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId34.png" /></p>
+<p>至此，$articleurl 的值为我们最后的payload：
+file://C:/Windows/System32/drivers/etc/hosts ，直至此时，$article
+的值为读取到的本地任意文件的内容，再往下看 get_filter_html()函数：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">$data</span><span class="n n-Quoted">``</span><span class="err">[</span><span class="n n-Quoted">``</span><span class="s1">&#39;content&#39;</span><span class="n n-Quoted">``</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="o">::</span><span class="n">replace_item</span><span class="p">(</span><span class="n">self</span><span class="o">::</span><span class="n">get_sub_content</span><span class="p">(</span><span class="n n-Quoted">``</span><span class="n">$html</span><span class="n n-Quoted">``</span><span class="p">,</span><span class="w"> </span><span class="n n-Quoted">``</span><span class="n">$config</span><span class="n n-Quoted">``</span><span class="err">[</span><span class="n n-Quoted">``</span><span class="s1">&#39;content_rule&#39;</span><span class="n n-Quoted">``</span><span class="err">][</span><span class="mi">0</span><span class="err">]</span><span class="p">,</span><span class="w"> </span><span class="n n-Quoted">``</span><span class="n">$config</span><span class="n n-Quoted">``</span><span class="err">[</span><span class="n n-Quoted">``</span><span class="s1">&#39;content_rule&#39;</span><span class="n n-Quoted">``</span><span class="err">][</span><span class="mi">1</span><span class="err">]</span><span class="p">),</span><span class="w"> </span><span class="n n-Quoted">``</span><span class="n">$config</span><span class="n n-Quoted">``</span><span class="err">[</span><span class="n n-Quoted">``</span><span class="s1">&#39;content_html_rule&#39;</span><span class="n n-Quoted">``</span><span class="err">]</span><span class="p">);</span><span class="w"> </span><span class="n n-Quoted">``</span><span class="k">return</span><span class="n n-Quoted">` `</span><span class="n">$data</span><span class="n n-Quoted">``</span><span class="p">;</span>
+</code></pre></div>
+
+<p>由于篇幅限制，只拿出影响读取内容的代码，其实这段代码对结果并无影响，有兴趣自己下来阅读。在往下看到：</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId35.png" /></p>
+<p>admin_tpl()函数为加载模板的函数，此模板位于：application\collection\view\collection_test.html</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId36.png" /></p>
+<p>此处只截出影响此漏洞的代码。此处可以看到，将读取出的任意文件内容显示出来，到此则漏洞分析完毕。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>操作系统：windows 7</p>
+<p>php版本：5.5.38 + Apache</p>
+<p>mysql版本：5.5.53</p>
+<p>首先登陆后台，进入 模块管理---&gt;采集管理</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId38.png" /></p>
+<p>添加节点</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId39.png" /></p>
+<p>此处网站配置框中，可以在自己的vps服务器中搭建一个html网页，其内容为payload：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;test123&gt;&lt;a</span><span class="w"> </span><span class="na">href=</span><span class="s">&quot;file://C:/Windows/System32/drivers/etc/hosts&quot;</span><span class="nt">&gt;</span>123<span class="nt">&lt;/a&gt;&lt;/test123&gt;</span>
+</code></pre></div>
+
+<p>获取网站中的区域开始html为，区域结束的HTML为。点击保存。</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId40.png" /></p>
+<p>再次点击测试采集，则读取payload中的hosts文件。</p>
+<p><img alt="" src="../resource/YzmCMSV5.3%E5%90%8E%E5%8F%B0ssrf/media/rId41.png" /></p>
+<p>复现成功。</p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/Spec/p/11188198.html">https://www.cnblogs.com/Spec/p/11188198.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../YzmCMS%20V5.4%20%E5%90%8E%E5%8F%B0getshell%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-link">
+        YzmCMS V5.4 后台getshell（一）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%90%8E%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%BA%8C%EF%BC%89/" class="btn btn-xs btn-link">
+        Yunyecms V2.0.2 后台注入漏洞（二）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

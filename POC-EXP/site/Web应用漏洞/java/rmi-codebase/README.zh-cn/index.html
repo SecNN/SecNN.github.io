@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/java/rmi-codebase/README.zh-cn/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Java RMI Codebase 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Java RMI Codebase \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../rmi-registry-bind-deserialization/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../rmi-registry-bind-deserialization/" class="btn btn-xs btn-link">
+        Java ≤JDK 8u111 RMI Registry Deserialization Remote Code Execution
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        Java RMI Codebase Remote Code Execution
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="java-rmi-codebase">Java RMI Codebase 远程代码执行漏洞<a class="headerlink" href="#java-rmi-codebase" title="Permanent link">&para;</a></h1>
+<p>Java Remote Method Invocation（RMI）是Java中用于远程过程调用的机制。在满足特定条件的情况下，RMI客户端可以通过指定<code>java.rmi.server.codebase</code>参数，使服务端加载远程对象，从而执行任意Java字节码。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://docs.oracle.com/javase/7/docs/technotes/guides/rmi/codebase.html">https://docs.oracle.com/javase/7/docs/technotes/guides/rmi/codebase.html</a></li>
+<li><a href="https://paper.seebug.org/1091/">https://paper.seebug.org/1091/</a></li>
+</ul>
+<h2 id="_1">环境搭建<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>执行如下命令编译及启动RMI Registry和服务器：</p>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose run -e RMIIP=your-ip -p 1099:1099 -p 64000:64000 rmi
+</code></pre></div>
+<p>将<code>your-ip</code>替换为你的服务器IP地址，客户端将使用此IP连接服务器。</p>
+<p>环境启动后，RMI Registry将监听在1099端口。</p>
+<h2 id="_2">漏洞复现<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>待完善。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../rmi-registry-bind-deserialization/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../rmi-registry-bind-deserialization/" class="btn btn-xs btn-link">
+        Java ≤JDK 8u111 RMI Registry Deserialization Remote Code Execution
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        Java RMI Codebase Remote Code Execution
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

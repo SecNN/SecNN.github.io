@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95/ssrf/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>SSRF - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "SSRF", url: "#_top", children: [
+              {title: "0x01 \u6f0f\u6d1e\u63cf\u8ff0", url: "#0x01" },
+              {title: "0x02 \u573a\u666f\u5e94\u7528\u573a\u666f", url: "#0x02" },
+              {title: "0x03 \u6f0f\u6d1e\u5371\u5bb3", url: "#0x03" },
+              {title: "0x04 \u4fee\u590d\u5efa\u8bae", url: "#0x04" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../ssti/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../ssti/" class="btn btn-xs btn-link">
+        SSTI
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../sql/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../sql/" class="btn btn-xs btn-link">
+        SQL Inject
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ssrf">SSRF<a class="headerlink" href="#ssrf" title="Permanent link">&para;</a></h1>
+<h2 id="0x01">0x01 漏洞描述<a class="headerlink" href="#0x01" title="Permanent link">&para;</a></h2>
+<p>服务端请求伪造攻击(Server-side Request Forgery):很多web应用都提供了从其他的服务器上获取数据的功能。比如获取图片、下载文件、读取文件内容等。SSRF漏洞是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。正是因为它是由服务端发起的，所以它能够请求到与它相连而与外网隔离的内部系统。</p>
+<p>即：利用一个可以发起网络请求的服务，当作跳板来攻击其他服务。</p>
+<h2 id="0x02">0x02 场景应用场景<a class="headerlink" href="#0x02" title="Permanent link">&para;</a></h2>
+<p>SSRF场景应用场景为任意可以发起网络请求的地方，比如：</p>
+<ul>
+<li>下载图片、下载文件等下载处；</li>
+<li>文件预览、图片预览等获取图片、文件内容处；</li>
+<li>在线识图，在线文档翻译，分享，订阅等；</li>
+<li>根据远程URL上传，静态资源图片等；</li>
+<li>数据库的内置功能，比如mongodb的copyDatabase函数；</li>
+<li>URL关键字中，比如：source，share，link，src，imageurl，target等；</li>
+</ul>
+<h2 id="0x03">0x03 漏洞危害<a class="headerlink" href="#0x03" title="Permanent link">&para;</a></h2>
+<ol>
+<li>内网、本地端口扫描，获取开放端口信息；</li>
+<li>主机信息收集，web应用指纹识别，获取服务banner信息等；</li>
+<li>根据识别出的应用针对性的发送payload攻击，例如struts24、redis、攻击内网、本地的应用程序及服务等；</li>
+<li>穿越防火墙</li>
+<li>利用file等其他允许协议进行绕过攻击，比如利用file协议读取本地文件（<code>file:///etc/passwd</code>）</li>
+</ol>
+<h2 id="0x04">0x04 修复建议<a class="headerlink" href="#0x04" title="Permanent link">&para;</a></h2>
+<p>SSRF漏洞修复的方法可归纳为一个依次向下的流程中：</p>
+<h3 id="41-url">4.1 解析目标URL<a class="headerlink" href="#41-url" title="Permanent link">&para;</a></h3>
+<p>获取scheme、host（推荐使用系统内置函数完成,避免自己使用正则提取）</p>
+<h3 id="42-scheme">4.2 校验scheme<a class="headerlink" href="#42-scheme" title="Permanent link">&para;</a></h3>
+<p>检查 scheme 是否为合法 (如非特殊需求请只允许 http 和 https)</p>
+<h3 id="43-ip">4.3 获取解析IP<a class="headerlink" href="#43-ip" title="Permanent link">&para;</a></h3>
+<p>解析 host 获取 dns 解析后的 IP 地址</p>
+<h3 id="44-ip">4.4 检测IP是否合法<a class="headerlink" href="#44-ip" title="Permanent link">&para;</a></h3>
+<p>检查解析后的IP地址是否为外网地址或者合法IP</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../ssti/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../ssti/" class="btn btn-xs btn-link">
+        SSTI
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../sql/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../sql/" class="btn btn-xs btn-link">
+        SQL Inject
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

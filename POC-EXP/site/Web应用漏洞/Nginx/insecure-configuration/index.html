@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Nginx/insecure-configuration/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Nginx Misconfiguration Vulnerabilities - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Nginx Misconfiguration Vulnerabilities", url: "#_top", children: [
+              {title: "Environment Setup", url: "#environment-setup" },
+              {title: "Mistake 1. CRLF Injection Vulnerability", url: "#mistake-1-crlf-injection-vulnerability" },
+              {title: "Mistake 2. Directory Traversal Vulnerability", url: "#mistake-2-directory-traversal-vulnerability" },
+              {title: "Mistake 3. add_header Override", url: "#mistake-3-add_header-override" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Nginx 配置错误导致漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CVE-2017-7529/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CVE-2017-7529/README.zh-cn/" class="btn btn-xs btn-link">
+        Nginx越界读取缓存漏洞（CVE-2017-7529）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="nginx-misconfiguration-vulnerabilities">Nginx Misconfiguration Vulnerabilities<a class="headerlink" href="#nginx-misconfiguration-vulnerabilities" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Nginx is a web server that can be used as a reverse proxy, load balancer, mail proxy, and HTTP cache. This environment contains three vulnerabilities caused by Nginx misconfiguration.</p>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start a Nginx server with multiple vulnerabilities:</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>After successful execution, Nginx will listen on three ports: 8080/8081/8082, corresponding to three different vulnerabilities.</p>
+<h2 id="mistake-1-crlf-injection-vulnerability">Mistake 1. CRLF Injection Vulnerability<a class="headerlink" href="#mistake-1-crlf-injection-vulnerability" title="Permanent link">&para;</a></h2>
+<p>Nginx decodes <code>$uri</code>, which means inputting %0d%0a can introduce line breaks, leading to CRLF injection vulnerabilities.</p>
+<p>Example of incorrect configuration (originally intended to redirect HTTP requests to HTTPS):</p>
+<div class="highlight"><pre><span></span><code>location / {
+    return 302 https://$host$uri;
+}
+</code></pre></div>
+<p>Payload: <code>http://your-ip:8080/%0d%0aSet-Cookie:%20a=1</code>, which can inject a Set-Cookie header.</p>
+<p><img alt="" src="5.png" />  </p>
+<p>Using techniques from the article "<a href="https://www.leavesongs.com/PENETRATION/bottle-crlf-cve-2016-9964.html">Bottle HTTP Header Injection Vulnerability Analysis</a>", you can construct an XSS vulnerability:</p>
+<p><img alt="" src="1.png" /></p>
+<h2 id="mistake-2-directory-traversal-vulnerability">Mistake 2. Directory Traversal Vulnerability<a class="headerlink" href="#mistake-2-directory-traversal-vulnerability" title="Permanent link">&para;</a></h2>
+<p>When configuring aliases in Nginx, forgetting to add a <code>/</code> will create a directory traversal vulnerability.</p>
+<p>Example of incorrect configuration (originally intended to allow users to access files in the /home/ directory):</p>
+<div class="highlight"><pre><span></span><code>location /files {
+    alias /home/;
+}
+</code></pre></div>
+<p>Payload: <code>http://your-ip:8081/files../</code>, successfully traversing to the root directory:</p>
+<p><img alt="" src="2.png" /></p>
+<h2 id="mistake-3-add_header-override">Mistake 3. add_header Override<a class="headerlink" href="#mistake-3-add_header-override" title="Permanent link">&para;</a></h2>
+<p>The <code>add_header</code> directive in Nginx configuration child blocks (server, location, if) will override HTTP headers added by <code>add_header</code> in the parent block, potentially creating security risks.</p>
+<p>For example, in the following code, CSP headers are added site-wide (in the parent block):</p>
+<div class="highlight"><pre><span></span><code>add_header Content-Security-Policy &quot;default-src &#39;self&#39;&quot;;
+add_header X-Frame-Options DENY;
+
+location = /test1 {
+    rewrite ^(.*)$ /xss.html break;
+}
+
+location = /test2 {
+    add_header X-Content-Type-Options nosniff;
+    rewrite ^(.*)$ /xss.html break;
+}
+</code></pre></div>
+<p>However, because the <code>/test2</code> location block adds an <code>X-Content-Type-Options</code> header, all <code>add_header</code> directives in the parent block become ineffective:</p>
+<p><img alt="" src="3.png" /></p>
+<p>XSS can be triggered:</p>
+<p><img alt="" src="4.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Nginx 配置错误导致漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CVE-2017-7529/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CVE-2017-7529/README.zh-cn/" class="btn btn-xs btn-link">
+        Nginx越界读取缓存漏洞（CVE-2017-7529）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

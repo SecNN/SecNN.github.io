@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/v2board/V2Board%20Admin.php%20%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>V2Board Admin.php 越权访问漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "V2Board Admin.php \u8d8a\u6743\u8bbf\u95ee\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1.6-privilege-escalation/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1.6-privilege-escalation/" class="btn btn-xs btn-link">
+        V2board 1.6.1 Privilege Escalation
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../unomi/CVE-2020-13942/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../unomi/CVE-2020-13942/README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Unomi 表达式注入远程代码执行漏洞（CVE-2020-13942）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="v2board-adminphp">V2Board Admin.php 越权访问漏洞<a class="headerlink" href="#v2board-adminphp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>V2board面板 Admin.php 存在越权访问漏洞，由于部分鉴权代码于v1.6.1版本进行了修改，鉴权方式变为从Redis中获取缓存判定是否存在可以调用接口，导致任意用户都可以调用管理员权限的接口获取后台权限</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>V2Board v1.6.1</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>title="V2Board"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>对比代码更新部分</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1671262250177-e7818814-a063-4920-bc99-6c27f80cb1cb.png" /></p>
+<p>与之前的代码相比较，鉴权在 v1.6.1 版本可以通过 <code>auth_data 或 authorizetion</code> 字段来实现验证</p>
+<div class="highlight"><pre><span></span><code><span class="cp">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="nx">App\Http\Middleware</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Closure</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Illuminate\Support\Facades\Cache</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Admin</span>
+<span class="p">{</span>
+  <span class="sd">/**</span>
+<span class="sd">* Handle an incoming request.</span>
+<span class="sd">*</span>
+<span class="sd">* @param \Illuminate\Http\Request $request</span>
+<span class="sd">* @param \Closure $next</span>
+<span class="sd">* @return mixed</span>
+<span class="sd">*/</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nx">Closure</span> <span class="nv">$next</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="nv">$authorization</span> <span class="o">=</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">input</span><span class="p">(</span><span class="s1">&#39;auth_data&#39;</span><span class="p">)</span> <span class="o">??</span> <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">(</span><span class="s1">&#39;authorization&#39;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$authorization</span><span class="p">)</span> <span class="nx">abort</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="s1">&#39;未登录或登陆已过期&#39;</span><span class="p">);</span>
+
+    <span class="nv">$authData</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">base64_decode</span><span class="p">(</span><span class="nv">$authorization</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">Cache</span><span class="o">::</span><span class="na">has</span><span class="p">(</span><span class="nv">$authorization</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$authData</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">||</span> <span class="o">!</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$authData</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="nx">abort</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="s1">&#39;鉴权失败，请重新登入&#39;</span><span class="p">);</span>
+      <span class="nv">$user</span> <span class="o">=</span> <span class="nx">\App\Models\User</span><span class="o">::</span><span class="na">where</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="nv">$authData</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="o">-&gt;</span><span class="na">where</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="nv">$authData</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="o">-&gt;</span><span class="na">select</span><span class="p">([</span>
+                 <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;email&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;is_admin&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;is_staff&#39;</span>
+                 <span class="p">])</span>
+        <span class="o">-&gt;</span><span class="na">first</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="p">)</span> <span class="nx">abort</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="s1">&#39;鉴权失败，请重新登入&#39;</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">is_admin</span><span class="p">)</span> <span class="nx">abort</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span> <span class="s1">&#39;鉴权失败，请重新登入&#39;</span><span class="p">);</span>
+      <span class="nx">Cache</span><span class="o">::</span><span class="na">put</span><span class="p">(</span><span class="nv">$authorization</span><span class="p">,</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">toArray</span><span class="p">(),</span> <span class="mi">3600</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">merge</span><span class="p">([</span>
+                    <span class="s1">&#39;user&#39;</span> <span class="o">=&gt;</span> <span class="nx">Cache</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="nv">$authorization</span><span class="p">)</span>
+                    <span class="p">]);</span>
+    <span class="k">return</span> <span class="nv">$next</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>可以发现主要要通过两次逻辑实现验证，一个是存在 header 中的 authorization 参数，再一个是校验 authorizations 是否存在于 Redis缓存中的</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1671263280790-db7b6174-5f26-4823-919f-2ca6443f009b.png" /></p>
+<p>在登陆验证的代码中，成功使用 email 和 password 登陆后会返回 token 和 auth_data</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1671262605086-55aabd4e-fc53-41f5-a27e-6cfed6551b0a.png" /></p>
+<p>同时 auth_data 会缓存于 Redis 中</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1671262910803-d4484032-ce2e-419e-a5b8-f00b8af2c7d3.png" /></p>
+<p>由于 Admin.php 文件中只验证了 authrization 是否在 Redis的缓存中，所以当注册任意一个用户进行登陆后获取到 auth_data 就可以任意调用 管理员的接口</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1671263235610-bd2779bb-318f-41d3-a037-c21d868a9d8e.png" /></p>
+<p><img alt="img" src="../../../.vuepress/public/img/1671263063721-8bcdece3-0aad-4b1f-86aa-6da75f5b271c.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../1.6-privilege-escalation/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../1.6-privilege-escalation/" class="btn btn-xs btn-link">
+        V2board 1.6.1 Privilege Escalation
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../unomi/CVE-2020-13942/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../unomi/CVE-2020-13942/README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Unomi 表达式注入远程代码执行漏洞（CVE-2020-13942）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

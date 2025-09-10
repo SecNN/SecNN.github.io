@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Pluck%20cms/Pluck%20CMS%204.7.10%20%E5%90%8E%E5%8F%B0%20%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Pluck CMS 4.7.10 后台 文件包含+文件上传导致getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Pluck CMS 4.7.10 \u540e\u53f0 \u6587\u4ef6\u5305\u542b+\u6587\u4ef6\u4e0a\u4f20\u5bfc\u81f4getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Pluck%20CMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Pluck%20CMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        Pluck CMS后台另两处任意代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Pligg%20CMS/%EF%BC%88CVE-2020-25287%EF%BC%89Pligg%20CMS%202.0.3%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Pligg%20CMS/%EF%BC%88CVE-2020-25287%EF%BC%89Pligg%20CMS%202.0.3%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2020-25287）Pligg CMS 2.0.3 远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pluck-cms-4710-getshell">Pluck CMS 4.7.10 后台 文件包含+文件上传导致getshell<a class="headerlink" href="#pluck-cms-4710-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Pluck CMS Pluck CMS \&lt;=4.7.10</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="1">1、分析过程<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<p>目前最新版本为4.7.10，个人测试github上最旧的4.7.2版本仍然存在该漏洞，框架本身语言选择模块数据注入导致的文件包含漏洞，官方更新版本并没有对这部分代码进行修改，可以认为是全版本通用的。该漏洞是在复现\"我怎么这么帅\"在先知发表的《Pluck
+CMS 4.7.10远程代码执行漏洞分析》之余审计其他代码发现的，在此致谢。</p>
+<p>v4.7.1分析 从入口文件admin.php查看:</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId25.shtml" /></p>
+<p>查看language.php,满足指定的文件存在，并传入的cont1参数和原本设置的$langpref参数不等，进入save_language($cont1)。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId26.shtml" /></p>
+<p>调用save_file方法。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId27.shtml" /></p>
+<p>由于只有一个数据，直接182写入php文件。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId28.shtml" /></p>
+<p>至此，langpref的值变成可控值，这个值对应的文件，用于控制网站的语言选择，会自动被全局php文件包含。可以包含上传功能点上传的图种文件解析其中的一句话导致getshell。文件上传功能点使用白名单，但是没有进行重命名，所以路径可以简单猜解。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId29.shtml" /></p>
+<h3 id="2">2、复现过程<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<p>文件上传一个可以写一句话木马的php图种。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId31.shtml" /></p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId32.shtml" /></p>
+<p>上述参数保存于php文件：</p>
+<div class="codehilite"><pre><span></span><code>\data\settings\langpref.php
+</code></pre></div>
+
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId33.shtml" /></p>
+<p>由于该参数是网站语言控制的php文件，访问任意网页，包含langpref对应的文件。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId34.shtml" /></p>
+<p>访问生成的php一句话木马。</p>
+<p><img alt="" src="../resource/PluckCMS4.7.10%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%2B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E5%AF%BC%E8%87%B4getshell/media/rId35.shtml" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Pluck%20CMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Pluck%20CMS%E5%90%8E%E5%8F%B0%E5%8F%A6%E4%B8%A4%E5%A4%84%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        Pluck CMS后台另两处任意代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Pligg%20CMS/%EF%BC%88CVE-2020-25287%EF%BC%89Pligg%20CMS%202.0.3%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Pligg%20CMS/%EF%BC%88CVE-2020-25287%EF%BC%89Pligg%20CMS%202.0.3%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2020-25287）Pligg CMS 2.0.3 远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Yunucms/Yunucms%20v2.0.7%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Yunucms v2.0.7 数据库泄露 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Yunucms v2.0.7 \u6570\u636e\u5e93\u6cc4\u9732", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-link">
+        Yunyecms V2.0.2 前台注入漏洞（一）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Yunucms%20v2.0.7%20%E5%90%8E%E5%8F%B0xss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Yunucms%20v2.0.7%20%E5%90%8E%E5%8F%B0xss/" class="btn btn-xs btn-link">
+        Yunucms v2.0.7 后台xss
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yunucms-v207">Yunucms v2.0.7 数据库泄露<a class="headerlink" href="#yunucms-v207" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>云优CMS是一款基于TP5.0框架为核心开发的一套免费+开源的城市分站内容管理系统。云优CMS前身为远航CMS。云优CMS于2017年9月上线全新版本，二级域名分站，内容分站独立，七牛云存储，自定义字段，自定义表单，自定义栏目权限，自定义管理权限等众多功能深受用户青睐。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Yunucms v2.0.7</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/index.php?s=/admin/data/export</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+
+public function export($ids = null, $id = null, $start = null) {
+        $Request = Request::instance();
+        if ($Request-&gt;isPost() &amp;&amp; !empty($ids) &amp;&amp; is_array($ids)) { //初始化
+            $path = config(&#39;data_backup_path&#39;);
+            is_dir($path) || mkdir($path, 755, true);
+            //读取备份配置
+            $config = [
+                &#39;path&#39; =&gt; realpath($path) . DIRECTORY_SEPARATOR,
+                &#39;part&#39; =&gt; config(&#39;data_backup_part_size&#39;),
+                &#39;compress&#39; =&gt; config(&#39;data_backup_compress&#39;),
+                &#39;level&#39; =&gt; config(&#39;data_backup_compress_level&#39;),
+            ];
+
+            //检查是否有正在执行的任务
+            $lock = &quot;{$config[&#39;path&#39;]}backup.lock&quot;;
+            if (is_file($lock)) {
+                return $this-&gt;error(&#39;检测到有一个备份任务正在执行，请稍后再试，或手动删除&quot;&#39;.$lock.&#39;&quot;后重试！&#39;);
+            }
+            file_put_contents($lock, $Request-&gt;time()); //创建锁文件
+            //检查备份目录是否可写
+            is_writeable($config[&#39;path&#39;]) || $this-&gt;error(&#39;备份目录不存在或不可写，请检查后重试！&#39;);
+            session(&#39;backup_config&#39;, $config);
+
+            //生成备份文件信息
+            $file = [
+                &#39;name&#39; =&gt; date(&#39;Ymd-His&#39;, $Request-&gt;time()),
+                &#39;part&#39; =&gt; 1,
+            ];
+            session(&#39;backup_file&#39;, $file);
+            //缓存要备份的表
+            session(&#39;backup_tables&#39;, $ids);
+
+            //创建备份文件
+            $Database = new \com\Database($file, $config);
+            if (false !== $Database-&gt;create()) {
+                $tab = [&#39;id&#39; =&gt; 0, &#39;start&#39; =&gt; 0];
+                return $this-&gt;success(&#39;初始化成功！&#39;, &#39;&#39;, [&#39;tables&#39; =&gt; $ids, &#39;tab&#39; =&gt; $tab]);
+            } else {
+                return $this-&gt;error(&#39;初始化失败，备份文件创建失败！&#39;);
+            }
+        }
+......
+</code></pre></div>
+
+<p>可以看到，备份文件的命名用的time方法，跟进</p>
+<div class="codehilite"><pre><span></span><code>public function time($float = false)
+    {
+        return $float ? $_SERVER[&#39;REQUEST_TIME_FLOAT&#39;] : $_SERVER[&#39;REQUEST_TIME&#39;];
+    }
+</code></pre></div>
+
+<p>可以看到利用REQUEST_TIME进行构造文件名，因此可以直接爆破得到并下载。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>在后台系统管理-&gt;数据库管理模块将所有数据库备份</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/media/rId26.png" /></p>
+<p>查看本地文件，所有备份保存在data目录下，发现名命是以时间命名，可以直接爆破得到</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/media/rId27.png" /></p>
+<p>从前台访问并下载</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/media/rId28.png" /></p>
+<p>下载完成后打开，泄露所有数据库信息</p>
+<p><img alt="" src="../resource/Yunucmsv2.0.7%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B3%84%E9%9C%B2/media/rId29.shtml" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Yunyecms/Yunyecms%20V2.0.2%20%E5%89%8D%E5%8F%B0%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88%E4%B8%80%EF%BC%89/" class="btn btn-xs btn-link">
+        Yunyecms V2.0.2 前台注入漏洞（一）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Yunucms%20v2.0.7%20%E5%90%8E%E5%8F%B0xss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Yunucms%20v2.0.7%20%E5%90%8E%E5%8F%B0xss/" class="btn btn-xs btn-link">
+        Yunucms v2.0.7 后台xss
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

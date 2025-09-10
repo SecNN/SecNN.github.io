@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Discuz/Discuz%21%20X3.4%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Discuz! X3.4 后台任意文件删除 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Discuz! X3.4 \u540e\u53f0\u4efb\u610f\u6587\u4ef6\u5220\u9664", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21ML%203.x%20%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21ML%203.x%20%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!ML 3.x 代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 前台ssrf
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="discuz-x34">Discuz! X3.4 后台任意文件删除<a class="headerlink" href="#discuz-x34" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>后台任意文件删除，需要有管理员的权限。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Discuz!X V3.4</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>分析一下该请求的流程。</p>
+<p>请求URL：<code>/dz/upload/admin.php?action=forums&amp;operation=edit&amp;fid=2&amp;replybgnew=../../../testfile.txt&amp;delreplybg=1</code></p>
+<p>在<code>admin.php</code>中接收了action参数，在第58行经过<code>admincpfile</code>函数处理后返回文件路径，并包含该文件。</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="p">(</span><span class="err">$</span><span class="n">admincp</span><span class="o">-&gt;</span><span class="n">allow</span><span class="p">(</span><span class="err">$</span><span class="n">action</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">operation</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">do</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="err">$</span><span class="n">action</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;index&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">require</span><span class="w"> </span><span class="err">$</span><span class="n">admincp</span><span class="o">-&gt;</span><span class="n">admincpfile</span><span class="p">(</span><span class="err">$</span><span class="n">action</span><span class="p">);</span>
+</code></pre></div>
+
+<p>看一下该函数的处理过程：</p>
+<div class="codehilite"><pre><span></span><code>function admincpfile($action) {
+        return &#39;./source/admincp/admincp_&#39;.$action.&#39;.php&#39;;
+    }
+</code></pre></div>
+
+<p>经过处理返回的内容是：<code>./source/admincp/admincp_forums.php</code>，也就来到了漏洞存在的地方。</p>
+<p>根据if/else的判断条件，进入else中的代码：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="ss">(</span><span class="o">!</span><span class="nv">submitcheck</span><span class="ss">(</span><span class="s1">&#39;detailsubmit&#39;</span><span class="ss">))</span><span class="w"> </span>{
+<span class="w">  </span>......
+}
+<span class="k">else</span>{
+
+}
+</code></pre></div>
+
+<p>造成漏洞的代码：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="p">(</span><span class="err">!$</span><span class="k">multiset</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;delreplybg&#39;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">valueparse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse_url</span><span class="p">(</span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;replybgnew&#39;</span><span class="o">]</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="err">!</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">valueparse</span><span class="o">[</span><span class="n">&#39;host&#39;</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">file_exists</span><span class="p">(</span><span class="err">$</span><span class="n">_G</span><span class="o">[</span><span class="n">&#39;setting&#39;</span><span class="o">][</span><span class="n">&#39;attachurl&#39;</span><span class="o">]</span><span class="p">.</span><span class="s1">&#39;common/&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;replybgnew&#39;</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">      </span><span class="nv">@unlink</span><span class="p">(</span><span class="err">$</span><span class="n">_G</span><span class="o">[</span><span class="n">&#39;setting&#39;</span><span class="o">][</span><span class="n">&#39;attachurl&#39;</span><span class="o">]</span><span class="p">.</span><span class="s1">&#39;common/&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;replybgnew&#39;</span><span class="o">]</span><span class="p">);</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="err">$</span><span class="n">_GET</span><span class="o">[</span><span class="n">&#39;replybgnew&#39;</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="err">}</span>
+</code></pre></div>
+
+<p><code>$multiset</code>默认为0，只要不给该参数赋值就满足条件进入if语句。</p>
+<p>第二个if语句，检查GET参数<code>delreplybg</code>有没有内容，然后做了下检测，检测parse_url函数返回的结果中有没有host这个变量，来确保GET参数<code>replybgnew</code>不是url，但是并不影响传入文件路径。</p>
+<p>这里<code>$_G['setting']['attachurl'</code>的值为<code>data/attachment/</code>，再拼接上<code>common/</code>和<code>$_GET['replybgnew']</code>，这样路径就可控了。通过unlink达到文件删除的目的。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>登陆后台，进入论坛-&gt;模块管理-&gt;编辑板块，使用burp拦截提交的数据。</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/media/rId26.png" /></p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/media/rId27.png" /></p>
+<p>发送，查看文件发现被删除。</p>
+<p><img alt="" src="../resource/Discuz%21X3.4%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/media/rId28.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7492">https://xz.aliyun.com/t/7492</a>#toc-7</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Discuz%21ML%203.x%20%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Discuz%21ML%203.x%20%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Discuz!ML 3.x 代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Discuz%21%20X3.4%20%E5%89%8D%E5%8F%B0ssrf/" class="btn btn-xs btn-link">
+        Discuz! X3.4 前台ssrf
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

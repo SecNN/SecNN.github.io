@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/FastAdmin/FastAdmin%20%E5%90%8E%E5%8F%B0%20auth_rule%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>FastAdmin 后台 auth_rule 权限认证getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "FastAdmin \u540e\u53f0 auth_rule \u6743\u9650\u8ba4\u8bc1getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../FastAdmin%20%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../FastAdmin%20%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        FastAdmin 第三方插件后台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../FastAdmin%20%E4%BC%9A%E5%91%98%E4%B8%AD%E5%BF%83%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../FastAdmin%20%E4%BC%9A%E5%91%98%E4%B8%AD%E5%BF%83%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        FastAdmin 会员中心前台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="fastadmin-auth_rule-getshell">FastAdmin 后台 auth_rule 权限认证getshell<a class="headerlink" href="#fastadmin-auth_rule-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>fastadmin对超管开放修改auth_rule表的权限，造成权限认证时，能触发代码执行</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">首先，需要超管权限进入后台，选择权限管理，进入菜单规则<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><img alt="aa6bd8929245b99c0d343a4b9e6f412b" src="../resource/FastAdmin%20%E5%90%8E%E5%8F%B0%20auth_rule%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81getshell/media/52ce9ed0f54e04c04c11c94eed144dd5fca6b82d.png" /></p>
+<h3 id="_5">这里选择菜单规则，修改他的规则条件<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><img alt="5613da758b07a846cf444d957b52ae00" src="../resource/FastAdmin%20%E5%90%8E%E5%8F%B0%20auth_rule%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81getshell/media/f7581db7f04c7bc806809e04bd48f6827145ddc6.png" /></p>
+<h3 id="_6">保存，然后退出登录，选择一个低权限的用户登录<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p><img alt="8390434205fd2042136a492ba8e69c66" src="../resource/FastAdmin%20%E5%90%8E%E5%8F%B0%20auth_rule%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81getshell/media/e7a0066009fd9581ac81f7a68c084af703effc3d.png" /></p>
+<h3 id="tp3tp5">TP3的代码移植到了TP5，: )<a class="headerlink" href="#tp3tp5" title="Permanent link">&para;</a></h3>
+<p><img alt="cf04194df00e909f44c5a2dff4b074f0" src="../resource/FastAdmin%20%E5%90%8E%E5%8F%B0%20auth_rule%20%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81getshell/media/132ddebdf4a175c509364eafa497a4b04051a71e.png" /></p>
+<h2 id="_7">参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.zhihuifly.com/t/topic/672">https://www.zhihuifly.com/t/topic/672</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../FastAdmin%20%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../FastAdmin%20%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8F%92%E4%BB%B6%E5%90%8E%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        FastAdmin 第三方插件后台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../FastAdmin%20%E4%BC%9A%E5%91%98%E4%B8%AD%E5%BF%83%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../FastAdmin%20%E4%BC%9A%E5%91%98%E4%B8%AD%E5%BF%83%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        FastAdmin 会员中心前台getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

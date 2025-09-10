@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/YXcms/YXcmsApp%201.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>YXcms 1.4.3 任意用户密码重置漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "YXcms 1.4.3 \u4efb\u610f\u7528\u6237\u5bc6\u7801\u91cd\u7f6e\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2018-11003%EF%BC%89YXcms%201.4.7%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2018-11003%EF%BC%89YXcms%201.4.7%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-11003）YXcms 1.4.7 跨站请求伪造漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../YXCMS%201.4.7%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../YXCMS%201.4.7%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        YXcms 1.4.7 储存型xss
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="yxcms-143">YXcms 1.4.3 任意用户密码重置漏洞<a class="headerlink" href="#yxcms-143" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>2017-03-26 YXcmsApp 1.4.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞原理<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>从框架上（基于CanPHP的二次开发）看不出来什么缺陷，那就来看看代码逻辑上有什么披露。来到protected/apps/member/controller/indexController.php中是一些关于会员账号的逻辑，其中的getpassword函数是找回密码的功能，其中分为两步：第一步根据用户名或者邮箱向注册的邮件发送重置密码链接；第二步根据重置密码的链接重置用户密码，然后再将新密码发送到对应邮箱。第二步代码如下：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId25.jpg" /></p>
+<p>这里的ENCODE_KEY是在安装时生成的6位密钥，想通过构造$_GET[\'code\']来重置其他用户的密码初步是不现实的。</p>
+<p>但之后又看到在regist功能中，第176行调用了自定义的set_cookie函数，如下：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId26.jpg" /></p>
+<p>跟进set_cookie函数，是在protected/include/lib/common.function.php中607行定义，如下：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId27.jpg" /></p>
+<p>这里是用ENCODE_KEY对原值进行加密再设置cookie。所以萌生了一个想法，将注册后对应设置的auth
+cookie作为getpassword的code，就可以正确地进行解密，解密后的内容即为regist函数中第175行拼接的字符串：</p>
+<div class="codehilite"><pre><span></span><code>$cookie_auth = $id.&#39;\t&#39;.$data[&#39;groupid&#39;].&#39;\t&#39;.$data[&#39;account&#39;].&#39;\t&#39;.$data[&#39;nickname&#39;].&#39;\t&#39;.$data[&#39;lastip&#39;];
+</code></pre></div>
+
+<p>其中会对account的格式进行校验，ip也是正则匹配的结果无法伪造，那么可控的就只有nickname了，我们可以跟踪一下nickname的过滤过程，首先是进入common.function.php的in函数：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId28.jpg" /></p>
+<p>接着就直接连接成字符串，虽然htmlspecialchars函数默认不会对单引号编码，但是addslashes函数会对单引号转义，这里的nickname就无法利用了。</p>
+<p>可是再往上看login逻辑时，发现在登陆成功后就会从数据库中取出账号信息，拼接成字符串设置为对应的auth
+cookie，如下：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId29.jpg" /></p>
+<p>我们可以考虑考虑二次注入的可能性，但还是需要跟踪一下在regist时insert数据是如何过滤的，最后可以跟到在protected/include/core/db/cpMysql.class.php中escape函数对数据进行了过滤：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId30.jpg" /></p>
+<p>因为在登陆成功后是直接拼接字符串就加密，所以单引号还是能够还原出来的，单引号的整个输入输出过程如下：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId31.jpg" /></p>
+<p>所以我们可以注册个带单引号nickname的账号，注册成功后退出重新登陆，使用auth
+cookie来作为重置密码的code，就会产生报错，如下（因为在解密的时候会把code进行urldecode，所以需要把cookie中的+改为%252B，/改为%252F）：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId32.jpg" /></p>
+<h3 id="_5">漏洞证明<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>漏洞的本质是二次注入
+，但是我们在数据库中可以看到nickname限制为30个字符，而且在这里我们可控的也只有nickname，所以进行报错注入几乎是不可能了。</p>
+<p>既然是在找回密码处的二次注入，就看看能不能重置任意用户名的密码。还是再来看看getpassword函数的逻辑：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId34.jpg" /></p>
+<p>假如说我们的payload改为\' or 1=1#
+那么肯定是可以将所有用户的密码都update为同一个newpass，这个newpass还是会发给info[\'email\']这个邮箱的，跟进187行看看find函数的结果是否是我们可控的，在protected/include/core/cpModel.calss.php中：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId35.jpg" /></p>
+<p>find函数虽然加了一个limit
+1的条件，但返回的也还是结果中的第一个值，所以如果我们能把自己邮箱排到查询结果中的首位就可以从邮件中知晓所有账号的新密码了。</p>
+<p>因为是利用新注册的账号来产生payload，很容易就可以想到payload为\' or 1=1
+order by id desc#</p>
+<p>然后注册账号，重新登陆，直接上code访问，可以监控到mysql执行语句如下：</p>
+<p><img alt="" src="../resource/YXcmsApp1.4.3%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/media/rId36.jpg" /></p>
+<p>顺利收到新密码的邮件：</p>
+<p>image</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CVE-2018-11003%EF%BC%89YXcms%201.4.7%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CVE-2018-11003%EF%BC%89YXcms%201.4.7%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2018-11003）YXcms 1.4.7 跨站请求伪造漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../YXCMS%201.4.7%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../YXCMS%201.4.7%E5%82%A8%E5%AD%98%E5%9E%8Bxss/" class="btn btn-xs btn-link">
+        YXcms 1.4.7 储存型xss
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

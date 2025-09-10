@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Wordpress/Wordpress%20%E6%8F%92%E4%BB%B6%E6%BC%8F%E6%B4%9E/WordPress%20Plugin%20-%20File%20Manager%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WordPress Plugin - File Manager 任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WordPress Plugin - File Manager \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-link">
+        WordPress Plugin - Google Review Slider 6.1 SQL Injection
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WordPress%20Plugin%20-%20Easy%20WP%20SMTP%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WordPress%20Plugin%20-%20Easy%20WP%20SMTP%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WordPress Plugin - Easy WP SMTP 反序列化漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wordpress-plugin-file-manager">WordPress Plugin - File Manager 任意文件上传漏洞<a class="headerlink" href="#wordpress-plugin-file-manager" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>File
+Manager是一个WordPress插件，由于函数处理不严谨，可构造恶意请求包上传任意文件。漏洞主要因为File
+Manager插件中的elFinder库的调用未进行严格访问控制触发，导致可以被直接利用</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>免费版受影响版本：V6.0-V6.8</p>
+<p>Pro版受影响版本：V7.6-V7.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>漏洞点位于file
+manager的connector.minimal.php文件，具体路径在<code>wordpress\wp-content\plugins\wp-file-manager\lib\php\connector.minimal.php</code></p>
+<p><img alt="1.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId25.png" /></p>
+<p>首先实例化一个<code>elFinderConnector</code>对象，然后调用它的<code>run()</code>方法，跟进run();</p>
+<p><img alt="2.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId26.png" /></p>
+<p>如果HTTP请求的方法是<code>POST</code>，会把<code>POST</code>和<code>GET</code>请求的数据保存到<code>$src</code>，然后判断<code>POST</code>传的参数。如果不传入<code>targets</code>，就不会进入前几个判断，之后会把<code>POST</code>请求传的<code>cmd</code>变量赋给<code>$cmd</code>，然后调用<code>commandExists()</code>检测传入的<code>$cmd</code>是否存在。</p>
+<p><img alt="3.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId27.png" /></p>
+<p>然后利用<code>commandArgsList()</code>函数获取<code>$cmd</code>对应的命令参数列表，漏洞利用需要上传文件，这里只关注<code>$cmd</code>为<code>upload</code>的情况。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">commandArgsList</span><span class="p">(</span><span class="o">$</span><span class="n">cmd</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">commandExists</span><span class="p">(</span><span class="o">$</span><span class="n">cmd</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">commands</span><span class="p">[</span><span class="o">$</span><span class="n">cmd</span><span class="p">];</span>
+<span class="w">            </span><span class="o">$</span><span class="n">list</span><span class="p">[</span><span class="s1">&#39;reqid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">list</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">/*</span><span class="n">upload对应的数组如下</span><span class="p">:</span>
+<span class="s1">&#39;upload&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">array</span><span class="p">(</span>
+<span class="w">    </span><span class="s1">&#39;target&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">true</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;FILES&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">true</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;mimes&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;html&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;upload&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="s1">&#39;name&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;upload_path&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;chunk&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;cid&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;node&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="s1">&#39;renames&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;hashes&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;suffix&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;mtime&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;overwrite&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="s1">&#39;contentSaveId&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="bp">false</span><span class="p">)</span>
+<span class="w">    </span><span class="o">*/</span>
+</code></pre></div>
+
+<p>循环遍历，将<code>POST</code>传入的参数保存到<code>$args</code>数组中，然后调用<code>input_filter()</code>函数对<code>$args</code>进行简单的过滤，</p>
+<p><img alt="4.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId28.png" /></p>
+<p>替换掉<code>%00</code>，并且做<code>stripslashes()</code>处理。然后将通过表单上传的文件<code>$_FILES</code>存到<code>$args['FILE']</code>中。然后调用<code>exec()</code>函数，跟进</p>
+<p><img alt="5.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId29.png" /></p>
+<p>前面会进行一些判断，最后进入到<code>$this-&gt;$cmd($args)</code>调用<code>upload()</code>函数，跟进</p>
+<p><img alt="6.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId30.png" /></p>
+<p>首先将<code>POST</code>传入的<code>target</code>赋给<code>$target</code>变量，然后调用<code>volume()</code>函数，</p>
+<p><img alt="7.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId31.png" /></p>
+<p>可以看到<code>$this-&gt;volume</code>数组含有两项，一项是<code>l1_</code>，一项是<code>t1_</code>，<code>volume()</code>函数定义如果传入的<code>$hash</code>以<code>l1_</code>或<code>t1_</code>开头，返回<code>$this-&gt;volume</code>数组对应的值，否则返回false。在<code>upload</code>函数中会检测<code>$volume</code>，如果其为false，程序会报错结束，所以<code>POST</code>传入的<code>target</code>必须以它们两个为前缀。继续分析upload()函数。依次取出<code>$args</code>数组中的值赋给相应的变量，这里要求<code>$args['FILES']['upload']</code>也就是<code>$_FILES['upload']</code>为数组，才能将其赋给<code>$files</code>变量，这就需要上传文件时上传一个文件数组。接下来其他的如<code>html、upload_path、chunk、cid、mtime</code>等参数可以不传。之后遍历<code>$files['name']</code>也就是<code>$_FILES['upload']['name']</code>，如果文件上传成功，将<code>$_FILES['upload']['name']</code>赋给<code>$tmpname</code>，然后调用<code>fopen()</code>打开上传的临时文件，将指针保存在<code>$fp</code>。在不传入<code>upload_path</code>时<code>$thash</code>等于<code>$target</code>，所以<code>$_target</code>为<code>$target</code>为我们<code>POST</code>传入的<code>target</code>变量。之后调用了<code>$volume-&gt;upload()</code>函数，第一个参数为之前打开文件的指针，第二个参数为<code>POST</code>传入的<code>target</code>变量，第三个参数为上传的文件名，第四个参数为空的数组。跟进<code>elFinderVolumeDriver</code>的<code>upload()</code></p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">upload</span><span class="p">(</span><span class="o">$</span><span class="n">fp</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">tmpname</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">hashes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">commandDisabled</span><span class="p">(</span><span class="s1">&#39;upload&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_PERM_DENIED</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="o">$</span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">dir</span><span class="p">(</span><span class="o">$</span><span class="n">dst</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="bp">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_TRGDIR_NOT_FOUND</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">dst</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">dir</span><span class="p">[</span><span class="s1">&#39;write&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_PERM_DENIED</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">nameAccepted</span><span class="p">(</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="bp">false</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_INVALID_NAME</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">mimeByName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">mimeDetect</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;internal&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">mime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">mimetype</span><span class="p">(</span><span class="o">$</span><span class="n">tmpname</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">mime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">mimetype</span><span class="p">(</span><span class="o">$</span><span class="n">tmpname</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">mimeByName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">mimetype</span><span class="p">(</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="bp">true</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">mime</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;unknown&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">mime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">mimeByName</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">allowPutMime</span><span class="p">(</span><span class="o">$</span><span class="n">mime</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">mimeByName</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">allowPutMime</span><span class="p">(</span><span class="o">$</span><span class="n">mimeByName</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_UPLOAD_FILE_MIME</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;(&#39;</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="o">$</span><span class="n">mime</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="s1">&#39;)&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">tmpsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nb nb-Type">int</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%u</span><span class="s1">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">filesize</span><span class="p">(</span><span class="o">$</span><span class="n">tmpname</span><span class="p">));</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uploadMaxSize</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">tmpsize</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uploadMaxSize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_UPLOAD_FILE_SIZE</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">dstpath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">decode</span><span class="p">(</span><span class="o">$</span><span class="n">dst</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">hashes</span><span class="p">[</span><span class="o">$</span><span class="n">name</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">test</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">decode</span><span class="p">(</span><span class="o">$</span><span class="n">hashes</span><span class="p">[</span><span class="o">$</span><span class="n">name</span><span class="p">]);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">stat</span><span class="p">(</span><span class="o">$</span><span class="n">test</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">test</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">joinPathCE</span><span class="p">(</span><span class="o">$</span><span class="n">dstpath</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">);</span>
+<span class="w">            </span><span class="o">$</span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">isNameExists</span><span class="p">(</span><span class="o">$</span><span class="n">test</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">clearcache</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">file</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">exists</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="n">ID</span><span class="w"> </span><span class="n">based</span><span class="w"> </span><span class="n">filesystem</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uploadOverwrite</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!$</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;write&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_PERM_DENIED</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="n">elseif</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">file</span><span class="p">[</span><span class="s1">&#39;mime&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;directory&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">setError</span><span class="p">(</span><span class="n">elFinder</span><span class="p">::</span><span class="n">ERROR_NOT_REPLACE</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">remove</span><span class="p">(</span><span class="o">$</span><span class="n">test</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="o">$</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uniqueName</span><span class="p">(</span><span class="o">$</span><span class="n">dstpath</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="bp">false</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span>
+<span class="w">            </span><span class="s1">&#39;mime&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">mime</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;width&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;height&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;size&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">tmpsize</span><span class="p">);</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="o">$</span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">strpos</span><span class="p">(</span><span class="o">$</span><span class="n">mime</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;image&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getimagesize</span><span class="p">(</span><span class="o">$</span><span class="n">tmpname</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">stat</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">            </span><span class="o">$</span><span class="n">stat</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">clearcache</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="o">$</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">saveCE</span><span class="p">(</span><span class="o">$</span><span class="n">fp</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">dstpath</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">stat</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="bp">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="bp">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="o">$</span><span class="n">stat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">stat</span><span class="p">(</span><span class="o">$</span><span class="n">path</span><span class="p">);</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">Try</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="n">URL</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">stat</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getContentUrl</span><span class="p">(</span><span class="o">$</span><span class="n">stat</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">])))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="o">$</span><span class="n">stat</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">url</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">$</span><span class="n">stat</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>首先进入<code>commandDisabled()</code>函数，返回false。</p>
+<p><img alt="8.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId32.png" /></p>
+<p>然后进入<code>dir()</code>函数，参数为<code>$dst</code>即<code>POST</code>传入的<code>target</code>值。</p>
+<p><img alt="9.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId33.png" /></p>
+<p>调用了file函数，</p>
+<p><img alt="10.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId34.png" /></p>
+<p>跟进<code>decode()</code>函数</p>
+<p><img alt="11.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId35.png" /></p>
+<p><img alt="12.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId36.png" /></p>
+<p><code>decode()</code>函数首先判断是否以<code>$this-&gt;id</code>开头，然后截取出<code>l1_</code>后面的内容，之后进行base64解密，uncrypt函数如上，未作操作。然后更换分隔符，之后调用<code>abspathCE()</code>函数，从注释中可以看出，<code>abspathCE()</code>函数会先判断<code>$path</code>是否等于分隔符<code>\</code>,如果等于，返回<code>$this-&gt;root</code>，否则返回<code>$this-&gt;root</code>拼接<code>$path</code>。看下对应的<code>abspathCE()</code>函数。</p>
+<p><img alt="13.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId37.png" /></p>
+<p><img alt="14.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId38.png" /></p>
+<p><img alt="15.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId39.png" /></p>
+<blockquote>
+<p>ps：POST传入target前缀不同的区别</p>
+</blockquote>
+<ul>
+<li>前缀为<code>l1_</code>时，<code>$this-&gt;root</code>
+    为<code>C:\Users\admin\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files</code></li>
+</ul>
+<blockquote>
+<p><img alt="16.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId40.png" />{width="5.833333333333333in"
+height="2.864215879265092in"}</p>
+</blockquote>
+<ul>
+<li>前缀为<code>t1_</code>时，<code>$this-&gt;disabled[]</code>包含<code>upload</code>，程序会报错结束，<code>$this-&gt;root</code>
+    为<code>C:\Users\admin\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\.trash</code></li>
+</ul>
+<blockquote>
+<p><img alt="17.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId41.png" />{width="5.833333333333333in"
+height="4.630450568678915in"}</p>
+</blockquote>
+<p>继续分析程序流程，<code>decode()</code>函数会返回<code>C:\Users\admin\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files</code>,然后调用<code>stat()</code>函数。</p>
+<p><img alt="18.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId42.png" /></p>
+<p><img alt="19.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId43.png" /></p>
+<p>stat()函数返回的<code>$ret</code>为</p>
+<div class="codehilite"><pre><span></span><code><span class="k">Array</span>
+<span class="p">(</span>
+<span class="w">    </span><span class="o">[</span><span class="n">isowner</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span>
+<span class="w">    </span><span class="o">[</span><span class="n">ts</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1589423646</span>
+<span class="w">    </span><span class="o">[</span><span class="n">mime</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">directory</span>
+<span class="w">    </span><span class="o">[</span><span class="n">read</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="o">[</span><span class="n">write</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="o">[</span><span class="n">size</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="o">[</span><span class="n">hash</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">l1_Lw</span>
+<span class="w">    </span><span class="o">[</span><span class="n">name</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">files</span>
+<span class="w">    </span><span class="o">[</span><span class="n">rootRev</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span>
+<span class="w">    </span><span class="o">[</span><span class="n">options</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">        </span><span class="p">(</span>
+<span class="w">            </span><span class="o">[</span><span class="n">path</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span>
+<span class="w">            </span><span class="o">[</span><span class="n">url</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">wordpress</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">content</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="k">file</span><span class="o">-</span><span class="n">manager</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">php</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="n">files</span><span class="o">/</span>
+<span class="w">            </span><span class="o">[</span><span class="n">tmbUrl</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">wordpress</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="n">content</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="n">wp</span><span class="o">-</span><span class="k">file</span><span class="o">-</span><span class="n">manager</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">php</span><span class="o">/</span><span class="p">..</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="p">.</span><span class="n">tmb</span><span class="o">/</span>
+<span class="w">            </span><span class="o">[</span><span class="n">disabled</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                </span><span class="p">(</span>
+<span class="w">                    </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">chmod</span>
+<span class="w">                </span><span class="p">)</span>
+
+<span class="w">            </span><span class="o">[</span><span class="n">separator</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w">                 </span><span class="o">[</span><span class="n">copyOverwrite</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">[</span><span class="n">uploadOverwrite</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">[</span><span class="n">uploadMaxSize</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">9223372036854775807</span>
+<span class="w">            </span><span class="o">[</span><span class="n">uploadMaxConn</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">            </span><span class="o">[</span><span class="n">uploadMime</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                </span><span class="p">(</span>
+<span class="w">                    </span><span class="o">[</span><span class="n">firstOrder</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">deny</span>
+<span class="w">                    </span><span class="o">[</span><span class="n">allow</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                        </span><span class="p">(</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ow">all</span>
+<span class="w">                        </span><span class="p">)</span>
+
+<span class="w">                    </span><span class="o">[</span><span class="n">deny</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                        </span><span class="p">(</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ow">all</span>
+<span class="w">                        </span><span class="p">)</span>
+
+<span class="w">                </span><span class="p">)</span>
+
+<span class="w">            </span><span class="o">[</span><span class="n">dispInlineRegex</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">^</span><span class="p">(</span><span class="vm">?</span><span class="err">:</span><span class="p">(</span><span class="vm">?</span><span class="err">:</span><span class="n">video</span><span class="o">|</span><span class="n">audio</span><span class="p">)</span><span class="o">|</span><span class="nc">image</span><span class="o">/</span><span class="p">(</span><span class="vm">?</span><span class="err">!</span><span class="p">.</span><span class="o">+</span><span class="err">\</span><span class="o">+</span><span class="nc">xml</span><span class="p">)</span><span class="o">|</span><span class="n">application</span><span class="o">/</span><span class="p">(</span><span class="vm">?</span><span class="err">:</span><span class="n">ogg</span><span class="o">|</span><span class="n">x</span><span class="o">-</span><span class="n">mpegURL</span><span class="o">|</span><span class="n">dash</span><span class="err">\</span><span class="o">+</span><span class="nc">xml</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="vm">?</span><span class="err">:</span><span class="nc">text</span><span class="o">/</span><span class="n">plain</span><span class="o">|</span><span class="n">application</span><span class="o">/</span><span class="n">pdf</span><span class="p">)</span><span class="err">$</span><span class="p">)</span>
+<span class="w">            </span><span class="o">[</span><span class="n">jpgQuality</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">            </span><span class="o">[</span><span class="n">archivers</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                </span><span class="p">(</span>
+<span class="w">                    </span><span class="o">[</span><span class="n">create</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                        </span><span class="p">(</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">tar</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">zip</span>
+<span class="w">                        </span><span class="p">)</span>
+
+<span class="w">                    </span><span class="o">[</span><span class="n">extract</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                        </span><span class="p">(</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">tar</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">zip</span>
+<span class="w">                        </span><span class="p">)</span>
+
+<span class="w">                    </span><span class="o">[</span><span class="n">createext</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                        </span><span class="p">(</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">application/x-tar</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">tar</span>
+<span class="w">                            </span><span class="o">[</span><span class="n">application/zip</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">zip</span>
+<span class="w">                        </span><span class="p">)</span>
+
+<span class="w">                </span><span class="p">)</span>
+
+<span class="w">            </span><span class="o">[</span><span class="n">uiCmdMap</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">Array</span>
+<span class="w">                </span><span class="p">(</span>
+<span class="w">                </span><span class="p">)</span>
+
+<span class="w">            </span><span class="o">[</span><span class="n">syncChkAsTs</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">[</span><span class="n">syncMinMs</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">10000</span>
+<span class="w">            </span><span class="o">[</span><span class="n">i18nFolderName</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">            </span><span class="o">[</span><span class="n">tmbCrop</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">[</span><span class="n">tmbReqCustomData</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span>
+<span class="w">            </span><span class="o">[</span><span class="n">substituteImg</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">[</span><span class="n">onetimeUrl</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">[</span><span class="n">trashHash</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">t1_Lw</span>
+<span class="w">            </span><span class="o">[</span><span class="n">csscls</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">elfinder</span><span class="o">-</span><span class="n">navbar</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="k">local</span>
+<span class="w">        </span><span class="p">)</span>
+
+<span class="w">    </span><span class="o">[</span><span class="n">volumeid</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">l1_</span>
+<span class="w">    </span><span class="o">[</span><span class="n">locked</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="o">[</span><span class="n">isroot</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="o">[</span><span class="n">phash</span><span class="o">]</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>返回<code>dir()</code>函数，然后在返回到<code>upload()</code>函数，将返回值赋给<code>upload()</code>函数中的<code>$dir</code>变量，</p>
+<p><img alt="20.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId44.png" /></p>
+<p>然后进行<code>mime</code>的判断，程序识别上传的php脚本的<code>mime</code>为<code>text/x-php</code>，跟进<code>allowPutMime()</code>函数，</p>
+<p><img alt="21.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId45.png" /></p>
+<p>从程序自带的注释中可以看出如果<code>uploadOrder</code>数组为<code>array('deny','allow')</code>，则默认允许上传<code>$mime</code>类型的文件。然后获取文件的大小，若文件大小不合法报错结束程序，之后<code>decode()</code>处理<code>$dst</code>(<code>POST</code><strong>传入的</strong><code>target</code><strong>值</strong>)返回结果赋给<code>$dstpath</code>，因为<code>$hash</code>为空数组，所以会调用<code>joinPathCE()</code>将<code>$dstpath</code>和<code>$name</code>(<strong>上传文件的文件名</strong>)拼接，然后检查文件是否存在。</p>
+<p><img alt="22.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId46.png" /></p>
+<p>最后调用<code>$this-&gt;saveCE()</code></p>
+<p><img alt="23.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId47.png" /></p>
+<p>跟进<code>_save()</code>。</p>
+<p><img alt="24.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId48.png" /></p>
+<p>本地是利用Windows系统分析，<code>$path</code>为<code>C:\Users\admin\phpstudy_pro\WWW\wordpress\wp-content\plugins\wp-file-manager\lib\files\shell.php</code>;<code>$uri</code>为<code>C:\Windows\phpxxxx.tmp</code>，最后会调用<code>copy()</code>将上传的文件复制到<code>\wordpress\wp-content\plugins\wp-file-manager\lib\files\shell.php</code>，即完成了任意文件上传。</p>
+<p><img alt="25.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId49.png" /></p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p><img alt="26.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId51.png" /></p>
+<p>访问<code>https://www.0-sec.org/wordpress/wp-content/plugins/wp-file-manager/lib/files/shell.php</code></p>
+<p><img alt="27.png" src="../resource/WordPressPlugin-FileManager%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/media/rId52.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../WordPress%20Plugin%20-%20Google%20Review%20Slider%206.1%20SQL%20Injection/" class="btn btn-xs btn-link">
+        WordPress Plugin - Google Review Slider 6.1 SQL Injection
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WordPress%20Plugin%20-%20Easy%20WP%20SMTP%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WordPress%20Plugin%20-%20Easy%20WP%20SMTP%20%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WordPress Plugin - Easy WP SMTP 反序列化漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

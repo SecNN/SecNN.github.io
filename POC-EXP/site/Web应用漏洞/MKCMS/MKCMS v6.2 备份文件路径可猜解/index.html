@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/MKCMS/MKCMS%20v6.2%20%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E5%8F%AF%E7%8C%9C%E8%A7%A3/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>MKCMS v6.2 备份文件路径可猜解 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "MKCMS v6.2 \u5907\u4efd\u6587\u4ef6\u8def\u5f84\u53ef\u731c\u89e3", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MKCMS%20v6.2%20%E9%AA%8C%E8%AF%81%E7%A0%81%E9%87%8D%E7%94%A8/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MKCMS%20v6.2%20%E9%AA%8C%E8%AF%81%E7%A0%81%E9%87%8D%E7%94%A8/" class="btn btn-xs btn-link">
+        MKCMS v6.2 验证码重用
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MKCMS%20v6.2%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MKCMS%20v6.2%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MKCMS v6.2 任意用户密码找回漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="mkcms-v62">MKCMS v6.2 备份文件路径可猜解<a class="headerlink" href="#mkcms-v62" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>MKCMS v6.2</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>/backupdata/movie.sql</p>
+<div class="codehilite"><pre><span></span><code><span class="err">/admin/cms_backup.php</span>
+<span class="cp">&lt;?php</span>
+<span class="nv">$filename</span><span class="o">=</span><span class="s2">&quot;../backupdata/&quot;</span><span class="o">.</span><span class="nx">DATA_NAME</span><span class="o">.</span><span class="s2">&quot;.sql&quot;</span><span class="p">;</span> <span class="c1">//存放路径，默认存放到项目最外层</span>
+<span class="nv">$fp</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="nv">$filename</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">);</span>
+<span class="nb">fputs</span><span class="p">(</span><span class="nv">$fp</span><span class="p">,</span><span class="nv">$mysql</span><span class="p">);</span>
+<span class="nb">fclose</span><span class="p">(</span><span class="nv">$fp</span><span class="p">);</span>
+<span class="nx">alert_href</span><span class="p">(</span><span class="s1">&#39;备份成功!&#39;</span><span class="p">,</span><span class="s1">&#39;cms_data.php&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>全局搜<code>DATA_NAME</code>变量，是安装时候设置的数据库名</p>
+<p><img alt="" src="../resource/MKCMSv6.2%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E5%8F%AF%E7%8C%9C%E8%A7%A3/media/rId24.png" /></p>
+<p>默认的<code>DATA_NAME</code>值是<code>movie</code></p>
+<p><img alt="" src="../resource/MKCMSv6.2%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E5%8F%AF%E7%8C%9C%E8%A7%A3/media/rId25.png" /></p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7580">https://xz.aliyun.com/t/7580</a>#toc-4</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MKCMS%20v6.2%20%E9%AA%8C%E8%AF%81%E7%A0%81%E9%87%8D%E7%94%A8/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MKCMS%20v6.2%20%E9%AA%8C%E8%AF%81%E7%A0%81%E9%87%8D%E7%94%A8/" class="btn btn-xs btn-link">
+        MKCMS v6.2 验证码重用
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MKCMS%20v6.2%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MKCMS%20v6.2%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E6%89%BE%E5%9B%9E%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MKCMS v6.2 任意用户密码找回漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

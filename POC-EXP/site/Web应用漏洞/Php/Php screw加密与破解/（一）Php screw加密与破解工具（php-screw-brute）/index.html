@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Php/Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3/%EF%BC%88%E4%B8%80%EF%BC%89Php%20screw%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%EF%BC%88php-screw-brute%EF%BC%89/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>（一）Php screw加密与破解工具（php-screw-brute） - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\uff08\u4e00\uff09Php screw\u52a0\u5bc6\u4e0e\u7834\u89e3\u5de5\u5177\uff08php-screw-brute\uff09", url: "#_top", children: [
+              {title: "\u4f7f\u7528\u65b9\u6cd5", url: "#_1" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_2" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88%E4%B8%89%EF%BC%89%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88%E4%B8%89%EF%BC%89%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/" class="btn btn-xs btn-link">
+        （三）通过IDA获取加密的key
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../CVE-2024-2961/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../CVE-2024-2961/README.zh-cn/" class="btn btn-xs btn-link">
+        PHP利用GNU C Iconv将文件读取变成RCE（CVE-2024-2961）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="php-screwphp-screw-brute">（一）Php screw加密与破解工具（php-screw-brute）<a class="headerlink" href="#php-screwphp-screw-brute" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>项目地址</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code>https://github.com/ianxtianxt/php-screw-brute
+</code></pre></div>
+
+<blockquote>
+<p>此脚本可以恢复/爆破php screw使用的密钥。PHP
+Screw使用压缩文件的长度来确定（硬编码）密钥的起始索引。PHP
+Screw的工作原理是首先使用ZLIB（级别1）压缩PHP文件，然后按位取反，再与密钥进行异或。
+因为ZLIB具有固定的头部并且不同文件的起始索引不同，所以可以恢复密钥的一部分，
+其余字节可以爆破。 通常，你拥有的文件越多，恢复密钥的速度就越快。
+当然，所有文件都必须使用相同的PHP Screw密钥进行加密。
+如果你拥有的文件足够多，则可直接恢复密钥而不需要爆破。</p>
+</blockquote>
+<p>下图是php文件经过php
+screw加密后的一个样子，通过开头的"PM9SCREW"字符串得知使用了php
+screw进行加密。<img alt="1.png" src="../resource/%28%E4%B8%80%29Phpscrew%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%28php-screw-brute%29/media/rId21.png" /></p>
+<h3 id="_1">使用方法<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p>下图是使用方法，解密成功后，会在相同目录下生成以".plain"为后缀的同名文件。比如待解密的文件是"index.php"，则解密成功后生成"index.php.plain"文件。<img alt="2.png" src="../resource/%28%E4%B8%80%29Phpscrew%E5%8A%A0%E5%AF%86%E4%B8%8E%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7%28php-screw-brute%29/media/rId23.png" /></p>
+<blockquote>
+<p>写了一个python脚本，用于筛选解密成功的php文件。</p>
+</blockquote>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: UTF-8 -*-</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="s1">&#39;/root/Download/demo&#39;</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">src</span> <span class="o">+</span> <span class="s1">&#39;_backup&#39;</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">dst</span><span class="p">)</span>    <span class="c1">#备份</span>
+
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span><span class="n">dirs</span><span class="p">,</span><span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">oldname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">newname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="n">basename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.php&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">oldname</span><span class="p">)</span>  <span class="c1">#删除原来的加密的PHP文件</span>
+            <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.plain&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">oldname</span><span class="p">,</span><span class="n">newname</span><span class="p">)</span>  <span class="c1">#重命名解密成功的文件 filename.php.plain =&gt; filename.php</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Good job&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+<h2 id="_2">参考链接<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.cnblogs.com/StudyCat/p/11268399.html">https://www.cnblogs.com/StudyCat/p/11268399.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%EF%BC%88%E4%B8%89%EF%BC%89%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%EF%BC%88%E4%B8%89%EF%BC%89%E9%80%9A%E8%BF%87IDA%E8%8E%B7%E5%8F%96%E5%8A%A0%E5%AF%86%E7%9A%84key/" class="btn btn-xs btn-link">
+        （三）通过IDA获取加密的key
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../CVE-2024-2961/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../CVE-2024-2961/README.zh-cn/" class="btn btn-xs btn-link">
+        PHP利用GNU C Iconv将文件读取变成RCE（CVE-2024-2961）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

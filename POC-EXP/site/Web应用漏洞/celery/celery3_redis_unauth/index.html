@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="author" content="内部使用">
+    <link rel="canonical" href="https://secnn.com/Web%E5%BA%94%E7%94%A8%E6%BC%8F%E6%B4%9E/celery/celery3_redis_unauth/">
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Celery &lt;4.0 Redis unauthorized access + Pickle deserialization exploit - SecNN-Wiki漏洞库管理系统&网络安全知识库-本Wiki所有信息来源于公开漏洞数据库</title>
+    <link href="../../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Celery \u0026lt;4.0 Redis unauthorized access + Pickle deserialization exploit", url: "#_top", children: [
+              {title: "Vulnerability Environment", url: "#vulnerability-environment" },
+              {title: "Exploit", url: "#exploit" },
+              {title: "Reference", url: "#reference" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../../js/base.js"></script>
+      <script src="../../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Celery &lt;4.0 Redis未授权访问+Pickle反序列化利用
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../bash/CVE-2014-6271/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../bash/CVE-2014-6271/README.zh-cn/" class="btn btn-xs btn-link">
+        Bash Shellshock 远程命令注入漏洞（CVE-2014-6271）
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="celery-40-redis-unauthorized-access-pickle-deserialization-exploit">Celery &lt;4.0 Redis unauthorized access + Pickle deserialization exploit<a class="headerlink" href="#celery-40-redis-unauthorized-access-pickle-deserialization-exploit" title="Permanent link">&para;</a></h1>
+<p><a href="README.zh-cn/">中文版本(Chinese version)</a></p>
+<p>Celery is a simple, flexible, and reliable distributed system that processes a large number of messages while providing the tools needed to operate and maintain such a system. It is a task queue focused on real-time processing and also supports task scheduling.</p>
+<p>In Celery &lt;4.0 version, Pickle is used by default for serialized task messages. When the queue service（e.g. Redis/RabbitMQ/RocketMQ ） used has an unauthorized access problem, the Pickle deserialization vulnerability can be used to execute arbitrary code.</p>
+<h2 id="vulnerability-environment">Vulnerability Environment<a class="headerlink" href="#vulnerability-environment" title="Permanent link">&para;</a></h2>
+<p>Execute the following command to start Celery 3.1.23 + Redis:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<h2 id="exploit">Exploit<a class="headerlink" href="#exploit" title="Permanent link">&para;</a></h2>
+<p>The exploit script <code>exploit.py</code> only supports use under python3</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>redis
+python<span class="w"> </span>exploit.py<span class="w"> </span><span class="o">[</span>Host<span class="w"> </span>IP<span class="o">]</span>
+</code></pre></div>
+<p>View Results：</p>
+<div class="highlight"><pre><span></span><code>docker compose logs celery
+</code></pre></div>
+<p>You can see the following task message error：</p>
+<p><img alt="" src="a.png" /></p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>celery<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/tmp
+</code></pre></div>
+<p>You can see that the file <code>celery_success</code> was successfully created</p>
+<p><img alt="" src="b.png" /></p>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<p><a href="https://docs.celeryproject.org/en/stable/userguide/configuration.html">https://docs.celeryproject.org/en/stable/userguide/configuration.html</a></p>
+<p><a href="https://www.bookstack.cn/read/celery-3.1.7-zh/8d5b10e3439dbe1f.md#dhfmrk">https://www.bookstack.cn/read/celery-3.1.7-zh/8d5b10e3439dbe1f.md#dhfmrk</a></p>
+<p><a href="https://docs.celeryproject.org/en/stable/userguide/calling.html#serializers">https://docs.celeryproject.org/en/stable/userguide/calling.html#serializers</a></p>
+<p><a href="https://www.jianshu.com/p/52552c075bc0">https://www.jianshu.com/p/52552c075bc0</a></p>
+<p><a href="https://www.runoob.com/w3cnote/python-redis-intro.html">https://www.runoob.com/w3cnote/python-redis-intro.html</a></p>
+<p><a href="https://blog.csdn.net/SKI_12/article/details/85015803">https://blog.csdn.net/SKI_12/article/details/85015803</a></p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="README.zh-cn/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="README.zh-cn/" class="btn btn-xs btn-link">
+        Celery &lt;4.0 Redis未授权访问+Pickle反序列化利用
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../../bash/CVE-2014-6271/README.zh-cn/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../../bash/CVE-2014-6271/README.zh-cn/" class="btn btn-xs btn-link">
+        Bash Shellshock 远程命令注入漏洞（CVE-2014-6271）
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content"><p>Copyright © 2025 SecNN-Wiki</p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="None">Windmill Dark</a> theme by 内部使用 (noraj).</p>
+</footer>
+
+</body>
+</html>
