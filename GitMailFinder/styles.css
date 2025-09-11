@@ -109,11 +109,19 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    text-decoration: none;
 }
 
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+}
+
+.btn:visited,
+.btn:focus,
+.btn:active {
+    text-decoration: none;
 }
 
 .btn:active {
