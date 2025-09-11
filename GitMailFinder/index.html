@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub邮箱信息查询平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fab fa-github"></i> GitHub邮箱信息查询平台</h1>
+            <p>通过两种方式查询GitHub用户的邮箱信息</p>
+        </header>
+
+        <div class="methods-container">
+            <div class="method-card">
+                <div class="method-header">
+                    <h2><i class="fas fa-code-branch"></i> 方法一：通过项目提交记录查询</h2>
+                    <p>输入GitHub仓库地址，查询记录中的作者邮箱</p>
+                </div>
+                
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="repoUrl">仓库地址：</label>
+                        <input type="text" id="repoUrl" placeholder="https://github.com/username/repository" />
+                    </div>
+                    <button id="queryCommits" class="btn btn-primary">
+                        <i class="fas fa-search"></i> 查询邮箱
+                    </button>
+                </div>
+
+                <div id="commitsResult" class="result-section" style="display: none;">
+                    <h3>查询结果：</h3>
+                    <div id="commitsContent"></div>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-header">
+                    <h2><i class="fas fa-code-branch"></i> 方法二：通过GitHub官方 API 查询</h2>
+                    <p>输入GitHub用户名，通过API查询用户公开活动中的邮箱</p>
+                </div>
+                
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="username">用户名：</label>
+                        <input type="text" id="username" placeholder="输入GitHub用户名" />
+                    </div>
+                    <div class="input-group">
+                        <label for="token">可选：GitHub Token（仅本地存储，处理GitHub API 的请求频率限制）</label>
+                        <input type="password" id="token" placeholder="粘贴你的个人访问令牌（PAT）" />
+                    </div>
+                    <button id="queryApi" class="btn btn-primary">
+                        <i class="fas fa-search"></i> 查询API邮箱
+                    </button>
+                </div>
+
+                <div id="apiResult" class="result-section" style="display: none;">
+                    <h3>查询结果：</h3>
+                    <div id="apiContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>正在查询中...</p>
+        </div>
+
+        <div class="error" id="error" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorMessage"></span>
+        </div>
+
+        <div class="method-card" style="margin-top:16px;">
+            <div class="method-header">
+                <h2><i class="fas fa-clock"></i> 最近查询历史记录</h2>
+                <p>仅保存在本地浏览器，最多显示最近10条</p>
+            </div>
+            <div id="historyList" class="result-section" style="display: none;">
+                <h3>历史：</h3>
+                <div id="historyContent"></div>
+            </div>
+            <div id="historyEmpty" class="no-results">暂时没有历史记录</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
