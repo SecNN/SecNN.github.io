@@ -23,22 +23,20 @@
 </script>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #818cf8;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --text: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --gradient: linear-gradient(135deg, var(--primary), #7c3aed);
+            --primary: #ff6666;
+            --primary-dark: #ff3333;
+            --primary-light: #ff9999;
+            --dark: #000000;
+            --dark-light: #111111;
+            --text: #ff6666;
+            --text-secondary: #ff9999;
+            --accent: #ff6666;
+            --danger: #ff6666;
+            --warning: #ffaa66;
+            --info: #ff6666;
+            --gradient: linear-gradient(135deg, var(--primary), #ff9999);
         }
-        .style-case-link {
-            margin-left: auto;
-        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -46,7 +44,7 @@
         }
         
         body {
-            font-family: 'Noto Sans SC', sans-serif;
+            font-family: 'Courier New', monospace;
             background-color: var(--dark);
             color: var(--text);
             line-height: 1.6;
@@ -54,11 +52,152 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Logo动画样式 */
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.4);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.45);
+                opacity: 0.9;
+            }
+        }
+        
+        /* 攻击图片样式 */
+        .attack-image {
+            max-width: 100%;
+            height: auto;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(255, 102, 102, 0.3);
+            display: block;
+        }
+        
+        /* 扫描线效果 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                rgba(255, 0, 0, 0.02) 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+            animation: scanline 0.15s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(2px); }
+        }
+        
+        /* 闪烁光标效果 */
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* 全局文字选择颜色 */
+        ::selection {
+            background-color: var(--primary);
+            color: black;
+        }
+        
+        /* 全局文本荧光效果 */
+        p {
+            color: var(--text-secondary);
+            text-shadow: 
+                0 0 2px rgba(255, 0, 0, 0.5),
+                0 0 4px rgba(255, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        /* 文字打字机效果 */
+        .typewriter {
+            overflow: hidden;
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            animation: 
+                typing 3.5s steps(40, end),
+                blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+        }
+        
+        /* 链接文本荧光效果 */
+        a {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--primary);
+            box-shadow: 0 0 5px var(--primary);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        /* 全局标题样式 - 增强荧光效果 */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text);
+            text-shadow: 
+                0 0 5px rgba(255, 0, 0, 0.7),
+                0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        /* 添加噪点效果 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: overlay;
         }
         
         /* 新导航栏 */
         .navbar {
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             position: fixed;
@@ -69,7 +208,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 102, 102, 0.5);
         }
         
         .navbar-brand {
@@ -94,13 +233,23 @@
             background: linear-gradient(90deg, var(--primary), var(--primary-light));
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            color: var(--primary);
+            text-shadow: 
+                0 0 5px rgba(255, 0, 0, 0.9),
+                0 0 10px rgba(255, 0, 0, 0.8),
+                0 0 20px rgba(255, 0, 0, 0.6);
+            letter-spacing: 1px;
+            animation: neonPulse 2s infinite alternate;
         }
         
         .nav-links {
             display: flex;
             gap: 1rem;
             align-items: center;
+        }
+        
+        .style-case-link {
+            margin-left: auto;
         }
         
         .nav-link {
@@ -116,8 +265,9 @@
         }
         
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 102, 102, 0.1);
             color: var(--primary-light);
+            text-shadow: 0 0 5px var(--primary);
         }
         
         .nav-link i {
@@ -147,12 +297,14 @@
         .hero {
             text-align: center;
             margin-bottom: 3rem;
+            margin-top: 0;
             position: relative;
-            padding: 2rem;
+            padding: 1rem 2rem;
             border-radius: 16px;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
-            border: 1px solid rgba(129, 140, 248, 0.3);
+            background: linear-gradient(135deg, rgba(255, 102, 102, 0.1), rgba(255, 68, 68, 0.1));
+            border: 1px solid rgba(255, 102, 102, 0.3);
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 102, 102, 0.1);
         }
         
         .hero::before {
@@ -176,10 +328,30 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(90deg, #fff, var(--primary-light));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(255, 102, 102, 0.7);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: glitch 3s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% {
+                text-shadow: 0 0 10px rgba(255, 102, 102, 0.7);
+                transform: translate(0);
+            }
+            91% {
+                text-shadow: 2px 0 0 rgba(255, 102, 102, 0.7), -2px 0 0 rgba(255, 102, 102, 0.7);
+                transform: translate(-2px);
+            }
+            92% {
+                text-shadow: -2px 0 0 rgba(255, 102, 102, 0.7), 2px 0 0 rgba(255, 102, 102, 0.7);
+                transform: translate(2px);
+            }
+            93% {
+                text-shadow: 0 0 10px rgba(255, 102, 102, 0.7);
+                transform: translate(0);
+            }
         }
         
         .hero-subtitle {
@@ -187,6 +359,8 @@
             opacity: 0.9;
             max-width: 700px;
             margin: 0 auto 2rem;
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
         }
         
         .hero-buttons {
@@ -211,23 +385,28 @@
         .btn-primary {
             background: var(--gradient);
             color: white;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 102, 102, 0.4);
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+            box-shadow: 0 6px 20px rgba(255, 102, 102, 0.6);
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 102, 102, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(255, 102, 102, 0.3);
+            box-shadow: 0 0 10px rgba(255, 102, 102, 0.2);
+            text-shadow: 0 0 5px rgba(255, 102, 102, 0.5);
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 102, 102, 0.2);
             transform: translateY(-2px);
+            box-shadow: 
+                0 0 15px rgba(255, 102, 102, 0.3),
+                0 0 25px rgba(255, 102, 102, 0.2);
         }
         
         /* 工具卡片区 */
@@ -237,6 +416,12 @@
             margin-bottom: 1.5rem;
             position: relative;
             display: inline-block;
+            text-shadow: 
+                0 0 5px rgba(255, 0, 0, 0.9),
+                0 0 10px rgba(255, 0, 0, 0.8),
+                0 0 20px rgba(255, 0, 0, 0.6);
+            animation: neonPulse 2s infinite alternate;
+            letter-spacing: 1px;
         }
         
         .section-title::after {
@@ -248,6 +433,10 @@
             height: 4px;
             background: var(--gradient);
             border-radius: 2px;
+            box-shadow: 
+                0 0 10px rgba(255, 102, 102, 0.7),
+                0 0 20px rgba(255, 102, 102, 0.5),
+                inset 0 0 5px rgba(255, 255, 255, 0.3);
         }
         
         .tools-grid {
@@ -262,14 +451,43 @@
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 102, 102, 0.2);
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.5),
+                0 0 15px rgba(255, 102, 102, 0.1);
             text-decoration: none;
             color: inherit;
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 0%,
+                rgba(255, 102, 102, 0.1) 50%,
+                transparent 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 4s infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) rotate(30deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(30deg);
+            }
         }
         
         .tool-card::before {
@@ -286,8 +504,36 @@
         
         .tool-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 
+                0 10px 20px rgba(255, 102, 102, 0.2),
+                0 0 30px rgba(255, 102, 102, 0.15);
             border-color: var(--primary);
+            background: rgba(255, 102, 102, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        /* 增强边框光晕效果 */
+        .tool-card, .feature-card, .ai-banner {
+            position: relative;
+        }
+        
+        .tool-card::after, .feature-card::after, .ai-banner::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, rgba(255, 102, 102, 1), rgba(255, 68, 68, 1));
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 14px;
+        }
+        
+        .tool-card:hover::after, .feature-card:hover::after, .ai-banner:hover::after {
+            opacity: 0.5;
         }
         
         .tool-card:hover::before {
@@ -303,7 +549,7 @@
         .tool-icon {
             width: 48px;
             height: 48px;
-            background: rgba(79, 70, 229, 0.2);
+            background: rgba(255, 102, 102, 0.2);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -311,12 +557,20 @@
             margin-right: 1rem;
             color: var(--primary-light);
             font-size: 1.5rem;
+            box-shadow: 
+                0 0 10px rgba(255, 102, 102, 0.3),
+                0 0 20px rgba(255, 102, 102, 0.2),
+                inset 0 0 5px rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 10px rgba(255, 102, 102, 0.7);
         }
         
         .tool-title {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
         }
         
         .tool-category {
@@ -330,9 +584,10 @@
         
         .tool-desc {
             font-size: 0.95rem;
-            opacity: 0.9;
+            opacity: 0.8;
             margin-bottom: 1rem;
             flex-grow: 1;
+            color: var(--text-secondary);
         }
         
         .tool-footer {
@@ -381,12 +636,18 @@
             padding: 2rem;
             text-align: center;
             transition: all 0.3s;
+            border: 1px solid rgba(255, 102, 102, 0.2);
         }
         
         .feature-icon {
             font-size: 2.5rem;
             color: var(--primary);
             margin-bottom: 1rem;
+            text-shadow: 
+                0 0 5px rgba(255, 102, 102, 0.9),
+                0 0 10px rgba(255, 102, 102, 0.8),
+                0 0 20px rgba(255, 102, 102, 0.6);
+            animation: neonPulse 2s infinite alternate;
         }
         
         .feature-title {
@@ -402,9 +663,10 @@
         
         /* 页脚 */
         footer {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.9);
             padding: 3rem 2rem 1.5rem;
             margin-top: 3rem;
+            border-top: 1px solid rgba(255, 102, 102, 0.3);
         }
         
         .footer-content {
@@ -429,6 +691,7 @@
             width: 40px;
             height: 3px;
             background: var(--primary);
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
         }
         
         .footer-links {
@@ -450,6 +713,10 @@
         
         .footer-links a:hover {
             color: var(--primary-light);
+            text-shadow: 
+                0 0 5px rgba(255, 102, 102, 1),
+                0 0 10px rgba(255, 102, 102, 0.8),
+                0 0 15px rgba(255, 102, 102, 0.6);
         }
         
         .footer-links i {
@@ -515,17 +782,19 @@
         
         .card-hover-3d:hover {
             transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 30px rgba(255, 102, 102, 0.2);
+            border-color: var(--primary);
         }
 		/* AI横幅区域 */
         .ai-banner {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(91, 33, 182, 0.2));
+            background: linear-gradient(135deg, rgba(255, 102, 102, 0.1), rgba(255, 68, 68, 0.1));
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(74, 144, 226, 0.5);
+            border: 1px solid rgba(255, 102, 102, 0.5);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 102, 102, 0.1);
         }
         
         .ai-banner::before {
@@ -569,7 +838,7 @@
         
         .ai-banner-btn {
             display: inline-block;
-            background: linear-gradient(135deg, var(--ai-color), #5e72e4);
+            background: linear-gradient(135deg, var(--primary), #cc0000);
             color: white;
             padding: 0.7rem 1.5rem;
             border-radius: 6px;
@@ -584,13 +853,14 @@
         }
         
         .ai-banner-btn.secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: var(--primary);
         }
         
         .ai-banner-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
         }
 		/* 赞助 */
 		.sponsors-grid {
@@ -619,18 +889,21 @@
             min-width: calc(16.666% - 11px); /* 6列布局 */
             flex-shrink: 0;
             padding: 12px;
-            background: white;
+            background: var(--dark-light);
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 6px rgba(255, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
             transition: all 0.3s;
+            border: 1px solid rgba(255, 0, 0, 0.2);
         }
         
         .sponsor-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+            border-color: var(--primary);
+            background: rgba(255, 0, 0, 0.05);
         }
         
         .sponsor-avatar {
@@ -650,7 +923,7 @@
         .sponsor-name {
             font-size: 12px;
             font-weight: bold;
-            color: #333;
+            color: var(--primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -659,7 +932,7 @@
         
         .sponsor-amount {
             font-size: 13px;
-            color: #ff6b6b;
+            color: var(--primary-light);
             font-weight: bold;
             margin: 3px 0 5px;
             white-space: nowrap;
@@ -667,7 +940,7 @@
         
         .sponsor-message {
             font-size: 11px;
-            color: #666;
+            color: var(--text-secondary);
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -676,7 +949,7 @@
             height: 28px;
             margin-top: 4px;
             padding-top: 3px;
-            border-top: 1px dashed #eee;
+            border-top: 1px dashed rgba(255, 0, 0, 0.3);
         }
         
         .carousel-nav {
@@ -685,20 +958,27 @@
             transform: translateY(-50%);
             width: 28px;
             height: 28px;
-            background: white;
-            border: none;
+            background: var(--dark);
+            border: 1px solid var(--primary);
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 2px 6px rgba(255, 102, 102, 0.2),
+                0 0 10px rgba(255, 102, 102, 0.3);
             cursor: pointer;
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--primary);
+            text-shadow: 0 0 5px rgba(255, 102, 102, 0.7);
         }
         
         .carousel-nav:hover {
-            background: #ffcc00;
-            color: white;
+            background: var(--primary);
+            color: black;
+            box-shadow: 
+                0 0 15px rgba(255, 102, 102, 0.7),
+                0 0 25px rgba(255, 102, 102, 0.5);
         }
         
         .carousel-prev {
@@ -732,10 +1012,10 @@
             <a href="#sponsor" class="nav-link">
                 <i class="fas fa-award"></i> 打赏列表
             </a>
-			<a href="https://www.github.com/SecNN" class="nav-link github" rel="nofollow" target="_blank">
+		<a href="https://www.github.com/SecNN" class="nav-link github" rel="nofollow" target="_blank">
             <i class="fab fa-github"></i> GitHub
         </a>
-		<a href="redindex.html" class="nav-link style-case-link" target="_self">
+		<a href="index.html" class="nav-link style-case-link" target="_self">
                 <i class="fas fa-paint-brush"></i> 更换主题
             </a>
 		<a href="https://chat.secnn.com" class="nav-link btn" target="_blank">
@@ -747,7 +1027,7 @@
     <div class="container">
 	<header>
 		    <h1 class="site-title">SecNN在线网络安全工具</h1>
-            <p class="site-title">我用两个灵魂对抗世界，一个向往，一个挣扎。</p>
+            <p class="site-title">我用两个灵魂对抗世界，一个向往，一个挣扎。<span class="blink">_</span></p>
         </header>
         <div class="ai-banner">
                 <div class="ai-banner-content">
@@ -782,7 +1062,7 @@
                 <div class="feature-icon">
                     <i class="fas fa-robot"></i>
                 </div>
-                <h3 class="feature-title">AI安全助手</h3>
+                <h3 class="feature-title">Ai安全助手</h3>
                 <p class="feature-desc">智能AI助手提供安全咨询、漏洞分析、代码审计等专业服务，7×24小时在线</p>
             </div>
             
@@ -906,7 +1186,6 @@
                 </a>
             </div>
         </section>
-        
         <!-- 更多工具部分 -->
         <section>
             <h2 class="section-title" data-aos="fade-up">更多工具</h2>
