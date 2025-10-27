@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AiScan-N - Kali Linux AI自动化渗透测试工具，集成网络安全扫描、漏洞检测、安全评估、Web应用安全测试、网络攻防模拟、漏洞利用等功能，为安全专业人员提供高效、智能的安全测试解决方案。">
+    <meta name="keywords" content="AiScan-N, 渗透测试, 网络安全, 漏洞扫描, 安全工具, Kali Linux, 自动化安全测试, AI安全, 网络安全评估, 安全检测, 安全审计, Web安全, 漏洞利用, 安全漏洞, 安全防护, 网络攻防, 信息安全, 安全测试, 黑客工具, 网络安全工具, 渗透工具, 安全评估工具, 网络安全技术, 安全漏洞扫描, 智能安全测试, SecNN">
+    <meta name="author" content="SecNN">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#000000">
+    <link rel="canonical" href="https://github.com/SecNN/AiScan-N">
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="AiScan-N - AI自动化渗透测试工具">
+    <meta property="og:description" content="Kali Linux AI自动化渗透测试工具，提供网络安全扫描、漏洞检测、安全评估等功能。">
+    <meta property="og:url" content="https://github.com/SecNN/AiScan-N">
+    <meta property="og:type" content="website">
+    <title>AiScan-N - AI自动化渗透测试工具 | 网络安全扫描与漏洞检测</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            color: #ff0000;
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 背景网格效果 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* 安全扫描动画效果 */
+        body::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(
+                0deg,
+                transparent 0%,
+                rgba(255, 0, 0, 0.05) 50%,
+                transparent 100%
+            );
+            animation: scan 8s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            0% {
+                transform: translateY(-50%);
+            }
+            50% {
+                transform: translateY(50%);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+        
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 
+                0 0 20px rgba(255, 0, 0, 0.3),
+                0 0 40px rgba(0, 0, 0, 0.5) inset;
+            backdrop-filter: blur(5px);
+        }
+        
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: none;
+            position: relative;
+            display: inline-block;
+            color: #ff0000;
+            text-shadow: 
+                0 0 10px rgba(255, 0, 0, 0.7),
+                0 0 20px rgba(255, 0, 0, 0.5),
+                0 0 30px rgba(255, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 4rem;
+            }
+            .project-description {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            .project-description {
+                font-size: 1.2rem;
+            }
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 15px;
+            height: 4px;
+            background-color: #ff0000;
+            margin-left: 8px;
+            animation: blink 1s infinite, glow 2s ease-in-out infinite alternate;
+            vertical-align: text-bottom;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.6);
+            }
+        }
+        
+        .project-description {
+            color: #ff3333;
+            font-size: 2rem;
+            margin: 1.5rem 0;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 2s; /* 等待标题打字效果完成后淡入 */
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+        
+        .github-link {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .github-icon {
+            width: 3rem;
+            height: 3rem;
+            color: #ff0000;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+        }
+        
+        .github-icon:hover {
+            color: #ff6666;
+            transform: scale(1.2) rotate(15deg);
+            filter: drop-shadow(0 0 15px rgba(255, 102, 102, 0.8));
+        }
+        
+        @media (max-width: 768px) {
+            .github-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .github-icon {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .cursor {
+                height: 2px;
+                width: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cursor {
+            height: 2px;
+            width: 10px;
+        }
+    }
+    
+    .security-features {
+            margin: 2rem 0;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border-left: 3px solid #ff0000;
+            border-right: 3px solid #ff0000;
+        }
+        
+        /* 导航链接样式 */
+        .nav-links {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #1a1a1a, #0a0a0a);
+            color: #ff0000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+            border-color: rgba(255, 0, 0, 0.6);
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-link {
+                padding: 0.8rem 1.5rem;
+                font-size: 1.1rem;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        .feature-text {
+            color: #ff3333;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-text:hover {
+            transform: translateX(5px);
+            text-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+        }
+    
+    .feature-text:nth-child(1) {
+        animation-delay: 2.5s;
+    }
+    
+    .feature-text:nth-child(2) {
+        animation-delay: 3s;
+    }
+    
+    .feature-text:nth-child(3) {
+        animation-delay: 3.5s;
+    }
+    
+    .feature-text:nth-child(4) {
+        animation-delay: 4s;
+    }
+    
+    .feature-text:nth-child(5) {
+        animation-delay: 4.5s;
+    }
+    
+    @media (max-width: 768px) {
+        .feature-text {
+            font-size: 1rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .feature-text {
+            font-size: 0.9rem;
+        }
+    }
+
+    @keyframes blink {
+        0%, 50% {
+            opacity: 1;
+        }
+        51%, 100% {
+            opacity: 0;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title" id="typing-text">AiScan-N</h1>
+        <span class="cursor"></span>
+        <p class="project-description">Kali Linux Ai自动化渗透工具 AiScan-N</p>
+        <div class="security-features">
+            <p class="feature-text">专注于网络安全评估、漏洞扫描、渗透测试自动化</p>
+            <p class="feature-text">AI驱动的安全检测技术，提升安全测试效率。</p>
+        </div>
+        <!-- 主要导航链接 -->
+        <div class="nav-links">
+            <a href="https://github.com/SecNN/AI-PT" target="_blank" class="nav-link">
+                <span class="nav-link-text">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    AI-PT 自动化渗透测试-靶场
+                </span>
+            </a>
+            <a href="https://www.secnn.com/POC-EXP" target="_blank" class="nav-link">
+                <span class="nav-link-text">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                    </svg>
+                    POC&EXP 安全工具库|漏洞库 - SecNN
+                </span>
+            </a>
+        </div>
+        
+        <!-- GitHub 项目链接 -->
+        <!-- GitHub 项目链接 - 使用导航链接样式 -->
+        <div class="nav-links">
+            <a href="https://github.com/SecNN/AiScan-N" target="_blank" class="nav-link">
+                <span class="nav-link-text">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                    </svg>
+                    AiScan-N 官方 GitHub 仓库
+                </span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.getElementById('typing-text');
+            const fullText = title.textContent;
+            title.textContent = '';
+            
+            const typeSpeed = 300; // 每个字符显示的间隔时间（毫秒）
+            const restartDelay = 2000; // 重新开始的延迟时间（毫秒）
+            
+            function typeWriter() {
+                let index = 0;
+                title.textContent = ''; // 清空之前的内容
+                
+                function typeNextChar() {
+                    if (index < fullText.length) {
+                        // 保持原始文本的大小写
+                        title.textContent += fullText.charAt(index);
+                        // 添加字符输入的声音效果和微小震动
+                        title.style.transform = 'translateY(' + (Math.random() * 4 - 2) + 'px)';
+                        setTimeout(() => {
+                            title.style.transform = 'translateY(0)';
+                        }, 50);
+                        index++;
+                        setTimeout(typeNextChar, typeSpeed);
+                    } else {
+                        // 完成一轮后，延迟3秒重新开始
+                        setTimeout(typeWriter, restartDelay);
+                    }
+                }
+                
+                typeNextChar();
+            }
+            
+            // 开始打字效果
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>
