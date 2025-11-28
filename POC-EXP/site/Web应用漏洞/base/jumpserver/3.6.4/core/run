@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd /opt/jumpserver/core/ || exit 1
-./jms start web

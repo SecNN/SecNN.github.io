@@ -1,5 +1,0 @@
-services:
-  web:
-    image: vulhub/vite:2.1.5
-    ports:
-      - "3000:3000"

@@ -1,4 +1,0 @@
-zone "vulhub.org" {
-      type master;
-      file "/etc/bind/vulhub.db";
-};
