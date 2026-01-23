@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AiScan-N - 智能扫描工具</title>
+    <title>AiScan-N - AI-Powered Security Tool</title>
     <link rel="icon" href="https://www.secnn.com/favicon.ico" type="image/x-icon">
     <style>
         * {
@@ -17,6 +17,7 @@
             line-height: 1.6;
             color: #333;
             background-color: #f5f5f5;
+            scroll-behavior: smooth;
         }
 
         .container {
@@ -27,20 +28,40 @@
 
         header {
             text-align: center;
-            padding: 60px 0 40px;
+            padding: 40px 0 30px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            opacity: 0.5;
+        }
+
+        header .header-content {
+            position: relative;
+            z-index: 1;
         }
 
         header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            animation: fadeInUp 1s ease-out;
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
         }
 
         .intro {
@@ -50,21 +71,49 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            animation: fadeInUp 1s ease-out 0.4s both;
         }
 
         section {
             margin-bottom: 60px;
             background: white;
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
         }
 
         section h2 {
             text-align: center;
             margin-bottom: 30px;
             color: #667eea;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
         }
 
         .download-options {
@@ -72,88 +121,246 @@
             justify-content: center;
             gap: 40px;
             flex-wrap: wrap;
+            margin-top: 40px;
         }
 
         .download-card {
             background: #f9f9f9;
-            padding: 25px;
-            border-radius: 10px;
+            padding: 30px;
+            border-radius: 12px;
             text-align: center;
-            width: 260px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 280px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .download-card:hover::before {
+            left: 100%;
         }
 
         .download-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         }
 
         .windows:hover {
             border-color: #0078d7;
+            box-shadow: 0 0 20px rgba(0, 120, 215, 0.2);
         }
 
         .mac:hover {
             border-color: #000000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
 
         .kali:hover {
             border-color: #444444;
+            box-shadow: 0 0 20px rgba(68, 68, 68, 0.2);
         }
 
         .os-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .download-card:hover .os-icon {
+            transform: scale(1.1);
         }
 
         .download-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #333;
         }
 
         .download-card p {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .download-btn {
             display: inline-block;
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-weight: bold;
-            transition: background 0.3s ease;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .download-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .download-btn:hover {
-            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .qr-code {
+            margin: 20px 0;
+        }
+
+        .qr-code img {
+            max-width: 250px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .version {
             font-size: 0.9rem;
             color: #999;
+            margin-bottom: 15px;
+        }
+
+        .download-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .download-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .download-count i {
+            font-style: normal;
         }
 
         .requirements-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            margin-top: 40px;
         }
 
         .requirements-card {
             background: #f9f9f9;
             padding: 25px;
-            border-radius: 8px;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .requirements-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
         .requirements-card h3 {
             margin-bottom: 15px;
             color: #667eea;
+            font-size: 1.2rem;
         }
 
         .requirements-card ul {
@@ -164,6 +371,11 @@
             padding: 8px 0;
             position: relative;
             padding-left: 25px;
+            transition: padding-left 0.3s ease;
+        }
+
+        .requirements-card li:hover {
+            padding-left: 30px;
         }
 
         .requirements-card li::before {
@@ -172,36 +384,47 @@
             font-weight: bold;
             position: absolute;
             left: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .requirements-card li:hover::before {
+            transform: scale(1.2);
         }
 
         .guide-tabs {
             display: flex;
             justify-content: center;
             margin-bottom: 30px;
-            gap: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
             background: #f0f0f0;
             border: none;
             padding: 12px 25px;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .tab-btn.active {
             background: #667eea;
             color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .tab-btn:hover:not(.active) {
             background: #e0e0e0;
+            transform: translateY(-2px);
         }
 
         .tab-content {
             display: none;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .tab-content.active {
@@ -211,21 +434,29 @@
         .tab-content ol {
             max-width: 600px;
             margin: 0 auto;
+            padding-left: 20px;
         }
 
         .tab-content li {
             margin-bottom: 15px;
             line-height: 1.8;
+            position: relative;
+            padding-left: 10px;
         }
 
         .version-details {
             max-width: 800px;
             margin: 0 auto;
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
         }
 
         .version-details h3 {
             color: #667eea;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
         }
 
         .version-details ul {
@@ -233,9 +464,14 @@
         }
 
         .version-details li {
-            padding: 8px 0;
+            padding: 10px 0;
             position: relative;
             padding-left: 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .version-details li:last-child {
+            border-bottom: none;
         }
 
         .version-details li::before {
@@ -251,72 +487,204 @@
         footer {
             background: #333;
             color: white;
-            padding: 40px 0;
+            padding: 60px 0;
             text-align: center;
+            margin-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
         }
 
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-links {
-            margin-top: 20px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
             color: white;
             text-decoration: none;
-            margin: 0 15px;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
         }
 
         .footer-links a:hover {
             color: #667eea;
         }
 
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .download-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            z-index: 9999;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 768px) {
+            header {
+                padding: 60px 0 40px;
+            }
+
             header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             section {
-                padding: 20px;
+                padding: 30px 20px;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
             }
 
             .download-options {
                 flex-direction: column;
                 align-items: center;
+                gap: 25px;
             }
 
             .download-card {
                 width: 100%;
                 max-width: 350px;
             }
+
+            .guide-tabs {
+                gap: 10px;
+            }
+
+            .tab-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .footer-links {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            section h2 {
+                font-size: 1.5rem;
+            }
+
+            .download-card {
+                padding: 25px;
+            }
+
+            .os-icon {
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="download-progress"></div>
     <div class="container">
+
+        <header>
+            <div class="header-content">
+                <h1>AiScan-N 一款基于人工智能驱动的Ai工具</h1>
+            </div>
+        </header>
+
+        <div class="intro">
+            <p></p>
+        </div>
 
         <section class="download-section">
             <h2>立即下载</h2>
+            <p style="text-align: center; margin-bottom: 30px; color: #666;">选择适合您操作系统的版本，开始使用AiScan-</p>
             <div class="download-options">
                 <div class="download-card windows">
                     <div class="os-icon">🖥️</div>
                     <h3>Windows</h3>
                     <p>支持Windows 10及以上版本</p>
-                    <a href="Download/AiScan-N-Kali-Server.bin" class="download-btn">下载 Windows 版本服务端</a>
-                    <p class="version">当前版本: v1.0.2</p>
+                    <a href="Download/AiScan-N-Server.exe" class="download-btn" onclick="trackDownload('Windows')">下载 Windows 版本服务端</a>
+                    <p class="version">当前版本: v1.0.3</p>
+                    <div class="download-stats">
+                        <span class="download-count"><i>📥</i> 896 次下载</span>
+                        <span>更新于: 2026-01-23</span>
+                    </div>
                 </div>
 
                 <div class="download-card mac">
                     <div class="os-icon">🍎</div>
                     <h3>MacOS</h3>
                     <p>支持MacOS 10.15及以上版本</p>
-                    <a href="Download/AiScan-N-MacOS.bin" class="download-btn">下载 MacOS 版本</a>
-                    <p class="version">当前版本: v1.0.2</p>
+                    <a href="Download/AiScan-N-MacOS.bin" class="download-btn" onclick="trackDownload('MacOS')">下载 MacOS 版本</a>
+                    <p class="version">当前版本: v1.0.3</p>
+                    <div class="download-stats">
+                        <span class="download-count"><i>📥</i> 176 次下载</span>
+                        <span>更新于: 2026-01-23</span>
+                    </div>
                 </div>
                 
                 <div class="download-card kali">
@@ -325,22 +693,51 @@
                     </div>
                     <h3>Kali Linux</h3>
                     <p>支持Kali Linux 2024.1及以上版本</p>
-                    <a href="Download/AiScan-N-Kali-Server.bin" class="download-btn">下载 Kali Linux 版本</a>
-                    <p class="version">当前版本: v1.0.2</p>
+                    <a href="Download/AiScan-N-Server.bin" class="download-btn" onclick="trackDownload('Kali')">下载 Kali Linux 版本</a>
+                    <p class="version">当前版本: v1.0.3</p>
+                    <div class="download-stats">
+                        <span class="download-count"><i>📥</i> 398 次下载</span>
+                        <span>更新于: 2026-01-23</span>
+                    </div>
                 </div>
                 <div class="download-card kali">
                     <div class="os-icon">🐧</div>
                     <h3>Linux</h3>
                     <p>支持Debian\Ubuntu\CentOS\Fedora等</p>
-                    <a href="#" class="download-btn">咨询管理员</a>
-                    <p class="version">当前版本: v1.0.2</p>
+                    <a href="#" class="download-btn" onclick="contactAdmin()">咨询管理员</a>
+                    <p class="version">当前版本: v1.0.3</p>
+                    <div class="download-stats">
+                        <span class="download-count"><i>📥</i> 22 次下载</span>
+                        <span>更新于: 2026-01-23</span>
+                    </div>
                 </div>
             </div>
         </section>
 
+
     </div>
 
+    <footer>
+        <div class="footer-content">
+            <p style="margin-top: 15px; color: #ccc;">AiScan-N 来了！这是一款基于人工智能驱动的Ai自动化网络安全（运维）工具，专注于网络安全评估、漏洞扫描、运维、应急响应、渗透测试自动化，Ai大模型工具集【CLI Agent】 ，Ai驱动的安全检测技术，提升安全测试（运维）效率，专为企业和个人用户打造，尤其适合初学者、零基础用户轻松入门智能安全领域快速上手使用，让你轻松迈入智能安全攻防时代！跨平台的应用程序，可在 🪟Windows、🐧Linux、 MacOS🍎苹果系统 、UOS（统信操作系统及其他国产系统） 和 🎭WSL（Windows Subsystem for Linux） 环境下运行。支持命令行交互启动，适用于多种开发与生产环境需求。</p>
+            <div class="footer-links">
+                <a href="#" onclick="showFAQ()">常见问题</a>
+                <a href="#" onclick="showContact()">联系我们</a>
+            </div>
+            <p style="margin-top: 30px; color: #999; font-size: 0.9rem;">&copy; 2025 SecNN. 保留所有权利。</p>
+        </div>
+    </footer>
+
     <script>
+        // 下载进度条
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.querySelector('.download-progress').style.width = scrolled + '%';
+        });
+
+        // 标签页切换
         function openTab(evt, tabName) {
             // 隐藏所有标签内容
             var i, tabContent, tabBtns;
@@ -360,7 +757,126 @@
             evt.currentTarget.classList.add("active");
         }
 
-     
+        // 下载跟踪
+        function trackDownload(os) {
+            console.log('Download started for:', os);
+            // 这里可以添加实际的下载跟踪代码
+        }
+
+        // 联系管理员
+        function contactAdmin() {
+            showQRCodeModal();
+        }
+
+        // 滚动到指定部分
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 显示常见问题
+        function showFAQ() {
+            alert('常见问题页面即将推出，敬请期待！');
+        }
+
+        // 显示联系我们
+        function showContact() {
+            showQRCodeModal();
+        }
+
+        // 显示二维码弹窗
+        function showQRCodeModal() {
+            // 创建弹窗元素
+            if (!document.getElementById('qrModal')) {
+                const modal = document.createElement('div');
+                modal.id = 'qrModal';
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3>联系我们</h3>
+                        <p>请扫描下方二维码添加微信，获取Linux版本的下载链接和技术支持。</p>
+                        <div class="qr-code">
+                            <img src="images/使用说明/微信联系方式.jpg" alt="微信联系方式">
+                        </div>
+                        <p>添加时请备注：AiScan-N咨询</p>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                // 添加关闭事件
+                const closeBtn = modal.querySelector('.close');
+                closeBtn.onclick = function() {
+                    modal.style.display = 'none';
+                };
+
+                // 点击弹窗外部关闭
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                };
+            }
+
+            // 显示弹窗
+            document.getElementById('qrModal').style.display = 'block';
+        }
+
+        // 平滑滚动到顶部
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 添加回到顶部按钮
+        window.addEventListener('scroll', function() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                if (!document.getElementById('back-to-top')) {
+                    const backToTopBtn = document.createElement('button');
+                    backToTopBtn.id = 'back-to-top';
+                    backToTopBtn.innerHTML = '↑';
+                    backToTopBtn.style.cssText = `
+                        position: fixed;
+                        bottom: 30px;
+                        right: 30px;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        background: #667eea;
+                        color: white;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                        transition: all 0.3s ease;
+                        z-index: 999;
+                    `;
+                    backToTopBtn.addEventListener('click', scrollToTop);
+                    backToTopBtn.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.1)';
+                        this.style.background = '#764ba2';
+                    });
+                    backToTopBtn.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                        this.style.background = '#667eea';
+                    });
+                    document.body.appendChild(backToTopBtn);
+                }
+            } else {
+                const backToTopBtn = document.getElementById('back-to-top');
+                if (backToTopBtn) {
+                    backToTopBtn.remove();
+                }
+            }
+        });
+
+        // 初始化页面
+        window.onload = function() {
+            // 添加页面加载动画
+            document.body.style.opacity = '0';
+            setTimeout(function() {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        };
     </script>
 </body>
 </html>
