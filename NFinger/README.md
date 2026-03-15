@@ -1,4 +1,4 @@
-# NFinger
+# NFinger 溯纹
 
 > **The Multi-Fingerprint Scanner for Web**
 
