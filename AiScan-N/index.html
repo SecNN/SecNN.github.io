@@ -1,472 +1,211 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AiScan-N - 这是一款基于人工智能的Ai全自动化渗透测试工具专注于网络安全评估、漏洞扫描、渗透测试自动化，Ai驱动的安全检测技术，提升安全测试效率，专为企业和个人用户打造，尤其适合初学者（小白）快速上手使用，让你轻松迈入智能安全攻防时代！">
-    <meta name="keywords" content="AiScan-N, 渗透测试, 网络安全, 漏洞扫描, 安全工具, Kali Linux, 自动化安全测试, AI安全, 网络安全评估, 安全检测, 安全审计, Web安全, 漏洞利用, 安全漏洞, 安全防护, 网络攻防, 信息安全, 安全测试, 黑客工具, 网络安全工具, 渗透工具, 安全评估工具, 网络安全技术, 安全漏洞扫描, 智能安全测试, SecNN">
-    <meta name="author" content="SecNN">
-    <link rel="icon" href="favicon.ico" sizes="any"> 
-    <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#000000">
-    <link rel="canonical" href="https://github.com/SecNN/AiScan-N">
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="AiScan-N - AI自动化渗透测试工具">
-    <meta property="og:description" content="Kali Linux AI自动化渗透测试工具，提供网络安全扫描、漏洞检测、安全评估等功能。">
-    <meta property="og:url" content="https://github.com/SecNN/AiScan-N">
-    <meta property="og:type" content="website">
-    <title>AiScan-N - AI自动化渗透测试工具 | 网络安全扫描与漏洞检测</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
-            color: #ff0000;
-            font-family: 'Rajdhani', sans-serif;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            overflow-y: auto;
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .container {
-            margin: 20px 0;
-        }
-        
-        /* 背景网格效果 */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: 0;
-            pointer-events: none;
-        }
-        
-        /* 安全扫描动画效果 */
-        body::after {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: 0;
-            width: 100%;
-            height: 200%;
-            background: linear-gradient(
-                0deg,
-                transparent 0%,
-                rgba(255, 0, 0, 0.05) 50%,
-                transparent 100%
-            );
-            animation: scan 8s ease-in-out infinite;
-            z-index: 0;
-            pointer-events: none;
-        }
-        
-        @keyframes scan {
-            0% {
-                transform: translateY(-50%);
-            }
-            50% {
-                transform: translateY(50%);
-            }
-            100% {
-                transform: translateY(-50%);
-            }
-        }
-        
-        .container {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            box-shadow: 
-                0 0 20px rgba(255, 0, 0, 0.3),
-                0 0 40px rgba(0, 0, 0, 0.5) inset;
-            backdrop-filter: blur(5px);
-        }
-        
-        .title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 8rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: none;
-            position: relative;
-            display: inline-block;
-            color: #ff0000;
-            text-shadow: 
-                0 0 10px rgba(255, 0, 0, 0.7),
-                0 0 20px rgba(255, 0, 0, 0.5),
-                0 0 30px rgba(255, 0, 0, 0.3);
-            margin-bottom: 1.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            .title {
-                font-size: 4rem;
-            }
-            .project-description {
-                font-size: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .title {
-                font-size: 2.5rem;
-            }
-            .project-description {
-                font-size: 1.2rem;
-            }
-        }
-        
-        .cursor {
-            display: inline-block;
-            width: 15px;
-            height: 4px;
-            background-color: #ff0000;
-            margin-left: 8px;
-            animation: blink 1s infinite, glow 2s ease-in-out infinite alternate;
-            vertical-align: text-bottom;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
-        }
-        
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
-            }
-            to {
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.6);
-            }
-        }
-        
-        .project-description {
-            color: #ff3333;
-            font-size: 2rem;
-            margin: 1.5rem 0;
-            font-weight: 500;
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards 2s; /* 等待标题打字效果完成后淡入 */
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        
-        .logo:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-        }
-        
-        .github-link {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .github-icon {
-            width: 3rem;
-            height: 3rem;
-            color: #ff0000;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
-        }
-        
-        .github-icon:hover {
-            color: #ff6666;
-            transform: scale(1.2) rotate(15deg);
-            filter: drop-shadow(0 0 15px rgba(255, 102, 102, 0.8));
-        }
-        
-        @media (max-width: 768px) {
-            .github-icon {
-                width: 2.5rem;
-                height: 2.5rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .github-icon {
-                width: 2rem;
-                height: 2rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .cursor {
-                height: 2px;
-                width: 12px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .cursor {
-            height: 2px;
-            width: 10px;
-        }
-    }
-    
-    .security-features {
-            margin: 2rem 0;
-            text-align: center;
-            padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-            border-left: 3px solid #ff0000;
-            border-right: 3px solid #ff0000;
-        }
-        
-        /* 导航链接样式 */
-        .nav-links {
-            margin: 2rem 0;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .nav-link {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #1a1a1a, #0a0a0a);
-            color: #ff0000;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
-        }
-        
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .nav-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
-            border-color: rgba(255, 0, 0, 0.6);
-        }
-        
-        .nav-link:hover::before {
-            left: 100%;
-        }
-        
-        .nav-link-text {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            .nav-link {
-                padding: 0.8rem 1.5rem;
-                font-size: 1.1rem;
-            }
-            .nav-links {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-        
-        .feature-text {
-            color: #ff3333;
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards;
-            font-weight: 500;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature-text:hover {
-            transform: translateX(5px);
-            text-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
-        }
-    
-    .feature-text:nth-child(1) {
-        animation-delay: 2.5s;
-    }
-    
-    .feature-text:nth-child(2) {
-        animation-delay: 3s;
-    }
-    
-    .feature-text:nth-child(3) {
-        animation-delay: 3.5s;
-    }
-    
-    .feature-text:nth-child(4) {
-        animation-delay: 4s;
-    }
-    
-    .feature-text:nth-child(5) {
-        animation-delay: 4.5s;
-    }
-    
-    @media (max-width: 768px) {
-        .feature-text {
-            font-size: 1rem;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .feature-text {
-            font-size: 0.9rem;
-        }
-    }
-
-    @keyframes blink {
-        0%, 50% {
-            opacity: 1;
-        }
-        51%, 100% {
-            opacity: 0;
-        }
-    }
-    </style>
-	    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"3PrVuI87i2rGEehu",ck:"3PrVuI87i2rGEehu"})</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AiScan-N：AI 驱动的自动化网络安全 CLI Agent，覆盖安全评估、漏洞扫描、运维与应急响应。">
+  <meta name="theme-color" content="#070b0a">
+  <title>AiScan-N — AI 驱动的安全行动终端</title>
+  <link rel="icon" href="https://www.secnn.com/favicon.ico">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="title" id="typing-text">AiScan-N</h1>
-        <span class="cursor"></span>
-        <p class="project-description">AiScan-N 一款基于人工智能驱动的Ai工具【CLI Agent】</p>
-        <div class="security-features">
-            <p class="feature-text">专注于网络安全评估、漏洞扫描、渗透测试自动化</p>
-            <p class="feature-text">适用场景 ：如（红队演练、CTF比赛、Web应用渗透测试、运维、应急响应、内网横向移动、密码破解与暴力攻击、流量分析与威胁检测、APT攻击模拟、漏洞赏金挑战等场景）</p>
-            <p class="feature-text">Ai驱动的安全检测技术，提升安全测试效率。</p>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="AiScan-N 首页">
+      <img class="brand-logo" src="https://www.secnn.com/favicon.ico" alt="SecNN Logo">
+      <span class="brand-name">AiScan<span>-N</span></span>
+      <span class="brand-tag">SECURITY AGENT</span>
+    </a>
+    <button class="menu-btn" aria-label="打开导航" aria-expanded="false"><i></i><i></i></button>
+    <nav class="nav" aria-label="主导航">
+      <a href="#capabilities">核心能力</a>
+      <a href="#workflow">工作方式</a>
+      <a href="#quickstart">快速开始</a>
+      <a href="#preview">界面预览</a>
+      <a href="#scenarios">应用场景</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener">获取 AiScan-N <span>↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero section-shell">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-copy reveal">
+        <div class="eyebrow"><span class="pulse"></span> AI-NATIVE SECURITY · CLI AGENT</div>
+        <h1>让每一次安全行动<br><em>快于威胁。</em></h1>
+        <p class="hero-desc">一款 AI 驱动的自动化网络安全与运维工具。通过 Web、CLI 与 MCP 连接大模型和安全工具，覆盖漏洞扫描、代码审计、APK 逆向、应急响应与渗透测试自动化。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener"><span>立即下载</span><b>↗</b></a>
+          <a class="btn btn-ghost" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener"><span class="github-dot">●</span> 查看源代码</a>
         </div>
-        <div class="nav-links">
-            <a href="https://github.com/SecNN/AI-PT" target="_blank" class="nav-link">
-                <span class="nav-link-text">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
-                    AI-PT 自动化渗透测试-靶场
-                </span>
-            </a>
-            <a href="https://www.secnn.com/POC-EXP" target="_blank" class="nav-link">
-                <span class="nav-link-text">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-                    </svg>
-                    POC&EXP 安全工具库|漏洞库 - SecNN
-                </span>
-            </a>
+        <div class="platforms" aria-label="支持平台">
+          <span>RUNS ON</span><b>Windows</b><i></i><b>Linux</b><i></i><b>macOS</b><i></i><b>WSL</b><i></i><b>UOS</b>
         </div>
-        
-        <div class="nav-links">
-            <a href="https://github.com/SecNN/AiScan-N" target="_blank" class="nav-link">
-                <span class="nav-link-text">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                    </svg>
-                    AiScan-N 官方 GitHub 仓库
-                </span>
-            </a>
-            <a href="https://mp.weixin.qq.com/s/Xu6WpkmPP04MA8fApxOMzA" target="_blank" class="nav-link">
-                <span class="nav-link-text">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>
-                    </svg>
-                在线演示
-                </span>
-            </a>
-			
+      </div>
+
+      <div class="terminal-wrap reveal delay-1">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="terminal-card">
+          <div class="terminal-head">
+            <div class="terminal-lights"><i></i><i></i><i></i></div>
+            <span>aiscan-n / intelligent-session</span>
+            <span class="secure">● SECURE</span>
+          </div>
+          <div class="terminal-body" aria-label="AiScan-N 命令行操作示例">
+            <p><span class="muted">$</span> <span class="cyan">AiScan-N</span> --password ********</p>
+            <p class="dim">[WEB] http://127.0.0.1:20000 · ready</p>
+            <p class="dim">[MCP] external service :10000 · ready</p>
+            <div class="scanline"><span></span></div>
+            <p class="gap"><span class="prompt">YOU ›</span> 分析目标资产并生成安全评估计划</p>
+            <p><span class="ai">AI  ›</span> 正在建立任务链...</p>
+            <div class="task"><i class="done">✓</i><span>资产发现与服务识别</span><b>完成</b></div>
+            <div class="task"><i class="done">✓</i><span>攻击面与风险优先级分析</span><b>完成</b></div>
+            <div class="task active"><i></i><span>验证风险并整理修复建议</span><b>执行中</b></div>
+            <div class="progress"><span></span></div>
+            <p class="typing"><span class="ai">AI  ›</span> <span id="type-text"></span><i class="cursor"></i></p>
+          </div>
+          <div class="terminal-foot"><span>SESSION 0X7A21</span><span>LOCAL-FIRST</span><span>ENCRYPTED</span></div>
         </div>
-        
-        <div class="nav-links">
-				<a href="Download.html" target="_blank" class="nav-link">
-                <span class="nav-link-text">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                    </svg>
-                Download
-                </span>
-            </a>
-			<a href="SecNNAPi.html" target="_blank" class="nav-link">
-                <span class="nav-link-text"> 
-                SecNN APi
-                </span>
-            </a>
+        <div class="float-badge"><small>ENGINE STATUS</small><strong><i></i> OPERATIONAL</strong></div>
+      </div>
+
+      <div class="scroll-cue"><span>SCROLL TO EXPLORE</span><i></i></div>
+    </section>
+
+    <section class="intro section-shell reveal">
+      <div class="section-code">01 / MISSION</div>
+      <div>
+        <p class="kicker">SECURITY, AUGMENTED</p>
+        <h2>不是更多工具，<br>而是更聪明的<span>行动方式。</span></h2>
+      </div>
+      <p class="intro-copy">AiScan-N 面向企业与个人，也照顾零基础用户：用自然语言描述目标，由大模型辅助调用指定工具、分析结果并整理报告。既能在浏览器中使用，也能通过 CLI 与外部 MCP 接入现有工作流。</p>
+    </section>
+
+    <section id="capabilities" class="capabilities section-shell">
+      <article class="feature feature-main reveal">
+        <div class="feature-index">01</div>
+        <div class="feature-icon radar"><i></i><i></i><b></b></div>
+        <div><p class="kicker">AI + SECURITY TOOLS</p><h3>自然语言驱动工具</h3><p>用自然语言发起安全任务，通过大模型分析目标并调用指定工具完成扫描、审计、分析与结果整理。</p></div>
+        <div class="feature-tags"><span>Web 交互</span><span>CLI Agent</span><span>MCP 服务</span></div>
+      </article>
+      <article class="feature reveal delay-1">
+        <div class="feature-index">02</div><div class="mini-icon">⌁</div>
+        <h3>支持多种大模型接入方式</h3>
+        <div class="model-row"><span>LOCAL</span><i></i><span>CLOUD</span><i></i><span>API</span></div>
+      </article>
+      <article class="feature reveal delay-2">
+        <div class="feature-index">03</div><div class="mini-icon shield">◇</div>
+        <h3>跨平台、本地可运行</h3><p>支持 Windows、Linux、macOS、WSL 与 UOS，可按系统架构选择服务端和客户端，在内网搭配本地大模型使用。</p>
+        <div class="signal"><i></i><i></i><i></i><i></i><span>PRIVATE BY DESIGN</span></div>
+      </article>
+    </section>
+
+    <section id="workflow" class="workflow section-shell">
+      <div class="section-heading reveal"><div><p class="kicker">FROM INTENT TO ACTION</p><h2>一句指令，启动完整安全闭环</h2></div><p>AI 不只回答问题，还会连接环境中的工具与信息，把判断落到实际行动中。</p></div>
+      <div class="flow reveal">
+        <article><b>01</b><span class="flow-icon">⌘</span><h3>描述目标</h3><p>用自然语言说清任务、范围与授权边界。</p></article>
+        <i class="flow-line"><span></span></i>
+        <article><b>02</b><span class="flow-icon">◎</span><h3>智能规划</h3><p>Agent 分析上下文，生成可解释的执行路径。</p></article>
+        <i class="flow-line"><span></span></i>
+        <article><b>03</b><span class="flow-icon">⚡</span><h3>工具协同</h3><p>按需调用扫描、分析与运维工具执行任务。</p></article>
+        <i class="flow-line"><span></span></i>
+        <article><b>04</b><span class="flow-icon">✓</span><h3>洞察输出</h3><p>汇总风险证据，形成清晰的修复与响应建议。</p></article>
+      </div>
+    </section>
+
+    <section id="quickstart" class="quickstart section-shell">
+      <div class="section-heading reveal"><div><p class="kicker">START IN MINUTES</p><h2>一个程序，两种服务入口</h2></div><p>默认启动 Web 服务与外部 MCP 服务。端口、登录密码、MCP Token 和模型接口均可按环境配置。</p></div>
+      <div class="quick-grid reveal">
+        <div class="command-panel">
+          <div class="command-tabs" role="tablist" aria-label="启动命令示例">
+            <button class="active" data-command="basic" role="tab" aria-selected="true">默认启动</button>
+            <button data-command="secure" role="tab" aria-selected="false">安全配置</button>
+            <button data-command="model" role="tab" aria-selected="false">指定模型</button>
+          </div>
+          <div class="command-code">
+            <div class="code-head"><span>TERMINAL</span><button id="copy-command" aria-label="复制启动命令">复制命令</button></div>
+            <pre><code id="command-output">AiScan-N</code></pre>
+            <p id="command-note">使用默认端口启动：Web 20000，外部 MCP 10000。</p>
+          </div>
         </div>
-		
-    </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const title = document.getElementById('typing-text');
-            const fullText = title.textContent;
-            title.textContent = '';
-            
-            const typeSpeed = 300;
-            const restartDelay = 2000;
-            
-            function typeWriter() {
-                let index = 0;
-                title.textContent = '';
-                
-                function typeNextChar() {
-                    if (index < fullText.length) {
-                        title.textContent += fullText.charAt(index);
-                        title.style.transform = 'translateY(' + (Math.random() * 4 - 2) + 'px)';
-                        setTimeout(() => {
-                            title.style.transform = 'translateY(0)';
-                        }, 50);
-                        index++;
-                        setTimeout(typeNextChar, typeSpeed);
-                    } else {
-                        setTimeout(typeWriter, restartDelay);
-                    }
-                }
-                
-                typeNextChar();
-            }
-            
-            setTimeout(typeWriter, 500);
-        });
-    </script>
+        <div class="service-map">
+          <div class="service-core"><small>AiScan-N</small><strong>TOOLS API</strong><i></i></div>
+          <div class="service-line line-web"></div><div class="service-line line-mcp"></div>
+          <article class="service web"><span>01</span><b>Web Console</b><small>:20000</small><p>浏览器登录与任务交互</p></article>
+          <article class="service mcp"><span>02</span><b>External MCP</b><small>:10000</small><p>接入支持 MCP 的客户端</p></article>
+          <div class="model-cloud">LOCAL / CLOUD / SecNN API</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="preview" class="product-preview section-shell">
+      <div class="section-heading reveal"><div><p class="kicker">REAL PRODUCT EXPERIENCE</p><h2>真实界面，完整掌控安全任务</h2></div><p>从模型配置、Skills 与工具管理，到扫描结果分析、移动端访问和登录审计，核心状态清晰可见。</p></div>
+      <div class="showcase-grid reveal">
+        <figure class="shot shot-main" data-full="images/iShot_2026-08-09_23.19.07.png">
+          <div class="shot-bar"><span>01 / DESKTOP CONSOLE</span><b>LIGHT MODE</b></div>
+          <img src="images/iShot_2026-08-09_23.19.07.png" alt="AiScan-N 浅色模式智能安全分析工作台" loading="lazy">
+          <figcaption><strong>智能安全分析工作台</strong><span>模型配置、对话分析与安全任务模板集中呈现</span></figcaption>
+        </figure>
+        <figure class="shot shot-phone" data-full="images/spacexcode-screenshot-2545@3x.png">
+          <div class="shot-bar"><span>02 / MOBILE</span><b>RESPONSIVE</b></div>
+          <img src="images/spacexcode-screenshot-2545@3x.png" alt="AiScan-N 手机端智能安全助手" loading="lazy">
+          <figcaption><strong>手机访问</strong><span>随时发起任务与查看结果</span></figcaption>
+        </figure>
+        <figure class="shot shot-phone" data-full="images/spacexcode-screenshot-2636@3x.png">
+          <div class="shot-bar"><span>03 / AUDIT</span><b>SECURITY</b></div>
+          <img src="images/spacexcode-screenshot-2636@3x.png" alt="AiScan-N 手机端登录安全审计" loading="lazy">
+          <figcaption><strong>登录安全审计</strong><span>失败来源、封禁状态与审计事件</span></figcaption>
+        </figure>
+        <figure class="shot shot-wide" data-full="images/iShot_2026-08-09_23.19.26.png">
+          <div class="shot-bar"><span>04 / DARK MODE</span><b>TOOLS WORKSPACE</b></div>
+          <img src="images/iShot_2026-08-09_23.19.26.png" alt="AiScan-N 深色模式工具管理工作台" loading="lazy">
+          <figcaption><strong>深色工具工作台</strong><span>大模型选择、MCP 管理与安全工具集中配置</span></figcaption>
+        </figure>
+        <figure class="shot shot-wide shot-audit" data-full="images/iShot_2026-08-09_23.19.48.png">
+          <div class="shot-bar"><span>05 / LOGIN AUDIT</span><b>SECURITY EVENTS</b></div>
+          <img src="images/iShot_2026-08-09_23.19.48.png" alt="AiScan-N 桌面端登录安全审计界面" loading="lazy">
+          <figcaption><strong>登录安全审计</strong><span>来源 IP、失败次数、封禁状态与最近审计事件一目了然</span></figcaption>
+        </figure>
+      </div>
+      <p class="preview-hint reveal"><span>↗</span> 点击任意界面图片可放大查看</p>
+    </section>
+
+    <section id="scenarios" class="scenarios section-shell">
+      <div class="section-heading reveal"><div><p class="kicker">BUILT FOR REAL OPERATIONS</p><h2>覆盖多元安全实战场景</h2></div><p>从日常运维到攻防演练，让 AI 成为随时在线的安全协作者。</p></div>
+      <div class="scenario-grid reveal">
+        <article><span>01</span><div class="scene-symbol">◫</div><h3>Web 应用渗透测试</h3><p>面向已授权目标执行安全测试与文件上传漏洞靶场验证。</p><i>WEB SECURITY</i></article>
+        <article><span>02</span><div class="scene-symbol">⌖</div><h3>内网资产盘点</h3><p>扫描存活主机、设备型号、端口与服务，也可调用 Fscan 等指定工具。</p><i>INTERNAL NETWORK</i></article>
+        <article><span>03</span><div class="scene-symbol">{ }</div><h3>代码审计与 APK 分析</h3><p>审计代码文件，并检查 APK 权限、导出组件、WebView、签名、DEX 与原生库风险。</p><i>CODE &amp; APK</i></article>
+        <article><span>04</span><div class="scene-symbol">⌁</div><h3>PCAP 恶意流量分析</h3><p>从 Wireshark 抓包日志中定位攻击 IP、漏洞类型、Webshell 与关键操作线索。</p><i>THREAT ANALYSIS</i></article>
+        <article><span>05</span><div class="scene-symbol">✦</div><h3>CTF 与隐写解密</h3><p>辅助分析图片隐写、Hex 附加、压缩包伪加密、AES 与各类靶场题目。</p><i>CTF TRAINING</i></article>
+        <article><span>06</span><div class="scene-symbol">↻</div><h3>运维与应急响应</h3><p>结合环境工具收集信息，辅助完成安全评估、故障排查与响应处置。</p><i>SECOPS</i></article>
+      </div>
+    </section>
+
+    <section class="cta section-shell reveal">
+      <div class="cta-grid" aria-hidden="true"></div>
+      <p class="kicker">YOUR NEXT SECURITY MOVE</p>
+      <h2>准备好，让 AI 加入<br>你的安全行动了吗？</h2>
+      <p>跨平台运行 · 开放模型接入 · CLI 高效交互</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener"><span>下载 AiScan-N</span><b>↗</b></a>
+        <a class="btn btn-ghost" href="https://api.secnn.com" target="_blank" rel="noopener">接入 SecNN API</a>
+      </div>
+      <small>仅用于合法授权的安全测试、教学与研究。请遵守当地法律法规。</small>
+    </section>
+  </main>
+
+  <footer class="footer section-shell">
+    <div class="brand"><img class="brand-logo" src="https://www.secnn.com/favicon.ico" alt="SecNN Logo"><span class="brand-name">AiScan<span>-N</span></span></div>
+    <p>AI-POWERED SECURITY TOOL · BUILT BY SecNN</p>
+    <div><a href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener">GitHub</a><a href="https://www.secnn.com/POC-EXP/" target="_blank" rel="noopener">安全知识库</a><a href="#top">返回顶部 ↑</a></div>
+  </footer>
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="产品截图大图" aria-hidden="true">
+    <button class="lightbox-close" aria-label="关闭大图">×</button>
+    <img src="" alt="AiScan-N 产品界面大图">
+    <p>ESC 关闭 · 点击空白区域返回</p>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
