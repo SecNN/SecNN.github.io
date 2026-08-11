@@ -1,0 +1,6 @@
+node_modules/
+test-results/
+playwright-report/
+.npm/
+npm-debug.log*
+.DS_Store

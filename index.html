@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecNN在线网络安全工具 - Ai安全咨询|渗透测试|红队工具|ShellCode免杀|网络安全工具|网络安全智能助手|黑客工具|漏洞扫描|安全测试|免杀木马|黑客攻防</title>
-	<meta name="description" content="SecNN提供专业网络安全工具和AI安全助手，包括ShellCode免杀、内网渗透、红蓝对抗、黑客工具、Web安全、红队演练、黑客攻防、Web漏洞扫描、红队渗透测试工具、GoogleHacking高级搜索、Windows提权辅助工具等，助力网络安全研究人员提升安全防护能力和高级攻防解决方案。">
-	<meta name="keywords" content="网络安全工具,渗透测试,漏洞扫描,ShellCode免杀,红队工具,AI安全助手,HTTPServer,黑客工具,Web安全,AI安全检测,红队演练,安全测试、渗透测试工具,CS免杀,免杀木马,内网渗透,攻击模拟,C2服务器,红蓝对抗,Kali Linux工具,黑客攻防">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <title>SecNN 在线网络安全工具与安全研究平台</title>
+	<meta name="description" content="SecNN提供专业网络安全工具，推荐 NFinger 溯纹进行 AI 智能 Web 指纹识别与资产发现，并涵盖渗透测试、漏洞扫描、红队演练、GoogleHacking、Windows 提权等安全研究场景。">
+	<meta name="keywords" content="NFinger,Web指纹识别,资产发现,网络安全工具,渗透测试,漏洞扫描,红队工具,AI安全检测,Web安全,资产测绘,GoogleHacking,Windows提权">
 	<link rel="icon" href="favicon.ico" sizes="any"> 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,21 +24,18 @@
 </script>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #818cf8;
-            --dark: #0f172a;
-            --dark-light: #1e293b;
-            --text: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #10b981;
+            --primary: #0891b2;
+            --primary-dark: #0e7490;
+            --primary-light: #0e7490;
+            --dark: #ffffff;
+            --dark-light: #f8fafc;
+            --text: #172033;
+            --text-secondary: #64748b;
+            --accent: #14b8a6;
             --danger: #ef4444;
             --warning: #f59e0b;
             --info: #3b82f6;
-            --gradient: linear-gradient(135deg, var(--primary), #7c3aed);
-        }
-        .style-case-link {
-            margin-left: auto;
+            --gradient: linear-gradient(135deg, #0891b2, #2563eb);
         }
         * {
             margin: 0;
@@ -47,7 +45,10 @@
         
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background-color: var(--dark);
+            background:
+                radial-gradient(circle at 12% 8%, rgba(8, 145, 178, 0.08), transparent 28rem),
+                radial-gradient(circle at 88% 22%, rgba(37, 99, 235, 0.06), transparent 26rem),
+                var(--dark);
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
@@ -58,7 +59,7 @@
         
         /* 新导航栏 */
         .navbar {
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             position: fixed;
@@ -69,7 +70,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
         }
         
         .navbar-brand {
@@ -91,7 +93,7 @@
         .brand-name {
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            background: linear-gradient(90deg, var(--primary), #2563eb);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -116,8 +118,8 @@
         }
         
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--primary-light);
+            background: #ecfeff;
+            color: var(--primary-dark);
         }
         
         .nav-link i {
@@ -127,7 +129,7 @@
         .nav-link.btn {
             background: var(--gradient);
             color: white;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 4px 18px rgba(8, 145, 178, 0.3);
         }
         
         .nav-link.btn:hover {
@@ -176,7 +178,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(90deg, #fff, var(--primary-light));
+            background: linear-gradient(90deg, #172033, var(--primary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -220,13 +222,13 @@
         }
         
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: white;
+            color: var(--text);
+            border: 1px solid #cbd5e1;
         }
         
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: #f8fafc;
             transform: translateY(-2px);
         }
         
@@ -258,12 +260,12 @@
         }
         
         .tool-card {
-            background: var(--dark-light);
+            background: rgba(255, 255, 255, 0.92);
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
             text-decoration: none;
             color: inherit;
             display: flex;
@@ -286,7 +288,7 @@
         
         .tool-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
             border-color: var(--primary);
         }
         
@@ -303,7 +305,7 @@
         .tool-icon {
             width: 48px;
             height: 48px;
-            background: rgba(79, 70, 229, 0.2);
+            background: #ecfeff;
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -322,7 +324,7 @@
         .tool-category {
             font-size: 0.8rem;
             color: var(--text-secondary);
-            background: rgba(255, 255, 255, 0.1);
+            background: #f1f5f9;
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
             display: inline-block;
@@ -376,11 +378,13 @@
         }
         
         .feature-card {
-            background: var(--dark-light);
+            background: rgba(255, 255, 255, 0.92);
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
             transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
         }
         
         .feature-icon {
@@ -402,7 +406,8 @@
         
         /* 页脚 */
         footer {
-            background: rgba(0, 0, 0, 0.3);
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
             padding: 3rem 2rem 1.5rem;
             margin-top: 3rem;
         }
@@ -461,7 +466,7 @@
             text-align: center;
             padding-top: 2rem;
             margin-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid #e2e8f0;
             font-size: 0.9rem;
             opacity: 0.7;
         }
@@ -514,18 +519,19 @@
         }
         
         .card-hover-3d:hover {
-            transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
         }
 		/* AI横幅区域 */
         .ai-banner {
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(91, 33, 182, 0.2));
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: linear-gradient(120deg, #ecfeff, #eff6ff 58%, #f0fdfa);
+            border-radius: 18px;
+            padding: 2rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(74, 144, 226, 0.5);
+            border: 1px solid #bae6fd;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
         }
         
         .ai-banner::before {
@@ -535,7 +541,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(74, 144, 226, 0.1) 0%, rgba(74, 144, 226, 0) 70%);
+            background: radial-gradient(circle, rgba(103, 232, 249, 0.12) 0%, rgba(8, 145, 178, 0) 68%);
             animation: rotate 15s linear infinite;
             z-index: 0;
         }
@@ -547,32 +553,70 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
+            gap: 1.5rem;
         }
         
         .ai-banner-text {
             flex: 1;
             min-width: 250px;
         }
+
+        .ai-banner-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
         
         .ai-banner-title {
-            font-size: 1.4rem;
+            font-size: clamp(1.6rem, 3vw, 2.15rem);
             margin-bottom: 0.5rem;
-            color: white;
-            font-weight: 600;
+            color: #0f2942;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
         
         .ai-banner-desc {
             font-size: 1rem;
-            opacity: 0.9;
+            color: #475569;
             margin-bottom: 1rem;
+        }
+
+        .ai-banner-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .ai-banner-feature {
+            padding: 0.35rem 0.75rem;
+            border: 1px solid rgba(103, 232, 249, 0.25);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+
+        .ai-banner-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
         
         .ai-banner-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--ai-color), #5e72e4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient);
             color: white;
             padding: 0.7rem 1.5rem;
-            border-radius: 6px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s;
@@ -580,17 +624,26 @@
             border: none;
             cursor: pointer;
             font-size: 1rem;
-            margin-right: 10px;
+            margin-right: 0;
         }
         
         .ai-banner-btn.secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: #334155;
         }
         
         .ai-banner-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .navbar { position: static; }
+            .container { padding-top: 1.25rem; }
+            .ai-banner { padding: 1.35rem; }
+            .ai-banner-actions { width: 100%; }
+            .ai-banner-btn { flex: 1; justify-content: center; }
         }
 		/* 赞助 */
 		.sponsors-grid {
@@ -708,6 +761,37 @@
         .carousel-next {
             right: 0;
         }
+
+        .sponsor-headings {
+            max-width: 900px;
+            margin: 0 auto 1.25rem;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
+
+        .sponsor-intro {
+            margin: 0;
+            color: #334155;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.7;
+        }
+
+        .sponsor-update {
+            margin: 0.45rem 0 0;
+            color: #64748b;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .sponsor-headings { margin-inline: 0.5rem; padding: 0.85rem; }
+            .sponsor-intro { font-size: 0.92rem; }
+            .sponsor-update { font-size: 0.82rem; }
+        }
 		.site-title {
         text-align: center;
     }
@@ -738,11 +822,11 @@
 			<a href="https://www.github.com/SecNN" class="nav-link github" rel="nofollow" target="_blank">
             <i class="fab fa-github"></i> GitHub
         </a>
-		<a href="redindex.html" class="nav-link style-case-link" target="_self">
-                <i class="fas fa-paint-brush"></i> 更换主题
+		<a href="AiScan-N" class="nav-link btn" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-terminal"></i> AiScan-N
             </a>
-		<a href="https://chat.secnn.com" class="nav-link btn" target="_blank">
-                <i class="fas fa-robot"></i> AI助手
+		<a href="https://nfinger.secnn.com/" class="nav-link btn" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-fingerprint"></i> NFinger
             </a>
         </div>
     </nav>
@@ -753,29 +837,10 @@
             <p class="site-title">我用两个灵魂对抗世界，一个向往，一个挣扎。</p>
         </header>
         <div class="ai-banner">
-                <div class="ai-banner-content">
-                    <div class="ai-banner-text">
-					<span class="tool-badge badge-popular">推荐</span>
-                        <h2 class="ai-banner-title"><i class="fas fa-robot"></i> SecNN - 网络安全智能助手</h2>
-						
-                        <p class="ai-banner-desc">采用最新AI技术，为您提供专业的网络安全咨询服务，解答各类安全难题，生成安全代码、分析漏洞原理、漏洞检索、攻防技巧、CVE知识库、代码审计、应急响应 、聊天机器人、安全基础知识等。</p>
-                    </div>
-                    <div>
-					<a href="https://register.secnn.com" class="ai-banner-btn secondary" target="_blank">
-                            <i class="fas fa-user-plus"></i> 用户注册
-                        </a>
-                        <a href="https://chat.secnn.com" class="nav-link btn" target="_blank">
-                            <i class="fas fa-robot"></i> 立即体验
-                        </a>
-                        
-                    </div>
-                </div>
-            </div>
-        <div class="ai-banner">
 			<div class="ai-banner-content">
                     <div class="ai-banner-text">
 					<span class="tool-badge badge-popular">推荐</span>
-                        <h2 class="ai-banner-title"><i class="fas fa-passport"></i> AiScan-N 一款基于人工智能驱动的Ai工具【CLI Agent】</h2>
+                        <h2 class="ai-banner-title"><i class="fas fa-terminal"></i> AiScan-N 一款基于人工智能驱动的Ai工具【CLI Agent】</h2>
 						
                         <p class="ai-banner-desc">AiScan-N 来了！这是一款基于人工智能驱动的Ai自动化网络安全（运维）工具，专注于网络安全评估、漏洞扫描、运维、应急响应、渗透测试自动化，Ai大模型工具集【CLI Agent】 ，Ai驱动的安全检测技术，提升安全测试（运维）效率，专为企业和个人用户打造，尤其适合初学者、零基础用户轻松入门智能安全领域快速上手使用，让你轻松迈入智能安全攻防时代！跨平台的应用程序，可在 🪟Windows、🐧Linux、 MacOS🍎苹果系统 、UOS（统信操作系统及其他国产系统） 和 🎭WSL（Windows Subsystem for Linux） 环境下运行。支持命令行交互启动，适用于多种开发与生产环境需求。</p>
                     </div>
@@ -786,6 +851,29 @@
                     </div>
                 </div>
         </div>
+        <div class="ai-banner" aria-labelledby="nfinger-title">
+                <div class="ai-banner-content">
+                    <div class="ai-banner-text">
+                        <span class="ai-banner-eyebrow"><i class="fas fa-star"></i> SecNN 推荐工具</span>
+                        <h2 class="ai-banner-title" id="nfinger-title"><i class="fas fa-fingerprint"></i> NFinger 溯纹</h2>
+                        <p class="ai-banner-desc">基于 AI 智能分析的 Web 应用指纹识别与资产发现工具。通过多维特征快速识别 CMS、开发框架、中间件与技术栈，为安全审计、资产梳理和漏洞排查提供清晰可靠的分析结果。</p>
+                        <div class="ai-banner-features" aria-label="NFinger 核心能力">
+                            <span class="ai-banner-feature">AI 智能分析</span>
+                            <span class="ai-banner-feature">Web 指纹识别</span>
+                            <span class="ai-banner-feature">资产测绘</span>
+                            <span class="ai-banner-feature">多格式报告</span>
+                        </div>
+                    </div>
+                    <div class="ai-banner-actions">
+                        <a href="https://nfinger.secnn.com/" class="ai-banner-btn" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-globe"></i> 在线使用
+                        </a>
+                        <a href="https://github.com/SecNN/NFinger/releases" class="ai-banner-btn secondary" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> 下载客户端
+                        </a>
+                    </div>
+                </div>
+            </div>
         <!-- 特色功能 -->
         <section class="features" data-aos="fade-up" data-aos-delay="100">
             <div class="feature-card card-hover-3d">
@@ -798,10 +886,10 @@
             
             <div class="feature-card card-hover-3d">
                 <div class="feature-icon">
-                    <i class="fas fa-robot"></i>
+                <i class="fas fa-fingerprint"></i>
                 </div>
-                <h3 class="feature-title">AI安全助手</h3>
-                <p class="feature-desc">智能AI助手提供安全咨询、漏洞分析、代码审计等专业服务，7×24小时在线</p>
+                <h3 class="feature-title">AI 指纹识别</h3>
+                <p class="feature-desc">智能识别 CMS、框架、中间件与技术栈，辅助资产发现、安全审计和漏洞排查</p>
             </div>
             
             <div class="feature-card card-hover-3d">
@@ -1109,106 +1197,21 @@
 	
 	<div class="sponsors-grid">
         <div class="carousel-container">
-		<div style="text-align: center;"><h5>🌟 特别鸣谢每一位打赏的朋友，金额不在大小，心意最珍贵💰 每一份支持，都是前行的动力 | 排名不分先后🌟️</h5>
-		<h5 class="wx-qrcode-title">📌 关注微信公众号获取最新资讯   ||    最新打赏名单即将整理公布，敬请期待！</h5>
+		<div class="sponsor-headings">
+            <p class="sponsor-intro">🌟 特别感谢每一位支持 SecNN 的朋友。金额不分大小，每一份心意都是项目持续前行的动力。</p>
+            <p class="sponsor-update">📌 赞助名单排名不分先后，最新名单将持续整理更新。</p>
 		</div>
             <button class="carousel-nav carousel-prev">❮</button>
             <div class="carousel-track" id="carouselTrack"></div>
             <button class="carousel-nav carousel-next">❯</button>
         </div>
 		
-    </div>
+	</div>
+	<script src="assets/sponsors.js?v=1"></script>
 	<script>
         document.addEventListener('DOMContentLoaded', function() {
             // 赞助者数据
-            const sponsors = [
-
-				{ 
-                    avatar: 'sponsor/12.jpg',
-                    name: 'Baymax', 
-                    amount: 666, 
-                    currency: '¥', 
-                    message: '牛X。不错！' 
-                },
-                
-		{ 
-                    avatar: 'sponsor/11.jpg',
-                    name: '清风徐来', 
-                    amount: 9.99, 
-                    currency: '¥', 
-                    message: '看你的文章感觉有搞头！' 
-                },
-		{ 
-                    avatar: 'sponsor/1.jpg',
-                    name: '肉松', 
-                    amount: 5, 
-                    currency: '¥', 
-                    message: '内容很有价值！' 
-                },
-                { 
-                    avatar: 'sponsor/2.jpg',
-                    name: '浪', 
-                    amount: 10, 
-                    currency: '¥', 
-                    message: '期待更多更新' 
-                },
-                { 
-                    avatar: 'sponsor/3.jpg',
-                    name: '风继续吹', 
-                    amount: 8.88, 
-                    currency: '¥', 
-                    message: '感谢分享' 
-                },
-                { 
-                    avatar: 'sponsor/4.jpg',
-                    name: 'D~', 
-                    amount: 52.0, 
-                    currency: '¥', 
-                    message: '帮我解决了大问题' 
-                },
-                { 
-                    avatar: 'sponsor/5.jpg',
-                    name: '西钉不敢吱声', 
-                    amount: 6.66, 
-                    currency: '¥', 
-                    message: '物超所值' 
-                },
-                { 
-                    avatar: 'sponsor/6.jpg',
-                    name: '冷酷DE瞬间', 
-                    amount: 20, 
-                    currency: '¥', 
-                    message: '推荐给朋友了' 
-                },
-                { 
-                    avatar: 'sponsor/7.jpg',
-                    name: 'Aღ᭄💞来盘意大利面ᯤ📶⁵ᴳ', 
-                    amount: 5, 
-                    currency: '¥', 
-                    message: '简洁明了' 
-                },
-                { 
-                    avatar: 'sponsor/8.jpg',
-                    name: 'A、我想静静', 
-                    amount: 10, 
-                    currency: '¥', 
-                    message: '第二次赞助了' 
-                },
-                { 
-                    avatar: 'sponsor/9.jpg',
-                    name: '笼中鸟余哀鸣', 
-                    amount: 1, 
-                    currency: '¥', 
-                    message: '继续加油' 
-                },
-                { 
-                    avatar: 'sponsor/10.jpg',
-                    name: 'July', 
-                    amount: 30, 
-                    currency: '¥', 
-                    message: '小而精' 
-                }
-            ];
+            const sponsors = window.SECNN_SPONSORS;
 
             const track = document.getElementById('carouselTrack');
             const prevBtn = document.querySelector('.carousel-prev');
@@ -1232,9 +1235,9 @@
                     const card = document.createElement('div');
                     card.className = 'sponsor-card';
                     card.innerHTML = `
-                        <img src="${sponsor.avatar}" class="sponsor-avatar" 
+                        <img src="sponsor/${sponsor.avatar}" class="sponsor-avatar" loading="lazy"
                              alt="${sponsor.name}" 
-                             onerror="this.src='https://via.placeholder.com/40?text=${sponsor.name.charAt(0)}'">
+                             onerror="this.style.visibility='hidden'">
                         <div class="sponsor-info">
                             <div class="sponsor-name">${sponsor.name}</div>
                             <div class="sponsor-amount">${sponsor.currency}${sponsor.amount}</div>
@@ -1432,5 +1435,6 @@
 </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6897549168811806"
      crossorigin="anonymous"></script>
+<script src="assets/site-footer.js?v=1"></script>
 </body>
 </html>

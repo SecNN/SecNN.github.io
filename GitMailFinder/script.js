@@ -20,6 +20,13 @@ class GitHubEmailQuery {
             this.queryApi();
         });
 
+        document.getElementById('clearToken').addEventListener('click', () => {
+            sessionStorage.removeItem('github_token');
+            localStorage.removeItem('github_token');
+            document.getElementById('token').value = '';
+            this.hideError();
+        });
+
         // 已移除一键聚合按钮
 
         // 支持回车键查询
@@ -43,7 +50,7 @@ class GitHubEmailQuery {
             if (input) {
                 const value = (input.value || '').trim();
                 if (value) {
-                    localStorage.setItem('github_token', value);
+                    sessionStorage.setItem('github_token', value);
                 }
             }
         } catch (_) {}
@@ -394,7 +401,7 @@ class GitHubEmailQuery {
             'Accept': 'application/vnd.github+json'
         };
         try {
-            const token = localStorage.getItem('github_token');
+            const token = sessionStorage.getItem('github_token');
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
@@ -408,7 +415,7 @@ class GitHubEmailQuery {
             'Accept': 'application/vnd.github.cloak-preview'
         };
         try {
-            const token = localStorage.getItem('github_token');
+            const token = sessionStorage.getItem('github_token');
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
@@ -420,7 +427,7 @@ class GitHubEmailQuery {
     getRateLimitHint(response, fallbackMessage) {
         const remaining = response.headers.get('x-ratelimit-remaining');
         const reset = response.headers.get('x-ratelimit-reset');
-        const hasToken = !!(localStorage.getItem('github_token') || '').trim();
+        const hasToken = !!(sessionStorage.getItem('github_token') || '').trim();
         let hint = fallbackMessage;
         if (reset) {
             const resetMs = Number(reset) * 1000;

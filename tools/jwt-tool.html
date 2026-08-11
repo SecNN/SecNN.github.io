@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JWT在线编解码工具|JSON Web Token解析、验证与生成|SecNN.com</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <title>JWT 编解码与签名验证 - SecNN</title>
 	<meta name="description" content="免费在线JSON Web Token(JWT)解析解码器，实时验证JWT有效性，生成HS256/RS256签名Token，支持在线调试JWT Header、Payload、Signature。">
+    <link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
     <style>
         :root {
             --primary-color: #4a6bdf;
@@ -319,12 +321,87 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #4a4a6c;
         }
+
+        /* SecNN 浅色主题 */
+        :root {
+            --primary-color: #0891b2;
+            --secondary-color: #2563eb;
+            --bg-color: #ffffff;
+            --card-color: #ffffff;
+            --text-color: #172033;
+            --error-color: #dc2626;
+            --success-color: #059669;
+            --warning-color: #b45309;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 12% 8%, rgba(8, 145, 178, 0.08), transparent 28rem),
+                radial-gradient(circle at 88% 22%, rgba(37, 99, 235, 0.06), transparent 26rem),
+                #ffffff;
+            color: var(--text-color);
+        }
+
+        h1 {
+            background-image: linear-gradient(90deg, #0891b2, #2563eb);
+            text-shadow: none;
+        }
+
+        h1::after { background: linear-gradient(90deg, #0891b2, #2563eb); }
+        .description { color: #64748b; }
+
+        .tool-card {
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        }
+
+        .tool-card:hover { box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12); }
+        .tool-card::before { background: linear-gradient(to bottom, #0891b2, #2563eb); }
+        h2, .field-item h4 { color: #172033; }
+
+        textarea, input, select {
+            color: #172033;
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        textarea::placeholder, input::placeholder { color: #94a3b8; }
+        label { color: #475569; }
+
+        button {
+            background: linear-gradient(135deg, #0891b2, #2563eb);
+            box-shadow: 0 5px 14px rgba(8, 145, 178, 0.2);
+        }
+
+        .signature-status { background: #f8fafc; border: 1px solid #e2e8f0; }
+        .token-preview { color: #64748b; }
+
+        .header-info {
+            color: #0e7490;
+            background: #ecfeff;
+            border: 1px solid #a5f3fc;
+        }
+
+        .field-explanations {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .field-item p, .footer { color: #64748b; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @media (max-width: 640px) {
+            body { padding: 8px; }
+            .tool-card { padding: 1rem; }
+        }
     </style>
 </head>
 <body>
+    <nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · JWT 工具</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
     <div class="container">
         <header>
-            <h1>JWT(JSON Web Token)在线编解码 | SecNN.com</h1>
+            <h1>JWT 编解码与签名验证</h1>
             <p class="description">免费安全、快速的在线JSON Web Token编码和解码工具，数据完全在本地处理，不会将任何数据发送到服务器。</p>
         </header>
 
@@ -400,11 +477,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/js-base64@3.7.2/base64.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/hmac-sha256.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/hmac-sha384.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/hmac-sha512.min.js"></script>
+    <script src="../assets/vendor/js-base64-3.7.2.min.js"></script>
+    <script src="../assets/vendor/crypto-js-4.1.1.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const encodeBtn = document.getElementById('encode-btn');
@@ -699,5 +773,7 @@
         }, null, 2);
     });
 </script>
-</body> </html>
+<script src="../assets/site-footer.js?v=1"></script>
+</body>
+</html>
                        

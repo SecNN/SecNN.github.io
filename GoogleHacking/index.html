@@ -3,353 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-    <title>Google Hacking工具|网络安全研究|适用于渗透测试和信息安全学习 - SecNN</title>
-	<meta name="description" content="全面介绍Google Hacking技术，包含phpinfo()探测、SQL错误发现、敏感文件搜索等实用Google搜索语法，适用于渗透测试和信息安全学习。">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <meta name="description" content="SecNN Google Hacking 高级搜索工具，提供常用搜索语法组合、目标域名校验与安全研究参考，适用于已授权的信息收集和安全测试。">
+    <meta name="keywords" content="Google Hacking,Google Dork,高级搜索,信息收集,网络安全,渗透测试,SecNN">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Google Hacking 搜索助手 - SecNN</title>
     <style>
         :root {
-            --primary-color: #00d8ff;
-            --secondary-color: #0b0e23;
-            --accent-color: #6e48aa;
-            --text-color: #e0e0e0;
-            --dark-bg: rgba(15, 18, 37, 0.9);
+            --primary: #0891b2;
+            --primary-dark: #0e7490;
+            --blue: #2563eb;
+            --text: #172033;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --danger: #dc2626;
+            --warning-bg: #fffbeb;
+            --warning-line: #fde68a;
+            --gradient: linear-gradient(135deg, var(--primary), var(--blue));
+            --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        
+
+        * { box-sizing: border-box; }
+
         body {
+            margin: 0;
             min-height: 100vh;
-            background: linear-gradient(to right, var(--secondary-color), #1a1e3a);
-            color: var(--text-color);
-            overflow-x: hidden;
-            position: relative;
+            font-family: "Segoe UI", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 5%, rgba(8, 145, 178, 0.08), transparent 28rem),
+                radial-gradient(circle at 92% 18%, rgba(37, 99, 235, 0.06), transparent 26rem),
+                #fff;
         }
-        
-        body::before {
-            content: '';
-            position: fixed;
+
+        button, input { font: inherit; }
+        button { cursor: pointer; }
+
+        .topbar {
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://source.unsplash.com/random/1920x1080/?cyber,security') center/cover no-repeat;
-            opacity: 0.15;
-            z-index: -1;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        
-        .logo {
+            z-index: 20;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
+            justify-content: space-between;
+            padding: 0.85rem max(1rem, calc((100vw - 1160px) / 2));
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(12px);
         }
-        
-        .logo img {
-            height: 50px;
-            margin-right: 1rem;
-            filter: drop-shadow(0 0 8px var(--primary-color));
+
+        .brand, .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 700;
         }
-        
-        .logo h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 10px rgba(0, 216, 255, 0.3);
+
+        .brand img { width: 34px; height: 34px; object-fit: contain; }
+
+        .back-link {
+            padding: 0.55rem 0.85rem;
+            border-radius: 9px;
+            color: var(--primary-dark);
+            font-size: 0.92rem;
         }
-        
-        .description {
-            color: rgba(224, 224, 224, 0.8);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+
+        .back-link:hover { background: #ecfeff; }
+
+        .container {
+            width: min(1160px, calc(100% - 2rem));
+            margin: 0 auto;
+            padding: 3.5rem 0 4rem;
         }
-        
-        .search-container {
-            background: var(--dark-bg);
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+
+        .hero { max-width: 800px; margin-bottom: 2rem; }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.7rem;
+            border: 1px solid #a5f3fc;
+            border-radius: 999px;
+            color: var(--primary-dark);
+            background: #ecfeff;
+            font-size: 0.82rem;
+            font-weight: 700;
         }
-        
-        .search-form {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+
+        h1 {
+            margin: 0.9rem 0 0.7rem;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1.12;
+            letter-spacing: -0.04em;
         }
-        
-        .search-input {
-            flex: 1;
-            padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-color);
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(0, 216, 255, 0.2);
-        }
-        
-        .search-btn {
-            padding: 1rem 2rem;
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 216, 255, 0.4);
-        }
-        
-        .quick-search {
-            margin-bottom: 2rem;
-        }
-        
-        .quick-search h2 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-        }
-        
-        .quick-search-buttons {
+
+        .hero p { margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
+
+        .workspace {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.7fr);
+            gap: 1.5rem;
+            align-items: start;
         }
-        
-        .quick-search-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-color);
-            padding: 0.8rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
         }
-        
-        .quick-search-btn:hover {
-            background: rgba(0, 216, 255, 0.1);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
+
+        .builder { padding: clamp(1.2rem, 3vw, 2rem); }
+
+        .section-heading { margin-bottom: 1rem; }
+        .section-heading h2 { margin: 0 0 0.3rem; font-size: 1.2rem; }
+        .section-heading p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+        .search-form { display: flex; gap: 0.75rem; }
+
+        .input-wrap { position: relative; flex: 1; }
+        .input-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            user-select: none;
         }
-        
-        .active-syntax {
-            margin-top: 2rem;
-            background: var(--dark-bg);
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .search-input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.7rem;
+            color: var(--text);
+            background: var(--surface-soft);
+            border: 1px solid #cbd5e1;
+            border-radius: 11px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
         }
-        
-        .active-syntax h2 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+
+        .search-input:focus {
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.13);
         }
-        
-        .syntax-display {
-            background: rgba(0, 0, 0, 0.3);
+
+        .primary-btn, .copy-btn {
+            border: 0;
+            border-radius: 11px;
+            font-weight: 700;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .primary-btn {
+            padding: 0.9rem 1.3rem;
+            color: #fff;
+            background: var(--gradient);
+            box-shadow: 0 8px 18px rgba(8, 145, 178, 0.2);
+        }
+
+        .primary-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(8, 145, 178, 0.28); }
+
+        .error { min-height: 1.4rem; margin: 0.4rem 0 0; color: var(--danger); font-size: 0.85rem; }
+
+        .templates { margin-top: 1.25rem; }
+        .template-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; }
+
+        .template-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-height: 64px;
+            padding: 0.75rem;
+            text-align: left;
+            color: var(--text);
+            background: var(--surface-soft);
+            border: 1px solid var(--line);
+            border-radius: 11px;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+
+        .template-btn:hover, .template-btn.active {
+            background: #ecfeff;
+            border-color: #67e8f9;
+            transform: translateY(-1px);
+        }
+
+        .template-icon {
+            display: grid;
+            place-items: center;
+            flex: 0 0 36px;
+            height: 36px;
+            border-radius: 9px;
+            color: var(--primary-dark);
+            background: #cffafe;
+            font-weight: 800;
+        }
+
+        .template-text strong, .template-text small { display: block; }
+        .template-text strong { font-size: 0.92rem; }
+        .template-text small { margin-top: 0.15rem; color: var(--muted); font-size: 0.76rem; }
+
+        .query-preview {
+            margin-top: 1.3rem;
             padding: 1rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-family: monospace;
-            color: #00ffaa;
-            border-left: 3px solid var(--primary-color);
+            background: #0f172a;
+            border-radius: 12px;
+            color: #dffafe;
         }
-        
-        .disclaimer {
-            margin-top: 2rem;
+
+        .preview-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.65rem; }
+        .preview-head strong { font-size: 0.88rem; color: #a5f3fc; }
+        .copy-btn { padding: 0.4rem 0.65rem; color: #dffafe; background: rgba(255, 255, 255, 0.1); font-size: 0.78rem; }
+        .copy-btn:hover { background: rgba(255, 255, 255, 0.18); }
+
+        code {
+            display: block;
+            overflow-wrap: anywhere;
+            color: #fff;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
+            line-height: 1.6;
         }
-        
-        /* 动画效果 */
-        @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
+
+        .authorization {
+            display: flex;
+            gap: 0.65rem;
+            align-items: flex-start;
+            margin-top: 1rem;
+            color: var(--muted);
+            font-size: 0.86rem;
+            line-height: 1.5;
         }
-        
-        .pulse {
-            animation: pulse 2s infinite;
+
+        .authorization input { margin-top: 0.2rem; accent-color: var(--primary); }
+
+        .sidebar { padding: 1.3rem; }
+        .sidebar h2 { margin: 0 0 1rem; font-size: 1.08rem; }
+        .steps { margin: 0; padding: 0; list-style: none; counter-reset: steps; }
+        .steps li { position: relative; padding: 0 0 1rem 2.4rem; color: var(--muted); font-size: 0.9rem; line-height: 1.55; counter-increment: steps; }
+        .steps li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: grid;
+            place-items: center;
+            width: 1.7rem;
+            height: 1.7rem;
+            color: var(--primary-dark);
+            background: #ecfeff;
+            border-radius: 50%;
+            font-weight: 800;
         }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .search-form {
-                flex-direction: column;
-            }
-            
-            .quick-search-buttons {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .logo h1 {
-                font-size: 1.8rem;
-            }
+
+        .operator-list { display: grid; gap: 0.55rem; }
+        .operator {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.65rem 0.75rem;
+            background: var(--surface-soft);
+            border-radius: 9px;
+            font-size: 0.84rem;
+        }
+        .operator code { color: var(--primary-dark); font-weight: 800; }
+        .operator span { color: var(--muted); text-align: right; }
+
+        .notice {
+            margin-top: 1.5rem;
+            padding: 1rem 1.1rem;
+            color: #854d0e;
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-line);
+            border-radius: 12px;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 850px) {
+            .workspace { grid-template-columns: 1fr; }
+            .sidebar { order: 2; }
+        }
+
+        @media (max-width: 620px) {
+            .container { padding-top: 2rem; }
+            .brand span { display: none; }
+            .search-form { flex-direction: column; }
+            .primary-btn { width: 100%; }
+            .template-grid { grid-template-columns: 1fr; }
+            .builder { padding: 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <img src="Google.png" alt="Google Logo">
-                <h1>Hacking 高级搜索工具 - SecNN</h1>
-            </div>
-            <p class="description">
-                这是一个专业的Google Hacking工具，用于网络安全研究人员查找潜在的安全漏洞。
-                请输入目标域名并使用预定义的搜索语法进行高效搜索。
-            </p>
+    <nav class="topbar" aria-label="页面导航">
+        <a class="brand" href="../index.html"><img src="Google.png" alt=""><span>SecNN · Google Hacking</span></a>
+        <a class="back-link" href="../index.html">← 返回主页</a>
+    </nav>
+
+    <main class="container">
+        <header class="hero">
+            <span class="eyebrow">🔎 授权安全测试工具</span>
+            <h1>Google Hacking<br>高级搜索助手</h1>
+            <p>输入目标域名并选择查询模板，快速生成 Google 高级搜索语法。适用于授权范围内的公开信息梳理、安全审计与暴露面检查。</p>
         </header>
-        
-        <div class="search-container">
-		🔍输入目标域名 》选择"快速搜索选项" 》点击搜索（自动组合语法并跳转到Google搜索结果）
-		
-            <div class="search-form">
-                <input type="text" class="search-input" id="domainInput" placeholder="输入目标域名 (例如: example.com)" required>
-                <button class="search-btn" onclick="performSearch()">搜索</button>
-            </div>
-            
-            <div class="quick-search">
-                <h2>快速搜索选项:</h2>
-                <div class="quick-search-buttons">
-                    <button class="quick-search-btn" onclick="setSyntax('phpinfo')">phpinfo()</button>
-                    <button class="quick-search-btn" onclick="setSyntax('login')">登录页面</button>
-                    <button class="quick-search-btn" onclick="setSyntax('sql')">SQL错误</button>
-                    <button class="quick-search-btn" onclick="setSyntax('documents')">公开文件信息</button>
-                    <button class="quick-search-btn" onclick="setSyntax('directory')">目录遍历漏洞</button>
-                    <button class="quick-search-btn" onclick="setSyntax('config')">配置文件泄露</button>
-                    <button class="quick-search-btn" onclick="setSyntax('logs')">日志文件泄露</button>
-                    <button class="quick-search-btn" onclick="setSyntax('backup')">备份和历史文件</button>
-                    <button class="quick-search-btn" onclick="setSyntax('database')">数据库文件泄露</button>
-                    <button class="quick-search-btn" onclick="setSyntax('github')">搜索Github/Gitlab</button>
+
+        <div class="workspace">
+            <section class="panel builder" aria-labelledby="builder-title">
+                <div class="section-heading">
+                    <h2 id="builder-title">创建搜索查询</h2>
+                    <p>支持域名、子域名或完整网址，系统会自动提取有效主机名。</p>
                 </div>
-            </div>
-            
-            <div class="active-syntax">
-                <h2>当前搜索语法: <span id="currentSyntax">未选择</span></h2>
-                <div class="syntax-display" id="syntaxDisplay">
-                    请从上方选择搜索语法或直接输入域名进行搜索
+
+                <form class="search-form" id="searchForm" novalidate>
+                    <div class="input-wrap">
+                        <span class="input-prefix" aria-hidden="true">🌐</span>
+                        <input class="search-input" id="domainInput" type="text" inputmode="url" autocomplete="url" placeholder="example.com" aria-describedby="domainError" required>
+                    </div>
+                    <button class="primary-btn" type="submit">在 Google 搜索</button>
+                </form>
+
+                <label class="authorization">
+                    <input id="authorizationCheck" type="checkbox">
+                    <span>我确认目标属于本人，或已获得目标所有者明确授权，并会遵守当地法律及搜索服务条款。</span>
+                </label>
+                <p class="error" id="domainError" role="alert"></p>
+
+                <div class="templates">
+                    <div class="section-heading">
+                        <h2>选择查询模板</h2>
+                        <p>不选择模板时，将仅查询目标站点的公开索引结果。</p>
+                    </div>
+                    <div class="template-grid" id="templateGrid"></div>
                 </div>
-            </div>
+
+                <div class="query-preview" aria-live="polite">
+                    <div class="preview-head"><strong id="selectedLabel">站点公开索引</strong><button class="copy-btn" id="copyBtn" type="button">复制语法</button></div>
+                    <code id="queryPreview">site:example.com</code>
+                </div>
+
+            </section>
+
+            <aside class="panel sidebar">
+                <h2>使用步骤</h2>
+                <ol class="steps">
+                    <li>输入需要检查的目标域名。</li>
+                    <li>选择一个与审计目标匹配的查询模板。</li>
+                    <li>核对生成的语法并确认已获得授权。</li>
+                    <li>打开 Google 结果，人工验证公开信息。</li>
+                </ol>
+
+                <h2>常用运算符</h2>
+                <div class="operator-list">
+                    <div class="operator"><code>site:</code><span>限定网站或域名</span></div>
+                    <div class="operator"><code>filetype:</code><span>限定文件类型</span></div>
+                    <div class="operator"><code>inurl:</code><span>匹配网址内容</span></div>
+                    <div class="operator"><code>intitle:</code><span>匹配页面标题</span></div>
+                    <div class="operator"><code>intext:</code><span>匹配页面正文</span></div>
+                </div>
+            </aside>
         </div>
-        
-        <p class="disclaimer">
-            注意: 此工具仅供合法的安全研究和授权渗透测试使用。未经授权扫描系统可能违反法律。
-        </p>
-    </div>
-    
+
+        <p class="notice"><strong>安全提示：</strong>搜索结果来自公开索引，但公开可见不代表获得了访问、下载或测试授权。请勿登录、利用、修改或传播不属于你的数据；发现问题时应通过负责任的披露渠道联系资产所有者。</p>
+    </main>
+
     <script>
-        let currentSyntax = '';
-        
-        function setSyntax(type) {
-            const domain = document.getElementById('domainInput').value;
-            let syntax = '';
-            let description = '';
-            
-            switch(type) {
-                case 'phpinfo':
-                    syntax = ` ext:php intitle:phpinfo "published by the PHP Group"`;
-                    description = "查找公开的phpinfo()页面，可能泄露服务器敏感信息";
-                    break;
-                case 'login':
-                    syntax = ` inurl:login | inurl:admin | intitle:登陆 | intitle:后台 | intitle:管理 | intitle:认证`;
-                    description = "查找目标网站的登录页面、管理后台";
-                    break;
-                case 'sql':
-                    syntax = ` intext:"sql syntax near" | intext:"syntax error has occurred" | intext:"incorrect syntax near" | intext:"unexpected end of SQL command" | intext:"Warning: mysql_connect()" | intext:"Warning: mysql_query()" | intext:"Warning: pg_connect()" | intext:"You have an error in your SQL syntax"`;
-                    description = "查找SQL错误信息，可能暴露数据库结构或配置";
-                    break;
-                case 'documents':
-                    syntax = ` ext:doc | ext:docx | ext:odt | ext:pdf | ext:rtf | ext:sxw | ext:psw`;
-                    description = "查找公开的文档文件，可能包含敏感信息";
-                    break;
-                case 'directory':
-                    syntax = ` intitle:index.of`;
-                    description = "查找目录遍历漏洞，可能暴露目录结构";
-                    break;
-                case 'config':
-                    syntax = ` ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini`;
-                    description = "查找配置文件泄露，可能包含敏感配置信息";
-                    break;
-                case 'logs':
-                    syntax = ` ext:log`;
-                    description = "查找日志文件，可能包含敏感活动记录";
-                    break;
-                case 'backup':
-                    syntax = ` ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup`;
-                    description = "查找备份和历史文件，可能包含旧版本但敏感的数据";
-                    break;
-                case 'database':
-                    syntax = ` ext:sql | ext:dbf | ext:mdb`;
-                    description = "查找数据库文件泄露，可能包含完整的数据库数据";
-                    break;
-                case 'github':
-                    syntax = ` github.com | site:gitlab.com ""`;
-                    description = "在GitHub/GitLab上搜索与目标相关的公开代码仓库";
-                    break;
+        const templates = [
+            { id: 'phpinfo', icon: 'PHP', label: 'phpinfo 页面', hint: '检查公开的运行环境信息', query: 'ext:php intitle:phpinfo "published by the PHP Group"' },
+            { id: 'login', icon: '↪', label: '登录与管理入口', hint: '定位公开登录页面', query: '(inurl:login OR inurl:admin OR intitle:登录 OR intitle:后台 OR intitle:管理)' },
+            { id: 'sql', icon: 'SQL', label: 'SQL 错误信息', hint: '检查公开错误页面', query: '(intext:"SQL syntax" OR intext:"mysql_query()" OR intext:"pg_connect()" OR intext:"database error")' },
+            { id: 'documents', icon: 'DOC', label: '公开文档', hint: '查找常见办公文档', query: '(filetype:pdf OR filetype:doc OR filetype:docx OR filetype:xls OR filetype:xlsx OR filetype:ppt OR filetype:pptx)' },
+            { id: 'directory', icon: 'DIR', label: '目录索引', hint: '定位公开目录列表', query: 'intitle:"index of"' },
+            { id: 'config', icon: 'CFG', label: '配置文件', hint: '检查误公开的配置内容', query: '(filetype:conf OR filetype:cfg OR filetype:ini OR filetype:xml OR filetype:env)' },
+            { id: 'logs', icon: 'LOG', label: '日志文件', hint: '检查公开日志索引', query: 'filetype:log' },
+            { id: 'backup', icon: 'BAK', label: '备份与历史文件', hint: '查找常见备份扩展名', query: '(filetype:bak OR filetype:backup OR filetype:old OR filetype:bkp)' },
+            { id: 'database', icon: 'DB', label: '数据库文件', hint: '检查公开数据库文件', query: '(filetype:sql OR filetype:db OR filetype:dbf OR filetype:mdb)' },
+            { id: 'source-map', icon: 'MAP', label: 'Source Map 文件', hint: '检查公开的前端映射文件', query: 'filetype:map' }
+        ];
+
+        const form = document.getElementById('searchForm');
+        const domainInput = document.getElementById('domainInput');
+        const errorBox = document.getElementById('domainError');
+        const templateGrid = document.getElementById('templateGrid');
+        const queryPreview = document.getElementById('queryPreview');
+        const selectedLabel = document.getElementById('selectedLabel');
+        const authorizationCheck = document.getElementById('authorizationCheck');
+        const copyBtn = document.getElementById('copyBtn');
+        let selectedTemplate = null;
+
+        function normalizeDomain(value) {
+            let candidate = value.trim().toLowerCase();
+            if (!candidate) return '';
+            if (!/^https?:\/\//i.test(candidate)) candidate = `https://${candidate}`;
+            try {
+                const hostname = new URL(candidate).hostname.replace(/^www\./, '').replace(/\.$/, '');
+                if (!hostname || hostname.length > 253 || !hostname.includes('.') || !/^[a-z0-9.-]+$/i.test(hostname)) return '';
+                if (hostname.split('.').some(part => !part || part.length > 63 || part.startsWith('-') || part.endsWith('-'))) return '';
+                return hostname;
+            } catch (_) {
+                return '';
             }
-            
-            currentSyntax = syntax;
-            document.getElementById('currentSyntax').textContent = description;
-            document.getElementById('syntaxDisplay').textContent = syntax;
         }
-        
-        function performSearch() {
-            const domain = document.getElementById('domainInput').value;
+
+        function buildQuery() {
+            const domain = normalizeDomain(domainInput.value) || 'example.com';
+            return `site:${domain}${selectedTemplate ? ` ${selectedTemplate.query}` : ''}`;
+        }
+
+        function updatePreview() {
+            queryPreview.textContent = buildQuery();
+            selectedLabel.textContent = selectedTemplate ? selectedTemplate.label : '站点公开索引';
+            errorBox.textContent = '';
+        }
+
+        templates.forEach(template => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'template-btn';
+            button.dataset.id = template.id;
+            button.innerHTML = `<span class="template-icon">${template.icon}</span><span class="template-text"><strong>${template.label}</strong><small>${template.hint}</small></span>`;
+            button.addEventListener('click', () => {
+                const selectingSame = selectedTemplate && selectedTemplate.id === template.id;
+                selectedTemplate = selectingSame ? null : template;
+                document.querySelectorAll('.template-btn').forEach(item => item.classList.toggle('active', !selectingSame && item.dataset.id === template.id));
+                updatePreview();
+            });
+            templateGrid.appendChild(button);
+        });
+
+        domainInput.addEventListener('input', updatePreview);
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const domain = normalizeDomain(domainInput.value);
             if (!domain) {
-                alert('请输入目标域名');
+                errorBox.textContent = '请输入有效域名，例如 example.com。';
+                domainInput.focus();
                 return;
             }
-            
-                        
-            let searchQuery = `site:${domain}`;
-            if (currentSyntax) {
-                searchQuery += ` ${currentSyntax}`;
+            if (!authorizationCheck.checked) {
+                errorBox.textContent = '请先确认你已获得目标测试授权。';
+                authorizationCheck.focus();
+                return;
             }
-            
-            // 编码搜索查询并打开Google搜索
-            const encodedQuery = encodeURIComponent(searchQuery);
-            window.open(`https://www.google.com/search?q=${encodedQuery}`, '_blank');
-        }
+            const query = `site:${domain}${selectedTemplate ? ` ${selectedTemplate.query}` : ''}`;
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank', 'noopener,noreferrer');
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(buildQuery());
+                copyBtn.textContent = '已复制';
+                setTimeout(() => { copyBtn.textContent = '复制语法'; }, 1400);
+            } catch (_) {
+                errorBox.textContent = '浏览器未允许复制，请手动选择查询语法。';
+            }
+        });
     </script>
+    <script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

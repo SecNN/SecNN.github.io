@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub用户泄露邮箱查询平台 - GitMailFinder</title>
-    <meta name="description" content="GitMailFinder 是一款高效工具，帮助开发者快速查找GitHub用户泄露的电子邮件地址。支持批量查询，数据精准，免费！">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <title>GitHub 公开提交邮箱查询 - GitMailFinder</title>
+    <meta name="description" content="GitMailFinder 用于查询 GitHub 公开提交记录和公开 API 中的邮箱信息，帮助开发者检查公开提交元数据与隐私暴露风险。">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · GitMailFinder</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
     <div class="container">
         <header class="header">
-            <h1><i class="fab fa-github"></i>GitHub用户泄露邮箱查询平台 - GitMailFinder</h1>
+            <h1><i class="fab fa-github"></i> GitHub 公开提交邮箱查询 - GitMailFinder</h1>
             <p style="margin-top:10px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
                 <a href="https://github.com/SecNN/GitMailFinder" target="_blank" rel="noopener" class="btn" style="background:#24292e;">
                     <i class="fab fa-github"></i> 项目仓库：SecNN/GitMailFinder
@@ -21,7 +24,7 @@
                     ⭐ 点个 Star 支持项目
                 </a>
             </p>
-            <p>通过两种方式查询GitHub用户泄露的邮箱</p>
+            <p>通过公开提交记录或 GitHub API 检查邮箱暴露情况，请仅查询本人或已获授权的账号与仓库。</p>
         </header>
 
         <div class="methods-container">
@@ -59,12 +62,13 @@
                         <input type="text" id="username" placeholder="输入GitHub用户名" />
                     </div>
                     <div class="input-group">
-                        <label for="token">可选：GitHub Token（仅本地存储，处理GitHub API 的请求频率限制）</label>
+                        <label for="token">可选：GitHub Token（仅保留到当前浏览器标签页关闭）</label>
                         <input type="password" id="token" placeholder="粘贴你的个人访问令牌（PAT）" />
                     </div>
                     <button id="queryApi" class="btn btn-primary">
                         <i class="fas fa-search"></i> 查询邮箱
                     </button>
+					<button id="clearToken" type="button" class="btn"><i class="fas fa-trash-alt"></i> 清除 Token</button>
 					<a href="https://github.com/SecNN/GitMailFinder?tab=readme-ov-file#%E8%8E%B7%E5%8F%96-github-tokenpat" target="_blank"  class="btn" >如何获取 GitHub Token（PAT）</a>
                 </div>
 
@@ -99,5 +103,6 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

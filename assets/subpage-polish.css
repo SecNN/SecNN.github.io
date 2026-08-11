@@ -1,0 +1,86 @@
+:root {
+    --secnn-primary: #0891b2;
+    --secnn-primary-dark: #0e7490;
+    --secnn-focus: rgba(8, 145, 178, 0.2);
+}
+
+html { scroll-behavior: smooth; }
+
+body { text-rendering: optimizeLegibility; }
+
+img, svg, video, canvas { max-width: 100%; }
+
+button, input, select, textarea { font: inherit; }
+
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+
+:where(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid var(--secnn-focus);
+    outline-offset: 2px;
+}
+
+.secnn-page-nav {
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto 1rem;
+    padding-top: 1rem;
+    font-family: "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+}
+
+.secnn-page-nav__brand,
+.secnn-page-nav__home {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0.55rem 0.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.secnn-page-nav__brand {
+    color: inherit;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.secnn-page-nav__home {
+    color: #fff;
+    background: linear-gradient(135deg, var(--secnn-primary), #2563eb);
+    box-shadow: 0 6px 16px rgba(8, 145, 178, 0.2);
+    font-weight: 700;
+}
+
+.secnn-page-nav__home:hover { transform: translateY(-1px); }
+
+.secnn-page-note {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 1.25rem auto;
+    padding: 0.85rem 1rem;
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font: 0.9rem/1.6 "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .secnn-page-nav { width: calc(100% - 1rem); padding-top: 0.5rem; }
+    .secnn-page-nav__brand { padding-left: 0.35rem; }
+    .secnn-page-nav__home { min-height: 38px; }
+}

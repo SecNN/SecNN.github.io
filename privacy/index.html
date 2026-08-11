@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <meta name="description" content="SecNN 在线工具的数据处理、第三方服务、本地存储与安全使用说明。">
+    <title>隐私与数据处理说明 - SecNN</title>
+    <link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
+    <style>
+        body { margin:0; color:#172033; background:radial-gradient(circle at 12% 8%,rgba(8,145,178,.08),transparent 28rem),#fff; font-family:"Segoe UI","Noto Sans SC",system-ui,sans-serif; }
+        main { width:min(860px,calc(100% - 2rem)); margin:0 auto; padding:2rem 0 4rem; }
+        .eyebrow { display:inline-flex; padding:.35rem .7rem; color:#0e7490; background:#ecfeff; border:1px solid #a5f3fc; border-radius:999px; font-size:.82rem; font-weight:700; }
+        h1 { margin:.9rem 0 .6rem; font-size:clamp(2rem,5vw,3rem); letter-spacing:-.035em; }
+        .lead { color:#64748b; line-height:1.8; }
+        section { margin-top:1rem; padding:1.25rem 1.4rem; background:#fff; border:1px solid #e2e8f0; border-radius:14px; box-shadow:0 8px 24px rgba(15,23,42,.05); }
+        h2 { margin:0 0 .6rem; font-size:1.15rem; }
+        p,li { color:#475569; line-height:1.75; }
+        ul { margin:.5rem 0 0; padding-left:1.2rem; }
+        code { color:#0e7490; background:#ecfeff; padding:.1rem .3rem; border-radius:4px; }
+    </style>
+</head>
+<body>
+    <nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · 隐私说明</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
+    <main>
+        <span class="eyebrow">隐私与数据处理</span>
+        <h1>你的数据如何被处理</h1>
+        <p class="lead">本说明概述 SecNN 在线工具在浏览器本地处理、第三方请求及本地存储方面的基本行为。不同工具的具体行为可能有所差异。</p>
+        <section><h2>浏览器本地处理</h2><p>编解码、JWT、密码字典和部分文本转换功能主要在浏览器中运行。除非页面明确说明或功能需要调用外部接口，输入内容不会由本站主动提交到服务器。</p></section>
+        <section><h2>第三方服务请求</h2><p>IP 查询、Google 搜索、GitHub 查询等功能需要向相应第三方服务发送必要参数。第三方可能依据其隐私政策记录 IP 地址、查询内容、浏览器信息或访问日志。</p></section>
+        <section><h2>浏览器本地存储</h2><p>部分工具可能使用 <code>localStorage</code> 保存偏好、历史记录或用户主动填写的配置。共享设备上使用敏感信息后，请及时清除页面数据和浏览器存储。</p></section>
+        <section><h2>敏感信息建议</h2><ul><li>不要在在线工具中粘贴生产环境密钥、真实访问令牌或未脱敏的个人数据。</li><li>JWT 解码不等于签名可信，请独立验证签名、签发方、受众和有效期。</li><li>仅对本人资产或已获得明确授权的目标开展安全测试。</li></ul></section>
+        <section><h2>外部资源</h2><p>部分页面使用 CDN 字体、图标或 JavaScript 库。加载这些资源时，浏览器会直接连接对应服务提供方。</p></section>
+        <section><h2>更新与反馈</h2><p>本说明会随工具功能调整而更新。若发现页面行为与说明不一致，可通过 SecNN GitHub 项目反馈。</p></section>
+    </main>
+    <script src="../assets/site-footer.js?v=1"></script>
+</body>
+</html>

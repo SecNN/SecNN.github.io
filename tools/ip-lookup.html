@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>在线IP地址查询工具 - 支持IPv6/域名解析/地理位置信息 | SecNN.com</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+	<title>IP 地址与域名查询 - SecNN</title>
 	<meta name="description" content="免费在线IP地址查询工具，精准查询IPv4/IPv6地址位置信息，支持域名解析获取IP。提供IP归属地、运营商ISP和详细地理位置等信息，快速检测您的公网IP和网络环境，是网络管理员的必备工具。">
+    <link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
 
     <style>
         :root {
@@ -273,12 +275,56 @@
                 font-size: 2rem;
             }
         }
+
+        /* SecNN 浅色主题 */
+        body {
+            background:
+                radial-gradient(circle at 10% 15%, rgba(8, 145, 178, 0.08), transparent 24rem),
+                radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.06), transparent 24rem),
+                #ffffff;
+            color: #172033;
+        }
+
+        .search-box {
+            padding: 1rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+        }
+
+        input[type="text"] {
+            background: #f8fafc;
+            color: #172033;
+            border-color: #cbd5e1;
+        }
+
+        input[type="text"]::placeholder { color: #94a3b8; }
+
+        .ip-card {
+            background: #ffffff;
+            border-color: #dbeafe;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+        }
+
+        .detail-label, footer { color: #64748b; }
+        .detail-value { color: #172033; }
+        .ip-card-header { border-bottom-color: #e2e8f0; }
+        .error-message { color: #dc2626; }
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .search-box { flex-direction: column; }
+            .search-box button { width: 100%; }
+            .ip-image { height: 280px; }
+        }
     </style>
 </head>
 <body>
+    <nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · IP 查询</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
     <div class="container">
         <header>
-            <h1>在线IP地址查询工具 - 支持IPv6/域名解析/地理位置信息 | SecNN.com</h1>
+            <h1>IP 地址与域名查询</h1>
             <p>免费查询IP地址的详细信息及地理位置信息</p>
         </header>
         
@@ -500,5 +546,6 @@
             fetchMyIp();
         });
     </script>
+<script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

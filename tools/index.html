@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在线编解码工具集合 - Base64编码解码|URL编码解码|Hex编码解码|Unicode编码解码|MD5生成工具|Java Bash|Java PowerShell|String - SecNN</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <title>在线编解码工具箱 - SecNN</title>
 	<meta name="description" content="免费在线编码解码工具集合，支持Base64/URL/Hex/Unicode编码解码、MD5生成、Java Bash/PowerShell命令转换等功能，网络安全人员必备工具，支持一站式解决方案">
+    <link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
 	<meta name="keywords" content="在线工具,编码转换,解码工具,Base64,URL编码,Hex解码,Unicode转换,MD5生成,网络安全工具">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="../assets/vendor/crypto-js-4.1.1.min.js"></script>
     <style>
         :root {
             --primary-color: #00d9ff;
@@ -231,12 +233,67 @@
                 width: 100%;
             }
         }
+
+        /* SecNN 浅色主题 */
+        :root {
+            --primary-color: #0891b2;
+            --secondary-color: #2563eb;
+            --dark-bg: #ffffff;
+            --darker-bg: #f8fafc;
+            --light-text: #172033;
+            --highlight: #0e7490;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 12% 8%, rgba(8, 145, 178, 0.08), transparent 28rem),
+                radial-gradient(circle at 88% 22%, rgba(37, 99, 235, 0.06), transparent 26rem),
+                #ffffff;
+            color: var(--light-text);
+        }
+
+        h1 { text-shadow: none; }
+
+        .tool-card, .feature-item {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+            backdrop-filter: none;
+        }
+
+        .tool-card:hover {
+            border-color: #67e8f9;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.11);
+        }
+
+        textarea, input, select {
+            background: #f8fafc;
+            color: #172033;
+            border-color: #cbd5e1;
+        }
+
+        textarea::placeholder, input::placeholder { color: #94a3b8; }
+
+        button {
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(8, 145, 178, 0.2);
+        }
+
+        .copy-btn {
+            color: #334155;
+            background: #e2e8f0;
+        }
+
+        .copy-btn:hover { background: #cbd5e1; }
+        footer { border-top-color: #e2e8f0; color: #64748b; }
+        .social-links a { color: #475569; }
     </style>
 </head>
 <body>
+    <nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · 编解码工具</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
     <div class="container">
         <header>
-            <h1>在线编解码工具集合 - SecNN</h1>
+            <h1>在线编解码工具箱</h1>
             <p class="subtitle">免费在线编码解码工具集合，支持Base64/URL/Hex/Unicode编码解码、MD5生成、Java Bash/PowerShell命令转换等功能，网络安全人员必备工具。</p>
         </header>
 		
@@ -543,7 +600,7 @@ function convertHttp(type) {
     <footer>
         <div class="social-links">
             🚀Copyright &copy; 2023 Made with<i class="fas fa-heart" style="color: #ff4757;"><a href="https://github.com/Axx8" target="_blank">GitHub</a>
-            <a href="wx.png" onclick="alert('扫码关注公众号')"> 微信公众号</a>
+            <a href="../img/wx.png">微信公众号</a>
         </div>
     </footer>
 
@@ -674,5 +731,6 @@ function convertHttp(type) {
             document.getElementById('cmd-result').value = result;
         }
     </script>
+<script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

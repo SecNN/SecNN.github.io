@@ -1,20 +1,28 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" href="favicon.ico" type="image/ico" sizes="16x16">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>快人一步-超前一分钟-时钟</title>
+<title>在线时钟 - SecNN</title>
+<meta name="description" content="SecNN 在线时钟页面，提供简洁的浏览器时间显示。">
 
 <link rel="stylesheet" href="css/demo.css">
+<link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
 
 </head>
 <body>
 
+<nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · 在线时钟</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
+
 <div id="clock"></div>
+
+<p class="secnn-page-note">时间依据当前设备时钟显示。如发现偏差，请先检查操作系统的日期、时间和时区设置。</p>
 
 <script src="js/demo.js"></script>
 
+<script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

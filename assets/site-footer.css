@@ -1,0 +1,42 @@
+.secnn-safety-notice {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 2rem auto 1rem;
+    padding: 1rem 1.1rem;
+    color: #475569;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #0891b2;
+    border-radius: 12px;
+    font: 0.9rem/1.65 "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+    text-align: left;
+}
+
+.secnn-safety-notice strong { color: #172033; }
+
+footer.secnn-site-footer {
+    width: 100%;
+    margin: 2rem 0 0;
+    padding: 1.5rem 1rem;
+    color: #64748b;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    font: 0.9rem/1.6 "Segoe UI", "Noto Sans SC", system-ui, sans-serif;
+    text-align: center;
+}
+
+.secnn-site-footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+}
+
+.secnn-site-footer__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+.secnn-site-footer a { color: #0e7490; text-decoration: none; font-weight: 600; }
+.secnn-site-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 680px) {
+    .secnn-site-footer__inner { flex-direction: column; }
+}

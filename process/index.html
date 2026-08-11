@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
 <link rel="icon" href="favicon.ico" type="image/ico" sizes="16x16">
-<title>Windows提权辅助工具 - 杀软在线对比|常用软件进程对比|系统安全检测工具 - SecNN</title>
+<title>Windows 进程与杀软识别工具 - SecNN</title>
 <meta name="description" content="专业的Windows系统安全工具，提供杀毒软件进程在线对比、常用软件进程识别和系统提权辅助功能，帮助您快速检测系统安全状况。">
+<link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
 <script src="./js/process.js"></script>
 <style>
     /* 全局样式 */
@@ -245,12 +248,84 @@
         100% { transform: translateX(100%); }
     }
     }
+
+    /* SecNN 浅色主题 */
+    body {
+        background:
+            radial-gradient(circle at 12% 10%, rgba(8, 145, 178, 0.08), transparent 26rem),
+            radial-gradient(circle at 88% 78%, rgba(37, 99, 235, 0.06), transparent 24rem),
+            #ffffff;
+        color: #172033;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.09);
+    }
+
+    h1 {
+        color: #0e7490;
+        text-shadow: none;
+        font-weight: 700;
+    }
+
+    h4, .command-instruction h4 {
+        color: #334155;
+        text-shadow: none;
+    }
+
+    .button_ {
+        background: linear-gradient(135deg, #0891b2, #2563eb);
+        box-shadow: 0 6px 18px rgba(8, 145, 178, 0.22);
+        text-shadow: none;
+    }
+
+    .button_:hover {
+        box-shadow: 0 10px 24px rgba(8, 145, 178, 0.3);
+    }
+
+    textarea {
+        background: #f8fafc;
+        color: #172033;
+        border-color: #cbd5e1;
+        box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.05);
+        resize: vertical;
+    }
+
+    textarea:focus {
+        border-color: #0891b2;
+        box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.13);
+    }
+
+    textarea:disabled { background: #f1f5f9; color: #334155; }
+
+    .command-instruction {
+        padding: 1rem;
+        margin: 1.25rem 0;
+        background: #ecfeff;
+        border: 1px solid #a5f3fc;
+        border-radius: 12px;
+        box-shadow: none;
+    }
+
+    .command-instruction::before, .command-instruction::after { display: none; }
+    .command-instruction span { color: #0e7490; }
+    .loading { color: #0e7490; text-shadow: none; }
+
+    .user-info {
+        color: #475569;
+        background: rgba(255, 255, 255, 0.94);
+        border-color: #e2e8f0;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    }
 </style>
 </head>
 
 <body>
+<nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · 进程识别</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
 <div class="container">
-    <h1>Windows提权辅助工具 - 杀软在线对比|常用软件进程对比 - SecNN</h1>
+    <h1>Windows 进程与杀软识别</h1>
     
     <div class="command-instruction">
         <h4>
@@ -365,5 +440,6 @@ fetch('https://ipinfo.io/json')
         displayUserInfo(null);
     });
 </script>
+<script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

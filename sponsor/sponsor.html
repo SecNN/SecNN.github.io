@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>打赏我们</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: https:; img-src 'self' data: blob: https:; connect-src 'self' https:; frame-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self' https:; upgrade-insecure-requests">
+    <title>支持 SecNN - 项目赞助与鸣谢</title>
+    <meta name="description" content="SecNN 项目支持与打赏信息，感谢社区用户对免费网络安全工具持续开发与维护的支持。">
+    <link rel="stylesheet" href="../assets/subpage-polish.css?v=1">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6366f1;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #4f46e5;
-            --hover-color: #818cf8;
+            --primary-color: #0891b2;
+            --dark-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #172033;
+            --muted-color: #64748b;
+            --accent-color: #2563eb;
+            --hover-color: #0e7490;
+            --line-color: #e2e8f0;
         }
         
         * {
@@ -24,7 +29,7 @@
         
         body {
             font-family: 'Noto Sans SC', sans-serif;
-            background-color: var(--dark-bg);
+            background: radial-gradient(circle at 12% 8%, rgba(8,145,178,.08), transparent 28rem), radial-gradient(circle at 88% 22%, rgba(37,99,235,.06), transparent 26rem), var(--dark-bg);
             color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
@@ -56,7 +61,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(90deg, #6366f1, #a855f7);
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -67,6 +72,7 @@
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto 2rem;
+            color: var(--muted-color);
         }
         
         /* 打赏卡片区 */
@@ -79,11 +85,11 @@
         
         .donation-card {
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 18px;
             padding: 2rem;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--line-color);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -91,7 +97,7 @@
         
         .donation-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.12);
             border-color: var(--primary-color);
         }
         
@@ -111,6 +117,7 @@
             font-size: 0.95rem;
             opacity: 0.8;
             margin-bottom: 1.5rem;
+            color: var(--muted-color);
         }
         
         .qrcode-image {
@@ -118,7 +125,9 @@
             height: 220px;
             margin: 0 auto 1.5rem;
             border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            background: #fff;
+            border: 1px solid var(--line-color);
             transition: all 0.3s;
         }
         
@@ -132,6 +141,7 @@
             opacity: 0.7;
             margin-top: 1.5rem;
             font-style: italic;
+            color: var(--muted-color);
         }
         
         /* 感谢区域 */
@@ -159,7 +169,9 @@
         footer {
             text-align: center;
             padding: 1.5rem;
-            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--muted-color);
+            background-color: #f8fafc;
+            border-top: 1px solid var(--line-color);
             margin-top: auto;
         }
         
@@ -196,6 +208,10 @@
             position: relative;
             margin: 0 30px;
             overflow: hidden;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border: 1px solid var(--line-color);
+            border-radius: 18px;
         }
         
         .carousel-track {
@@ -216,6 +232,7 @@
             flex-direction: column;
             align-items: center;
             transition: all 0.3s;
+            border: 1px solid var(--line-color);
         }
         
         .sponsor-card:hover {
@@ -273,8 +290,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 28px;
-            height: 28px;
+            width: 38px;
+            height: 38px;
             background: white;
             border: none;
             border-radius: 50%;
@@ -284,10 +301,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--primary-color);
         }
         
         .carousel-nav:hover {
-            background: #ffcc00;
+            background: var(--primary-color);
             color: white;
         }
         
@@ -298,14 +316,27 @@
         .carousel-next {
             right: 0;
         }
+
+        .support-eyebrow { display:inline-flex; padding:.35rem .75rem; color:var(--primary-color); background:#ecfeff; border:1px solid #a5f3fc; border-radius:999px; font-size:.82rem; font-weight:700; }
+        .sponsors-heading { text-align:center; margin-bottom:1.25rem; }
+        .sponsors-heading h2 { margin-bottom:.35rem; }
+        .sponsors-heading p { color:var(--muted-color); font-size:.92rem; }
+        .footer-text a { color:var(--primary-color); text-decoration:none; }
+        @media (min-width:1200px) and (max-width:1399px) { .sponsor-card { min-width:calc(20% - 10px); } }
+        @media (max-width:1199px) { .sponsor-card { min-width:calc(25% - 9px); } }
+        @media (max-width:991px) { .sponsor-card { min-width:calc(33.333% - 8px); } }
+        @media (max-width:767px) { .sponsor-card { min-width:calc(50% - 6px); } }
+        @media (max-width:575px) { .sponsor-card { min-width:100%; } .carousel-container { margin:0 .5rem; padding:1rem 2.5rem; } .qrcode-image { width:min(220px,100%); height:auto; aspect-ratio:1; } }
     </style>
 </head>
 <body>
+    <nav class="secnn-page-nav" aria-label="页面导航"><span class="secnn-page-nav__brand">SecNN · 项目支持</span><a class="secnn-page-nav__home" href="../index.html">← 返回主页</a></nav>
     <div class="container">
         <header>
-            <h1 class="site-title"></h1>
+            <span class="support-eyebrow">社区支持</span>
+            <h1 class="site-title">支持 SecNN 持续维护</h1>
             <p class="site-description">
-                感谢您对SecNN的支持！您的每一份打赏都是我们持续改进和提供优质服务的动力。<br>
+                SecNN 工具持续免费开放。你的支持将用于项目维护、服务资源和功能迭代；赞助完全自愿，不影响任何工具的正常使用。
             </p>
 		</header>
         
@@ -344,97 +375,18 @@
     </div>
     <div class="sponsors-grid">
         <div class="carousel-container">
-		<div style="text-align: center;"><h3>❤️ 衷心感谢您的支持 ❤️</h3></div>
-		<div style="text-align: center;"><h5>🌟 特别鸣谢每一位打赏的朋友，金额不在大小，心意最珍贵💰 每一份支持，都是前行的动力 | 排名不分先后🌟️</h5></div>
+		<div class="sponsors-heading"><h2>感谢每一份支持</h2><p>赞助名单按录入顺序展示，排名不分先后。</p></div>
 
-            <button class="carousel-nav carousel-prev">❮</button>
+            <button class="carousel-nav carousel-prev" type="button" aria-label="查看上一组赞助者">❮</button>
             <div class="carousel-track" id="carouselTrack"></div>
-            <button class="carousel-nav carousel-next">❯</button>
+            <button class="carousel-nav carousel-next" type="button" aria-label="查看下一组赞助者">❯</button>
         </div>
     </div>
+	<script src="../assets/sponsors.js?v=1"></script>
 	<script>
         document.addEventListener('DOMContentLoaded', function() {
             // 赞助者数据
-            const sponsors = [
-                
-		{ 
-                    avatar: '11.jpg',
-                    name: '清风徐来', 
-                    amount: 9.99, 
-                    currency: '¥', 
-                    message: '看你的文章感觉有搞头！' 
-                },
-		{ 
-                    avatar: '1.jpg',
-                    name: '肉松', 
-                    amount: 5, 
-                    currency: '¥', 
-                    message: '内容很有价值！' 
-                },
-                { 
-                    avatar: '2.jpg',
-                    name: '浪', 
-                    amount: 10, 
-                    currency: '¥', 
-                    message: '期待更多更新' 
-                },
-                { 
-                    avatar: '3.jpg',
-                    name: '风继续吹', 
-                    amount: 8.88, 
-                    currency: '¥', 
-                    message: '感谢分享' 
-                },
-                { 
-                    avatar: '4.jpg',
-                    name: 'D~', 
-                    amount: 52.0, 
-                    currency: '¥', 
-                    message: '帮我解决了大问题' 
-                },
-                { 
-                    avatar: '5.jpg',
-                    name: '西钉不敢吱声', 
-                    amount: 6.66, 
-                    currency: '¥', 
-                    message: '物超所值' 
-                },
-                { 
-                    avatar: '6.jpg',
-                    name: '冷酷DE瞬间', 
-                    amount: 20, 
-                    currency: '¥', 
-                    message: '推荐给朋友了' 
-                },
-                { 
-                    avatar: '7.jpg',
-                    name: 'Aღ᭄💞来盘意大利面ᯤ📶⁵ᴳ', 
-                    amount: 5, 
-                    currency: '¥', 
-                    message: '简洁明了' 
-                },
-                { 
-                    avatar: '8.jpg',
-                    name: 'A、我想静静', 
-                    amount: 10, 
-                    currency: '¥', 
-                    message: '第二次赞助了' 
-                },
-                { 
-                    avatar: '9.jpg',
-                    name: '笼中鸟余哀鸣', 
-                    amount: 1, 
-                    currency: '¥', 
-                    message: '继续加油' 
-                },
-                { 
-                    avatar: '10.jpg',
-                    name: 'July', 
-                    amount: 30, 
-                    currency: '¥', 
-                    message: '小而精' 
-                }
-            ];
+            const sponsors = window.SECNN_SPONSORS;
 
             const track = document.getElementById('carouselTrack');
             const prevBtn = document.querySelector('.carousel-prev');
@@ -442,11 +394,6 @@
             let currentIndex = 0;
             let itemsPerView = 6;
             let cardWidth = 0;
-            let isDragging = false;
-            let startPos = 0;
-            let currentTranslate = 0;
-            let prevTranslate = 0;
-            let animationID;
             let autoScrollInterval;
 
             // 初始化轮播
@@ -458,9 +405,9 @@
                     const card = document.createElement('div');
                     card.className = 'sponsor-card';
                     card.innerHTML = `
-                        <img src="${sponsor.avatar}" class="sponsor-avatar" 
+                        <img src="${sponsor.avatar}" class="sponsor-avatar" loading="lazy"
                              alt="${sponsor.name}" 
-                             onerror="this.src='https://via.placeholder.com/40?text=${sponsor.name.charAt(0)}'">
+                             onerror="this.style.visibility='hidden'">
                         <div class="sponsor-info">
                             <div class="sponsor-name">${sponsor.name}</div>
                             <div class="sponsor-amount">${sponsor.currency}${sponsor.amount}</div>
@@ -495,6 +442,8 @@
 
             // 自动滚动
             function startAutoScroll() {
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                clearInterval(autoScrollInterval);
                 autoScrollInterval = setInterval(() => {
                     nextSlide();
                 }, 3000);
@@ -536,6 +485,16 @@
                 resetAutoScroll();
             });
 
+            track.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
+            track.addEventListener('mouseleave', startAutoScroll);
+            track.addEventListener('focusin', () => clearInterval(autoScrollInterval));
+            track.addEventListener('focusout', startAutoScroll);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) clearInterval(autoScrollInterval);
+                else startAutoScroll();
+            });
+
             // 响应式调整
             window.addEventListener('resize', () => {
                 updateItemsPerView();
@@ -555,5 +514,6 @@
             <a href="https://github.com/SecNN" target="_blank">SecNN</a>
         </p>
     </footer>
+    <script src="../assets/site-footer.js?v=1"></script>
 </body>
 </html>

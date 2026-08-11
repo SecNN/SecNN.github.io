@@ -1,0 +1,11 @@
+{
+  "name": "secnn-static-site",
+  "private": true,
+  "scripts": {
+    "check": "sh scripts/check-site.sh",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
+}
