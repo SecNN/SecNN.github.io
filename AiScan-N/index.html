@@ -20,12 +20,10 @@
     <button class="menu-btn" aria-label="打开导航" aria-expanded="false"><i></i><i></i></button>
     <nav class="nav" aria-label="主导航">
       <a href="#capabilities">核心能力</a>
-      <a href="#workflow">工作方式</a>
       <a href="#quickstart">快速开始</a>
       <a href="#preview">界面预览</a>
       <a href="#scenarios">应用场景</a>
     </nav>
-    <a class="nav-cta" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener">获取 AiScan-N <span>↗</span></a>
   </header>
 
   <main id="top">
@@ -35,9 +33,6 @@
         <div class="eyebrow"><span class="pulse"></span> AI-NATIVE SECURITY · CLI AGENT</div>
         <h1>让每一次安全行动<br><em>快于威胁。</em></h1>
         <p class="hero-desc">一款 AI 驱动的自动化网络安全与运维工具。通过 Web、CLI 与 MCP 连接大模型和安全工具，覆盖漏洞扫描、代码审计、APK 逆向、应急响应与渗透测试自动化。</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="https://github.com/SecNN/AiScan-N/releases" target="_blank" rel="noopener"><span>立即下载</span><b>↗</b></a>
-        </div>
         <div class="platforms" aria-label="支持平台">
           <span>RUNS ON</span><b>Windows</b><i></i><b>Linux</b><i></i><b>macOS</b><i></i><b>WSL</b><i></i><b>UOS</b>
         </div>
@@ -72,6 +67,18 @@
       <div class="scroll-cue"><span>SCROLL TO EXPLORE</span><i></i></div>
     </section>
 
+    <section class="cta section-shell reveal">
+      <div class="cta-grid" aria-hidden="true"></div>
+      <p class="kicker">YOUR NEXT SECURITY MOVE</p>
+      <h2>准备好，让 AI 加入<br>你的安全行动了吗？</h2>
+      <p>跨平台运行 · 开放模型接入 · CLI 高效交互</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener"><span>下载 AiScan-N</span><b>↗</b></a>
+        <a class="btn btn-ghost" href="https://api.secnn.com" target="_blank" rel="noopener">接入 SecNN API</a>
+      </div>
+      <small>仅用于合法授权的安全测试、教学与研究。请遵守当地法律法规。</small>
+    </section>
+
     <section class="intro section-shell reveal">
       <div class="section-code">01 / MISSION</div>
       <div>
@@ -84,13 +91,14 @@
     <section id="capabilities" class="capabilities section-shell">
       <article class="feature feature-main reveal">
         <div class="feature-index">01</div>
-        <div class="feature-icon radar"><i></i><i></i><b></b></div>
+        <div class="feature-icon radar" aria-hidden="true"><i></i><i></i><b></b><span class="radar-blips"></span></div>
         <div><p class="kicker">AI + SECURITY TOOLS</p><h3>自然语言驱动工具</h3><p>用自然语言发起安全任务，通过大模型分析目标并调用指定工具完成扫描、审计、分析与结果整理。</p></div>
         <div class="feature-tags"><span>Web 交互</span><span>CLI Agent</span><span>MCP 服务</span></div>
       </article>
       <article class="feature reveal delay-1">
         <div class="feature-index">02</div><div class="mini-icon">⌁</div>
         <h3>支持多种大模型接入方式</h3>
+        <p>兼容 OpenAI API 格式，可连接云端模型、第三方模型服务与 Ollama 等本地模型；按场景自由切换，在效果、成本与数据隐私之间灵活平衡。</p>
         <div class="model-row"><span>LOCAL</span><i></i><span>CLOUD</span><i></i><span>API</span></div>
       </article>
       <article class="feature reveal delay-2">
@@ -98,19 +106,6 @@
         <h3>跨平台、本地可运行</h3><p>支持 Windows、Linux、macOS、WSL 与 UOS，可按系统架构选择服务端和客户端，在内网搭配本地大模型使用。</p>
         <div class="signal"><i></i><i></i><i></i><i></i><span>PRIVATE BY DESIGN</span></div>
       </article>
-    </section>
-
-    <section id="workflow" class="workflow section-shell">
-      <div class="section-heading reveal"><div><p class="kicker">FROM INTENT TO ACTION</p><h2>一句指令，启动完整安全闭环</h2></div><p>AI 不只回答问题，还会连接环境中的工具与信息，把判断落到实际行动中。</p></div>
-      <div class="flow reveal">
-        <article><b>01</b><span class="flow-icon">⌘</span><h3>描述目标</h3><p>用自然语言说清任务、范围与授权边界。</p></article>
-        <i class="flow-line"><span></span></i>
-        <article><b>02</b><span class="flow-icon">◎</span><h3>智能规划</h3><p>Agent 分析上下文，生成可解释的执行路径。</p></article>
-        <i class="flow-line"><span></span></i>
-        <article><b>03</b><span class="flow-icon">⚡</span><h3>工具协同</h3><p>按需调用扫描、分析与运维工具执行任务。</p></article>
-        <i class="flow-line"><span></span></i>
-        <article><b>04</b><span class="flow-icon">✓</span><h3>洞察输出</h3><p>汇总风险证据，形成清晰的修复与响应建议。</p></article>
-      </div>
     </section>
 
     <section id="quickstart" class="quickstart section-shell">
@@ -182,17 +177,6 @@
       </div>
     </section>
 
-    <section class="cta section-shell reveal">
-      <div class="cta-grid" aria-hidden="true"></div>
-      <p class="kicker">YOUR NEXT SECURITY MOVE</p>
-      <h2>准备好，让 AI 加入<br>你的安全行动了吗？</h2>
-      <p>跨平台运行 · 开放模型接入 · CLI 高效交互</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="https://github.com/SecNN/AiScan-N" target="_blank" rel="noopener"><span>下载 AiScan-N</span><b>↗</b></a>
-        <a class="btn btn-ghost" href="https://api.secnn.com" target="_blank" rel="noopener">接入 SecNN API</a>
-      </div>
-      <small>仅用于合法授权的安全测试、教学与研究。请遵守当地法律法规。</small>
-    </section>
   </main>
 
   <footer class="footer section-shell">

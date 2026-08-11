@@ -32,6 +32,39 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.reveal').forEach(element => revealObserver.observe(element));
 
+const radarBlips = document.querySelector('.radar-blips');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (radarBlips) {
+  const blips = Array.from({ length: 16 }, (_, index) => {
+    const blip = document.createElement('span');
+    blip.style.setProperty('--size', `${3 + Math.random() * 4}px`);
+    blip.style.setProperty('--delay', `${-Math.random() * 3}s`);
+    blip.style.setProperty('--pulse', `${1.6 + Math.random() * 2.2}s`);
+    blip.style.setProperty('--color', index % 5 === 0 ? 'var(--cyan)' : 'var(--green)');
+    radarBlips.appendChild(blip);
+    return blip;
+  });
+
+  const moveBlip = blip => {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = Math.sqrt(Math.random()) * 45;
+    blip.style.setProperty('--x', `${50 + Math.cos(angle) * radius}%`);
+    blip.style.setProperty('--y', `${50 + Math.sin(angle) * radius}%`);
+    blip.classList.toggle('hot', Math.random() > 0.35);
+  };
+
+  blips.forEach(moveBlip);
+  if (!reducedMotion) {
+    setInterval(() => {
+      const moves = 3 + Math.floor(Math.random() * 4);
+      for (let index = 0; index < moves; index += 1) {
+        moveBlip(blips[Math.floor(Math.random() * blips.length)]);
+      }
+    }, 1250);
+  }
+}
+
 const output = document.querySelector('#type-text');
 const phrases = ['发现 3 项风险，正在生成处置建议…', '证据链已整理，报告摘要已就绪。', '任务完成。等待下一条安全指令。'];
 let phraseIndex = 0;
